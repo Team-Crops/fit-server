@@ -1,4 +1,4 @@
-package org.crops.fitserver.core.file;
+package org.crops.fitserver.core.file.service;
 
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -15,24 +16,23 @@ public class S3FileServiceImpl implements FileService {
 
   private final S3Client s3Client;
 
-  @Value("${aws.s3.bucketNameForPermanent}")
-  private String bucketNameForPermanent;
+  @Value("${aws.s3.bucket}")
+  private String bucket;
 
-  @Value("${aws.s3.bucketNameForTemporary}")
-  private String bucketNameForTemporary;
 
   @Override
-  public String uploadFile(String fileName, MultipartFile file, boolean isTemporary)
-      throws IOException {
-    var bucketName = isTemporary ? bucketNameForTemporary : bucketNameForPermanent;
+  public String uploadFile(String fileName, MultipartFile file, boolean isTemporary) {
+    fileName = isTemporary ? "temp/" + fileName : "file/" + fileName; // TODO: use enum
 
-    var putObjectResponse = s3Client.putObject(
-        PutObjectRequest.builder().bucket(bucketName).key(fileName)
-            .build(),
-        RequestBody.fromBytes(file.getBytes())
-    );
-
-    System.out.println(putObjectResponse.toString());
+    try {
+      s3Client.putObject(
+          PutObjectRequest.builder().bucket(bucket).key(fileName)
+              .build(),
+          RequestBody.fromBytes(file.getBytes())
+      );
+    } catch (IOException e) {
+      throw new RuntimeException(e);// TODO: 롤백할 수 있게 사용자 에러로 수정
+    }
 
     return fileName;//TODO: create unique file name(filename+timestamp+random number)
   }
