@@ -42,3 +42,34 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.register("bootRunLocal") {
+	group = "application"
+	description = "Runs this project as a Spring Boot application in the 'local' environment."
+	doFirst {
+		tasks.bootRun.configure {
+			systemProperty("spring.profiles.active", "local")
+		}
+	}
+	finalizedBy(tasks.bootRun)
+}
+tasks.register("bootRunDev") {
+	group = "application"
+	description = "Runs this project as a Spring Boot application in the 'dev' environment."
+	doFirst {
+		tasks.bootRun.configure {
+			systemProperty("spring.profiles.active", "dev")
+		}
+	}
+	finalizedBy(tasks.bootRun)
+}
+tasks.register("bootRunProd") {
+	group = "application"
+	description = "Runs this project as a Spring Boot application in the 'prod' environment."
+	doFirst {
+		tasks.bootRun.configure {
+			systemProperty("spring.profiles.active", "prod")
+		}
+	}
+	finalizedBy(tasks.bootRun)
+}
