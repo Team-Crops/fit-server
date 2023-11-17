@@ -11,8 +11,6 @@ import software.amazon.awssdk.services.s3.S3Client;
 @Configuration
 public class AwsConfig {
 
-
-  //add accessKey and secretKey and region
   @Value("${aws.accessKey}")
   private String accessKey;
 

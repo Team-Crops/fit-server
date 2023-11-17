@@ -4,8 +4,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface FileService {
 
-  //fileKey is the newly created name of the file
+  //return fileKey. fileKey is the newly created name of the file
   String uploadFile(String fileName, MultipartFile file, boolean isTemporary);
 
-  boolean deleteFile(String fileKey);
+  void deleteFile(String fileKey);
 }
