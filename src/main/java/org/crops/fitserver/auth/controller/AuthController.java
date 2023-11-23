@@ -1,10 +1,12 @@
 package org.crops.fitserver.auth.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.auth.facade.AuthFacade;
+import org.crops.fitserver.auth.facade.dto.TokenResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,17 +19,17 @@ public class AuthController {
 
 	private final AuthFacade authFacade;
 
-	@GetMapping("/social")
-	public ResponseEntity socialLogin(
+	@GetMapping("/social/{socialPlatform}")
+	public ResponseEntity<TokenResponse> socialLogin(
 			HttpServletRequest request,
 			@RequestParam(name = "code") String code,
-			@RequestParam(name = "socialPlatform") SocialPlatform socialPlatform
+			@PathVariable(name = "socialPlatform") String socialPlatform
 	) {
-		authFacade.socialLogin(
+		TokenResponse tokenResponse = authFacade.socialLogin(
 				request.getRequestURL().toString(),
 				code,
-				socialPlatform);
-		return ResponseEntity.ok(null);
+				SocialPlatform.of(socialPlatform));
+		return ResponseEntity.ok(tokenResponse);
 	}
 
 	@PostMapping("/login")
