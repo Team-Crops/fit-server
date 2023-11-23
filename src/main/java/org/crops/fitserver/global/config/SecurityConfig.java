@@ -74,7 +74,7 @@ public class SecurityConfig {
 					.requestMatchers(PathRequest.toStaticResources().atCommonLocations())
 					.requestMatchers(
 							new AntPathRequestMatcher(
-									"/v1/auth/social",
+									"/v1/auth/social/**",
 									HttpMethod.GET.name())
 					);
 		};
