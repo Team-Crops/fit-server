@@ -10,6 +10,7 @@ public class TokenCollection {
 
 	private final String accessToken;
 	private final String refreshToken;
+
 	public static TokenCollection of(String accessToken, String refreshToken) {
 		return new TokenCollection(accessToken, refreshToken);
 	}
