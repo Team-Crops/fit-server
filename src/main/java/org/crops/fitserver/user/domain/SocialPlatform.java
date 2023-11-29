@@ -1,4 +1,4 @@
-package org.crops.fitserver.auth.controller;
+package org.crops.fitserver.user.domain;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

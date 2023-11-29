@@ -2,6 +2,7 @@ package org.crops.fitserver.auth.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.crops.fitserver.user.domain.SocialPlatform;
 import org.crops.fitserver.auth.facade.AuthFacade;
 import org.crops.fitserver.auth.facade.dto.TokenResponse;
 import org.springframework.http.ResponseEntity;
