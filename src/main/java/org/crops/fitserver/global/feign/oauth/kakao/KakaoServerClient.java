@@ -1,6 +1,5 @@
-package org.crops.fitserver.global.feign.kakao;
+package org.crops.fitserver.global.feign.oauth.kakao;
 
-import org.crops.fitserver.global.feign.KakaoSocialUserProfile;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.PostMapping;

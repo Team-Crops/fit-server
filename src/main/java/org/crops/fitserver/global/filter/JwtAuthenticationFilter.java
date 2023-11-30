@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.global.exception.FitException;
 import org.crops.fitserver.global.http.HeaderTokenExtractor;
-import org.crops.fitserver.global.exception.ErrorType;
+import org.crops.fitserver.global.http.ErrorType;
 import org.crops.fitserver.global.exception.NotFoundException;
 import org.crops.fitserver.global.jwt.JwtResolver;
 import org.crops.fitserver.global.security.PrincipalDetailsService;

@@ -1,4 +1,4 @@
-package org.crops.fitserver.global.feign.google;
+package org.crops.fitserver.global.feign.oauth.google;
 
 import lombok.Getter;
 import lombok.Setter;

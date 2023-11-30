@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.crops.fitserver.global.exception.ErrorType;
+import org.crops.fitserver.global.http.ErrorType;
 import org.crops.fitserver.global.exception.FitException;
 import org.crops.fitserver.global.http.FailResponse;
 import org.springframework.http.MediaType;

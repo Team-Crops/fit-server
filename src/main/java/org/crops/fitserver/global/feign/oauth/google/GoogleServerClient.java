@@ -1,6 +1,5 @@
-package org.crops.fitserver.global.feign.google;
+package org.crops.fitserver.global.feign.oauth.google;
 
-import org.crops.fitserver.global.feign.GoogleSocialUserProfile;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

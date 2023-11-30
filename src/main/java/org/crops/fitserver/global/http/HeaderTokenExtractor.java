@@ -2,7 +2,6 @@ package org.crops.fitserver.global.http;
 
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.crops.fitserver.global.exception.ErrorType;
 import org.crops.fitserver.global.exception.FitException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;

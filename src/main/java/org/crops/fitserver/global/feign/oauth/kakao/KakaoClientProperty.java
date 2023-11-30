@@ -1,4 +1,4 @@
-package org.crops.fitserver.global.feign.kakao;
+package org.crops.fitserver.global.feign.oauth.kakao;
 
 import lombok.Getter;
 import lombok.Setter;

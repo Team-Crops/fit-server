@@ -1,13 +1,13 @@
 package org.crops.fitserver.auth.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.crops.fitserver.global.feign.kakao.KakaoClientProperty;
+import org.crops.fitserver.global.feign.oauth.kakao.KakaoClientProperty;
 import org.crops.fitserver.global.jwt.JwtProperty;
 import org.crops.fitserver.auth.service.OAuthService;
-import org.crops.fitserver.global.feign.OAuthToken;
-import org.crops.fitserver.global.feign.KakaoSocialUserProfile;
-import org.crops.fitserver.global.feign.kakao.KakaoAuthServerClient;
-import org.crops.fitserver.global.feign.kakao.KakaoServerClient;
+import org.crops.fitserver.global.feign.oauth.OAuthToken;
+import org.crops.fitserver.global.feign.oauth.kakao.KakaoSocialUserProfile;
+import org.crops.fitserver.global.feign.oauth.kakao.KakaoAuthServerClient;
+import org.crops.fitserver.global.feign.oauth.kakao.KakaoServerClient;
 import org.crops.fitserver.user.domain.SocialPlatform;
 import org.crops.fitserver.user.domain.SocialUserInfo;
 import org.crops.fitserver.user.domain.User;

@@ -1,4 +1,4 @@
-package org.crops.fitserver.global.exception;
+package org.crops.fitserver.global.http;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

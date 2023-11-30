@@ -1,11 +1,11 @@
 package org.crops.fitserver.auth.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.crops.fitserver.global.feign.GoogleSocialUserProfile;
-import org.crops.fitserver.global.feign.OAuthToken;
-import org.crops.fitserver.global.feign.google.GoogleAuthServerClient;
-import org.crops.fitserver.global.feign.google.GoogleClientProperty;
-import org.crops.fitserver.global.feign.google.GoogleServerClient;
+import org.crops.fitserver.global.feign.oauth.google.GoogleSocialUserProfile;
+import org.crops.fitserver.global.feign.oauth.OAuthToken;
+import org.crops.fitserver.global.feign.oauth.google.GoogleAuthServerClient;
+import org.crops.fitserver.global.feign.oauth.google.GoogleClientProperty;
+import org.crops.fitserver.global.feign.oauth.google.GoogleServerClient;
 import org.crops.fitserver.auth.service.OAuthService;
 import org.crops.fitserver.global.jwt.JwtProperty;
 import org.crops.fitserver.user.domain.SocialPlatform;
