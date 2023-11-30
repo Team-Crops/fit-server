@@ -7,6 +7,7 @@ import org.crops.fitserver.global.filter.JwtAuthenticationFilter;
 import org.crops.fitserver.global.filter.JwtExceptionFilter;
 import org.crops.fitserver.global.http.HeaderTokenExtractor;
 import org.crops.fitserver.global.jwt.JwtResolver;
+import org.crops.fitserver.global.security.PrincipalDetailsService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -30,6 +31,7 @@ public class SecurityConfig {
 	private final JwtExceptionFilter jwtExceptionFilter;
 	private final JwtAccessDeniedHandler customAccessDeniedHandler;
 	private final HeaderTokenExtractor headerTokenExtractor;
+	private final PrincipalDetailsService principalDetailsService;
 	private final JwtResolver jwtResolver;
 
 	@Bean
@@ -40,7 +42,7 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		JwtAuthenticationFilter jwtAuthenticationFilter =
-				new JwtAuthenticationFilter(headerTokenExtractor, jwtResolver);
+				new JwtAuthenticationFilter(principalDetailsService, headerTokenExtractor, jwtResolver);
 		http
 				.addFilterBefore(jwtAuthenticationFilter,
 						UsernamePasswordAuthenticationFilter.class)
