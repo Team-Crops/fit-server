@@ -3,6 +3,8 @@ package org.crops.fitserver.auth.controller;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.auth.facade.dto.SocialLoginPageResponse;
+import org.crops.fitserver.global.http.HttpResponse;
+import org.crops.fitserver.global.http.SuccessType;
 import org.crops.fitserver.user.domain.SocialPlatform;
 import org.crops.fitserver.auth.facade.AuthFacade;
 import org.crops.fitserver.auth.facade.dto.TokenResponse;
@@ -31,7 +33,9 @@ public class AuthController {
 				request.getRequestURL().toString(),
 				code,
 				SocialPlatform.of(socialPlatform));
-		return ResponseEntity.ok(tokenResponse);
+		return HttpResponse.success(
+				SuccessType.LOGIN_SUCCESS,
+				tokenResponse);
 	}
 
 	@GetMapping("/social/{socialPlatform}/login-page")
@@ -40,17 +44,18 @@ public class AuthController {
 	) {
 		SocialLoginPageResponse socialLoginPageUrl = authFacade.getSocialLoginPageUrl(
 				SocialPlatform.of(socialPlatform));
-		return ResponseEntity.ok(
+		return HttpResponse.success(
+				SuccessType.READ_RESOURCE_SUCCESS,
 				socialLoginPageUrl);
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity login() {
+	public ResponseEntity<Void> login() {
 		return ResponseEntity.ok(null);
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity signup() {
+	public ResponseEntity<Void> signup() {
 		return ResponseEntity.ok(null);
 	}
 }
