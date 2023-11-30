@@ -3,7 +3,7 @@ package org.crops.fitserver.global.http;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.global.exception.ErrorType;
-import org.crops.fitserver.global.exception.UnauthorizedException;
+import org.crops.fitserver.global.exception.FitException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -21,7 +21,7 @@ public class HeaderTokenExtractor {
 			return bearerHeader.substring(HEADER_PREFIX.length());
 		}
 		log.error("Authorization Header does not begin with \"Bearer\" String : [{}]", bearerHeader);
-		throw new UnauthorizedException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
+		throw new FitException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
 	}
 
 	public String extractRefreshToken(HttpServletRequest request){
@@ -30,6 +30,6 @@ public class HeaderTokenExtractor {
 			return bearerHeader.substring(HEADER_PREFIX.length());
 		}
 		log.error("Refresh-Token Header does not begin with \"Bearer\" String : [{}]", bearerHeader);
-		throw new UnauthorizedException(ErrorType.INVALID_REFRESH_TOKEN_EXCEPTION);
+		throw new FitException(ErrorType.INVALID_REFRESH_TOKEN_EXCEPTION);
 	}
 }
