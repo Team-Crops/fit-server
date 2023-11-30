@@ -2,6 +2,7 @@ package org.crops.fitserver.auth.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.crops.fitserver.auth.facade.dto.SocialLoginPageResponse;
 import org.crops.fitserver.user.domain.SocialPlatform;
 import org.crops.fitserver.auth.facade.AuthFacade;
 import org.crops.fitserver.auth.facade.dto.TokenResponse;
@@ -20,7 +21,7 @@ public class AuthController {
 
 	private final AuthFacade authFacade;
 
-	@GetMapping("/social/{socialPlatform}")
+	@GetMapping("/social/{socialPlatform}/login")
 	public ResponseEntity<TokenResponse> socialLogin(
 			HttpServletRequest request,
 			@RequestParam(name = "code") String code,
@@ -31,6 +32,16 @@ public class AuthController {
 				code,
 				SocialPlatform.of(socialPlatform));
 		return ResponseEntity.ok(tokenResponse);
+	}
+
+	@GetMapping("/social/{socialPlatform}/login-page")
+	public ResponseEntity<SocialLoginPageResponse> getSocialLoginPageUrl(
+			@PathVariable(name = "socialPlatform") String socialPlatform
+	) {
+		SocialLoginPageResponse socialLoginPageUrl = authFacade.getSocialLoginPageUrl(
+				SocialPlatform.of(socialPlatform));
+		return ResponseEntity.ok(
+				socialLoginPageUrl);
 	}
 
 	@PostMapping("/login")
