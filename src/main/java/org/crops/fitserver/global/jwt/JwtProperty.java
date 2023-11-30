@@ -15,4 +15,5 @@ public class JwtProperty {
 	private String refreshKey;
 	private Integer accessExpiredMin;
 	private Integer refreshExpiredDay;
+	private String bearerPrefix;
 }
