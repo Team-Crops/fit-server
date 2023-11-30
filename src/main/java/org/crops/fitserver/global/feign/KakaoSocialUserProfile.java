@@ -1,4 +1,4 @@
-package org.crops.fitserver.global.oauth;
+package org.crops.fitserver.global.feign;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class SocialUserProfile {
+public class KakaoSocialUserProfile {
 
 	private Long id;
 }
