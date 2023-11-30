@@ -14,11 +14,8 @@ import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.global.exception.ErrorType;
+import org.crops.fitserver.global.exception.FitException;
 import org.crops.fitserver.global.exception.UnauthorizedException;
-import org.crops.fitserver.global.security.PrincipalDetailsService;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -26,7 +23,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class JwtResolver {
 
-	private final PrincipalDetailsService principalDetailsService;
 	private final JwtProperty jwtProperty;
 	private Key accessKey;
 	private Key refreshKey;
@@ -55,22 +51,12 @@ public class JwtResolver {
 				.getBody();
 	}
 
-	public Authentication getAuthenticationFromAccessToken(String accessToken) {
-		UserDetails userDetails =
-				principalDetailsService.loadUserByUsername(
-						getUserIdFromAccessToken(accessToken).toString());
-		return new UsernamePasswordAuthenticationToken(
-				userDetails,
-				"",
-				userDetails.getAuthorities());
-	}
-
 	public Long getUserIdFromAccessToken(String accessToken) {
 		try {
 			Claims claims = getAccessTokenBody(accessToken);
 			return Long.parseLong(claims.get("userId").toString());
 		} catch (ExpiredJwtException e) {
-			throw new UnauthorizedException(ErrorType.EXPIRED_ACCESS_TOKEN_EXCEPTION);
+			throw new FitException(ErrorType.EXPIRED_ACCESS_TOKEN_EXCEPTION);
 		} catch (Exception e) {
 			throw new UnauthorizedException();
 		}
@@ -81,7 +67,7 @@ public class JwtResolver {
 			Claims claims = getRefreshTokenBody(refreshToken);
 			return Long.parseLong(claims.get("userId").toString());
 		} catch (ExpiredJwtException e) {
-			throw new UnauthorizedException(ErrorType.EXPIRED_REFRESH_TOKEN_EXCEPTION);
+			throw new FitException(ErrorType.EXPIRED_REFRESH_TOKEN_EXCEPTION);
 		} catch (Exception e) {
 			throw new UnauthorizedException();
 		}
@@ -92,14 +78,13 @@ public class JwtResolver {
 			return !getAccessTokenBody(accessToken)
 					.getExpiration()
 					.before(new Date());
-		} catch (SecurityException | MalformedJwtException | SignatureException e) {
-			throw new UnauthorizedException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
+		} catch (SecurityException | MalformedJwtException | SignatureException |
+				 IllegalArgumentException e) {
+			throw new FitException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
 		} catch (UnsupportedJwtException e) {
-			throw new UnauthorizedException(ErrorType.UNSUPPORTED_JWT_TOKEN_EXCEPTION);
-		} catch (IllegalArgumentException e) {
-			throw new UnauthorizedException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
+			throw new FitException(ErrorType.UNSUPPORTED_JWT_TOKEN_EXCEPTION);
 		} catch (ExpiredJwtException e) {
-			throw new UnauthorizedException(ErrorType.EXPIRED_ACCESS_TOKEN_EXCEPTION);
+			throw new FitException(ErrorType.EXPIRED_ACCESS_TOKEN_EXCEPTION);
 		}
 	}
 
@@ -108,14 +93,13 @@ public class JwtResolver {
 			return !getRefreshTokenBody(refreshToken)
 					.getExpiration()
 					.before(new Date());
-		} catch (SecurityException | MalformedJwtException | SignatureException e) {
-			throw new UnauthorizedException(ErrorType.INVALID_REFRESH_TOKEN_EXCEPTION);
+		} catch (SecurityException | MalformedJwtException | SignatureException |
+				 IllegalArgumentException e) {
+			throw new FitException(ErrorType.INVALID_REFRESH_TOKEN_EXCEPTION);
 		} catch (UnsupportedJwtException e) {
-			throw new UnauthorizedException(ErrorType.UNSUPPORTED_JWT_TOKEN_EXCEPTION);
-		} catch (IllegalArgumentException e) {
-			throw new UnauthorizedException(ErrorType.INVALID_REFRESH_TOKEN_EXCEPTION);
+			throw new FitException(ErrorType.UNSUPPORTED_JWT_TOKEN_EXCEPTION);
 		} catch (ExpiredJwtException e) {
-			throw new UnauthorizedException(ErrorType.EXPIRED_REFRESH_TOKEN_EXCEPTION);
+			throw new FitException(ErrorType.EXPIRED_REFRESH_TOKEN_EXCEPTION);
 		}
 	}
 }
