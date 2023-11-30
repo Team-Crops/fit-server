@@ -39,11 +39,15 @@ public class SocialUserInfo {
 	@Column(nullable = false, length = 255)
 	private String socialCode;
 
-	public static SocialUserInfo of(User user, SocialPlatform socialType, String socialCode) {
+	public static SocialUserInfo newInstance(User user, SocialPlatform socialType, String socialCode) {
 		return SocialUserInfo.builder()
 				.user(user)
 				.socialType(socialType)
 				.socialCode(socialCode)
 				.build();
+	}
+
+	public static String calculateSocialCode(SocialPlatform socialPlatform, String socialCode) {
+		return socialPlatform.name() + "_" + socialCode;
 	}
 }
