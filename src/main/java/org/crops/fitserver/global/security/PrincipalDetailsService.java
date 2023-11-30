@@ -1,6 +1,5 @@
 package org.crops.fitserver.global.security;
 
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.global.exception.UnauthorizedException;
 import org.crops.fitserver.user.repository.UserRepository;
