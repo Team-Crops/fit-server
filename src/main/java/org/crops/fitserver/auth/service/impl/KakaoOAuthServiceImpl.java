@@ -30,17 +30,21 @@ public class KakaoOAuthServiceImpl implements OAuthService {
 	public User socialUserLogin(
 			String redirectUrl,
 			String authorizationCode) {
+
 		OAuthToken oAuthToken = kakaoAuthServerClient.getOAuth2AccessToken(
 				kakaoClientProperty.getContentType(),
 				kakaoClientProperty.getGrantType(),
 				kakaoClientProperty.getClientId(),
 				redirectUrl,
 				authorizationCode);
+
 		KakaoSocialUserProfile socialUserProfile = kakaoServerClient.getUserInformation(
 				jwtProperty.getBearerPrefix() + oAuthToken.getAccessToken());
+
 		String socialCode = SocialUserInfo.calculateSocialCode(
 				SocialPlatform.KAKAO,
 				String.valueOf(socialUserProfile.getId()));
+
 		SocialUserInfo socialUserInfo = socialUserInfoRepository
 				.findBySocialCode(socialCode)
 				.orElseGet(
@@ -53,6 +57,7 @@ public class KakaoOAuthServiceImpl implements OAuthService {
 											SocialPlatform.KAKAO,
 											socialCode));
 						});
+
 		return socialUserInfo.getUser();
 	}
 

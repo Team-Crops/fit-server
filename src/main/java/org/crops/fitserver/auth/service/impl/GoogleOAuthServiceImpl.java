@@ -30,6 +30,7 @@ public class GoogleOAuthServiceImpl implements OAuthService {
 	public User socialUserLogin(
 			String redirectUri,
 			String authorizationCode) {
+
 		OAuthToken oAuthToken = googleAuthServerClient.getOAuth2AccessToken(
 				googleClientProperty.getContentType(),
 				googleClientProperty.getGrantType(),
@@ -37,11 +38,14 @@ public class GoogleOAuthServiceImpl implements OAuthService {
 				googleClientProperty.getClientSecret(),
 				redirectUri,
 				authorizationCode);
+
 		GoogleSocialUserProfile socialUserProfile = googleServerClient.getUserInformation(
 				jwtProperty.getBearerPrefix() + oAuthToken.getAccessToken());
+
 		String socialCode = SocialUserInfo.calculateSocialCode(
 				SocialPlatform.GOOGLE,
 				socialUserProfile.getSub());
+
 		SocialUserInfo socialUserInfo = socialUserInfoRepository
 				.findBySocialCode(socialCode)
 				.orElseGet(
@@ -54,6 +58,7 @@ public class GoogleOAuthServiceImpl implements OAuthService {
 											SocialPlatform.GOOGLE,
 											socialCode));
 						});
+
 		return socialUserInfo.getUser();
 	}
 
