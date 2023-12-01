@@ -29,12 +29,6 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
 			FilterChain filterChain) throws ServletException, IOException {
 		try {
 			filterChain.doFilter(request, response);
-		} catch (FitException e) {
-			responseError(
-					response,
-					e.getErrorType(),
-					e.getMessage());
-			log.error(e.getMessage());
 		} catch (Exception e) {
 			responseError(
 					response,

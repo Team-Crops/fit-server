@@ -35,22 +35,6 @@ public class JwtResolver {
 		refreshKey = Keys.hmacShaKeyFor(refreshKeyBytes);
 	}
 
-	private Claims getAccessTokenBody(String accessToken) {
-		return Jwts.parserBuilder()
-				.setSigningKey(accessKey)
-				.build()
-				.parseClaimsJws(accessToken)
-				.getBody();
-	}
-
-	private Claims getRefreshTokenBody(String refreshToken) {
-		return Jwts.parserBuilder()
-				.setSigningKey(refreshKey)
-				.build()
-				.parseClaimsJws(refreshToken)
-				.getBody();
-	}
-
 	public Long getUserIdFromAccessToken(String accessToken) {
 		try {
 			Claims claims = getAccessTokenBody(accessToken);
@@ -101,5 +85,21 @@ public class JwtResolver {
 		} catch (ExpiredJwtException e) {
 			throw new FitException(ErrorType.EXPIRED_REFRESH_TOKEN_EXCEPTION);
 		}
+	}
+
+	private Claims getAccessTokenBody(String accessToken) {
+		return Jwts.parserBuilder()
+				.setSigningKey(accessKey)
+				.build()
+				.parseClaimsJws(accessToken)
+				.getBody();
+	}
+
+	private Claims getRefreshTokenBody(String refreshToken) {
+		return Jwts.parserBuilder()
+				.setSigningKey(refreshKey)
+				.build()
+				.parseClaimsJws(refreshToken)
+				.getBody();
 	}
 }

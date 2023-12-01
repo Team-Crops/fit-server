@@ -15,20 +15,26 @@ public class HeaderTokenExtractor {
 	private static final String REFRESH_TOKEN_HEADER = "Refresh-Token";
 
 	public String extractAccessToken(HttpServletRequest request) {
-		String bearerHeader = request.getHeader(AUTHORIZATION_HEADER);
-		if (StringUtils.hasText(bearerHeader) && bearerHeader.startsWith(HEADER_PREFIX)) {
-			return bearerHeader.substring(HEADER_PREFIX.length());
+		String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+		if (!isValidBearerToken(bearerToken)) {
+			log.error("Authorization Header does not begin with \"Bearer\" String : [{}]",
+					bearerToken);
+			throw new FitException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
 		}
-		log.error("Authorization Header does not begin with \"Bearer\" String : [{}]", bearerHeader);
-		throw new FitException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
+		return bearerToken.substring(HEADER_PREFIX.length());
 	}
 
-	public String extractRefreshToken(HttpServletRequest request){
-		String bearerHeader = request.getHeader(REFRESH_TOKEN_HEADER);
-		if (StringUtils.hasText(bearerHeader) && bearerHeader.startsWith(HEADER_PREFIX)) {
-			return bearerHeader.substring(HEADER_PREFIX.length());
+	public String extractRefreshToken(HttpServletRequest request) {
+		String bearerToken = request.getHeader(REFRESH_TOKEN_HEADER);
+		if (!isValidBearerToken(bearerToken)) {
+			log.error("Refresh-Token Header does not begin with \"Bearer\" String : [{}]",
+					bearerToken);
+			throw new FitException(ErrorType.INVALID_REFRESH_TOKEN_EXCEPTION);
 		}
-		log.error("Refresh-Token Header does not begin with \"Bearer\" String : [{}]", bearerHeader);
-		throw new FitException(ErrorType.INVALID_REFRESH_TOKEN_EXCEPTION);
+		return bearerToken.substring(HEADER_PREFIX.length());
+	}
+
+	private static boolean isValidBearerToken(String bearerHeader) {
+		return StringUtils.hasText(bearerHeader) && bearerHeader.startsWith(HEADER_PREFIX);
 	}
 }

@@ -31,7 +31,14 @@ public class JwtProvider {
 		accessExpired = jwtProperty.getAccessExpiredMin();
 		refreshExpired = jwtProperty.getRefreshExpiredDay();
 	}
-	
+
+	public TokenCollection createTokenCollection(TokenInfo tokenInfo) {
+		return TokenCollection.of(
+				createAccessToken(tokenInfo),
+				createRefreshToken(tokenInfo)
+		);
+	}
+
 	public String createAccessToken(TokenInfo tokenInfo) {
 		return Jwts.builder()
 				.setSubject("access_token")
@@ -50,12 +57,5 @@ public class JwtProvider {
 				.setExpiration(Date.from(Instant.now().plus(refreshExpired, ChronoUnit.DAYS)))
 				.signWith(refreshKey)
 				.compact();
-	}
-
-	public TokenCollection createTokenCollection(TokenInfo tokenInfo) {
-		return TokenCollection.of(
-				createAccessToken(tokenInfo),
-				createRefreshToken(tokenInfo)
-		);
 	}
 }
