@@ -42,10 +42,10 @@ public class AuthController {
 	public ResponseEntity<SocialLoginPageResponse> getSocialLoginPageUrl(
 			@PathVariable(name = "socialPlatform") String socialPlatform
 	) {
-		SocialLoginPageResponse socialLoginPageUrl = authFacade.getSocialLoginPageUrl(
+		SocialLoginPageResponse socialLoginPageResponse = authFacade.getSocialLoginPageUrl(
 				SocialPlatform.of(socialPlatform));
 		return HttpResponse.success(
 				SuccessType.READ_RESOURCE_SUCCESS,
-				socialLoginPageUrl);
+				socialLoginPageResponse);
 	}
 }
