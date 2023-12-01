@@ -40,14 +40,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		filterChain.doFilter(request, response);
 	}
 
-	private void setAuthenticationInSecurityContext(String accessToken) {
-		try {
-			Long userId = jwtResolver.getUserIdFromAccessToken(accessToken);
-			UserDetails userDetails =
-					principalDetailsService.loadUserByUsername(userId.toString());
-			Authentication authentication = getAuthenticationFromUserDetails(userDetails);
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-		} catch (NotFoundException e) {
+	private static void checkAccessTokenNotNull(String accessToken) {
+		if (!StringUtils.hasText(accessToken)) {
+			log.warn("JWT Token is null : [{}]", accessToken);
 			throw new FitException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
 		}
 	}
@@ -58,9 +53,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		}
 	}
 
-	private static void checkAccessTokenNotNull(String accessToken) {
-		if (!StringUtils.hasText(accessToken)) {
-			log.warn("JWT Token is null : [{}]", accessToken);
+	private void setAuthenticationInSecurityContext(String accessToken) {
+		try {
+			Long userId = jwtResolver.getUserIdFromAccessToken(accessToken);
+			UserDetails userDetails =
+					principalDetailsService.loadUserByUsername(userId.toString());
+			Authentication authentication = getAuthenticationFromUserDetails(userDetails);
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+		} catch (NotFoundException e) {
 			throw new FitException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
 		}
 	}
