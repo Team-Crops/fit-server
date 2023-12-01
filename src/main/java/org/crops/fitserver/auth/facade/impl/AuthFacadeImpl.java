@@ -11,6 +11,7 @@ import org.crops.fitserver.auth.facade.AuthFacade;
 import org.crops.fitserver.auth.facade.dto.TokenResponse;
 import org.crops.fitserver.user.domain.User;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ public class AuthFacadeImpl implements AuthFacade {
 	private final JwtProvider jwtProvider;
 
 	@Override
+	@Transactional
 	public TokenResponse socialLogin(String redirectUrl, String authorizationCode,
 			SocialPlatform socialPlatform) {
 		OAuthService oAuthService = oAuthServiceProvider.getOAuthService(socialPlatform);
@@ -32,6 +34,7 @@ public class AuthFacadeImpl implements AuthFacade {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public SocialLoginPageResponse getSocialLoginPageUrl(SocialPlatform socialPlatform) {
 		OAuthService oAuthService = oAuthServiceProvider.getOAuthService(socialPlatform);
 		return SocialLoginPageResponse.from(oAuthService.getLoginPageUrl());
