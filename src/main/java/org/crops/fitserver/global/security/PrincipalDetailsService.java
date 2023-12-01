@@ -18,6 +18,8 @@ public class PrincipalDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		return PrincipalDetails.from(
 				userRepository.findById(Long.parseLong(username))
-						.orElseThrow(UnauthorizedException::new));
+						.orElseThrow(() -> {
+							throw new UsernameNotFoundException("해당 유저를 찾을 수 없습니다.");
+						}));
 	}
 }
