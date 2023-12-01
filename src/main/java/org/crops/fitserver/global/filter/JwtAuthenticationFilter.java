@@ -34,23 +34,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			HttpServletResponse response,
 			FilterChain filterChain) throws ServletException, IOException {
 		String accessToken = headerTokenExtractor.extractAccessToken(request);
-		if (StringUtils.hasText(accessToken)) {
-			if (jwtResolver.validateAccessToken(accessToken)) {
-				try {
-					Long userId = jwtResolver.getUserIdFromAccessToken(accessToken);
-					UserDetails userDetails =
-							principalDetailsService.loadUserByUsername(userId.toString());
-					Authentication authentication = getAuthenticationFromUserDetails(userDetails);
-					SecurityContextHolder.getContext().setAuthentication(authentication);
-				} catch (NotFoundException e) {
-					throw new FitException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
-				}
-			}
-		} else {
+		checkAccessTokenNotNull(accessToken);
+		checkAccessTokenValidation(accessToken);
+		setAuthenticationInSecurityContext(accessToken);
+		filterChain.doFilter(request, response);
+	}
+
+	private void setAuthenticationInSecurityContext(String accessToken) {
+		try {
+			Long userId = jwtResolver.getUserIdFromAccessToken(accessToken);
+			UserDetails userDetails =
+					principalDetailsService.loadUserByUsername(userId.toString());
+			Authentication authentication = getAuthenticationFromUserDetails(userDetails);
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+		} catch (NotFoundException e) {
+			throw new FitException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
+		}
+	}
+
+	private void checkAccessTokenValidation(String accessToken) {
+		if (!jwtResolver.validateAccessToken(accessToken)) {
+			throw new FitException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
+		}
+	}
+
+	private static void checkAccessTokenNotNull(String accessToken) {
+		if (!StringUtils.hasText(accessToken)) {
 			log.warn("JWT Token is null : [{}]", accessToken);
 			throw new FitException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
 		}
-		filterChain.doFilter(request, response);
 	}
 
 	private static UsernamePasswordAuthenticationToken getAuthenticationFromUserDetails(
