@@ -48,14 +48,4 @@ public class AuthController {
 				SuccessType.READ_RESOURCE_SUCCESS,
 				socialLoginPageUrl);
 	}
-
-	@PostMapping("/login")
-	public ResponseEntity<Void> login() {
-		return ResponseEntity.ok(null);
-	}
-
-	@PostMapping("/signup")
-	public ResponseEntity<Void> signup() {
-		return ResponseEntity.ok(null);
-	}
 }
