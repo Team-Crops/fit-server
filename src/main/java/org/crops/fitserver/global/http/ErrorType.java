@@ -8,6 +8,13 @@ import org.springframework.http.HttpStatus;
 public enum ErrorType {
 
 	/**
+	 * 400 BAD REQUEST
+	 */
+	INVALID_INPUT_EXCEPTION(HttpStatus.BAD_REQUEST, "잘못된 요청입니다"),
+	INVALID_PASSWORD_EXCEPTION(HttpStatus.BAD_REQUEST, "잘못된 비밀번호입니다."),
+	INVALID_ARGUMENT_EXCEPTION(HttpStatus.BAD_REQUEST, "잘못된 인자가 입력되었습니다."),
+
+	/**
 	 * 401 UNAUTHORIZED
 	 */
 	UNAUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "인증되지 않은 사용자입니다."),
@@ -32,6 +39,7 @@ public enum ErrorType {
 	 * 500 INTERNAL SERVER ERROR
 	 */
 	INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러가 발생했습니다"),
+	UNSUPPORTED_SOCIAL_PLATFORM_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "지원하지 않는 소셜 플랫폼입니다."),
 
 	;
 	private final HttpStatus httpStatus;

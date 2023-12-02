@@ -27,6 +27,11 @@ public class GoogleOAuthServiceImpl implements OAuthService {
 	private final UserRepository userRepository;
 
 	@Override
+	public boolean support(SocialPlatform socialPlatform) {
+		return socialPlatform == SocialPlatform.GOOGLE;
+	}
+
+	@Override
 	public User socialUserLogin(
 			String redirectUri,
 			String authorizationCode) {

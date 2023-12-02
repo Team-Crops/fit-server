@@ -27,6 +27,11 @@ public class KakaoOAuthServiceImpl implements OAuthService {
 	private final UserRepository userRepository;
 
 	@Override
+	public boolean support(SocialPlatform socialPlatform) {
+		return socialPlatform == SocialPlatform.KAKAO;
+	}
+
+	@Override
 	public User socialUserLogin(
 			String redirectUrl,
 			String authorizationCode) {

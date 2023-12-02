@@ -1,12 +1,10 @@
 package org.crops.fitserver.auth.service.provider;
 
-import java.util.HashMap;
-import java.util.Map;
-import javax.annotation.PostConstruct;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.auth.service.OAuthService;
-import org.crops.fitserver.auth.service.impl.GoogleOAuthServiceImpl;
-import org.crops.fitserver.auth.service.impl.KakaoOAuthServiceImpl;
+import org.crops.fitserver.global.exception.FitException;
+import org.crops.fitserver.global.http.ErrorType;
 import org.crops.fitserver.user.domain.SocialPlatform;
 import org.springframework.stereotype.Component;
 
@@ -14,18 +12,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OAuthServiceProvider {
 
-	private static final Map<SocialPlatform, OAuthService> socialServiceMap = new HashMap<>();
-
-	private final KakaoOAuthServiceImpl kakaoOAuthServiceImpl;
-	private final GoogleOAuthServiceImpl googleOAuthServiceImpl;
-
-	@PostConstruct
-	private void initOAuthService() {
-		socialServiceMap.put(SocialPlatform.KAKAO, kakaoOAuthServiceImpl);
-		socialServiceMap.put(SocialPlatform.GOOGLE, googleOAuthServiceImpl);
-	}
+	private final List<OAuthService> socialServices;
 
 	public OAuthService getOAuthService(SocialPlatform socialPlatform) {
-		return socialServiceMap.get(socialPlatform);
+		for (OAuthService oAuthService : socialServices) {
+			if (oAuthService.support(socialPlatform)) {
+				return oAuthService;
+			}
+		}
+		throw new FitException(ErrorType.UNSUPPORTED_SOCIAL_PLATFORM_EXCEPTION);
 	}
 }
