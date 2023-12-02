@@ -1,5 +1,6 @@
-name: CI to ${{ inputs.deploy_target }} by @${{ github.actor }}
-run-name: Integration to ${{ inputs.deploy_target }} by @${{ github.actor }}
+name: CI
+run-name: . ${{ github.actor }} . ${{ github.base_ref }} . ${{ github.head_ref }} . ${{ github.ref }} . ${{ github.event_name }} .  ${{ github.run_number }} . ${{ github.sha }} . ${{ github.triggering_actor }}
+#run-name: Integration to ${{ inputs.deploy_target }} by @${{ github.actor }}/
 
 on:
   push:
@@ -27,9 +28,8 @@ jobs:
 
       - name: Create application.yml
         run: |
-          pwd
-          touch src/main/resources/application-dev.yml
-          echo "${{ secrets.APPLICATION_DEV }}" >> src/main/resources/application-prod.yml
+          touch ./src/main/resources/application.yml
+          echo "${{ secrets.CI_APPLICATION_YML }}" >> ./src/main/resources/application.yml
         shell: bash
 
       - name: Grant execute permission for gradlew
