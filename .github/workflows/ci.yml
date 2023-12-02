@@ -1,6 +1,7 @@
 name: CI
-run-name: . ${{ github.ref }} . ${{ github.event_name }}
-#  .  ${{ github.run_number }} . ${{ github.sha }} . ${{ github.triggering_actor }}
+run-name:  .  ${{ github.run_number }} . ${{ github.sha }} . ${{ github.triggering_actor }}
+#  . ${{ github.ref }}
+#  . ${{ github.event_name }}  - push
 #run-name: Integration to ${{ inputs.deploy_target }} by @${{ github.actor }}/
 
 on:
