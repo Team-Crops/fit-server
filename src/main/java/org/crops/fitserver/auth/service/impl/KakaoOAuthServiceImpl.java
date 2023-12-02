@@ -14,6 +14,7 @@ import org.crops.fitserver.user.domain.User;
 import org.crops.fitserver.user.repository.SocialUserInfoRepository;
 import org.crops.fitserver.user.repository.UserRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -32,6 +33,7 @@ public class KakaoOAuthServiceImpl implements OAuthService {
 	}
 
 	@Override
+	@Transactional
 	public User socialUserLogin(
 			String redirectUrl,
 			String authorizationCode) {
