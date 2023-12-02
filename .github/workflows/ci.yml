@@ -1,5 +1,7 @@
 name: CI
-run-name: . ${{ github.actor }} . ${{ github.base_ref }} . ${{ github.head_ref }} . ${{ github.ref }} . ${{ github.event_name }} .  ${{ github.run_number }} . ${{ github.sha }} . ${{ github.triggering_actor }}
+run-name: . ${{ github.base_ref }} . ${{ github.head_ref }}
+#  . ${{ github.ref }} . ${{ github.event_name }}
+#  .  ${{ github.run_number }} . ${{ github.sha }} . ${{ github.triggering_actor }}
 #run-name: Integration to ${{ inputs.deploy_target }} by @${{ github.actor }}/
 
 on:
