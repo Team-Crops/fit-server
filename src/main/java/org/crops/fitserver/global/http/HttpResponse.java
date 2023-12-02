@@ -1,22 +1,21 @@
 package org.crops.fitserver.global.http;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @Slf4j
 public class HttpResponse {
 
-	public static ResponseEntity<Void> success(SuccessType successType){
-		log.info(successType.getMessage());
+	public static ResponseEntity<Void> success(HttpStatus httpStatus){
 		return ResponseEntity
-				.status(successType.getHttpStatus())
+				.status(httpStatus)
 				.build();
 	}
 
-	public static <T> ResponseEntity<T> success(SuccessType successType, T data){
-		log.info(successType.getMessage());
+	public static <T> ResponseEntity<T> success(HttpStatus httpStatus, T data){
 		return ResponseEntity
-				.status(successType.getHttpStatus())
+				.status(httpStatus)
 				.body(data);
 	}
 
