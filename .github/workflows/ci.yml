@@ -1,6 +1,5 @@
-name: CI
-run-name: . ${{ github.ref }} . ${{ github.ref_name }} . ${{ github.base_ref }} . ${{ github.event_name }}  - push
-#run-name: Integration to ${{ inputs.deploy_target }} by @${{ github.actor }}/
+name: Integration
+run-name: ${{ github.event_name }} to ${{ github.ref_name }} by @${{ github.actor }}Z
 
 on:
   push:
