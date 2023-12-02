@@ -1,5 +1,5 @@
 name: Automatic Reviewer Assignment
-run-name: Assign Reviewer to ${{ github.ref_name }} || ${{ github.base_ref }} pr by @${{ github.actor }}
+run-name: Assign reviewer ${{ github.base_ref }} pull request by @${{ github.actor }}
 
 on:
   pull_request:
@@ -15,4 +15,4 @@ jobs:
           assignees: ${{ github.actor }}
           reviewers: ${{ vars.REVIEWERS }}
           ready-comment: '코드 리뷰 준비중. 💬 <reviewers>'
-          merged-comment: '성공적으로 Merge 되었습니다. :tada: 리뷰 고마워요. <reviewers> '
+          merged-comment: '성공적으로 Merge 되었습니다. 🎉 리뷰 고마워요. <reviewers> '
