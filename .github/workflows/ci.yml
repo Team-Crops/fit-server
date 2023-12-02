@@ -1,14 +1,12 @@
 name: CI
-run-name:  .  ${{ github.run_number }} . ${{ github.sha }} . ${{ github.triggering_actor }}
-#  . ${{ github.ref }}
-#  . ${{ github.event_name }}  - push
+run-name: . ${{ github.ref }} . ${{ github.ref_name }} . ${{ github.base_ref }} . ${{ github.event_name }}  - push
 #run-name: Integration to ${{ inputs.deploy_target }} by @${{ github.actor }}/
 
 on:
   push:
-    branches: [ master, hotfix/**, releases/**, develop, feature/**]
+    branches: [ master, hotfix/**, releases/**, develop, feature/** ]
   pull_request:
-    branches: [ master, hotfix/**, releases/**, develop, feature/**]
+    branches: [ master, hotfix/**, releases/**, develop, feature/** ]
 
 permissions:
   contents: read
