@@ -11,6 +11,7 @@ import org.crops.fitserver.global.feign.oauth.kakao.KakaoServerClient;
 import org.crops.fitserver.user.domain.SocialPlatform;
 import org.crops.fitserver.user.domain.SocialUserInfo;
 import org.crops.fitserver.user.domain.User;
+import org.crops.fitserver.user.domain.UserRole;
 import org.crops.fitserver.user.repository.SocialUserInfoRepository;
 import org.crops.fitserver.user.repository.UserRepository;
 import org.springframework.stereotype.Component;
@@ -57,7 +58,7 @@ public class KakaoOAuthServiceImpl implements OAuthService {
 				.orElseGet(
 						() -> {
 							User newUser = userRepository.save(
-									User.newInstance());
+									User.from(UserRole.NON_MEMBER));
 							return socialUserInfoRepository.save(
 									SocialUserInfo.newInstance(
 											newUser,

@@ -57,7 +57,7 @@ public class SecurityConfig {
 				.requestMatchers(new AntPathRequestMatcher("/admin/**"))
 				.hasAuthority("ADMIN")
 				.anyRequest()
-				.authenticated();
+				.hasAnyAuthority("USER", "MANAGER", "ADMIN");
 		return http.build();
 	}
 

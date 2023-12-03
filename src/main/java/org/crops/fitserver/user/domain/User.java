@@ -57,19 +57,13 @@ public class User extends BaseTimeEntity {
 	@Column(length = 100)
 	private String career;
 
-	@Column(nullable = false)
-	@ColumnDefault("false")
-	private boolean isRest;
-
-	@Column(nullable = false)
-	@ColumnDefault("false")
-	private boolean isValid;
-
 	@OneToOne(mappedBy = "user")
 	private SocialUserInfo socialUserInfo;
 
-	public static User newInstance() {
-		return new User();
+	public static User from(UserRole userRole) {
+		return User.builder()
+			.userRole(userRole)
+			.build();
 	}
 }
 
