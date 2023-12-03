@@ -26,12 +26,12 @@ public class AuthController {
 	public ResponseEntity<TokenResponse> socialLogin(
 			HttpServletRequest request,
 			@RequestParam(name = "code") String code,
-			@PathVariable(name = "socialPlatform") String socialPlatform
+			@PathVariable(name = "socialPlatform") SocialPlatform socialPlatform
 	) {
 		TokenResponse tokenResponse = authFacade.socialLogin(
 				request.getRequestURL().toString(),
 				code,
-				SocialPlatform.of(socialPlatform));
+				socialPlatform);
 		return HttpResponse.success(
 				HttpStatus.OK,
 				tokenResponse);
@@ -39,10 +39,10 @@ public class AuthController {
 
 	@GetMapping("/social/{socialPlatform}/login-page")
 	public ResponseEntity<SocialLoginPageResponse> getSocialLoginPageUrl(
-			@PathVariable(name = "socialPlatform") String socialPlatform
+			@PathVariable(name = "socialPlatform") SocialPlatform socialPlatform
 	) {
 		SocialLoginPageResponse socialLoginPageResponse = authFacade.getSocialLoginPageUrl(
-				SocialPlatform.of(socialPlatform));
+				socialPlatform);
 		return HttpResponse.success(
 				HttpStatus.OK,
 				socialLoginPageResponse);
