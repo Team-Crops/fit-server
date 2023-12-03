@@ -48,7 +48,7 @@ public class SampleControllerTest {
 
     @Test
     public void sample() throws Exception {
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/sample"))
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/sample"))
                 .andExpect(status().is2xxSuccessful())
                 .andDo(document("sample",
                                 resource(
