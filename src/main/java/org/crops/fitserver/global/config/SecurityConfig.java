@@ -70,7 +70,8 @@ public class SecurityConfig {
 					.requestMatchers(
 							new AntPathRequestMatcher(
 									"/v1/auth/social/**",
-									HttpMethod.GET.name())
+									HttpMethod.GET.name()),
+							new AntPathRequestMatcher("/h2-console/**")
 					);
 		};
 	}
