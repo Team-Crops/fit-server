@@ -9,6 +9,10 @@ import java.util.UUID;
 import org.jboss.logging.MDC;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+
+/**
+ * 가장 상위부터 UUID를 부여하기 위해 Filter 사용 (error 발생시에도 UUID가 부여되어야 하기 때문에)
+ */
 public class LogFilter extends OncePerRequestFilter {
 
     public static final String DEFAULT_MDC_UUID_KEY = "MDC_UUID";

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
   <property name="LOG_PATTERN"
-    value="%green(%d{yyyy-MM-dd HH:mm:ss}) %magenta([%-10X{MDC_UUID}]) %highlight(%-5level) %cyan(%-40.40logger{39}) : %msg%ex%n"/>
+    value="%green(%d{yyyy-MM-dd HH:mm:ss}) %magenta([%-10X{MDC_UUID}]) %highlight(%-5level) %cyan(%-40.40logger{39}) : %msg%n%ex"/>
   <property name="LOG_PATTERN_WITHOUT_COLOR"
-    value="%d{yyyy-MM-dd HH:mm:ss} [%-10.10X{MDC_UUID}] %-5level %-40.40logger{39} : %msg%n "/>
+    value="%d{yyyy-MM-dd HH:mm:ss} [%-10.10X{MDC_UUID}] %-5level %-40.40logger{39} : %msg%n%ex"/>
 
   <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
