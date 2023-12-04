@@ -23,7 +23,7 @@ public class LogRequestFilter extends OncePerRequestFilter {
         var requestMethod = request.getMethod();
         var requestURN = request.getRequestURI() + (request.getQueryString() != null ? "?"
                 + request.getQueryString() : "");
-        log.info(requestMethod + " " + requestURN + ", requestBody: " + requestBody);
+        log.info("{} {}, requestBody: {}", requestMethod, requestURN, requestBody);
 
         filterChain.doFilter(request, response);
     }
