@@ -70,6 +70,8 @@ out/
 ### application.yml ###
 application.yaml
 application-*.yaml
+!application-dev.yaml
+!application-prod.yaml
 
 ### secret ###
 secret
