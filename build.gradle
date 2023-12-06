@@ -3,6 +3,7 @@ import org.hidetake.gradle.swagger.generator.GenerateSwaggerUI
 buildscript {
     ext {
         restdocsApiSpecVersion = '0.19.0'
+        jjwtVersion = '0.11.5'
     }
 }
 
@@ -22,6 +23,14 @@ swaggerSources {
 
 group = 'org.crops'
 version = '0.0.1-SNAPSHOT'
+
+bootJar {
+    archivesBaseName = 'app'
+    archiveFileName = 'app.jar'
+    enabled = true
+}
+
+jar { enabled = false }
 
 java {
     sourceCompatibility = '17'
@@ -56,9 +65,9 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.3'
 
     // jwt
-    runtimeOnly "io.jsonwebtoken:jjwt-impl:0.11.5"
-    runtimeOnly "io.jsonwebtoken:jjwt-jackson:0.11.5"
-    implementation "io.jsonwebtoken:jjwt-api:0.11.5"
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
+    implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
 
     implementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     implementation "com.epages:restdocs-api-spec:${restdocsApiSpecVersion}"
