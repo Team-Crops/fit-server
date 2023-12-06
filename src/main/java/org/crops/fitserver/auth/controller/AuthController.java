@@ -20,31 +20,31 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1/auth")
 public class AuthController {
 
-	private final AuthFacade authFacade;
+  private final AuthFacade authFacade;
 
-	@GetMapping("/social/{socialPlatform}/login")
-	public ResponseEntity<TokenResponse> socialLogin(
-			HttpServletRequest request,
-			@RequestParam(name = "code") String code,
-			@PathVariable(name = "socialPlatform") SocialPlatform socialPlatform
-	) {
-		TokenResponse tokenResponse = authFacade.socialLogin(
-				request.getRequestURL().toString(),
-				code,
-				socialPlatform);
-		return HttpResponse.success(
-				HttpStatus.OK,
-				tokenResponse);
-	}
+  @GetMapping("/social/{socialPlatform}/login")
+  public ResponseEntity<TokenResponse> socialLogin(
+      HttpServletRequest request,
+      @RequestParam(name = "code") String code,
+      @PathVariable(name = "socialPlatform") SocialPlatform socialPlatform
+  ) {
+    TokenResponse tokenResponse = authFacade.socialLogin(
+        request.getRequestURL().toString(),
+        code,
+        socialPlatform);
+    return HttpResponse.success(
+        HttpStatus.OK,
+        tokenResponse);
+  }
 
-	@GetMapping("/social/{socialPlatform}/login-page")
-	public ResponseEntity<SocialLoginPageResponse> getSocialLoginPageUrl(
-			@PathVariable(name = "socialPlatform") SocialPlatform socialPlatform
-	) {
-		SocialLoginPageResponse socialLoginPageResponse = authFacade.getSocialLoginPageUrl(
-				socialPlatform);
-		return HttpResponse.success(
-				HttpStatus.OK,
-				socialLoginPageResponse);
-	}
+  @GetMapping("/social/{socialPlatform}/login-page")
+  public ResponseEntity<SocialLoginPageResponse> getSocialLoginPageUrl(
+      @PathVariable(name = "socialPlatform") SocialPlatform socialPlatform
+  ) {
+    SocialLoginPageResponse socialLoginPageResponse = authFacade.getSocialLoginPageUrl(
+        socialPlatform);
+    return HttpResponse.success(
+        HttpStatus.OK,
+        socialLoginPageResponse);
+  }
 }

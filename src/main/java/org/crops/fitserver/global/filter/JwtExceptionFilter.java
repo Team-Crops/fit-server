@@ -19,36 +19,36 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @RequiredArgsConstructor
 public class JwtExceptionFilter extends OncePerRequestFilter {
 
-	private final ObjectMapper objectMapper;
+  private final ObjectMapper objectMapper;
 
-	@Override
-	protected void doFilterInternal(
-			HttpServletRequest request,
-			HttpServletResponse response,
-			FilterChain filterChain) throws ServletException, IOException {
-		try {
-			filterChain.doFilter(request, response);
-		} catch (Exception e) {
-			responseError(
-					response,
-					ErrorType.INTERNAL_SERVER_ERROR,
-					ErrorType.INTERNAL_SERVER_ERROR.getMessage());
-			log.error(e.getMessage());
-		}
-	}
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      FilterChain filterChain) throws ServletException, IOException {
+    try {
+      filterChain.doFilter(request, response);
+    } catch (Exception e) {
+      responseError(
+          response,
+          ErrorType.INTERNAL_SERVER_ERROR,
+          ErrorType.INTERNAL_SERVER_ERROR.getMessage());
+      log.error(e.getMessage());
+    }
+  }
 
-	private void responseError(
-			HttpServletResponse response,
-			ErrorType errorType,
-			String message)
-			throws IOException {
-		response.setStatus(errorType.getStatusCode());
-		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-		response.setCharacterEncoding("UTF-8");
-		response.getWriter()
-				.write(objectMapper.writeValueAsString(
-						new FailResponse(
-								errorType.getStatusCode(),
-								message)));
-	}
+  private void responseError(
+      HttpServletResponse response,
+      ErrorType errorType,
+      String message)
+      throws IOException {
+    response.setStatus(errorType.getStatusCode());
+    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+    response.setCharacterEncoding("UTF-8");
+    response.getWriter()
+        .write(objectMapper.writeValueAsString(
+            new FailResponse(
+                errorType.getStatusCode(),
+                message)));
+  }
 }

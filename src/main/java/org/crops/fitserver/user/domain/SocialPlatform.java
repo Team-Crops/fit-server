@@ -9,15 +9,15 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum SocialPlatform {
 
-	KAKAO("kakao"),
-	GOOGLE("google"),
-	;
-	private final String name;
+  KAKAO("kakao"),
+  GOOGLE("google"),
+  ;
+  private final String name;
 
-	public static SocialPlatform of(String name) {
-		return Arrays.stream(SocialPlatform.values())
-				.filter(socialPlatform -> socialPlatform.name.equals(name))
-				.findFirst()
-				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 소셜 플랫폼입니다."));
-	}
+  public static SocialPlatform of(String name) {
+    return Arrays.stream(SocialPlatform.values())
+        .filter(socialPlatform -> socialPlatform.name.equals(name))
+        .findFirst()
+        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 소셜 플랫폼입니다."));
+  }
 }

@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class BusinessExceptionHandler {
 
-    @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
-        log.error("BusinessException : {}", e.getErrorCode().getMessage(), e);
-        return ErrorResponse.toResponseEntity(e.getErrorCode());
-    }
+  @ExceptionHandler(BusinessException.class)
+  public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
+    log.error("BusinessException : {}", e.getErrorCode().getMessage(), e);
+    return ErrorResponse.toResponseEntity(e.getErrorCode());
+  }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(Exception e) {
-        log.error("Exception : {}", e.getMessage(), e);
-        return ErrorResponse.toResponseEntity(ErrorCode.INTERNAL_SERVER_ERROR);
-    }
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ErrorResponse> handleException(Exception e) {
+    log.error("Exception : {}", e.getMessage(), e);
+    return ErrorResponse.toResponseEntity(ErrorCode.INTERNAL_SERVER_ERROR);
+  }
 }

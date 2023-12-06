@@ -5,8 +5,8 @@ import org.springframework.core.convert.converter.Converter;
 
 public class SocailPlatformRequestConverter implements Converter<String, SocialPlatform> {
 
-	@Override
-	public SocialPlatform convert(String socialPlatform) {
-		return SocialPlatform.of(socialPlatform);
-	}
+  @Override
+  public SocialPlatform convert(String socialPlatform) {
+    return SocialPlatform.of(socialPlatform);
+  }
 }

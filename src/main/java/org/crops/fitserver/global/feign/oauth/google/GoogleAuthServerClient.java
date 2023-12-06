@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "googleAuthServerClient", url = "https://oauth2.googleapis.com")
 public interface GoogleAuthServerClient {
 
-	@PostMapping(value = "/token", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	OAuthToken getOAuth2AccessToken(
-			@RequestHeader(HttpHeaders.CONTENT_TYPE) String contentType,
-			@RequestParam("grant_type") String grantType,
-			@RequestParam("client_id") String clientId,
-			@RequestParam("client_secret") String clientSecret,
-			@RequestParam("redirect_uri") String redirectUri,
-			@RequestParam("code") String code
-	);
+  @PostMapping(value = "/token", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+  OAuthToken getOAuth2AccessToken(
+      @RequestHeader(HttpHeaders.CONTENT_TYPE) String contentType,
+      @RequestParam("grant_type") String grantType,
+      @RequestParam("client_id") String clientId,
+      @RequestParam("client_secret") String clientSecret,
+      @RequestParam("redirect_uri") String redirectUri,
+      @RequestParam("code") String code
+  );
 }

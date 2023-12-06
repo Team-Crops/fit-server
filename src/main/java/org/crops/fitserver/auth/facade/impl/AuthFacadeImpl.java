@@ -17,26 +17,26 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AuthFacadeImpl implements AuthFacade {
 
-	private final OAuthServiceProvider oAuthServiceProvider;
-	private final JwtProvider jwtProvider;
+  private final OAuthServiceProvider oAuthServiceProvider;
+  private final JwtProvider jwtProvider;
 
-	@Override
-	@Transactional
-	public TokenResponse socialLogin(String redirectUrl, String authorizationCode,
-			SocialPlatform socialPlatform) {
-		OAuthService oAuthService = oAuthServiceProvider.getOAuthService(socialPlatform);
-		User user = oAuthService.socialUserLogin(
-				redirectUrl,
-				authorizationCode);
-		return TokenResponse.of(
-				jwtProvider.createTokenCollection(
-						TokenInfo.from(user)));
-	}
+  @Override
+  @Transactional
+  public TokenResponse socialLogin(String redirectUrl, String authorizationCode,
+      SocialPlatform socialPlatform) {
+    OAuthService oAuthService = oAuthServiceProvider.getOAuthService(socialPlatform);
+    User user = oAuthService.socialUserLogin(
+        redirectUrl,
+        authorizationCode);
+    return TokenResponse.of(
+        jwtProvider.createTokenCollection(
+            TokenInfo.from(user)));
+  }
 
-	@Override
-	@Transactional(readOnly = true)
-	public SocialLoginPageResponse getSocialLoginPageUrl(SocialPlatform socialPlatform) {
-		OAuthService oAuthService = oAuthServiceProvider.getOAuthService(socialPlatform);
-		return SocialLoginPageResponse.from(oAuthService.getLoginPageUrl());
-	}
+  @Override
+  @Transactional(readOnly = true)
+  public SocialLoginPageResponse getSocialLoginPageUrl(SocialPlatform socialPlatform) {
+    OAuthService oAuthService = oAuthServiceProvider.getOAuthService(socialPlatform);
+    return SocialLoginPageResponse.from(oAuthService.getLoginPageUrl());
+  }
 }

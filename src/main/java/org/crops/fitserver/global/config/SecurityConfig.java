@@ -29,99 +29,99 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-	private final JwtExceptionFilter jwtExceptionFilter;
-	private final JwtAccessDeniedHandler customAccessDeniedHandler;
-	private final HeaderTokenExtractor headerTokenExtractor;
-	private final PrincipalDetailsService principalDetailsService;
-	private final JwtResolver jwtResolver;
+  private final JwtExceptionFilter jwtExceptionFilter;
+  private final JwtAccessDeniedHandler customAccessDeniedHandler;
+  private final HeaderTokenExtractor headerTokenExtractor;
+  private final PrincipalDetailsService principalDetailsService;
+  private final JwtResolver jwtResolver;
 
-	private static final String[] apiDocumentPatterns = {
-			"/swagger-resources/**",
-			"/swagger-ui.html",
-			"/swagger-ui/**",
-			"/v3/api-docs/**",
-			"/api-docs/**",
-			"/webjars/**",
-			"/docs/**"
-	};
+  private static final String[] apiDocumentPatterns = {
+      "/swagger-resources/**",
+      "/swagger-ui.html",
+      "/swagger-ui/**",
+      "/v3/api-docs/**",
+      "/api-docs/**",
+      "/webjars/**",
+      "/docs/**"
+  };
 
-	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		JwtAuthenticationFilter jwtAuthenticationFilter =
-				new JwtAuthenticationFilter(
-						principalDetailsService,
-						headerTokenExtractor,
-						jwtResolver);
-		http
-				.addFilterBefore(jwtAuthenticationFilter,
-						UsernamePasswordAuthenticationFilter.class)
-				.addFilterBefore(jwtExceptionFilter,
-						JwtAuthenticationFilter.class)
-				.exceptionHandling(
-						exceptionHandling -> exceptionHandling
-								.accessDeniedHandler(customAccessDeniedHandler)
-				)
-				.sessionManagement(
-						sessionManagement -> sessionManagement
-								.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-				)
-				.httpBasic(
-						AbstractHttpConfigurer::disable
-				)
-				.csrf(
-						AbstractHttpConfigurer::disable
-				);
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    JwtAuthenticationFilter jwtAuthenticationFilter =
+        new JwtAuthenticationFilter(
+            principalDetailsService,
+            headerTokenExtractor,
+            jwtResolver);
+    http
+        .addFilterBefore(jwtAuthenticationFilter,
+            UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(jwtExceptionFilter,
+            JwtAuthenticationFilter.class)
+        .exceptionHandling(
+            exceptionHandling -> exceptionHandling
+                .accessDeniedHandler(customAccessDeniedHandler)
+        )
+        .sessionManagement(
+            sessionManagement -> sessionManagement
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        )
+        .httpBasic(
+            AbstractHttpConfigurer::disable
+        )
+        .csrf(
+            AbstractHttpConfigurer::disable
+        );
 
-		http.authorizeHttpRequests(
-				authorize -> authorize
-						.requestMatchers(new AntPathRequestMatcher("/manager/**"))
-						.hasAnyAuthority("MANAGER", "ADMIN")
-						.requestMatchers(new AntPathRequestMatcher("/admin/**"))
-						.hasAuthority("ADMIN")
-						.anyRequest()
-						.hasAnyAuthority("USER", "MANAGER", "ADMIN")
-		);
+    http.authorizeHttpRequests(
+        authorize -> authorize
+            .requestMatchers(new AntPathRequestMatcher("/manager/**"))
+            .hasAnyAuthority("MANAGER", "ADMIN")
+            .requestMatchers(new AntPathRequestMatcher("/admin/**"))
+            .hasAuthority("ADMIN")
+            .anyRequest()
+            .hasAnyAuthority("USER", "MANAGER", "ADMIN")
+    );
 
-		return http.build();
-	}
+    return http.build();
+  }
 
-	@Bean
-	public WebSecurityCustomizer webSecurityCustomizer() {
-		return web -> {
-			web.ignoring()
-					.requestMatchers(apiDocumentPatterns)
-					.requestMatchers("/actuator/**")
-					.requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-					.requestMatchers(
-							new AntPathRequestMatcher(
-									"/v1/auth/social/**",
-									HttpMethod.GET.name()),
-							new AntPathRequestMatcher("/h2-console/**")
-					);
-		};
-	}
+  @Bean
+  public WebSecurityCustomizer webSecurityCustomizer() {
+    return web -> {
+      web.ignoring()
+          .requestMatchers(apiDocumentPatterns)
+          .requestMatchers("/actuator/**")
+          .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+          .requestMatchers(
+              new AntPathRequestMatcher(
+                  "/v1/auth/social/**",
+                  HttpMethod.GET.name()),
+              new AntPathRequestMatcher("/h2-console/**")
+          );
+    };
+  }
 
-	@Bean
-	protected CorsConfigurationSource corsConfigurationSource() {
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", getDefaultCorsConfiguration());
-		return source;
-	}
+  @Bean
+  protected CorsConfigurationSource corsConfigurationSource() {
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", getDefaultCorsConfiguration());
+    return source;
+  }
 
-	private CorsConfiguration getDefaultCorsConfiguration() {
-		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("https://api.f-it.com"));
-		configuration.setAllowedMethods(
-				Arrays.asList(
-						HttpMethod.GET.name(),
-						HttpMethod.POST.name(),
-						HttpMethod.PUT.name(),
-						HttpMethod.PATCH.name(),
-						HttpMethod.DELETE.name()));
-		configuration.setAllowedHeaders(Arrays.asList("*"));
-		configuration.setExposedHeaders(Arrays.asList("Refresh-Token"));
-		configuration.setAllowCredentials(true);
-		configuration.setMaxAge(3600L);
-		return configuration;
-	}
+  private CorsConfiguration getDefaultCorsConfiguration() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(Arrays.asList("https://api.f-it.com"));
+    configuration.setAllowedMethods(
+        Arrays.asList(
+            HttpMethod.GET.name(),
+            HttpMethod.POST.name(),
+            HttpMethod.PUT.name(),
+            HttpMethod.PATCH.name(),
+            HttpMethod.DELETE.name()));
+    configuration.setAllowedHeaders(Arrays.asList("*"));
+    configuration.setExposedHeaders(Arrays.asList("Refresh-Token"));
+    configuration.setAllowCredentials(true);
+    configuration.setMaxAge(3600L);
+    return configuration;
+  }
 }
