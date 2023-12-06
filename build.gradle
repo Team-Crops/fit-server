@@ -102,5 +102,7 @@ tasks.withType(Jar).configureEach {
 
 tasks.named('test') {
     useJUnitPlatform()
+    //./gradlew {taskName} -Dspring.profiles.active=local 와 같이 실행하면 test에 profile을 넘겨줄 수 있다.
+    systemProperty 'spring.profiles.active', System.getProperty('spring.profiles.active')
 }
 
