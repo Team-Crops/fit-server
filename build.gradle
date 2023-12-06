@@ -51,7 +51,7 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     implementation 'com.h2database:h2'// open feign
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:3.1.7'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.3'
     implementation "io.github.openfeign:feign-httpclient:11.9.1"
 
     // jwt
