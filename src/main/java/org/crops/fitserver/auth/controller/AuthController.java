@@ -1,6 +1,6 @@
 package org.crops.fitserver.auth.controller;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.auth.facade.dto.SocialLoginPageResponse;
 import org.crops.fitserver.global.http.HttpResponse;
