@@ -21,57 +21,57 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class GoogleOAuthServiceImpl implements OAuthService {
 
-	private final JwtProperty jwtProperty;
-	private final GoogleAuthServerClient googleAuthServerClient;
-	private final GoogleServerClient googleServerClient;
-	private final GoogleClientProperty googleClientProperty;
-	private final SocialUserInfoRepository socialUserInfoRepository;
-	private final UserRepository userRepository;
+  private final JwtProperty jwtProperty;
+  private final GoogleAuthServerClient googleAuthServerClient;
+  private final GoogleServerClient googleServerClient;
+  private final GoogleClientProperty googleClientProperty;
+  private final SocialUserInfoRepository socialUserInfoRepository;
+  private final UserRepository userRepository;
 
-	@Override
-	public boolean support(SocialPlatform socialPlatform) {
-		return socialPlatform == SocialPlatform.GOOGLE;
-	}
+  @Override
+  public boolean support(SocialPlatform socialPlatform) {
+    return socialPlatform == SocialPlatform.GOOGLE;
+  }
 
-	@Override
-	@Transactional
-	public User socialUserLogin(
-			String redirectUri,
-			String authorizationCode) {
+  @Override
+  @Transactional
+  public User socialUserLogin(
+      String redirectUri,
+      String authorizationCode) {
 
-		OAuthToken oAuthToken = googleAuthServerClient.getOAuth2AccessToken(
-				googleClientProperty.getContentType(),
-				googleClientProperty.getGrantType(),
-				googleClientProperty.getClientId(),
-				googleClientProperty.getClientSecret(),
-				redirectUri,
-				authorizationCode);
+    OAuthToken oAuthToken = googleAuthServerClient.getOAuth2AccessToken(
+        googleClientProperty.getContentType(),
+        googleClientProperty.getGrantType(),
+        googleClientProperty.getClientId(),
+        googleClientProperty.getClientSecret(),
+        redirectUri,
+        authorizationCode);
 
-		GoogleSocialUserProfile socialUserProfile = googleServerClient.getUserInformation(
-				jwtProperty.getBearerPrefix() + oAuthToken.getAccessToken());
+    GoogleSocialUserProfile socialUserProfile = googleServerClient.getUserInformation(
+        jwtProperty.getBearerPrefix() + oAuthToken.getAccessToken());
 
-		String socialCode = SocialUserInfo.calculateSocialCode(
-				SocialPlatform.GOOGLE,
-				socialUserProfile.getSub());
+    String socialCode = SocialUserInfo.calculateSocialCode(
+        SocialPlatform.GOOGLE,
+        socialUserProfile.getSub());
 
-		SocialUserInfo socialUserInfo = socialUserInfoRepository
-				.findBySocialCode(socialCode)
-				.orElseGet(
-						() -> {
-							User newUser = userRepository.save(
-									User.from(UserRole.NON_MEMBER));
-							return socialUserInfoRepository.save(
-									SocialUserInfo.newInstance(
-											newUser,
-											SocialPlatform.GOOGLE,
-											socialCode));
-						});
+    SocialUserInfo socialUserInfo = socialUserInfoRepository
+        .findBySocialCode(socialCode)
+        .orElseGet(
+            () -> {
+              User newUser = userRepository.save(
+                  User.from(UserRole.NON_MEMBER));
+              return socialUserInfoRepository.save(
+                  SocialUserInfo.newInstance(
+                      newUser,
+                      SocialPlatform.GOOGLE,
+                      socialCode));
+            });
 
-		return socialUserInfo.getUser();
-	}
+    return socialUserInfo.getUser();
+  }
 
-	@Override
-	public String getLoginPageUrl() {
-		return googleClientProperty.getLoginPageUrl();
-	}
+  @Override
+  public String getLoginPageUrl() {
+    return googleClientProperty.getLoginPageUrl();
+  }
 }

@@ -9,12 +9,12 @@ import org.crops.fitserver.global.jwt.TokenCollection;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class TokenResponse {
 
-	private final String accessToken;
-	private final String refreshToken;
+  private final String accessToken;
+  private final String refreshToken;
 
-	public static TokenResponse of(TokenCollection tokenCollection) {
-		return new TokenResponse(
-				tokenCollection.getAccessToken(),
-				tokenCollection.getRefreshToken());
-	}
+  public static TokenResponse of(TokenCollection tokenCollection) {
+    return new TokenResponse(
+        tokenCollection.getAccessToken(),
+        tokenCollection.getRefreshToken());
+  }
 }

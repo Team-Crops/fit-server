@@ -21,56 +21,56 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class KakaoOAuthServiceImpl implements OAuthService {
 
-	private final JwtProperty jwtProperty;
-	private final KakaoAuthServerClient kakaoAuthServerClient;
-	private final KakaoServerClient kakaoServerClient;
-	private final KakaoClientProperty kakaoClientProperty;
-	private final SocialUserInfoRepository socialUserInfoRepository;
-	private final UserRepository userRepository;
+  private final JwtProperty jwtProperty;
+  private final KakaoAuthServerClient kakaoAuthServerClient;
+  private final KakaoServerClient kakaoServerClient;
+  private final KakaoClientProperty kakaoClientProperty;
+  private final SocialUserInfoRepository socialUserInfoRepository;
+  private final UserRepository userRepository;
 
-	@Override
-	public boolean support(SocialPlatform socialPlatform) {
-		return socialPlatform == SocialPlatform.KAKAO;
-	}
+  @Override
+  public boolean support(SocialPlatform socialPlatform) {
+    return socialPlatform == SocialPlatform.KAKAO;
+  }
 
-	@Override
-	@Transactional
-	public User socialUserLogin(
-			String redirectUrl,
-			String authorizationCode) {
+  @Override
+  @Transactional
+  public User socialUserLogin(
+      String redirectUrl,
+      String authorizationCode) {
 
-		OAuthToken oAuthToken = kakaoAuthServerClient.getOAuth2AccessToken(
-				kakaoClientProperty.getContentType(),
-				kakaoClientProperty.getGrantType(),
-				kakaoClientProperty.getClientId(),
-				redirectUrl,
-				authorizationCode);
+    OAuthToken oAuthToken = kakaoAuthServerClient.getOAuth2AccessToken(
+        kakaoClientProperty.getContentType(),
+        kakaoClientProperty.getGrantType(),
+        kakaoClientProperty.getClientId(),
+        redirectUrl,
+        authorizationCode);
 
-		KakaoSocialUserProfile socialUserProfile = kakaoServerClient.getUserInformation(
-				jwtProperty.getBearerPrefix() + oAuthToken.getAccessToken());
+    KakaoSocialUserProfile socialUserProfile = kakaoServerClient.getUserInformation(
+        jwtProperty.getBearerPrefix() + oAuthToken.getAccessToken());
 
-		String socialCode = SocialUserInfo.calculateSocialCode(
-				SocialPlatform.KAKAO,
-				String.valueOf(socialUserProfile.getId()));
+    String socialCode = SocialUserInfo.calculateSocialCode(
+        SocialPlatform.KAKAO,
+        String.valueOf(socialUserProfile.getId()));
 
-		SocialUserInfo socialUserInfo = socialUserInfoRepository
-				.findBySocialCode(socialCode)
-				.orElseGet(
-						() -> {
-							User newUser = userRepository.save(
-									User.from(UserRole.NON_MEMBER));
-							return socialUserInfoRepository.save(
-									SocialUserInfo.newInstance(
-											newUser,
-											SocialPlatform.KAKAO,
-											socialCode));
-						});
+    SocialUserInfo socialUserInfo = socialUserInfoRepository
+        .findBySocialCode(socialCode)
+        .orElseGet(
+            () -> {
+              User newUser = userRepository.save(
+                  User.from(UserRole.NON_MEMBER));
+              return socialUserInfoRepository.save(
+                  SocialUserInfo.newInstance(
+                      newUser,
+                      SocialPlatform.KAKAO,
+                      socialCode));
+            });
 
-		return socialUserInfo.getUser();
-	}
+    return socialUserInfo.getUser();
+  }
 
-	@Override
-	public String getLoginPageUrl() {
-		return kakaoClientProperty.getLoginPageUrl();
-	}
+  @Override
+  public String getLoginPageUrl() {
+    return kakaoClientProperty.getLoginPageUrl();
+  }
 }

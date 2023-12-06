@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GoogleSocialUserProfile {
 
-	private String sub;
-	private String email;
-	private String name;
+  private String sub;
+  private String email;
+  private String name;
 }

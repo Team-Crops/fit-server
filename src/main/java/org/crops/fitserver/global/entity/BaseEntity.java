@@ -12,7 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
 
-	@Column(nullable = false)
-	@ColumnDefault("false")
-	private boolean isDeleted;
+  @Column(nullable = false)
+  @ColumnDefault("false")
+  private boolean isDeleted;
 }
