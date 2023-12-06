@@ -1,10 +1,10 @@
 package org.crops.fitserver.global.filter;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.global.exception.FitException;
@@ -24,52 +24,52 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-	private final PrincipalDetailsService principalDetailsService;
-	private final HeaderTokenExtractor headerTokenExtractor;
-	private final JwtResolver jwtResolver;
+  private final PrincipalDetailsService principalDetailsService;
+  private final HeaderTokenExtractor headerTokenExtractor;
+  private final JwtResolver jwtResolver;
 
-	@Override
-	protected void doFilterInternal(
-			HttpServletRequest request,
-			HttpServletResponse response,
-			FilterChain filterChain) throws ServletException, IOException {
-		String accessToken = headerTokenExtractor.extractAccessToken(request);
-		checkAccessTokenNotNull(accessToken);
-		checkAccessTokenValidation(accessToken);
-		setAuthenticationInSecurityContext(accessToken);
-		filterChain.doFilter(request, response);
-	}
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      FilterChain filterChain) throws ServletException, IOException {
+    String accessToken = headerTokenExtractor.extractAccessToken(request);
+    checkAccessTokenNotNull(accessToken);
+    checkAccessTokenValidation(accessToken);
+    setAuthenticationInSecurityContext(accessToken);
+    filterChain.doFilter(request, response);
+  }
 
-	private static void checkAccessTokenNotNull(String accessToken) {
-		if (!StringUtils.hasText(accessToken)) {
-			log.warn("JWT Token is null : [{}]", accessToken);
-			throw new FitException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
-		}
-	}
+  private static void checkAccessTokenNotNull(String accessToken) {
+    if (!StringUtils.hasText(accessToken)) {
+      log.warn("JWT Token is null : [{}]", accessToken);
+      throw new FitException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
+    }
+  }
 
-	private void checkAccessTokenValidation(String accessToken) {
-		if (!jwtResolver.validateAccessToken(accessToken)) {
-			throw new FitException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
-		}
-	}
+  private void checkAccessTokenValidation(String accessToken) {
+    if (!jwtResolver.validateAccessToken(accessToken)) {
+      throw new FitException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
+    }
+  }
 
-	private void setAuthenticationInSecurityContext(String accessToken) {
-		try {
-			Long userId = jwtResolver.getUserIdFromAccessToken(accessToken);
-			UserDetails userDetails =
-					principalDetailsService.loadUserByUsername(userId.toString());
-			Authentication authentication = getAuthenticationFromUserDetails(userDetails);
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-		} catch (NotFoundException e) {
-			throw new FitException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
-		}
-	}
+  private void setAuthenticationInSecurityContext(String accessToken) {
+    try {
+      Long userId = jwtResolver.getUserIdFromAccessToken(accessToken);
+      UserDetails userDetails =
+          principalDetailsService.loadUserByUsername(userId.toString());
+      Authentication authentication = getAuthenticationFromUserDetails(userDetails);
+      SecurityContextHolder.getContext().setAuthentication(authentication);
+    } catch (NotFoundException e) {
+      throw new FitException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
+    }
+  }
 
-	private static UsernamePasswordAuthenticationToken getAuthenticationFromUserDetails(
-			UserDetails userDetails) {
-		return new UsernamePasswordAuthenticationToken(
-				userDetails,
-				"",
-				userDetails.getAuthorities());
-	}
+  private static UsernamePasswordAuthenticationToken getAuthenticationFromUserDetails(
+      UserDetails userDetails) {
+    return new UsernamePasswordAuthenticationToken(
+        userDetails,
+        "",
+        userDetails.getAuthorities());
+  }
 }

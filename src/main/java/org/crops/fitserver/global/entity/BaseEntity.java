@@ -1,8 +1,8 @@
 package org.crops.fitserver.global.entity;
 
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -12,7 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
 
-	@Column(nullable = false)
-	@ColumnDefault("false")
-	private boolean isDeleted;
+  @Column(nullable = false)
+  @ColumnDefault("false")
+  private boolean isDeleted;
 }

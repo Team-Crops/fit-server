@@ -5,9 +5,9 @@ import org.crops.fitserver.user.domain.SocialUserInfo;
 import org.springframework.data.repository.Repository;
 
 public interface SocialUserInfoRepository extends
-		Repository<SocialUserInfo, Long> {
+    Repository<SocialUserInfo, Long> {
 
-	Optional<SocialUserInfo> findBySocialCode(String socialCode);
+  Optional<SocialUserInfo> findBySocialCode(String socialCode);
 
-	SocialUserInfo save(SocialUserInfo socialUserInfo);
+  SocialUserInfo save(SocialUserInfo socialUserInfo);
 }

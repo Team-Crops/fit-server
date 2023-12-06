@@ -11,9 +11,9 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties("oauth2.client.google")
 public class GoogleClientProperty {
 
-	private String contentType;
-	private String grantType;
-	private String clientId;
-	private String clientSecret;
-	private String loginPageUrl;
+  private String contentType;
+  private String grantType;
+  private String clientId;
+  private String clientSecret;
+  private String loginPageUrl;
 }

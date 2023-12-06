@@ -14,5 +14,5 @@ import lombok.Setter;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class OAuthToken {
 
-	private String accessToken;
+  private String accessToken;
 }

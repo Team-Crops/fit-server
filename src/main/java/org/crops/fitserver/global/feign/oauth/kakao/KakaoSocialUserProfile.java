@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class KakaoSocialUserProfile {
 
-	private Long id;
+  private Long id;
 }

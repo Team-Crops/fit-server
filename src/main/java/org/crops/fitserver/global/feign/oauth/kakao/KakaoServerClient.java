@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 @FeignClient(name = "kakaoApiClient", url = "https://kapi.kakao.com")
 public interface KakaoServerClient {
 
-	@PostMapping(value = "/v2/user/me")
-	KakaoSocialUserProfile getUserInformation(
-			@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken
-	);
+  @PostMapping(value = "/v2/user/me")
+  KakaoSocialUserProfile getUserInformation(
+      @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken
+  );
 }

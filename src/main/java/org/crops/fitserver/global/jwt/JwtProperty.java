@@ -11,9 +11,9 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties("jwt")
 public class JwtProperty {
 
-	private String accessKey;
-	private String refreshKey;
-	private Integer accessExpiredMin;
-	private Integer refreshExpiredDay;
-	private String bearerPrefix;
+  private String accessKey;
+  private String refreshKey;
+  private Integer accessExpiredMin;
+  private Integer refreshExpiredDay;
+  private String bearerPrefix;
 }

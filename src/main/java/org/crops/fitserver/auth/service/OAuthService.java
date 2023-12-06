@@ -6,11 +6,11 @@ import org.crops.fitserver.user.domain.User;
 
 public interface OAuthService {
 
-	boolean support(SocialPlatform socialPlatform);
+  boolean support(SocialPlatform socialPlatform);
 
-	User socialUserLogin(
-			String redirectUrl,
-			String authorizationCode);
+  User socialUserLogin(
+      String redirectUrl,
+      String authorizationCode);
 
-	String getLoginPageUrl();
+  String getLoginPageUrl();
 }

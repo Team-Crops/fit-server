@@ -8,9 +8,9 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class SocialLoginPageResponse {
 
-	private String loginPageUrl;
+  private String loginPageUrl;
 
-	public static SocialLoginPageResponse from(String loginPageUrl) {
-		return new SocialLoginPageResponse(loginPageUrl);
-	}
+  public static SocialLoginPageResponse from(String loginPageUrl) {
+    return new SocialLoginPageResponse(loginPageUrl);
+  }
 }

@@ -11,11 +11,11 @@ import org.crops.fitserver.user.domain.User;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class TokenInfo {
 
-	private Map<String, Object> payload;
+  private Map<String, Object> payload;
 
-	public static TokenInfo from(User user) {
-		Map<String, Object> accessTokenPayload = new HashMap<>();
-		accessTokenPayload.put("userId", user.getId());
-		return new TokenInfo(accessTokenPayload);
-	}
+  public static TokenInfo from(User user) {
+    Map<String, Object> accessTokenPayload = new HashMap<>();
+    accessTokenPayload.put("userId", user.getId());
+    return new TokenInfo(accessTokenPayload);
+  }
 }

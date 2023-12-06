@@ -12,14 +12,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OAuthServiceProvider {
 
-	private final List<OAuthService> socialServices;
+  private final List<OAuthService> socialServices;
 
-	public OAuthService getOAuthService(SocialPlatform socialPlatform) {
-		for (OAuthService oAuthService : socialServices) {
-			if (oAuthService.support(socialPlatform)) {
-				return oAuthService;
-			}
-		}
-		throw new FitException(ErrorType.UNSUPPORTED_SOCIAL_PLATFORM_EXCEPTION);
-	}
+  public OAuthService getOAuthService(SocialPlatform socialPlatform) {
+    for (OAuthService oAuthService : socialServices) {
+      if (oAuthService.support(socialPlatform)) {
+        return oAuthService;
+      }
+    }
+    throw new FitException(ErrorType.UNSUPPORTED_SOCIAL_PLATFORM_EXCEPTION);
+  }
 }

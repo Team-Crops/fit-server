@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 @FeignClient(name = "googleServerClient", url = "https://www.googleapis.com")
 public interface GoogleServerClient {
 
-	@PostMapping(value = "/oauth2/v3/userinfo", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	GoogleSocialUserProfile getUserInformation(
-			@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken
-	);
+  @PostMapping(value = "/oauth2/v3/userinfo", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+  GoogleSocialUserProfile getUserInformation(
+      @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken
+  );
 }

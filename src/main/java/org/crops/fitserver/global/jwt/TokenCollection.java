@@ -8,10 +8,10 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class TokenCollection {
 
-	private final String accessToken;
-	private final String refreshToken;
+  private final String accessToken;
+  private final String refreshToken;
 
-	public static TokenCollection of(String accessToken, String refreshToken) {
-		return new TokenCollection(accessToken, refreshToken);
-	}
+  public static TokenCollection of(String accessToken, String refreshToken) {
+    return new TokenCollection(accessToken, refreshToken);
+  }
 }

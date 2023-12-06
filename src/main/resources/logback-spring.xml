@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+  <property name="LOG_PATTERN"
+    value="%green(%d{yyyy-MM-dd HH:mm:ss}) %magenta([%-10X{MDC_UUID}]) %highlight(%-5level) %cyan(%-40.40logger{39}) : %msg%n%ex"/>
+  <property name="LOG_PATTERN_WITHOUT_COLOR"
+    value="%d{yyyy-MM-dd HH:mm:ss} [%-10.10X{MDC_UUID}] %-5level %-40.40logger{39} : %msg%n%ex"/>
+
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>${LOG_PATTERN}</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder>
+      <pattern>
+        ${LOG_PATTERN_WITHOUT_COLOR}
+      </pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>./log/%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <maxFileSize>10MB</maxFileSize>
+      <maxHistory>${MAX_HISTORY}</maxHistory>
+    </rollingPolicy>
+  </appender>
+
+  <springProfile name="local | (!dev &amp; !prod)">
+    <root level="DEBUG">
+      <appender-ref ref="CONSOLE" />
+    </root>
+  </springProfile>
+  <springProfile name="dev">
+    <root level="INFO">
+      <property name="MAX_HISTORY" value="7" />
+      <appender-ref ref="CONSOLE" />
+      <appender-ref ref="FILE" />
+    </root>
+  </springProfile>
+  <springProfile name="prod">
+    <root level="INFO">
+      <property name="MAX_HISTORY" value="30" />
+      <appender-ref ref="CONSOLE" />
+      <appender-ref ref="FILE" />
+    </root>
+  </springProfile>
+</configuration>
