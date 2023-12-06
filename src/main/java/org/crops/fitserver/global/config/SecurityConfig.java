@@ -89,14 +89,14 @@ public class SecurityConfig {
   public WebSecurityCustomizer webSecurityCustomizer() {
     return web -> {
       web.ignoring()
-          .requestMatchers(apiDocumentPatterns)
-          .requestMatchers("/actuator/**")
-          .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
           .requestMatchers(
-              new AntPathRequestMatcher(
-                  "/v1/auth/social/**",
-                  HttpMethod.GET.name()),
-              new AntPathRequestMatcher("/h2-console/**")
+              Arrays.stream(apiDocumentPatterns)
+                  .map(AntPathRequestMatcher::new)
+                  .toArray(AntPathRequestMatcher[]::new))
+          .requestMatchers(new AntPathRequestMatcher("/actuator/**"))
+          .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+          .requestMatchers(new AntPathRequestMatcher("/v1/auth/social/**"))
+          .requestMatchers(new AntPathRequestMatcher("/h2-console/**")
           );
     };
   }
