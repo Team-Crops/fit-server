@@ -75,3 +75,4 @@ application-*.yaml
 
 ### secret ###
 secret
+/fit-server-privates/
