@@ -2,3 +2,6 @@
 	path = fit-server-privates
 	url = https://github.com/Team-Crops/fit-server-privates.git
 	branch = main
+[submodule "src/main/resources/config"]
+	path = src/main/resources/config
+	url = https://github.com/Team-Crops/fit-server-privates.git
