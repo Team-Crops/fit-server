@@ -5,3 +5,4 @@
 [submodule "application config"]
 	path = src/main/resources/config
 	url = https://github.com/Team-Crops/fit-server-privates.git
+	branch = main
