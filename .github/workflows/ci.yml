@@ -3,7 +3,7 @@ run-name: ${{ github.event_name }} ${{ github.ref_name }} by @${{ github.actor }
 
 on:
   push:
-    branches: [ main, hotfix/**, releases/**, develop, feature/** ]
+    branches: [ main, hotfix/**, releases/**, develop]
   pull_request:
     branches: [ main, hotfix/**, releases/**, develop]
 
