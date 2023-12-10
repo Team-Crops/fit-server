@@ -42,7 +42,7 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: Login to Amazon ECR
-#        id: login-ecr
+        id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Docker Image Build And Push
