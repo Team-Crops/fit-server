@@ -7,7 +7,7 @@ files:
 
 permissions:
     - object: /home/ubuntu/app/deploy
-      pattern: "**"거
+      pattern: "**"
       owner: root
       group: root
 #  - object: /
