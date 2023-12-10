@@ -1,7 +1,7 @@
 version: 0.0
 os: linux
 files:
-  - source: /deploy
+  - source: ./deploy
     destination: /home/ubuntu/app/deploy
     overwrite: yes
 
@@ -16,13 +16,13 @@ permissions:
 #    group: ubuntu
 
 hooks:
-#  BeforeInstall:
-#    - location: ./scripts/beforeInstall.sh
-#      timeout: 100
-#      runas: root
+  BeforeInstall:
+    - location: ./deploy/scripts/beforeInstall.sh
+      timeout: 100
+      runas: root
 #      runas: ubuntu
   AfterInstall:
-    - location: scripts/beforeInstall.sh
+    - location: ./deploy/scripts/beforeInstall.sh
       timeout: 100
       runas: root
 #    - location: scripts/afterInstall.sh
