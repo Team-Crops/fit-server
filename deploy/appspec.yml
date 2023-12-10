@@ -1,0 +1,39 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ubuntu/app/deploy
+    overwrite: yes
+
+permissions:
+    - object: /home/ubuntu/app/deploy
+      pattern: "**"
+      owner: root
+      group: root
+#  - object: /
+#    pattern: "**"
+#    owner: ubuntu
+#    group: ubuntu
+
+hooks:
+  BeforeInstall:
+    - location: scripts/beforeInstall.sh
+      timeout: 100
+      runas: root
+#      runas: ubuntu
+#  AfterInstall:
+#    - location: scripts/afterInstall.sh
+#      timeout: 100
+#      runas: root
+##  HealthCheck:
+#    - location: scripts/healthCheck.sh
+#      timeout: 100
+#      runas: root
+#  Switch:
+#    - location: scripts/switch.sh
+#      timeout: 100
+#      runas: root
+#  ApplicationStop:
+#    - location: scripts/stop_server.sh
+#      timeout: 300
+#      runas: root
