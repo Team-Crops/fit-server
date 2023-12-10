@@ -1,15 +1,15 @@
 version: 0.0
 os: linux
 files:
-  - source: /
+  - source: /deploy
     destination: /home/ubuntu/app/deploy
     overwrite: yes
 
-#permissions:
-#    - object: /home/ubuntu/app/deploy
-#      pattern: "**"
-#      owner: root
-#      group: root
+permissions:
+    - object: /home/ubuntu/app/deploy
+      pattern: "**"
+      owner: root
+      group: root
 #  - object: /
 #    pattern: "**"
 #    owner: ubuntu
@@ -22,7 +22,7 @@ hooks:
 #      runas: root
 #      runas: ubuntu
   AfterInstall:
-    - location: deploy/scripts/beforeInstall.sh
+    - location: scripts/beforeInstall.sh
       timeout: 100
       runas: root
 #    - location: scripts/afterInstall.sh
