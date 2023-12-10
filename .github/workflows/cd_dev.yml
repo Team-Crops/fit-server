@@ -61,7 +61,7 @@ jobs:
           --deployment-config-name CodeDeployDefault.OneAtATime
           --deployment-group-name ${{ secrets.CODE_DEPLOY_GROUP }}
           --github-location repository=TEAM-Crops/fit-server/deploy,commitId=${GITHUB_SHA}
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.CODE_DEPLOY_NAME }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_IAM_USER_SECRET_ACCESS_KEY }}
+#        env:
+#          AWS_ACCESS_KEY_ID: ${{ secrets.CODE_DEPLOY_NAME }}
+#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_IAM_USER_SECRET_ACCESS_KEY }}
 
