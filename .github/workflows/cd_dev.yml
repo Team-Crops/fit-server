@@ -52,7 +52,7 @@ jobs:
           file: ./Dockerfile
           push: true
           build-args: PROFILE=${{ secrets.ENV }}
-          tags: ${{ secrets.ECR_URL }}/fit-was:latest
+          tags: ${{ secrets.ECR_URL }}:latest
 
 
       - name: Deploy
