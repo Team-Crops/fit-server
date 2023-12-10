@@ -35,4 +35,4 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build -Denv=${{ secrets.ENV }}
+        run: ./gradlew clean build -Denv=${{ secrets.ENV }}
