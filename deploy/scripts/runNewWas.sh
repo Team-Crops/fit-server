@@ -1,6 +1,6 @@
 NOW_TIME="$(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)"
 
-CURRENT_PORT=$(cat /home/ubuntu/service_url.inc | grep -Po '[0-9]+' | tail -1)
+CURRENT_PORT=$(cat /home/ubuntu/service-url.inc | grep -Po '[0-9]+' | tail -1)
 TARGET_PORT=0
 TARGET_STATE = ""
 
@@ -17,7 +17,7 @@ else
   echo "[$NOW_TIME] > Assign current to port 8081 in blue state." >> /home/ubuntu/app/deploy.log
   CURRENT_PORT=8081
   CURRENT_STATE = "blue"
-  echo "set \$service_url http://localhost:${CURRENT_PORT};" | tee /etc/nginx/conf.d/service-url.inc
+  echo "set \$service_url http://localhost:${CURRENT_PORT};" | tee /home/ubuntu/service-url.inc
   TARGET_PORT=8082
   TARGET_STATE = "green"
 fi

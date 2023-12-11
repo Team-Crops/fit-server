@@ -1,6 +1,6 @@
 NOW_TIME="$(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)"
 
-CURRENT_PORT=$(cat /home/ubuntu/service_url.inc  | grep -Po '[0-9]+' | tail -1)
+CURRENT_PORT=$(cat /home/ubuntu/service-url.inc  | grep -Po '[0-9]+' | tail -1)
 TARGET_PORT=0
 
 echo "[$NOW_TIME] > Nginx currently proxies to ${CURRENT_PORT}." >> /home/ubuntu/app/deploy.log
@@ -14,7 +14,7 @@ else
     exit 1
 fi
 
-echo "set \$service_url http://localhost:${TARGET_PORT};" | tee /etc/nginx/conf.d/service-url.inc
+echo "set \$service_url http://localhost:${TARGET_PORT};" | tee /home/ubuntu/service-url.inc
 sudo service nginx reload
 echo "[$NOW_TIME] > Nginx reloaded." >> /home/ubuntu/app/deploy.log
 echo "[$NOW_TIME] > Now Nginx proxies to ${TARGET_PORT}." >> /home/ubuntu/app/deploy.log
