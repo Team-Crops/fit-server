@@ -13,13 +13,15 @@ permissions:
 
 hooks:
   AfterInstall:
-    - location: ~/setEnvironment.sh
+    - location: ./deploy/scripts/runNewWas.sh
       timeout: 100
       runas: root
-    - location: ./deploy/environment/
+    - location: ./deploy/scripts/healthCheck.sh
       timeout: 100
       runas: root
-    - location: ./deploy/scripts/beforeInstall.sh
+    - location: ./deploy/scripts/switchPort.sh
       timeout: 100
       runas: root
-#  ApplicationStop:
+    - location: ./deploy/scripts/stopServer.sh
+      timeout: 100
+      runas: root
