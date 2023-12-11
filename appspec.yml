@@ -13,7 +13,10 @@ permissions:
 
 hooks:
   AfterInstall:
-    - location: ./deploy/scripts/beforeInstall.sh
+    - location: ~/setEnvironment.sh
+      timeout: 100
+      runas: root
+    - location: ./deploy/environment/
       timeout: 100
       runas: root
     - location: ./deploy/scripts/beforeInstall.sh
