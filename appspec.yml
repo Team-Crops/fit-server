@@ -10,17 +10,8 @@ permissions:
       pattern: "**"
       owner: root
       group: root
-#  - object: /
-#    pattern: "**"
-#    owner: ubuntu
-#    group: ubuntu
 
 hooks:
-#  BeforeInstall:
-#    - location: ./deploy/scripts/beforeInstall.sh
-#      timeout: 100
-#      runas: root
-#      runas: ubuntu
   AfterInstall:
     - location: ./deploy/scripts/beforeInstall.sh
       timeout: 100
@@ -28,18 +19,4 @@ hooks:
     - location: ./deploy/scripts/beforeInstall.sh
       timeout: 100
       runas: root
-#    - location: scripts/afterInstall.sh
-#      timeout: 100
-#      runas: root
-##  HealthCheck:
-#    - location: scripts/healthCheck.sh
-#      timeout: 100
-#      runas: root
-#  Switch:
-#    - location: scripts/switch.sh
-#      timeout: 100
-#      runas: root
 #  ApplicationStop:
-#    - location: scripts/stop_server.sh
-#      timeout: 300
-#      runas: root
