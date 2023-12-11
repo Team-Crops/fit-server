@@ -1,0 +1,20 @@
+version: '3.9'
+services:
+  blue:
+    container_name: fit-was-blue
+    image: 728702143069.dkr.ecr.ap-northeast-2.amazonaws.com/fit-was:latest
+    ports:
+      - 8081:8080
+    environment:
+      - PROFILE=${PROFILE}
+    volumes:
+      - /home/ubuntu/logs:/logs
+  green:
+    container_name: fit-was-green
+    image: 728702143069.dkr.ecr.ap-northeast-2.amazonaws.com/fit-was:latest
+    ports:
+      - 8082:8080
+    environment:
+      - PROFILE=${PROFILE}
+    volumes:
+      - /home/ubuntu/logs:/logs
