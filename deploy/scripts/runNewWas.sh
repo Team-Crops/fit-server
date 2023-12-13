@@ -4,15 +4,20 @@ CURRENT_PORT=$(cat /home/ubuntu/service-url.inc | grep -Po '[0-9]+' | tail -1)
 TARGET_PORT=0
 TARGET_STATE = ""
 
+echo "${cat /home/ubuntu/service-url.inc | grep -Po '[0-9]+' | tail -1}" >> /home/ubuntu/app/deploy.log
 echo "$(cat /home/ubuntu/service-url.inc | grep -Po '[0-9]+' | tail -1)" >> /home/ubuntu/app/deploy.log
-echo "$(CURRENT_PORT)" >> /home/ubuntu/app/deploy.log
+
+echo "${CURRENT_POR}" >> /home/ubuntu/app/deploy.log
 echo "$CURRENT_PORT" >> /home/ubuntu/app/deploy.log
-echo "$(TARGET_PORT)" >> /home/ubuntu/app/deploy.log
-echo "$TARGET_PORT" >> /home/ubuntu/app/deploy.log
+echo "$(CURRENT_PORT)" >> /home/ubuntu/app/deploy.log
+
+echo ${CURRENT_PORT} >> /home/ubuntu/app/deploy.log
+echo $CURRENT_PORT >> /home/ubuntu/app/deploy.log
+echo $(CURRENT_PORT) >> /home/ubuntu/app/deploy.log
 
 
 
-
+#
 #if [ ${CURRENT_PORT} -eq 8081 ]; then
 #  CURRENT_STATE = "blue"
 #  TARGET_PORT=8082
