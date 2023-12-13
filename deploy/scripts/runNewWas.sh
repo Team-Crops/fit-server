@@ -27,12 +27,21 @@ echo "[$NOW_TIME] > Current status of running f-it WAS is port $CURRENT_PORT in 
 echo "[$NOW_TIME] > test : $(docker ps | grep fit-was-$TARGET_STATE)" >> /home/ubuntu/app/deploy.log
 
 # Todo : remove
+# 이거 그대로 -z
 if [ -n "test" ]; then
   echo "not null success " >> /home/ubuntu/app/deploy.log
 fi
 
+if [ -z "test" ]; then
+  echo "not null failed " >> /home/ubuntu/app/deploy.log
+fi
+
 if [ -z "" ]; then
   echo "null success" >> /home/ubuntu/app/deploy.log
+fi
+
+if [ -n "" ]; then
+  echo "null failed" >> /home/ubuntu/app/deploy.log
 fi
 
 IS_TARGET_SERVER_RUN = "$(docker ps | grep fit-was-$TARGET_STATE)"
