@@ -27,9 +27,20 @@ echo "[$NOW_TIME] > Current status of running f-it WAS is port $CURRENT_PORT in 
 echo "[$NOW_TIME] > test : $(docker ps | grep fit-was-$TARGET_STATE)" >> /home/ubuntu/app/deploy.log
 
 # Todo : remove
-echo "test1$(docker ps | grep fit-was-$TARGET_STATE)2" >> /home/ubuntu/app/deploy.log
+if [ -n "test" ]; then
+  echo "not null success " >> /home/ubuntu/app/deploy.log
+fi
 
-if [ -n $(docker ps | grep fit-was-$TARGET_STATE) ]; then
+if [ -z "" ]; then
+  echo "null success" >> /home/ubuntu/app/deploy.log
+fi
+
+IS_TARGET_SERVER_RUN = $(docker ps | grep fit-was-$TARGET_STATE)
+echo "[$NOW_TIME] > IS_TARGET_SERVER_RUN : $IS_TARGET_SERVER_RUN" >> /home/ubuntu/app/deploy.log
+
+
+#if [ -n $(docker ps | grep fit-was-$TARGET_STATE) ]; then
+if [ -n $IS_TARGET_SERVER_RUN ]; then
   echo "[$NOW_TIME] > Kill f-it WAS running with state port $TARGET_PORT in state $TARGET_STATE." >> /home/ubuntu/app/deploy.log
   docker-compose -f /home/ubuntu/app/deploy/docker/docker-compose.was.yml stop $TARGET_STATE
 fi
