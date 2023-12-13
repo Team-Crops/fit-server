@@ -15,7 +15,7 @@ hooks:
   AfterInstall:
     - location: ./deploy/scripts/runNewWas.sh
       timeout: 100
-      runas: sudo
+      runas: root
     - location: ./deploy/scripts/healthCheck.sh
       timeout: 100
       runas: root
