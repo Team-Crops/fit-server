@@ -27,10 +27,10 @@ echo "[$NOW_TIME] > Current status of running f-it WAS is port $CURRENT_PORT in 
 
 if [ -n $(docker ps | grep fit-was-$TARGET_STATE) ]; then
   echo "[$NOW_TIME] > Kill f-it WAS running with state port $TARGET_PORT in state $TARGET_STATE." >> /home/ubuntu/app/deploy.log
-  docker-compose -f docker-compose.was.yml stop $TARGET_STATE
+  docker-compose -f ./../docker/docker-compose.was.yml stop $TARGET_STATE
 fi
 
 aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 728702143069.dkr.ecr.ap-northeast-2.amazonaws.com
-docker-compose -f docker-compose.was.yml pull $TARGET_STATE
-docker-compose -f docker-compose.was.yml up -d $TARGET_STATE
+docker-compose -f ./../docker/docker-compose.was.yml pull $TARGET_STATE
+docker-compose -f ./../docker/docker-compose.was.yml up -d $TARGET_STATE
 echo "[$NOW_TIME] > Now new f-it WAS running with port $TARGET_PORT in $TARGET_STATE state." >> /home/ubuntu/app/deploy.log
