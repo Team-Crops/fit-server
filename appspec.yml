@@ -8,14 +8,14 @@ files:
 permissions:
     - object: /home/ubuntu/app/deploy
       pattern: "**"
-      owner: ubuntu
-      group: ubuntu
+      owner: root
+      group: root
 
 hooks:
   AfterInstall:
     - location: ./deploy/scripts/runNewWas.sh
       timeout: 100
-      runas: ubuntu
+      runas: sudo
     - location: ./deploy/scripts/healthCheck.sh
       timeout: 100
       runas: root
