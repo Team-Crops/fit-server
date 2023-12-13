@@ -19,6 +19,10 @@ do
     echo "[$NOW_TIME] > #${RETRY_COUNT} trying..." >> /home/ubuntu/app/deploy.log
     RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:${TARGET_PORT}/actuator/health)
 
+    # Todo: remove
+    echo "[$NOW_TIME] > Response code : ${RESPONSE_CODE}" >> /home/ubuntu/app/deploy.log
+#    curl -s -o /dev/null -w "%{http_code}" http://localhost:8082/actuator/health
+
     if [ ${RESPONSE_CODE} -eq 200 ]; then
         echo "[$NOW_TIME] > New f-it WAS successfully running" >> /home/ubuntu/app/deploy.log
         exit 0

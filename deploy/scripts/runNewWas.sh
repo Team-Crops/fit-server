@@ -35,3 +35,6 @@ aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS
 && docker-compose -f /home/ubuntu/app/deploy/docker/docker-compose.was.yml pull $TARGET_STATE \
 && docker-compose -f /home/ubuntu/app/deploy/docker/docker-compose.was.yml up -d $TARGET_STATE \
 && echo "[$NOW_TIME] > Now new f-it WAS running with port $TARGET_PORT in $TARGET_STATE state." >> /home/ubuntu/app/deploy.log
+
+# Todo: remove
+echo $(docker ps | grep fit-was-$TARGET_STATE) >> /home/ubuntu/app/deploy.log
