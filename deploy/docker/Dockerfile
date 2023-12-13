@@ -9,4 +9,4 @@ COPY ${JAR_FILE} app.jar
 USER ubuntu_user
 
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","-Duser.timezone=${TZ}","-Dspring.profiles.active=${PROFILE}","app.jar"]
+ENTRYPOINT ["java","-jar","-Duser.timezone=${TZ}","-Dspring.profiles.active=dev","app.jar"]
