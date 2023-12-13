@@ -45,11 +45,11 @@ fi
 
 IS_TARGET_SERVER_RUN = "$(docker ps | grep fit-was-$TARGET_STATE)"
 echo "[$NOW_TIME] > test : $IS_TARGET_SERVER_RUN" >> /home/ubuntu/app/deploy.log
-if [ -n $IS_TARGET_SERVER_RUN ]; then
+if [ -n "$IS_TARGET_SERVER_RUN" ]; then
   echo ".. not null " >> /home/ubuntu/app/deploy.log
 fi
 
-if [ -z $IS_TARGET_SERVER_RUN ]; then
+if [ -z "$IS_TARGET_SERVER_RUN" ]; then
   echo ".. null" >> /home/ubuntu/app/deploy.log
 fi
 
