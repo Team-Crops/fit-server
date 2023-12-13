@@ -16,12 +16,12 @@ hooks:
     - location: ./deploy/scripts/runNewWas.sh
       timeout: 100
       runas: root
-    - location: ./deploy/scripts/healthCheck.sh
-      timeout: 100
-      runas: root
-    - location: ./deploy/scripts/switchPort.sh
-      timeout: 100
-      runas: root
-    - location: ./deploy/scripts/stopServer.sh
-      timeout: 100
-      runas: root
+#    - location: ./deploy/scripts/healthCheck.sh
+#      timeout: 100
+#      runas: root
+#    - location: ./deploy/scripts/switchPort.sh
+#      timeout: 100
+#      runas: root
+#    - location: ./deploy/scripts/stopServer.sh
+#      timeout: 100
+#      runas: root
