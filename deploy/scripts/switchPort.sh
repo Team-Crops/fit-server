@@ -5,16 +5,16 @@ TARGET_PORT=0
 
 echo "[$NOW_TIME] > Nginx currently proxies to ${CURRENT_PORT}." >> /home/ubuntu/app/deploy.log
 
-if [ ${CURRENT_PORT} -eq 8081 ]; then
+if [ $CURRENT_PORT -eq 8081 ]; then
     TARGET_PORT=8082
-elif [ ${CURRENT_PORT} -eq 8082 ]; then
+elif [ $CURRENT_PORT -eq 8082 ]; then
     TARGET_PORT=8081
 else
-    echo "[$NOW_TIME] > No f-it was is connected to nginx port ${CURRENT_PORT}." >> /home/ubuntu/app/deploy.log
+    echo "[$NOW_TIME] > No f-it was is connected to nginx port $CURRENT_PORT." >> /home/ubuntu/app/deploy.log
     exit 1
 fi
 
-echo "set \$service_url http://localhost:${TARGET_PORT};" | tee /home/ubuntu/service-url.inc
+echo "set \$service_url http://localhost:$TARGET_PORT;" | tee /home/ubuntu/service-url.inc
 sudo service nginx reload
 echo "[$NOW_TIME] > Nginx reloaded." >> /home/ubuntu/app/deploy.log
-echo "[$NOW_TIME] > Now Nginx proxies to ${TARGET_PORT}." >> /home/ubuntu/app/deploy.log
+echo "[$NOW_TIME] > Now Nginx proxies to $TARGET_PORT." >> /home/ubuntu/app/deploy.log
