@@ -12,7 +12,7 @@ else
     exit 1
 fi
 
-echo "[$NOW_TIME] > Start health check of f-it WAS at 'http://localhost:${TARGET_PORT}' ..." >> /home/ubuntu/app/deploy/deploy.log
+echo "[$NOW_TIME] > Start health check of f-it WAS at 'http://127.0.0.1:${TARGET_PORT}' ..." >> /home/ubuntu/app/deploy/deploy.log
 
 # Todo: remove
 echo $(docker ps | grep fit-was-green) >> /home/ubuntu/app/deploy/deploy.log
@@ -20,11 +20,11 @@ echo $(docker ps | grep fit-was-green) >> /home/ubuntu/app/deploy/deploy.log
 for RETRY_COUNT in {1..10}
 do
     echo "[$NOW_TIME] > #${RETRY_COUNT} trying..." >> /home/ubuntu/app/deploy/deploy.log
-    RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:${TARGET_PORT}/actuator/health)
+    RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:${TARGET_PORT}/actuator/health)
 
     # Todo: remove
     echo "[$NOW_TIME] > Response code : ${RESPONSE_CODE}" >> /home/ubuntu/app/deploy/deploy.log
-#    curl -s -o /dev/null -w "%{http_code}" http://localhost:8082/actuator/health
+#    curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8082/actuator/health
     echo "$(docker ps | grep fit-was-green)" >> /home/ubuntu/app/deploy/deploy.log
 
     if [ ${RESPONSE_CODE} -eq 200 ]; then

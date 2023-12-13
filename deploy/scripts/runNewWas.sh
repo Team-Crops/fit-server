@@ -18,7 +18,7 @@ else
   echo "[$NOW_TIME] > Assign current to port 8081 in blue state." >> /home/ubuntu/app/deploy/deploy.log
   CURRENT_PORT=8081
   CURRENT_STATE="blue"
-  echo "set \$service_url http://localhost:$CURRENT_PORT;" | tee /home/ubuntu/service-url.inc
+  echo "set \$service_url http://127.0.0.1:$CURRENT_PORT;" | tee /home/ubuntu/service-url.inc
   TARGET_PORT=8082
   TARGET_STATE="green"
 fi

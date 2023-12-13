@@ -14,7 +14,7 @@ else
     exit 1
 fi
 
-echo "set \$service_url http://localhost:$TARGET_PORT;" | tee /home/ubuntu/service-url.inc
+echo "set \$service_url http://127.0.0.1:$TARGET_PORT;" | tee /home/ubuntu/service-url.inc
 sudo service nginx reload
 echo "[$NOW_TIME] > Nginx reloaded." >> /home/ubuntu/app/deploy/deploy.log
 echo "[$NOW_TIME] > Now Nginx proxies to $TARGET_PORT." >> /home/ubuntu/app/deploy/deploy.log
