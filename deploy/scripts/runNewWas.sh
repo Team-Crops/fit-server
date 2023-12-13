@@ -35,7 +35,7 @@ if [ -z "" ]; then
   echo "null success" >> /home/ubuntu/app/deploy.log
 fi
 
-IS_TARGET_SERVER_RUN = $(docker ps | grep fit-was-$TARGET_STATE)
+IS_TARGET_SERVER_RUN = "$(docker ps | grep fit-was-$TARGET_STATE)"
 if [ -n $IS_TARGET_SERVER_RUN ]; then
   echo "not null success " >> /home/ubuntu/app/deploy.log
 fi
