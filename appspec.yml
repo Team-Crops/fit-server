@@ -6,10 +6,10 @@ files:
     overwrite: yes
 
 permissions:
-    - object: /home/ubuntu/app/deploy
-      pattern: "**"
-      owner: ubuntu
-      group: ubuntu
+  - object: /home/ubuntu/app/deploy
+    pattern: "**"
+    owner: ubuntu
+    group: ubuntu
 
 
 hooks:
