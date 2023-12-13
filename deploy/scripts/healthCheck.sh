@@ -25,6 +25,7 @@ do
     # Todo: remove
     echo "[$NOW_TIME] > Response code : ${RESPONSE_CODE}" >> /home/ubuntu/app/deploy.log
 #    curl -s -o /dev/null -w "%{http_code}" http://localhost:8082/actuator/health
+    echo $(docker ps | grep fit-was-green) >> /home/ubuntu/app/deploy.log
 
     if [ ${RESPONSE_CODE} -eq 200 ]; then
         echo "[$NOW_TIME] > New f-it WAS successfully running" >> /home/ubuntu/app/deploy.log
