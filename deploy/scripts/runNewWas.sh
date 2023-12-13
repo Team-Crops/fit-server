@@ -31,6 +31,6 @@ if [ -n "$(docker ps | grep fit-was-$TARGET_STATE)" ]; then
 fi
 
 aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 728702143069.dkr.ecr.ap-northeast-2.amazonaws.com \
-&& sudo docker-compose -f /home/ubuntu/app/deploy/docker/docker-compose.was.yml pull $TARGET_STATE \
-&& sudo docker-compose -f /home/ubuntu/app/deploy/docker/docker-compose.was.yml up -d $TARGET_STATE \
+&& docker-compose -f /home/ubuntu/app/deploy/docker/docker-compose.was.yml pull $TARGET_STATE \
+&& docker-compose -f /home/ubuntu/app/deploy/docker/docker-compose.was.yml up -d $TARGET_STATE \
 && echo "[$NOW_TIME] > Now new f-it WAS running with port $TARGET_PORT in $TARGET_STATE state." >> /home/ubuntu/app/deploy.log

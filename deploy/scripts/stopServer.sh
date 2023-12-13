@@ -17,6 +17,6 @@ fi
 
 if [ -z $(docker ps | grep fit-was-$DEPRECATED_STATE) ]; then
   echo "[$NOW_TIME] > Kill f-it WAS running with state port $DEPRECATED_PORT in state $DEPRECATED_STATE." >> /home/ubuntu/app/deploy.log
-  docker-compose -f ../docker/docker-compose.was.yml stop $DEPRECATED_STATE
+  docker-compose -f /home/ubuntu/app/deploy/docker/docker-compose.was.yml stop $DEPRECATED_STATE
   docker rm fit-was-$DEPRECATED_STATE
 fi
