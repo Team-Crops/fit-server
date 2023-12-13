@@ -25,37 +25,15 @@ fi
 
 echo "[$NOW_TIME] > Current status of running f-it WAS is port $CURRENT_PORT in $CURRENT_STATE state." >> /home/ubuntu/app/deploy.log
 
-# Todo : remove
-# 이거 그대로 -z
-if [ -n "test" ]; then
-  echo "not null success " >> /home/ubuntu/app/deploy.log
-fi
-
-if [ -z "test" ]; then
-  echo "not null failed " >> /home/ubuntu/app/deploy.log
-fi
-
-if [ -z "" ]; then
-  echo "null success" >> /home/ubuntu/app/deploy.log
-fi
-
-if [ -n "" ]; then
-  echo "null failed" >> /home/ubuntu/app/deploy.log
-fi
-
 IS_TARGET_SERVER_RUN = "$(docker ps | grep fit-was-$TARGET_STATE)"
-echo "[$NOW_TIME] > test : $IS_TARGET_SERVER_RUN" >> /home/ubuntu/app/deploy.log
 if [ -n "$IS_TARGET_SERVER_RUN" ]; then
   echo ".. not null " >> /home/ubuntu/app/deploy.log
 fi
-
 if [ -z "$IS_TARGET_SERVER_RUN" ]; then
   echo ".. null" >> /home/ubuntu/app/deploy.log
 fi
-
-
 #if [ -n $(docker ps | grep fit-was-$TARGET_STATE) ]; then
-if [ -n $IS_TARGET_SERVER_RUN ]; then
+if [ -n "$(docker ps | grep fit-was-$TARGET_STATE)" ]; then
   echo "[$NOW_TIME] > Kill f-it WAS running with state port $TARGET_PORT in state $TARGET_STATE." >> /home/ubuntu/app/deploy.log
   docker-compose -f /home/ubuntu/app/deploy/docker/docker-compose.was.yml stop $TARGET_STATE
 fi
@@ -64,6 +42,3 @@ aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS
 && sudo docker-compose -f /home/ubuntu/app/deploy/docker/docker-compose.was.yml pull $TARGET_STATE \
 && sudo docker-compose -f /home/ubuntu/app/deploy/docker/docker-compose.was.yml up -d $TARGET_STATE \
 && echo "[$NOW_TIME] > Now new f-it WAS running with port $TARGET_PORT in $TARGET_STATE state." >> /home/ubuntu/app/deploy.log
-
-# Todo: remove
-echo $(docker ps | grep fit-was-$TARGET_STATE) >> /home/ubuntu/app/deploy.log

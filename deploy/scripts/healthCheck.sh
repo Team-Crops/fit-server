@@ -14,6 +14,9 @@ fi
 
 echo "[$NOW_TIME] > Start health check of f-it WAS at 'http://localhost:${TARGET_PORT}' ..." >> /home/ubuntu/app/deploy.log
 
+# Todo: remove
+echo $(docker ps | grep fit-was-green) >> /home/ubuntu/app/deploy.log
+
 for RETRY_COUNT in {1..10}
 do
     echo "[$NOW_TIME] > #${RETRY_COUNT} trying..." >> /home/ubuntu/app/deploy.log
