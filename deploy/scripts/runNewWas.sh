@@ -36,8 +36,13 @@ if [ -z "" ]; then
 fi
 
 IS_TARGET_SERVER_RUN = $(docker ps | grep fit-was-$TARGET_STATE)
-echo "[$NOW_TIME] > IS_TARGET_SERVER_RUN : $IS_TARGET_SERVER_RUN" >> /home/ubuntu/app/deploy.log
+if [ -n $IS_TARGET_SERVER_RUN ]; then
+  echo "not null success " >> /home/ubuntu/app/deploy.log
+fi
 
+if [ -z $IS_TARGET_SERVER_RUN ]; then
+  echo "null success" >> /home/ubuntu/app/deploy.log
+fi
 
 #if [ -n $(docker ps | grep fit-was-$TARGET_STATE) ]; then
 if [ -n $IS_TARGET_SERVER_RUN ]; then
