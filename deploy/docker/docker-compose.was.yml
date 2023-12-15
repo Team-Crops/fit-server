@@ -5,8 +5,6 @@ services:
     image: 728702143069.dkr.ecr.ap-northeast-2.amazonaws.com/fit-was:latest
     ports:
       - 8081:8080
-    environment:
-      - PROFILE=${PROFILE}
     volumes:
       - /home/ubuntu/logs:/logs
   green:
@@ -14,7 +12,5 @@ services:
     image: 728702143069.dkr.ecr.ap-northeast-2.amazonaws.com/fit-was:latest
     ports:
       - 8082:8080
-    environment:
-      - PROFILE=${PROFILE}
     volumes:
       - /home/ubuntu/logs:/logs
