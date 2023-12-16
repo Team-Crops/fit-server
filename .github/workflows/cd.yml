@@ -52,8 +52,7 @@ jobs:
           file: ./deploy/docker/Dockerfile
           push: true
           build-args: PROFILE=${{ secrets.ENV }}
-          tags: ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:latest
-
+          tags: ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{ secrets.ENV }}
 
       - name: Deploy
         run: aws deploy create-deployment 
@@ -61,8 +60,3 @@ jobs:
           --deployment-config-name CodeDeployDefault.OneAtATime
           --deployment-group-name ${{ secrets.CODE_DEPLOY_GROUP }}
           --github-location repository=TEAM-Crops/fit-server,commitId=${GITHUB_SHA}
-        env:
-          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-#          AWS_ACCESS_KEY_ID: ${{ secrets.CODE_DEPLOY_NAME }}
-#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_IAM_USER_SECRET_ACCESS_KEY }}
-
