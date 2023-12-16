@@ -25,7 +25,7 @@ else
   TARGET_STATE="green"
 fi
 
-echo "[$NOW_TIME] > Current status of running f-it WAS is port $CURRENT_PORT in $CURRENT_STATE state." >> /home/ubuntu/app/deploy/deploy.log
+echo "[$TIME] > Current status of running f-it WAS is port $CURRENT_PORT in $CURRENT_STATE state." >> /home/ubuntu/app/deploy/deploy.log
 
 if [ -n "$(docker ps | grep fit-was-$TARGET_STATE)" ]; then
   echo "[$TIME] > Kill f-it WAS running with state port $TARGET_PORT in state $TARGET_STATE." >> /home/ubuntu/app/deploy/deploy.log

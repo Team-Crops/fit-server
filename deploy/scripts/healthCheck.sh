@@ -12,14 +12,14 @@ else
     exit 1
 fi
 
-echo "[$TIME] > Start health check of f-it WAS at 'http://127.0.0.1:${TARGET_PORT}' ..." >> /home/ubuntu/app/deploy/deploy.log
+echo "[$TIME] > Start health check of f-it WAS at 'http://127.0.0.1:${TARGET_PORT}'..." >> /home/ubuntu/app/deploy/deploy.log
 
 for RETRY_COUNT in {1..10}
 do
     echo "[$TIME] > #${RETRY_COUNT} trying..." >> /home/ubuntu/app/deploy/deploy.log
     RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:${TARGET_PORT}/actuator/health)
     if [ ${RESPONSE_CODE} -eq 200 ]; then
-        echo "[$TIME] > New f-it WAS successfully running" >> /home/ubuntu/app/deploy/deploy.log
+        echo "[$TIME] > New f-it WAS successfully running." >> /home/ubuntu/app/deploy/deploy.log
         exit 0
     elif [ ${RETRY_COUNT} -eq 10 ]; then
         echo "[$TIME] > Health check failed." >> /home/ubuntu/app/deploy/deploy.log
