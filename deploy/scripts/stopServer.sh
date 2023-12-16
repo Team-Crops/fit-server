@@ -1,3 +1,5 @@
+source /etc/environment
+
 TIME="$(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)"
 CURRENT_PORT=$(cat /home/ubuntu/service-url.inc | grep -Po '[0-9]+' | tail -1)
 DEPRECATED_PORT=0
@@ -19,3 +21,8 @@ if [ -n "$(docker ps | grep fit-was-$DEPRECATED_STATE)" ]; then
   docker-compose -f /home/ubuntu/app/deploy/docker/docker-compose.was.yml stop $DEPRECATED_STATE
   docker rm fit-was-$DEPRECATED_STATE
 fi
+
+if [ -n "$(docker images -q 728702143069.dkr.ecr.ap-northeast-2.amazonaws.com/fit-was:$ENV)"]; then
+  docker rmi -f $(docker images -a 728702143069.dkr.ecr.ap-northeast-2.amazonaws.com/fit-was --filter "before=728702143069.dkr.ecr.ap-northeast-2.amazonaws.com/fit-was:$ENV" -q)
+fi
+
