@@ -31,11 +31,10 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
-      - name: Set up Gradle
-        uses: gradle/gradle-build-action@v2
-
       - name: Build with Gradle
-        run: ./gradlew build -Denv=${{ secrets.ENV }}
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build -Denv=${{ secrets.ENV }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
