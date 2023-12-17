@@ -2,9 +2,6 @@ name: Deployment
 run-name: Deploy ${{ github.ref_name }} by @${{ github.actor }}
 
 on:
-  # Todo : remove
-  pull_request:
-    branches: [ main, develop ]
   push:
     branches: [ main, develop ]
 

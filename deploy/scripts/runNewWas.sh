@@ -1,13 +1,11 @@
 source /etc/environment
-
 TIME="$(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)"
-
 CURRENT_PORT=$(cat /home/ubuntu/service-url.inc | grep -Po '[0-9]+' | tail -1)
 CURRENT_STATE=""
 TARGET_PORT=0
 TARGET_STATE=""
 
-if [ $CURRENT_PORT -eq 8081 ]; then
+if [ $CURRENT_PORT -eq 8081 ]; then정
   CURRENT_STATE="blue"
   TARGET_PORT=8082
   TARGET_STATE="green"
