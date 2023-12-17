@@ -3,6 +3,7 @@ import org.hidetake.gradle.swagger.generator.GenerateSwaggerUI
 buildscript {
     ext {
         restdocsApiSpecVersion = '0.19.0'
+        jjwtVersion = '0.11.5'
     }
 }
 
@@ -14,14 +15,22 @@ plugins {
     id 'org.hidetake.swagger.generator' version '2.19.2'
 }
 
+group = 'org.crops'
+version = '0.0.1-SNAPSHOT'
+
 swaggerSources {
-    sample {
+    fit {
         setInputFile(file("${project.buildDir}/api-spec/openapi3.yaml"))
     }
 }
 
-group = 'org.crops'
-version = '0.0.1-SNAPSHOT'
+bootJar {
+    archivesBaseName = 'app'
+    archiveFileName = 'app.jar'
+    enabled = true
+}
+
+jar { enabled = false }
 
 java {
     sourceCompatibility = '17'
@@ -38,50 +47,51 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    testImplementation 'org.springframework.security:spring-security-test'
     compileOnly 'org.projectlombok:lombok'
-
     annotationProcessor 'org.projectlombok:lombok'
+
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'com.mysql:mysql-connector-j'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
-    implementation 'com.h2database:h2'
+    runtimeOnly 'com.h2database:h2'
 
     // open feign
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.3'
 
     // jwt
-    runtimeOnly "io.jsonwebtoken:jjwt-impl:0.11.5"
-    runtimeOnly "io.jsonwebtoken:jjwt-jackson:0.11.5"
-    implementation "io.jsonwebtoken:jjwt-api:0.11.5"
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
+    implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
 
-    implementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    implementation "com.epages:restdocs-api-spec:${restdocsApiSpecVersion}"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation "com.epages:restdocs-api-spec:${restdocsApiSpecVersion}"
     swaggerUI 'org.webjars:swagger-ui:5.9.0'
 }
 
 openapi3 {
     setServer('http://localhost:8080')
     setTitle('Crops API')
-    setDescription('Crops API')
+    setDescription('Crops API Docs')
     setVersion(version)
     setFormat('yaml')
 }
+
 tasks.withType(GenerateSwaggerUI).configureEach {
     dependsOn('openapi3')
 }
 
 tasks.register('copySwaggerUI', Copy) {
-    dependsOn('generateSwaggerUISample')
+    dependsOn('generateSwaggerUIFit')
 
-    def generatedSwaggerUISampleTask = tasks.named('generateSwaggerUISample', GenerateSwaggerUI).get()
+    def generatedSwaggerUIFitTask = tasks.named('generateSwaggerUIFit', GenerateSwaggerUI).get()
 
-    from("${generatedSwaggerUISampleTask.outputDir}")
+    from("${generatedSwaggerUIFitTask.outputDir}")
     into(layout.buildDirectory.dir("resources/main/static/docs").get())
 }
 tasks.named('resolveMainClassName') {
@@ -93,5 +103,6 @@ tasks.withType(Jar).configureEach {
 
 tasks.named('test') {
     useJUnitPlatform()
+    systemProperty 'spring.profiles.active', System.getProperty('env')
 }
 
