@@ -103,6 +103,6 @@ tasks.withType(Jar).configureEach {
 
 tasks.named('test') {
     useJUnitPlatform()
-    systemProperty 'spring.profiles.active', System.getProperty('env')
+    systemProperty 'spring.profiles.active', System.getProperty("spring.profiles.active")
 }
 

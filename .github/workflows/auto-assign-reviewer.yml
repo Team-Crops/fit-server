@@ -1,5 +1,5 @@
 name: Automatic Reviewer Assignment
-run-name: Assign reviewer ${{ github.base_ref }} pull request by @${{ github.actor }}
+run-name: Assign reviewer ${{ github.ref_name }} pull request by @${{ github.actor }}
 
 on:
   pull_request:
