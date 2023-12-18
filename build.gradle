@@ -1,75 +1,97 @@
+import org.hidetake.gradle.swagger.generator.GenerateSwaggerUI
+
+buildscript {
+    ext {
+        restdocsApiSpecVersion = '0.19.0'
+    }
+}
+
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.1.5'
-	id 'io.spring.dependency-management' version '1.1.3'
+    id 'java'
+    id 'org.springframework.boot' version '3.1.5'
+    id 'io.spring.dependency-management' version '1.1.3'
+    id 'com.epages.restdocs-api-spec' version "${restdocsApiSpecVersion}"
+    id 'org.hidetake.swagger.generator' version '2.19.2'
+}
+
+swaggerSources {
+    sample {
+        setInputFile(file("${project.buildDir}/api-spec/openapi3.yaml"))
+    }
 }
 
 group = 'org.crops'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '17'
+    sourceCompatibility = '17'
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	//add aws sdk
-	implementation 'software.amazon.awssdk:s3:2.21.22'
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
-	testImplementation 'org.mockito:mockito-core:3.11.2'
-	testImplementation 'org.mockito:mockito-junit-jupiter:3.11.2'
-	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
+    compileOnly 'org.projectlombok:lombok'
+
+    annotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    implementation 'com.h2database:h2'
+
+    // open feign
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.3'
+
+    // jwt
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:0.11.5"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:0.11.5"
+    implementation "io.jsonwebtoken:jjwt-api:0.11.5"
+
+    implementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    implementation "com.epages:restdocs-api-spec:${restdocsApiSpecVersion}"
+    swaggerUI 'org.webjars:swagger-ui:5.9.0'
+}
+
+openapi3 {
+    setServer('http://localhost:8080')
+    setTitle('Crops API')
+    setDescription('Crops API')
+    setVersion(version)
+    setFormat('yaml')
+}
+tasks.withType(GenerateSwaggerUI).configureEach {
+    dependsOn('openapi3')
+}
+
+tasks.register('copySwaggerUI', Copy) {
+    dependsOn('generateSwaggerUISample')
+
+    def generatedSwaggerUISampleTask = tasks.named('generateSwaggerUISample', GenerateSwaggerUI).get()
+
+    from("${generatedSwaggerUISampleTask.outputDir}")
+    into(layout.buildDirectory.dir("resources/main/static/docs").get())
+}
+tasks.named('resolveMainClassName') {
+    dependsOn('copySwaggerUI')
+}
+tasks.withType(Jar).configureEach {
+    dependsOn('copySwaggerUI')
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
-tasks.register("bootRunLocal") {
-	group = "application"
-	description = "Runs this project as a Spring Boot application in the 'local' environment."
-	doFirst {
-		tasks.bootRun.configure {
-			systemProperty("spring.profiles.active", "local")
-		}
-	}
-	finalizedBy(tasks.bootRun)
-}
-tasks.register("bootRunDev") {
-	group = "application"
-	description = "Runs this project as a Spring Boot application in the 'dev' environment."
-	doFirst {
-		tasks.bootRun.configure {
-			systemProperty("spring.profiles.active", "dev")
-		}
-	}
-	finalizedBy(tasks.bootRun)
-}
-tasks.register("bootRunProd") {
-	group = "application"
-	description = "Runs this project as a Spring Boot application in the 'prod' environment."
-	doFirst {
-		tasks.bootRun.configure {
-			systemProperty("spring.profiles.active", "prod")
-		}
-	}
-	finalizedBy(tasks.bootRun)
-}
