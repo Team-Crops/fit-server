@@ -1,0 +1,19 @@
+version: '3.9'
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: fit-mariadb
+    hostname: fit-database-host
+    expose:
+      - 3306
+    ports:
+      - 3306:3306
+    volumes:
+      - /home/ubuntu/logs:/logs
+
+  redis:
+    image: redis:latest
+    container_name: fit-redis
+    hostname: fit-redis-host
+    ports:
+      - 6379:6379

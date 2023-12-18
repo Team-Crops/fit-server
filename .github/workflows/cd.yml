@@ -1,0 +1,61 @@
+name: Deployment
+run-name: Deploy ${{ github.ref_name }} by @${{ github.actor }}
+
+on:
+  push:
+    branches: [ main, develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref_name == 'main' && 'production' || 'develop' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.ACTION_TOKEN }}
+          submodules: true
+
+      - name: Update Submodule
+        run: git submodule update --remote --recursive
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build -Denv=${{ secrets.ENV }}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_IAM_USER_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_IAM_USER_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Docker Image Build And Push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./deploy/docker/Dockerfile
+          push: true
+          build-args: PROFILE=${{ secrets.ENV }}
+          tags: ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{ secrets.ENV }}
+
+      - name: Deploy
+        run: aws deploy create-deployment 
+          --application-name ${{ secrets.CODE_DEPLOY_NAME }}
+          --deployment-config-name CodeDeployDefault.OneAtATime
+          --deployment-group-name ${{ secrets.CODE_DEPLOY_GROUP }}
+          --github-location repository=TEAM-Crops/fit-server,commitId=${GITHUB_SHA}
