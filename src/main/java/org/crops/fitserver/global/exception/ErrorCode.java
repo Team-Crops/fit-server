@@ -26,7 +26,12 @@ public enum ErrorCode {
   /**
    * resource. code prefix: resource-
    */
-  FORBIDDEN_EXCEPTION(HttpStatus.FORBIDDEN, "resource-1", "리소스에 접근 권한이 없습니다.");
+  FORBIDDEN_EXCEPTION(HttpStatus.FORBIDDEN, "resource-1", "리소스에 접근 권한이 없습니다."),
+
+  /**
+   * file. code prefix: file-
+   */
+  FILE_UPLOAD_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "file-1", "파일 업로드에 실패했습니다.");
 
 
   private final HttpStatus httpStatus;

@@ -1,8 +1,11 @@
 package org.crops.fitserver.core.file.service;
 
+import static org.crops.fitserver.global.exception.ErrorCode.FILE_UPLOAD_EXCEPTION;
+
 import java.io.IOException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.crops.fitserver.global.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,7 +36,7 @@ public class S3FileServiceImpl implements FileService {
           RequestBody.fromBytes(file.getBytes())
       );
     } catch (IOException e) {
-      throw new RuntimeException(e);// TODO: 롤백할 수 있게 사용자 에러로 수정
+      throw new BusinessException(FILE_UPLOAD_EXCEPTION);
     }
 
     return fileKey;
