@@ -31,7 +31,7 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: build -Dspring.profiles.active=${{ secrets.ENV }}
+          arguments: build -Denv=${{ secrets.ENV }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
