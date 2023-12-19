@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@V1
 @Slf4j
 @RestController
 @RequestMapping("/file")
@@ -22,7 +21,7 @@ public class FileController {
 
   private final FileService fileService;
 
-  @PostMapping(value = "/pre-signed-url", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/pre-signed-url")
   public ResponseEntity<PreSignedUrlDto> generatePreSignedUrl(
       @RequestBody() GeneratePreSignedUrlRequest request) {
     var result = fileService.generatePreSignedUrl(request.name(), request.domain());

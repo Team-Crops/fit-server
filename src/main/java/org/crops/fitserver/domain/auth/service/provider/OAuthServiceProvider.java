@@ -3,9 +3,9 @@ package org.crops.fitserver.domain.auth.service.provider;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.domain.auth.service.OAuthService;
-import org.crops.fitserver.global.exception.FitException;
-import org.crops.fitserver.global.http.ErrorType;
 import org.crops.fitserver.domain.user.domain.SocialPlatform;
+import org.crops.fitserver.global.exception.BusinessException;
+import org.crops.fitserver.global.exception.ErrorCode;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,6 +20,6 @@ public class OAuthServiceProvider {
         return oAuthService;
       }
     }
-    throw new FitException(ErrorType.UNSUPPORTED_SOCIAL_PLATFORM_EXCEPTION);
+    throw new BusinessException(ErrorCode.UNSUPPORTED_SOCIAL_PLATFORM_EXCEPTION);
   }
 }
