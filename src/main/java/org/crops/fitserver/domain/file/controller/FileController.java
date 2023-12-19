@@ -20,7 +20,7 @@ public class FileController {
 
   private final FileService fileService;
 
-  @PostMapping(value = "/pre-signed-url", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PostMapping(value = "/pre-signed-url", consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<PreSignedUrlDto> generatePreSignedUrl(
       @RequestBody GeneratePreSignedUrlRequest request) {
     var result = fileService.generatePreSignedUrl(request.fileName(), request.fileDomain());
