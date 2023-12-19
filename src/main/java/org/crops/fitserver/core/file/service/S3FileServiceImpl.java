@@ -1,23 +1,24 @@
 package org.crops.fitserver.core.file.service;
 
-import static org.crops.fitserver.global.exception.ErrorCode.FILE_UPLOAD_EXCEPTION;
-
-import java.io.IOException;
+import java.time.Duration;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.crops.fitserver.global.exception.BusinessException;
+import org.crops.fitserver.core.file.constant.FileDomain;
+import org.crops.fitserver.core.file.dto.PreSignedUrlDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
 @Service
 @RequiredArgsConstructor
 public class S3FileServiceImpl implements FileService {
 
   private final S3Client s3Client;
+
+  private final S3Presigner s3Presigner;
 
   @Value("${aws.s3.bucket}")
   private String bucket;
@@ -26,20 +27,21 @@ public class S3FileServiceImpl implements FileService {
 
 
   @Override
-  public String uploadFile(String fileName, MultipartFile file, boolean isTemporary) {
-    var fileKey = createFileKey(fileName, isTemporary);
+  public PreSignedUrlDto generatePreSignedUrl(String fileName, FileDomain fileDomain) {
+    var fileKey = createFileKey(fileName, fileDomain.getDirectory(), fileDomain.isTemporary());
+    var putObjectRequest = PutObjectRequest.builder().bucket(bucket).key(fileKey).build();
 
-    try {
-      s3Client.putObject(
-          PutObjectRequest.builder().bucket(bucket).key(fileKey)
-              .build(),
-          RequestBody.fromBytes(file.getBytes())
-      );
-    } catch (IOException e) {
-      throw new BusinessException(FILE_UPLOAD_EXCEPTION);
-    }
+    var preSignRequest = PutObjectPresignRequest.builder()
+        .signatureDuration(Duration.ofMinutes(10))//10분 안에 업로드 해야함
+        .putObjectRequest(putObjectRequest)
+        .build();
 
-    return fileKey;
+    var preSignedRequest = s3Presigner.presignPutObject(preSignRequest);
+
+    return PreSignedUrlDto.builder()
+        .preSignedUrl(preSignedRequest.url().toExternalForm())
+        .fileKey(fileKey)
+        .build();
   }
 
   @Override
@@ -47,7 +49,8 @@ public class S3FileServiceImpl implements FileService {
     s3Client.deleteObject(builder -> builder.bucket(bucket).key(fileKey));
   }
 
-  private static String createFileKey(String fileName, boolean isTemporary) {
-    return (isTemporary ? TEMPORARY_FILE_PREFIX : FILE_PREFIX)+ UUID.randomUUID() + fileName;
+  private static String createFileKey(String fileName, String directory, boolean isTemporary) {
+    return (isTemporary ? TEMPORARY_FILE_PREFIX : FILE_PREFIX) + directory + "/" + UUID.randomUUID()
+        + fileName;
   }
 }

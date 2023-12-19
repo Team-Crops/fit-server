@@ -7,6 +7,7 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentials;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 @Configuration
 public class AwsConfig {
@@ -22,7 +23,7 @@ public class AwsConfig {
 
   private AwsCredentials getCredentials() {
     return AwsBasicCredentials.create(accessKey, secretKey);
-  };
+  }
 
   @Bean
   public S3Client S3Client() {
@@ -30,6 +31,14 @@ public class AwsConfig {
         .region(Region.of(region))
         .credentialsProvider(this::getCredentials)
         .forcePathStyle(true)
+        .build();
+  }
+
+  @Bean
+  public S3Presigner S3Presigner() {
+    return S3Presigner.builder()
+        .region(Region.of(region))
+        .credentialsProvider(this::getCredentials)
         .build();
   }
 
