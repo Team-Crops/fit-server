@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.domain.file.dto.PreSignedUrlDto;
 import org.crops.fitserver.domain.file.dto.request.GeneratePreSignedUrlRequest;
 import org.crops.fitserver.domain.file.service.FileService;
+import org.crops.fitserver.global.annotation.V1;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@V1
 @RestController
 @RequestMapping("/file")
 @RequiredArgsConstructor
