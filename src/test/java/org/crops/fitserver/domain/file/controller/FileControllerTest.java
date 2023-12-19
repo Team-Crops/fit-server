@@ -22,6 +22,7 @@ import org.crops.fitserver.domain.file.service.FileService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.internal.matchers.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -65,6 +66,43 @@ class FileControllerTest {
         .build();
   }
 
+  @Test
+  void generatePreSignedUrl_failed_when_parameter_is_null() throws Exception {
+    //given
+    var url = "/v1/file/pre-signed-url";
+    var uploadImageRequest = new GeneratePreSignedUrlRequest(null, FileDomain.CHAT);
+
+    //when
+    var result = mockMvc.perform(post(url)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(uploadImageRequest))
+    );
+
+    //then
+    result.andExpect(status().isBadRequest())
+        .andDo(
+            document("generate-pre-signed-url-failed",
+                resource(
+                    ResourceSnippetParameters.builder()
+                        .tag("file")
+                        .description("generate pre-signed url")
+                        .summary("generate pre-signed url")
+                        .requestSchema(Schema.schema("generatePreSignedUrlRequest"))
+                        .requestFields(
+                            fieldWithPath("fileName").type(JsonFieldType.STRING).description("파일 이름"),
+                            new EnumFields(FileDomain.class).withPath("fileDomain").description("파일 도메인")
+                        )
+                        .responseSchema(Schema.schema("errorResponse"))
+                        .responseFields(
+                            fieldWithPath("code").type(JsonFieldType.STRING).description("에러 코드"),
+                            fieldWithPath("message").type(JsonFieldType.STRING).description("에러 메시지")
+                        )
+                        .build()
+                )
+            )
+        );
+  }
+
 
   @Test
   void generatePreSignedUrl_Success() throws Exception {
@@ -95,8 +133,8 @@ class FileControllerTest {
                         .summary("generate pre-signed url")
                         .requestSchema(Schema.schema("generatePreSignedUrlRequest"))
                         .requestFields(
-                            fieldWithPath("fileName").type(JsonFieldType.STRING).description("파일 이름"),
-                            new EnumFields(FileDomain.class).withPath("fileDomain").description("파일 도메인")
+                            fieldWithPath("name").type(JsonFieldType.STRING).description("파일 이름"),
+                            new EnumFields(FileDomain.class).withPath("domain").description("파일 도메인")
                         )
                         .responseSchema(Schema.schema("preSignedUrlDto"))
                         .responseFields(

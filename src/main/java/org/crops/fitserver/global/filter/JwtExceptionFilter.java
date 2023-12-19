@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.crops.fitserver.global.exception.FitException;
 import org.crops.fitserver.global.http.ErrorType;
 import org.crops.fitserver.global.http.FailResponse;
 import org.springframework.http.MediaType;
@@ -28,6 +29,12 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
       FilterChain filterChain) throws ServletException, IOException {
     try {
       filterChain.doFilter(request, response);
+    } catch (FitException e) {
+      log.error("error : {}", e.getMessage(), e);
+      responseError(
+          response,
+          e.getErrorType(),
+          e.getErrorType().getMessage());
     } catch (Exception e) {
       log.error("error : {}", e.getMessage(), e);
       responseError(
