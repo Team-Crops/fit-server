@@ -6,8 +6,8 @@ import org.crops.fitserver.domain.file.constant.FileDomain;
 
 
 public record GeneratePreSignedUrlRequest(
-    @JsonProperty("name") String name,
-    @JsonProperty("domain") FileDomain domain
+    @NotNull String fileName,
+    @NotNull FileDomain fileDomain
 ) {
 
 }
