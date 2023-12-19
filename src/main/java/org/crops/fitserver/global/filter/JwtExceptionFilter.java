@@ -29,11 +29,11 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
     try {
       filterChain.doFilter(request, response);
     } catch (Exception e) {
+      log.error("error : {}", e.getMessage(), e);
       responseError(
           response,
           ErrorType.INTERNAL_SERVER_ERROR,
           ErrorType.INTERNAL_SERVER_ERROR.getMessage());
-      log.error(e.getMessage());
     }
   }
 
