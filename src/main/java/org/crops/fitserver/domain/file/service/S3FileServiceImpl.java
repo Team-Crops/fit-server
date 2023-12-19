@@ -22,8 +22,8 @@ public class S3FileServiceImpl implements FileService {
 
   @Value("${aws.s3.bucket}")
   private String bucket;
-  private final static String FILE_PREFIX = "file/";
-  private final static String TEMPORARY_FILE_PREFIX = "temp/";
+  private final static String FILE_PREFIX = "file";
+  private final static String TEMPORARY_FILE_PREFIX = "temp";
 
 
   @Override
