@@ -5,7 +5,7 @@ CURRENT_STATE=""
 TARGET_PORT=0
 TARGET_STATE=""
 
-if [ $CURRENT_PORT -eq 8081 ]; then정
+if [ $CURRENT_PORT -eq 8081 ]; then
   CURRENT_STATE="blue"
   TARGET_PORT=8082
   TARGET_STATE="green"
