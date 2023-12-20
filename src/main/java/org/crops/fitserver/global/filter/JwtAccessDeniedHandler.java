@@ -25,9 +25,10 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
   @Override
   public void handle(HttpServletRequest request, HttpServletResponse response,
       AccessDeniedException accessDeniedException) throws IOException, ServletException {
-    log.error("user id {} has Role {}",
+    log.warn("user id {} has Role {}",
         SecurityContextHolder.getContext().getAuthentication().getName(),
-        SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString(),
+        SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
+    log.error(
         "error : {}", accessDeniedException.getMessage(),
         accessDeniedException);
     ErrorCode errorCode = ErrorCode.FORBIDDEN_EXCEPTION;
