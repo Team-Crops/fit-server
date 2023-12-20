@@ -13,9 +13,8 @@ import java.security.Key;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.crops.fitserver.global.http.ErrorType;
-import org.crops.fitserver.global.exception.FitException;
-import org.crops.fitserver.global.exception.UnauthorizedException;
+import org.crops.fitserver.global.exception.BusinessException;
+import org.crops.fitserver.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -40,9 +39,9 @@ public class JwtResolver {
       Claims claims = getAccessTokenBody(accessToken);
       return Long.parseLong(claims.get("userId").toString());
     } catch (ExpiredJwtException e) {
-      throw new FitException(ErrorType.EXPIRED_ACCESS_TOKEN_EXCEPTION);
+      throw new BusinessException(ErrorCode.EXPIRED_ACCESS_TOKEN_EXCEPTION);
     } catch (Exception e) {
-      throw new UnauthorizedException();
+      throw new BusinessException(ErrorCode.INVALID_ACCESS_TOKEN_EXCEPTION);
     }
   }
 
@@ -51,9 +50,9 @@ public class JwtResolver {
       Claims claims = getRefreshTokenBody(refreshToken);
       return Long.parseLong(claims.get("userId").toString());
     } catch (ExpiredJwtException e) {
-      throw new FitException(ErrorType.EXPIRED_REFRESH_TOKEN_EXCEPTION);
+      throw new BusinessException(ErrorCode.EXPIRED_REFRESH_TOKEN_EXCEPTION);
     } catch (Exception e) {
-      throw new UnauthorizedException();
+      throw new BusinessException(ErrorCode.INVALID_REFRESH_TOKEN_EXCEPTION);
     }
   }
 
@@ -64,11 +63,11 @@ public class JwtResolver {
           .before(new Date());
     } catch (SecurityException | MalformedJwtException | SignatureException |
              IllegalArgumentException e) {
-      throw new FitException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
+      throw new BusinessException(ErrorCode.INVALID_ACCESS_TOKEN_EXCEPTION);
     } catch (UnsupportedJwtException e) {
-      throw new FitException(ErrorType.UNSUPPORTED_JWT_TOKEN_EXCEPTION);
+      throw new BusinessException(ErrorCode.UNSUPPORTED_JWT_TOKEN_EXCEPTION);
     } catch (ExpiredJwtException e) {
-      throw new FitException(ErrorType.EXPIRED_ACCESS_TOKEN_EXCEPTION);
+      throw new BusinessException(ErrorCode.EXPIRED_ACCESS_TOKEN_EXCEPTION);
     }
   }
 
@@ -79,11 +78,11 @@ public class JwtResolver {
           .before(new Date());
     } catch (SecurityException | MalformedJwtException | SignatureException |
              IllegalArgumentException e) {
-      throw new FitException(ErrorType.INVALID_REFRESH_TOKEN_EXCEPTION);
+      throw new BusinessException(ErrorCode.INVALID_REFRESH_TOKEN_EXCEPTION);
     } catch (UnsupportedJwtException e) {
-      throw new FitException(ErrorType.UNSUPPORTED_JWT_TOKEN_EXCEPTION);
+      throw new BusinessException(ErrorCode.UNSUPPORTED_JWT_TOKEN_EXCEPTION);
     } catch (ExpiredJwtException e) {
-      throw new FitException(ErrorType.EXPIRED_REFRESH_TOKEN_EXCEPTION);
+      throw new BusinessException(ErrorCode.EXPIRED_REFRESH_TOKEN_EXCEPTION);
     }
   }
 

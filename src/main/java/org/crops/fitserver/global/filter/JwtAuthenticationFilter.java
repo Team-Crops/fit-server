@@ -7,16 +7,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.crops.fitserver.global.exception.FitException;
+import org.crops.fitserver.global.exception.BusinessException;
+import org.crops.fitserver.global.exception.ErrorCode;
 import org.crops.fitserver.global.http.HeaderTokenExtractor;
-import org.crops.fitserver.global.http.ErrorType;
-import org.crops.fitserver.global.exception.NotFoundException;
 import org.crops.fitserver.global.jwt.JwtResolver;
 import org.crops.fitserver.global.security.PrincipalDetailsService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -43,13 +43,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private static void checkAccessTokenNotNull(String accessToken) {
     if (!StringUtils.hasText(accessToken)) {
       log.warn("JWT Token is null : [{}]", accessToken);
-      throw new FitException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
+      throw new BusinessException(ErrorCode.INVALID_ACCESS_TOKEN_EXCEPTION);
     }
   }
 
   private void checkAccessTokenValidation(String accessToken) {
     if (!jwtResolver.validateAccessToken(accessToken)) {
-      throw new FitException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
+      throw new BusinessException(ErrorCode.INVALID_ACCESS_TOKEN_EXCEPTION);
     }
   }
 
@@ -60,8 +60,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
           principalDetailsService.loadUserByUsername(userId.toString());
       Authentication authentication = getAuthenticationFromUserDetails(userDetails);
       SecurityContextHolder.getContext().setAuthentication(authentication);
-    } catch (NotFoundException e) {
-      throw new FitException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
+    } catch (UsernameNotFoundException e) {
+      throw new BusinessException(ErrorCode.INVALID_ACCESS_TOKEN_EXCEPTION);
     }
   }
 

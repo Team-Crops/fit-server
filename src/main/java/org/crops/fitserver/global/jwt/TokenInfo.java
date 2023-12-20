@@ -5,7 +5,7 @@ import java.util.Map;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.crops.fitserver.user.domain.User;
+import org.crops.fitserver.domain.user.domain.User;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
