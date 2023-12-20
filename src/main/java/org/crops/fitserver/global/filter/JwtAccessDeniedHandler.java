@@ -7,8 +7,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.crops.fitserver.global.http.ErrorType;
-import org.crops.fitserver.global.http.FailResponse;
+import org.crops.fitserver.global.exception.ErrorCode;
+import org.crops.fitserver.global.exception.ErrorResponse;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,14 +30,13 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
         SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString(),
         "error : {}", accessDeniedException.getMessage(),
         accessDeniedException);
-    ErrorType errorType = ErrorType.FORBIDDEN_EXCEPTION;
-    response.setStatus(errorType.getStatusCode());
+    ErrorCode errorCode = ErrorCode.FORBIDDEN_EXCEPTION;
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     response.setCharacterEncoding("UTF-8");
+    response.setStatus(errorCode.getHttpStatus().value());
     response.getWriter()
         .write(objectMapper.writeValueAsString(
-            new FailResponse(
-                errorType.getStatusCode(),
-                errorType.getMessage())));
+            ErrorResponse.from(errorCode)));
+
   }
 }
