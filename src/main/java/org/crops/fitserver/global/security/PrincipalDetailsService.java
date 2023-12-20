@@ -1,8 +1,7 @@
 package org.crops.fitserver.global.security;
 
 import lombok.RequiredArgsConstructor;
-import org.crops.fitserver.global.exception.UnauthorizedException;
-import org.crops.fitserver.user.repository.UserRepository;
+import org.crops.fitserver.domain.user.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

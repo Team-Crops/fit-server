@@ -2,7 +2,8 @@ package org.crops.fitserver.global.http;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.crops.fitserver.global.exception.FitException;
+import org.crops.fitserver.global.exception.BusinessException;
+import org.crops.fitserver.global.exception.ErrorCode;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -31,7 +32,7 @@ public class HeaderTokenExtractor {
       log.error("{} Header does not begin with \"Bearer\" String : [{}]",
           headerPrefix,
           bearerToken);
-      throw new FitException(ErrorType.INVALID_ACCESS_TOKEN_EXCEPTION);
+      throw new BusinessException(ErrorCode.INVALID_ACCESS_TOKEN_EXCEPTION);
     }
   }
 

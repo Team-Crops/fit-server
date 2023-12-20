@@ -1,5 +1,6 @@
 package org.crops.fitserver.global.log;
 
+import org.crops.fitserver.global.filter.ContentCacheFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,8 +13,18 @@ public class LogConfig {
     FilterRegistrationBean<LogFilter> registrationBean = new FilterRegistrationBean<>();
     registrationBean.setFilter(new LogFilter());
     registrationBean.addUrlPatterns("*");
-    registrationBean.setOrder(1);
+    registrationBean.setOrder(2);
     registrationBean.setName("LogFilter");
+    return registrationBean;
+  }
+
+  @Bean
+  public FilterRegistrationBean<ContentCacheFilter> ContentCacheFilter() {
+    FilterRegistrationBean<ContentCacheFilter> registrationBean = new FilterRegistrationBean<>();
+    registrationBean.setFilter(new ContentCacheFilter());
+    registrationBean.addUrlPatterns("*");
+    registrationBean.setOrder(1);
+    registrationBean.setName("ContentCacheFilter");
     return registrationBean;
   }
 
@@ -23,7 +34,7 @@ public class LogConfig {
     FilterRegistrationBean<LogRequestFilter> registrationBean = new FilterRegistrationBean<>();
     registrationBean.setFilter(new LogRequestFilter());
     registrationBean.addUrlPatterns("*");
-    registrationBean.setOrder(2);
+    registrationBean.setOrder(3);
     registrationBean.setName("LogRequestFilter");
     return registrationBean;
   }
