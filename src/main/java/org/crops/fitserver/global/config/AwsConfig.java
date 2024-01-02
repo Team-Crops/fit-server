@@ -41,5 +41,4 @@ public class AwsConfig {
         .credentialsProvider(this::getCredentials)
         .build();
   }
-
 }

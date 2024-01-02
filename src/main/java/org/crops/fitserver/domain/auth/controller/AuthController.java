@@ -4,10 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.domain.auth.facade.dto.SocialLoginPageResponse;
 import org.crops.fitserver.domain.auth.facade.AuthFacade;
-import org.crops.fitserver.global.http.HttpResponse;
 import org.crops.fitserver.domain.user.domain.SocialPlatform;
 import org.crops.fitserver.domain.auth.facade.dto.TokenResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,19 +30,15 @@ public class AuthController {
         request.getRequestURL().toString(),
         code,
         socialPlatform);
-    return HttpResponse.success(
-        HttpStatus.OK,
-        tokenResponse);
+    return ResponseEntity.ok(tokenResponse);
   }
 
   @GetMapping("/social/{socialPlatform}/login-page")
   public ResponseEntity<SocialLoginPageResponse> getSocialLoginPageUrl(
       @PathVariable(name = "socialPlatform") SocialPlatform socialPlatform
   ) {
-    SocialLoginPageResponse socialLoginPageResponse = authFacade.getSocialLoginPageUrl(
-        socialPlatform);
-    return HttpResponse.success(
-        HttpStatus.OK,
-        socialLoginPageResponse);
+    SocialLoginPageResponse socialLoginPageResponse =
+        authFacade.getSocialLoginPageUrl(socialPlatform);
+    return ResponseEntity.ok(socialLoginPageResponse);
   }
 }

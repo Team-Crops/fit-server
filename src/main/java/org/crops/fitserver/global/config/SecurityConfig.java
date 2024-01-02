@@ -2,6 +2,7 @@ package org.crops.fitserver.global.config;
 
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
+import org.crops.fitserver.domain.user.domain.UserRole;
 import org.crops.fitserver.global.filter.JwtAccessDeniedHandler;
 import org.crops.fitserver.global.filter.JwtAuthenticationFilter;
 import org.crops.fitserver.global.filter.JwtExceptionFilter;
@@ -74,12 +75,17 @@ public class SecurityConfig {
 
     http.authorizeHttpRequests(
         authorize -> authorize
-            .requestMatchers(new AntPathRequestMatcher("/manager/**"))
-            .hasAnyAuthority("MANAGER", "ADMIN")
             .requestMatchers(new AntPathRequestMatcher("/admin/**"))
-            .hasAuthority("ADMIN")
+            .hasAuthority(UserRole.ADMIN.name())
+            .requestMatchers(new AntPathRequestMatcher("/manager/**"))
+            .hasAnyAuthority(
+                UserRole.MANAGER.name(),
+                UserRole.ADMIN.name())
             .anyRequest()
-            .hasAnyAuthority("USER", "MANAGER", "ADMIN")
+            .hasAnyAuthority(
+                UserRole.MEMBER.name(),
+                UserRole.MANAGER.name(),
+                UserRole.ADMIN.name())
     );
 
     return http.build();
@@ -87,18 +93,17 @@ public class SecurityConfig {
 
   @Bean
   public WebSecurityCustomizer webSecurityCustomizer() {
-    return web -> {
-      web.ignoring()
-          .requestMatchers(
-              Arrays.stream(apiDocumentPatterns)
-                  .map(AntPathRequestMatcher::new)
-                  .toArray(AntPathRequestMatcher[]::new))
-          .requestMatchers(new AntPathRequestMatcher("/actuator/**"))
-          .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-          .requestMatchers(new AntPathRequestMatcher("/v1/auth/social/**"))
-          .requestMatchers(new AntPathRequestMatcher("/h2-console/**")
-          );
-    };
+    return web -> web
+        .ignoring()
+        .requestMatchers(
+            Arrays.stream(apiDocumentPatterns)
+                .map(AntPathRequestMatcher::new)
+                .toArray(AntPathRequestMatcher[]::new))
+        .requestMatchers(new AntPathRequestMatcher("/actuator/**"))
+        .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+        .requestMatchers(new AntPathRequestMatcher("/v1/auth/social/**"))
+        .requestMatchers(new AntPathRequestMatcher("/h2-console/**")
+        );
   }
 
   @Bean
