@@ -1,4 +1,4 @@
-package org.crops.fitserver.global.socket.security;
+package org.crops.fitserver.global.socket;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
@@ -42,11 +42,11 @@ public class WebSocketAddMappingSupporter {
 
       socketIOServer.addEventListener(endpoint, dtoClass, ((client, data, ackSender) -> {
         List<Object> args = new ArrayList<>();
-        for (Class<?> params : method.getParameterTypes()) {                        // Controller 메소드의 파라미터들
+        for (Class<?> params : method.getParameterTypes()) {
           if (params.equals(SocketIOServer.class)) {
-            args.add(socketIOServer);      // SocketIOServer 면 주입
+            args.add(socketIOServer);
           } else if (params.equals(SocketIOClient.class)) {
-            args.add(client);         // 마찬가지
+            args.add(client);
           } else if (params.equals(dtoClass)) {
             args.add(data);
           }

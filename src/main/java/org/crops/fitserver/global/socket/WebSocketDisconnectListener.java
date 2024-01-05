@@ -1,4 +1,4 @@
-package org.crops.fitserver.global.socket.security;
+package org.crops.fitserver.global.socket;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.listener.DisconnectListener;
@@ -10,13 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class WebSocketDisConnectController implements DisconnectListener {
+public class WebSocketDisconnectListener implements DisconnectListener {
 
   @Override
   @Transactional
   public void onDisconnect(SocketIOClient socketIOClient) {
-    log.info("Client[{}] - Disconnected from socket", socketIOClient.getSessionId().toString());
-//    userRepository.findById(client.get("userInfo"))
-//        .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
+    log.info("Socket ID[{}] - Disconnected from socket", socketIOClient.getSessionId().toString());
   }
 }
