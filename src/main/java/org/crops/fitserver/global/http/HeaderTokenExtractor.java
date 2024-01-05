@@ -21,6 +21,11 @@ public class HeaderTokenExtractor {
     return bearerToken.substring(HEADER_PREFIX.length());
   }
 
+  public String extractAccessToken(String authorizationHeader) {
+    checkValidBearerToken(AUTHORIZATION_HEADER, authorizationHeader);
+    return authorizationHeader.substring(HEADER_PREFIX.length());
+  }
+
   public String extractRefreshToken(HttpServletRequest request) {
     String bearerToken = request.getHeader(REFRESH_TOKEN_HEADER);
     checkValidBearerToken(REFRESH_TOKEN_HEADER, bearerToken);
