@@ -61,7 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       Authentication authentication = getAuthenticationFromUserDetails(userDetails);
       SecurityContextHolder.getContext().setAuthentication(authentication);
     } catch (UsernameNotFoundException e) {
-      throw new BusinessException(ErrorCode.INVALID_ACCESS_TOKEN_EXCEPTION);
+      throw new BusinessException(e, ErrorCode.INVALID_ACCESS_TOKEN_EXCEPTION);
     }
   }
 

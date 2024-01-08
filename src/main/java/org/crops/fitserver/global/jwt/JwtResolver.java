@@ -39,9 +39,9 @@ public class JwtResolver {
       Claims claims = getAccessTokenBody(accessToken);
       return Long.parseLong(claims.get("userId").toString());
     } catch (ExpiredJwtException e) {
-      throw new BusinessException(ErrorCode.EXPIRED_ACCESS_TOKEN_EXCEPTION);
+      throw new BusinessException(e, ErrorCode.EXPIRED_ACCESS_TOKEN_EXCEPTION);
     } catch (Exception e) {
-      throw new BusinessException(ErrorCode.INVALID_ACCESS_TOKEN_EXCEPTION);
+      throw new BusinessException(e, ErrorCode.INVALID_ACCESS_TOKEN_EXCEPTION);
     }
   }
 
@@ -50,9 +50,9 @@ public class JwtResolver {
       Claims claims = getRefreshTokenBody(refreshToken);
       return Long.parseLong(claims.get("userId").toString());
     } catch (ExpiredJwtException e) {
-      throw new BusinessException(ErrorCode.EXPIRED_REFRESH_TOKEN_EXCEPTION);
+      throw new BusinessException(e, ErrorCode.EXPIRED_REFRESH_TOKEN_EXCEPTION);
     } catch (Exception e) {
-      throw new BusinessException(ErrorCode.INVALID_REFRESH_TOKEN_EXCEPTION);
+      throw new BusinessException(e, ErrorCode.INVALID_REFRESH_TOKEN_EXCEPTION);
     }
   }
 
@@ -63,11 +63,11 @@ public class JwtResolver {
           .before(new Date());
     } catch (SecurityException | MalformedJwtException | SignatureException |
              IllegalArgumentException e) {
-      throw new BusinessException(ErrorCode.INVALID_ACCESS_TOKEN_EXCEPTION);
+      throw new BusinessException(e, ErrorCode.INVALID_ACCESS_TOKEN_EXCEPTION);
     } catch (UnsupportedJwtException e) {
-      throw new BusinessException(ErrorCode.UNSUPPORTED_JWT_TOKEN_EXCEPTION);
+      throw new BusinessException(e, ErrorCode.UNSUPPORTED_JWT_TOKEN_EXCEPTION);
     } catch (ExpiredJwtException e) {
-      throw new BusinessException(ErrorCode.EXPIRED_ACCESS_TOKEN_EXCEPTION);
+      throw new BusinessException(e, ErrorCode.EXPIRED_ACCESS_TOKEN_EXCEPTION);
     }
   }
 
@@ -78,11 +78,11 @@ public class JwtResolver {
           .before(new Date());
     } catch (SecurityException | MalformedJwtException | SignatureException |
              IllegalArgumentException e) {
-      throw new BusinessException(ErrorCode.INVALID_REFRESH_TOKEN_EXCEPTION);
+      throw new BusinessException(e, ErrorCode.INVALID_REFRESH_TOKEN_EXCEPTION);
     } catch (UnsupportedJwtException e) {
-      throw new BusinessException(ErrorCode.UNSUPPORTED_JWT_TOKEN_EXCEPTION);
+      throw new BusinessException(e, ErrorCode.UNSUPPORTED_JWT_TOKEN_EXCEPTION);
     } catch (ExpiredJwtException e) {
-      throw new BusinessException(ErrorCode.EXPIRED_REFRESH_TOKEN_EXCEPTION);
+      throw new BusinessException(e, ErrorCode.EXPIRED_REFRESH_TOKEN_EXCEPTION);
     }
   }
 
