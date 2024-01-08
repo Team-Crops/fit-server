@@ -4,8 +4,7 @@ import java.util.Optional;
 import org.crops.fitserver.domain.chat.domain.ChatRoom;
 import org.springframework.data.repository.Repository;
 
-public interface ChatRoomRepository extends
-    Repository<ChatRoom, Long> {
+public interface ChatRoomRepository extends Repository<ChatRoom, Long> {
 
   ChatRoom save(ChatRoom chatRoom);
 

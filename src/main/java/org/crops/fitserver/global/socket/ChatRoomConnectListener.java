@@ -23,8 +23,6 @@ public class ChatRoomConnectListener implements ConnectListener {
       log.info("Socket ID[{}]  Connected to socket", socketIOClient.getSessionId().toString());
       chatRoomService.getById(Long.parseLong(roomId));
       socketIOClient.joinRoom(roomId);
-//      socketIOClient.set("", "");
-//      socketIOClient.get("");
     }
   }
 }
