@@ -5,5 +5,10 @@ import org.crops.fitserver.domain.chat.domain.MessageType;
 
 public interface ChatRoomFacade {
 
-  void sendMessage(SocketIOClient client, Long userId, Long roomId, MessageType messageType, String content);
+  void sendMessage(
+      SocketIOClient client,
+      Long userId,
+      Long roomId,
+      MessageType messageType,
+      String content);
 }

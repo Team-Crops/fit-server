@@ -41,7 +41,7 @@ public class SocketExceptionListener implements ExceptionListener {
   private void runExceptionHandling(Exception e, SocketIOClient client) {
     final ErrorResponse message;
     if (e instanceof BusinessException) {
-      BusinessException fitException = (BusinessException)e;
+      BusinessException fitException = (BusinessException) e;
       message = ErrorResponse.from(fitException.getErrorCode());
     } else {
       e.printStackTrace();
