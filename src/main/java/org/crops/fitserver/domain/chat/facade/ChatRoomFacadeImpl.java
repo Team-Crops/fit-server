@@ -25,6 +25,8 @@ public class ChatRoomFacadeImpl implements ChatRoomFacade {
   private final SocketService socketService;
   private final UserRepository userRepository;
 
+  private final static String GET_MESSAGE_EVENT_NAME = "get_message";
+
   @Override
   public void sendMessage(
       SocketIOClient client,
@@ -44,6 +46,6 @@ public class ChatRoomFacadeImpl implements ChatRoomFacade {
         user.getProfileImageUrl(),
         messageType,
         new StringMessageResponse(content));
-    socketService.sendMessage(client, "get_message", response);
+    socketService.sendMessage(client, GET_MESSAGE_EVENT_NAME, response);
   }
 }

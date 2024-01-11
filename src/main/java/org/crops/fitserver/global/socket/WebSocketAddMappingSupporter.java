@@ -13,8 +13,8 @@ import org.crops.fitserver.global.annotation.SocketMapping;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
 @Component
+@RequiredArgsConstructor
 public class WebSocketAddMappingSupporter {
 
   private final ConfigurableListableBeanFactory beanFactory;
