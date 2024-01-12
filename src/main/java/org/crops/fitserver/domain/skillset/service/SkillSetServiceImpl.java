@@ -1,6 +1,7 @@
 package org.crops.fitserver.domain.skillset.service;
 
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.skillset.domain.Skill;
@@ -29,24 +30,29 @@ class SkillSetServiceImpl implements SkillSetService {
     }
 
     //1. Skill 생성
-    var skill = skillRepository.save(
-        Skill.builder().displayName(createSkillRequest.displayName()
-        ).build()
-    );
+    var skill = Skill.builder().displayName(createSkillRequest.displayName()).build();
+    skill = skillRepository.save(skill);
 
     //2. Position에 Skill 추가
     if (!CollectionUtils.isEmpty(createSkillRequest.positionIds())) {
-      var positions = positionRepository.findAllById(createSkillRequest.positionIds());
-
-      if (positions.size() != createSkillRequest.positionIds().size()) {
-        throw new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION);
-      }
-
-      positions.forEach(position -> position.addSkill(skill));
-
-      positionRepository.saveAll(positions);
+      addSkillToPosition(skill, createSkillRequest.positionIds());
     }
 
     return SkillDto.from(skill);
+  }
+
+  /**
+   * private이기 때문에 부모의 트랜잭션을 이어받음.
+   */
+  private void addSkillToPosition(Skill skill, List<Long> positionIds) {
+    var positions = positionRepository.findAllById(positionIds);
+
+    if (positions.size() != positionIds.size()) {
+      throw new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION);
+    }
+
+    positions.forEach(position -> position.addSkill(skill));
+
+    positionRepository.saveAll(positions);
   }
 }
