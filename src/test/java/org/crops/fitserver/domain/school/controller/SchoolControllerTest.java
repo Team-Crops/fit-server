@@ -92,6 +92,7 @@ public class SchoolControllerTest {
                 resource(
                     ResourceSnippetParameters.builder()
                         .tag("school")
+                        .summary("학교 리스트 조회")
                         .description("get school list")
                         .responseFields(
                             fieldWithPath("[]").description("학교 리스트"),
@@ -134,6 +135,7 @@ public class SchoolControllerTest {
                 resource(
                     ResourceSnippetParameters.builder()
                         .tag("school")
+                        .summary("학교 리스트 조회")
                         .description("get school list by keyword")
                         .responseFields(
                             fieldWithPath("[]").description("학교 리스트"),

@@ -1,4 +1,4 @@
-package org.crops.fitserver.domain.file.controller;
+package org.crops.fitserver.domain.region.controller;
 
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;

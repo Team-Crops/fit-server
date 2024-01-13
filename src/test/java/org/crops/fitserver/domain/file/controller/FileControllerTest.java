@@ -1,4 +1,4 @@
-package org.crops.fitserver.domain.region.controller;
+package org.crops.fitserver.domain.file.controller;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.ArgumentMatchers.any;
