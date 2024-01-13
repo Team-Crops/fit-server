@@ -73,7 +73,9 @@ class RegionControllerTest {
   public void getRegionList_Success() throws Exception {
     //given
     var url = "/v1/region";
-    given(regionService.getRegionList()).willReturn(List.of());
+    given(regionService.getRegionList()).willReturn(List.of(
+        RegionDto.of(1L, "test")
+    ));
 
     //when
     var result = mockMvc.perform(get(url)
@@ -89,7 +91,10 @@ class RegionControllerTest {
                         .description("지역 리스트 조회")
                         .summary("지역 리스트 조회")
                         .responseFields(
-                            fieldWithPath("[]").type(JsonFieldType.ARRAY).description("지역 리스트")
+                            fieldWithPath("[]").type(JsonFieldType.ARRAY).description("지역 리스트"),
+                            fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("지역 id"),
+                            fieldWithPath("[].displayName").type(JsonFieldType.STRING)
+                                .description("지역명")
                         )
                         .build()
                 )

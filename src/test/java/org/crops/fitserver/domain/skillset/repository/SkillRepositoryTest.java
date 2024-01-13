@@ -1,11 +1,11 @@
-package org.crops.fitserver.domain.skillSet.repository;
+package org.crops.fitserver.domain.skillset.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.crops.fitserver.domain.skillSet.domain.Skill;
+import org.crops.fitserver.domain.skillset.domain.Skill;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;

@@ -1,4 +1,4 @@
-package org.crops.fitserver.domain.skillSet.service;
+package org.crops.fitserver.domain.skillset.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -8,12 +8,12 @@ import static org.mockito.BDDMockito.given;
 import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.crops.fitserver.domain.skillSet.domain.Position;
-import org.crops.fitserver.domain.skillSet.domain.Skill;
-import org.crops.fitserver.domain.skillSet.dto.request.CreatePositionRequest;
-import org.crops.fitserver.domain.skillSet.dto.request.CreateSkillRequest;
-import org.crops.fitserver.domain.skillSet.repository.PositionRepository;
-import org.crops.fitserver.domain.skillSet.repository.SkillRepository;
+import org.crops.fitserver.domain.skillset.domain.Position;
+import org.crops.fitserver.domain.skillset.domain.Skill;
+import org.crops.fitserver.domain.skillset.dto.request.CreatePositionRequest;
+import org.crops.fitserver.domain.skillset.dto.request.CreateSkillRequest;
+import org.crops.fitserver.domain.skillset.repository.PositionRepository;
+import org.crops.fitserver.domain.skillset.repository.SkillRepository;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -196,7 +196,7 @@ public class SkillSetServiceTest {
     ));
 
     // when
-    var result = skillSetService.getPostionList();
+    var result = skillSetService.getPositionList();
 
     // then
     assertThat(result).hasSize(1);
