@@ -41,6 +41,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -123,12 +124,12 @@ class SkillSetControllerTest {
                         .description("직군 리스트를 조회한다.")
                         .responseSchema(Schema.schema("position-list"))
                         .responseFields(
-                            fieldWithPath("[]").description("직군 리스트"),
-                            fieldWithPath("[].id").description("직군 id"),
-                            fieldWithPath("[].displayName").description("직군 이름"),
-                            fieldWithPath("[].skillList").description("직군에 속한 스킬 리스트"),
-                            fieldWithPath("[].skillList[].id").description("스킬 id"),
-                            fieldWithPath("[].skillList[].displayName").description("스킬 이름")
+                            fieldWithPath("[]").type(JsonFieldType.ARRAY).description("직군 리스트"),
+                            fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("직군 id"),
+                            fieldWithPath("[].displayName").type(JsonFieldType.STRING).description("직군 이름"),
+                            fieldWithPath("[].skillList").type(JsonFieldType.ARRAY).description("직군에 속한 스킬 리스트"),
+                            fieldWithPath("[].skillList[].id").type(JsonFieldType.NUMBER).description("스킬 id"),
+                            fieldWithPath("[].skillList[].displayName").type(JsonFieldType.STRING).description("스킬 이름")
                         )
                         .build()
                 )
@@ -163,13 +164,13 @@ class SkillSetControllerTest {
                         .description("직군을 생성한다.")
                         .requestSchema(Schema.schema("createPositionRequest"))
                         .requestFields(
-                            fieldWithPath("displayName").description("직군 이름"),
-                            fieldWithPath("skillIds").description("직군에 속한 스킬 리스트").optional()
+                            fieldWithPath("displayName").type(JsonFieldType.STRING).description("직군 이름"),
+                            fieldWithPath("skillIds").type(JsonFieldType.ARRAY).description("직군에 속한 스킬 리스트").optional()
                         )
                         .responseSchema(Schema.schema("errorResponse"))
                         .responseFields(
-                            fieldWithPath("code").description("에러 코드"),
-                            fieldWithPath("message").description("에러 메시지")
+                            fieldWithPath("code").type(JsonFieldType.STRING).description("에러 코드"),
+                            fieldWithPath("message").type(JsonFieldType.STRING).description("에러 메시지")
                         )
                         .build()
                 )
@@ -205,14 +206,14 @@ class SkillSetControllerTest {
                         .description("직군을 생성한다.")
                         .requestSchema(Schema.schema("createPositionRequest"))
                         .requestFields(
-                            fieldWithPath("displayName").description("직군 이름"),
+                            fieldWithPath("displayName").type(JsonFieldType.STRING).description("직군 이름"),
                             fieldWithPath("skillIds").description("직군에 속한 스킬 리스트").optional()
                         )
                         .responseSchema(Schema.schema("position"))
                         .responseFields(
-                            fieldWithPath("id").description("직군 id"),
-                            fieldWithPath("displayName").description("직군 이름"),
-                            fieldWithPath("skillList").description("직군에 속한 스킬 리스트")
+                            fieldWithPath("id").type(JsonFieldType.NUMBER).description("직군 id"),
+                            fieldWithPath("displayName").type(JsonFieldType.STRING).description("직군 이름"),
+                            fieldWithPath("skillList").type(JsonFieldType.ARRAY).description("직군에 속한 스킬 리스트")
                         )
                         .build()
                 )
@@ -249,13 +250,13 @@ class SkillSetControllerTest {
                         .description("직군을 생성한다.")
                         .requestSchema(Schema.schema("createPositionRequest"))
                         .requestFields(
-                            fieldWithPath("displayName").description("직군 이름"),
-                            fieldWithPath("skillIds").description("직군에 속한 스킬 리스트").optional()
+                            fieldWithPath("displayName").type(JsonFieldType.STRING).description("직군 이름"),
+                            fieldWithPath("skillIds").type(JsonFieldType.STRING).description("직군에 속한 스킬 리스트").optional()
                         )
                         .responseSchema(Schema.schema("errorResponse"))
                         .responseFields(
-                            fieldWithPath("code").description("에러 코드"),
-                            fieldWithPath("message").description("에러 메시지")
+                            fieldWithPath("code").type(JsonFieldType.STRING).description("에러 코드"),
+                            fieldWithPath("message").type(JsonFieldType.STRING).description("에러 메시지")
                         )
                         .build()
                 )
@@ -303,16 +304,16 @@ class SkillSetControllerTest {
                         .description("직군을 생성한다.")
                         .requestSchema(Schema.schema("createPositionRequest"))
                         .requestFields(
-                            fieldWithPath("displayName").description("직군 이름"),
+                            fieldWithPath("displayName").type(JsonFieldType.STRING).description("직군 이름"),
                             fieldWithPath("skillIds").description("직군에 속한 스킬 리스트").optional()
                         )
                         .responseSchema(Schema.schema("position"))
                         .responseFields(
-                            fieldWithPath("id").description("직군 id"),
-                            fieldWithPath("displayName").description("직군 이름"),
-                            fieldWithPath("skillList").description("직군에 속한 스킬 리스트"),
-                            fieldWithPath("skillList[].id").description("스킬 id"),
-                            fieldWithPath("skillList[].displayName").description("스킬 이름")
+                            fieldWithPath("id").type(JsonFieldType.NUMBER).description("직군 id"),
+                            fieldWithPath("displayName").type(JsonFieldType.STRING).description("직군 이름"),
+                            fieldWithPath("skillList").type(JsonFieldType.ARRAY).description("직군에 속한 스킬 리스트"),
+                            fieldWithPath("skillList[].id").type(JsonFieldType.NUMBER).description("스킬 id"),
+                            fieldWithPath("skillList[].displayName").type(JsonFieldType.STRING).description("스킬 이름")
                         )
                         .build()
                 )
@@ -346,12 +347,12 @@ class SkillSetControllerTest {
                         .description("직군 이름을 수정한다.")
                         .requestSchema(Schema.schema("updatePositionRequest"))
                         .requestFields(
-                            fieldWithPath("displayName").description("직군 이름")
+                            fieldWithPath("displayName").type(JsonFieldType.STRING).description("직군 이름")
                         )
                         .responseSchema(Schema.schema("errorResponse"))
                         .responseFields(
-                            fieldWithPath("code").description("에러 코드"),
-                            fieldWithPath("message").description("에러 메시지")
+                            fieldWithPath("code").type(JsonFieldType.STRING).description("에러 코드"),
+                            fieldWithPath("message").type(JsonFieldType.STRING).description("에러 메시지")
                         )
                         .build()
                 )
@@ -386,13 +387,13 @@ class SkillSetControllerTest {
                         .description("직군 이름을 수정한다.")
                         .requestSchema(Schema.schema("updatePositionRequest"))
                         .requestFields(
-                            fieldWithPath("displayName").description("직군 이름")
+                            fieldWithPath("displayName").type(JsonFieldType.STRING).description("직군 이름")
                         )
                         .responseSchema(Schema.schema("position"))
                         .responseFields(
-                            fieldWithPath("id").description("직군 id"),
-                            fieldWithPath("displayName").description("직군 이름"),
-                            fieldWithPath("skillList").description("직군에 속한 스킬 리스트")
+                            fieldWithPath("id").type(JsonFieldType.NUMBER).description("직군 id"),
+                            fieldWithPath("displayName").type(JsonFieldType.STRING).description("직군 이름"),
+                            fieldWithPath("skillList").type(JsonFieldType.ARRAY).description("직군에 속한 스킬 리스트")
                         )
                         .build()
                 )
@@ -442,11 +443,11 @@ class SkillSetControllerTest {
                         )
                         .responseSchema(Schema.schema("position"))
                         .responseFields(
-                            fieldWithPath("id").description("직군 id"),
-                            fieldWithPath("displayName").description("직군 이름"),
-                            fieldWithPath("skillList").description("직군에 속한 스킬 리스트"),
-                            fieldWithPath("skillList[].id").description("스킬 id"),
-                            fieldWithPath("skillList[].displayName").description("스킬 이름")
+                            fieldWithPath("id").type(JsonFieldType.NUMBER).description("직군 id"),
+                            fieldWithPath("displayName").type(JsonFieldType.STRING).description("직군 이름"),
+                            fieldWithPath("skillList").type(JsonFieldType.ARRAY).description("직군에 속한 스킬 리스트"),
+                            fieldWithPath("skillList[].id").type(JsonFieldType.NUMBER).description("스킬 id"),
+                            fieldWithPath("skillList[].displayName").type(JsonFieldType.STRING).description("스킬 이름")
                         )
                         .build()
                 )
@@ -506,9 +507,9 @@ class SkillSetControllerTest {
                         .description("스킬 리스트를 조회한다.")
                         .responseSchema(Schema.schema("skill-list"))
                         .responseFields(
-                            fieldWithPath("[]").description("스킬 리스트"),
-                            fieldWithPath("[].id").description("스킬 id"),
-                            fieldWithPath("[].displayName").description("스킬 이름")
+                            fieldWithPath("[]").type(JsonFieldType.ARRAY).description("스킬 리스트"),
+                            fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("스킬 id"),
+                            fieldWithPath("[].displayName").type(JsonFieldType.STRING).description("스킬 이름")
                         )
                         .build()
                 )
@@ -545,9 +546,9 @@ class SkillSetControllerTest {
                         .description("직군에 속한 스킬 리스트를 조회한다.")
                         .responseSchema(Schema.schema("skill-list"))
                         .responseFields(
-                            fieldWithPath("[]").description("스킬 리스트"),
-                            fieldWithPath("[].id").description("스킬 id"),
-                            fieldWithPath("[].displayName").description("스킬 이름")
+                            fieldWithPath("[]").type(JsonFieldType.ARRAY).description("스킬 리스트"),
+                            fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("스킬 id"),
+                            fieldWithPath("[].displayName").type(JsonFieldType.STRING).description("스킬 이름")
                         )
                         .build()
                 )
@@ -581,13 +582,13 @@ class SkillSetControllerTest {
                         .description("스킬을 생성한다.")
                         .requestSchema(Schema.schema("createSkillRequest"))
                         .requestFields(
-                            fieldWithPath("displayName").description("스킬 이름"),
-                            fieldWithPath("positionIds").description("스킬에 속한 직군 리스트")
+                            fieldWithPath("displayName").type(JsonFieldType.STRING).description("스킬 이름"),
+                            fieldWithPath("positionIds").type(JsonFieldType.ARRAY).description("스킬에 속한 직군 리스트")
                         )
                         .responseSchema(Schema.schema("errorResponse"))
                         .responseFields(
-                            fieldWithPath("code").description("에러 코드"),
-                            fieldWithPath("message").description("에러 메시지")
+                            fieldWithPath("code").type(JsonFieldType.STRING).description("에러 코드"),
+                            fieldWithPath("message").type(JsonFieldType.STRING).description("에러 메시지")
                         )
                         .build()
                 )
@@ -621,13 +622,13 @@ class SkillSetControllerTest {
                         .description("스킬을 생성한다.")
                         .requestSchema(Schema.schema("createSkillRequest"))
                         .requestFields(
-                            fieldWithPath("displayName").description("스킬 이름"),
-                            fieldWithPath("positionIds").description("스킬에 속한 직군 리스트")
+                            fieldWithPath("displayName").type(JsonFieldType.STRING).description("스킬 이름"),
+                            fieldWithPath("positionIds").type(JsonFieldType.ARRAY).description("스킬에 속한 직군 리스트")
                         )
                         .responseSchema(Schema.schema("skill"))
                         .responseFields(
-                            fieldWithPath("id").description("스킬 id"),
-                            fieldWithPath("displayName").description("스킬 이름")
+                            fieldWithPath("id").type(JsonFieldType.NUMBER).description("스킬 id"),
+                            fieldWithPath("displayName").type(JsonFieldType.STRING).description("스킬 이름")
                         )
                         .build()
                 )
@@ -664,13 +665,13 @@ class SkillSetControllerTest {
                         .description("스킬을 생성한다.")
                         .requestSchema(Schema.schema("createSkillRequest"))
                         .requestFields(
-                            fieldWithPath("displayName").description("스킬 이름"),
-                            fieldWithPath("positionIds").description("스킬에 속한 직군 리스트")
+                            fieldWithPath("displayName").type(JsonFieldType.STRING).description("스킬 이름"),
+                            fieldWithPath("positionIds").type(JsonFieldType.ARRAY).description("스킬에 속한 직군 리스트")
                         )
                         .responseSchema(Schema.schema("errorResponse"))
                         .responseFields(
-                            fieldWithPath("code").description("에러 코드"),
-                            fieldWithPath("message").description("에러 메시지")
+                            fieldWithPath("code").type(JsonFieldType.STRING).description("에러 코드"),
+                            fieldWithPath("message").type(JsonFieldType.STRING).description("에러 메시지")
                         )
                         .build()
                 )
@@ -707,13 +708,13 @@ class SkillSetControllerTest {
                         .description("스킬을 생성한다.(결과에서 직군 리스트는 제외된다. 201 code를 받았다면 성공한 것임)")
                         .requestSchema(Schema.schema("createSkillRequest"))
                         .requestFields(
-                            fieldWithPath("displayName").description("스킬 이름"),
-                            fieldWithPath("positionIds").description("스킬에 속한 직군 리스트")
+                            fieldWithPath("displayName").type(JsonFieldType.STRING).description("스킬 이름"),
+                            fieldWithPath("positionIds").type(JsonFieldType.ARRAY).description("스킬에 속한 직군 리스트")
                         )
                         .responseSchema(Schema.schema("skill"))
                         .responseFields(
-                            fieldWithPath("id").description("스킬 id"),
-                            fieldWithPath("displayName").description("스킬 이름")
+                            fieldWithPath("id").type(JsonFieldType.NUMBER).description("스킬 id"),
+                            fieldWithPath("displayName").type(JsonFieldType.STRING).description("스킬 이름")
                         )
                         .build()
                 )
@@ -747,12 +748,12 @@ class SkillSetControllerTest {
                         .description("스킬 이름을 수정한다.")
                         .requestSchema(Schema.schema("updateSkillRequest"))
                         .requestFields(
-                            fieldWithPath("displayName").description("스킬 이름")
+                            fieldWithPath("displayName").type(JsonFieldType.STRING).description("스킬 이름")
                         )
                         .responseSchema(Schema.schema("errorResponse"))
                         .responseFields(
-                            fieldWithPath("code").description("에러 코드"),
-                            fieldWithPath("message").description("에러 메시지")
+                            fieldWithPath("code").type(JsonFieldType.STRING).description("에러 코드"),
+                            fieldWithPath("message").type(JsonFieldType.STRING).description("에러 메시지")
                         )
                         .build()
                 )
@@ -787,12 +788,12 @@ class SkillSetControllerTest {
                         .description("스킬 이름을 수정한다.")
                         .requestSchema(Schema.schema("updateSkillRequest"))
                         .requestFields(
-                            fieldWithPath("displayName").description("스킬 이름")
+                            fieldWithPath("displayName").type(JsonFieldType.STRING).description("스킬 이름")
                         )
                         .responseSchema(Schema.schema("skill"))
                         .responseFields(
-                            fieldWithPath("id").description("스킬 id"),
-                            fieldWithPath("displayName").description("스킬 이름")
+                            fieldWithPath("id").type(JsonFieldType.NUMBER).description("스킬 id"),
+                            fieldWithPath("displayName").type(JsonFieldType.STRING).description("스킬 이름")
                         )
                         .build()
                 )
@@ -829,12 +830,12 @@ class SkillSetControllerTest {
                         .description("스킬에 직군을 추가한다.")
                         .requestSchema(Schema.schema("addSkillToPositionListRequest"))
                         .requestFields(
-                            fieldWithPath("positionIds").description("스킬에 추가할 직군 리스트")
+                            fieldWithPath("positionIds").type(JsonFieldType.ARRAY).description("스킬에 추가할 직군 리스트")
                         )
                         .responseSchema(Schema.schema("skill"))
                         .responseFields(
-                            fieldWithPath("id").description("스킬 id"),
-                            fieldWithPath("displayName").description("스킬 이름")
+                            fieldWithPath("id").type(JsonFieldType.NUMBER).description("스킬 id"),
+                            fieldWithPath("displayName").type(JsonFieldType.STRING).description("스킬 이름")
                         )
                         .build()
                 )

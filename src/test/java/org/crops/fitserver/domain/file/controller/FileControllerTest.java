@@ -86,7 +86,7 @@ class FileControllerTest {
                         .summary("generate pre-signed url")
                         .requestSchema(Schema.schema("generatePreSignedUrlRequest"))
                         .requestFields(
-                            fieldWithPath("fileName").description("파일 이름"),
+                            fieldWithPath("fileName").type(JsonFieldType.STRING).description("파일 이름"),
                             new EnumFields(FileDomain.class).withPath("fileDomain")
                                 .description("파일 도메인")
                         )
