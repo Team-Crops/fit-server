@@ -4,8 +4,11 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.domain.Skill;
+import org.crops.fitserver.domain.skillset.dto.PositionDto;
 import org.crops.fitserver.domain.skillset.dto.SkillDto;
+import org.crops.fitserver.domain.skillset.dto.request.CreatePositionRequest;
 import org.crops.fitserver.domain.skillset.dto.request.CreateSkillRequest;
 import org.crops.fitserver.domain.skillset.repository.PositionRepository;
 import org.crops.fitserver.domain.skillset.repository.SkillRepository;
@@ -35,16 +38,48 @@ class SkillSetServiceImpl implements SkillSetService {
 
     //2. Position에 Skill 추가
     if (!CollectionUtils.isEmpty(createSkillRequest.positionIds())) {
-      addSkillToPosition(skill, createSkillRequest.positionIds());
+      addSkillToPositionList(skill, createSkillRequest.positionIds());
     }
 
     return SkillDto.from(skill);
   }
 
+  @Override
+  @Transactional
+  public PositionDto createPosition(CreatePositionRequest request) {
+    if (positionRepository.findByDisplayName(request.displayName()).isPresent()) {
+      throw new BusinessException(ErrorCode.DUPLICATED_RESOURCE_EXCEPTION);
+    }
+
+    var position = Position.builder().displayName(request.displayName()).build();
+    position = positionRepository.save(position);
+
+    if (!CollectionUtils.isEmpty(request.skillIds())) {
+      addSkillListToPosition(position, request.skillIds());
+    }
+
+    return PositionDto.from(position);
+  }
+
+  @Override
+  public List<PositionDto> getPostionList() {
+    return positionRepository.findAll().stream().map(PositionDto::from).toList();
+  }
+
+  @Override
+  public List<SkillDto> getSkillList() {
+    return skillRepository.findAll().stream().map(SkillDto::from).toList();
+  }
+
+  @Override
+  public List<SkillDto> getSkillListByPositionId(Long positionId) {
+    return positionRepository.findByPositionId(positionId).stream().map(SkillDto::from).toList();
+  }
+
   /**
    * private이기 때문에 부모의 트랜잭션을 이어받음.
    */
-  private void addSkillToPosition(Skill skill, List<Long> positionIds) {
+  private void addSkillToPositionList(Skill skill, List<Long> positionIds) {
     var positions = positionRepository.findAllById(positionIds);
 
     if (positions.size() != positionIds.size()) {
@@ -54,5 +89,17 @@ class SkillSetServiceImpl implements SkillSetService {
     positions.forEach(position -> position.addSkill(skill));
 
     positionRepository.saveAll(positions);
+  }
+
+  private void addSkillListToPosition(Position position, List<Long> skillIds) {
+    var skills = skillRepository.findAllById(skillIds);
+
+    if (skills.size() != skillIds.size()) {
+      throw new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION);
+    }
+
+    skills.forEach(position::addSkill);
+
+    positionRepository.save(position);
   }
 }
