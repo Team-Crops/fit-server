@@ -2,6 +2,7 @@ package org.crops.fitserver.domain.skillset.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.domain.Skill;
@@ -21,6 +22,7 @@ public class PositionRepositoryTest {
 
   private final TestEntityManager em;
   private final PositionRepository positionRepository;
+  private final SkillRepository skillRepository;
 
   @Test
   public void create_position() {
@@ -87,7 +89,7 @@ public class PositionRepositoryTest {
     var result = positionRepository.findById(positionId);
 
     // then
-    assertThat(result.get().isDeleted()).isEqualTo(true);
+    assertThat(result).isEqualTo(Optional.empty());
   }
 
   @Test
@@ -130,5 +132,33 @@ public class PositionRepositoryTest {
     assertThat(result.getId()).isNotNull();
     assertThat(result.getSkills().size()).isEqualTo(0);
   }
+
+  @Test
+  public void delete_skill() {
+    // given
+    Position position = Position.builder()
+        .displayName("test")
+        .build();
+    Skill skill = Skill.builder()
+        .displayName("test")
+        .build();
+    skill = skillRepository.save(skill);
+
+    position.addSkill(skill);
+    position = positionRepository.save(position);
+    em.flush();
+    em.clear();
+
+    skillRepository.deleteById(skill.getId());
+    em.flush();
+
+    // when
+    var result = positionRepository.findWithSkills(position.getId()).get();
+
+    // then
+    assertThat(result.getId()).isNotNull();
+    assertThat(result.getSkills().size()).isEqualTo(0);
+  }
+
 
 }

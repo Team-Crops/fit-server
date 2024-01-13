@@ -73,7 +73,10 @@ class SkillSetServiceImpl implements SkillSetService {
 
   @Override
   public List<SkillDto> getSkillListByPositionId(Long positionId) {
-    return positionRepository.findByPositionId(positionId).stream().map(SkillDto::from).toList();
+    return positionRepository.findWithSkills(positionId)
+        .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION))
+        .getSkills()
+        .stream().map(SkillDto::from).toList();
   }
 
   @Override
@@ -116,6 +119,16 @@ class SkillSetServiceImpl implements SkillSetService {
           return PositionDto.from(position);
         })
         .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
+  }
+
+  @Override
+  public void deleteSkill(Long skillId) {
+    skillRepository.deleteById(skillId);
+  }
+
+  @Override
+  public void deletePosition(Long positionId) {
+    positionRepository.deleteById(positionId);
   }
 
   /**

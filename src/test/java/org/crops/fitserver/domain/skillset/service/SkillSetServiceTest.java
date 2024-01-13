@@ -219,11 +219,10 @@ public class SkillSetServiceTest {
   @Test
   public void get_skill_list_by_position_success() {
     // given
-    given(positionRepository.findByPositionId(any()))
-        .willReturn(List.of(
-                Skill.builder().displayName("test").build()
-            )
-        );
+    var position = Position.builder().displayName("test").build();
+    position.addSkill(Skill.builder().displayName("test_skill").build());
+    given(positionRepository.findWithSkills(any()))
+        .willReturn(Optional.of(position));
 
     // when
     var result = skillSetService.getSkillListByPositionId(1L);
@@ -294,5 +293,26 @@ public class SkillSetServiceTest {
     assertThat(result.displayName()).isEqualTo("test");
   }
 
+  @Test
+  public void delete_skill_success() {
+    // given
+
+    // when
+    skillSetService.deleteSkill(1L);
+
+    // then
+    Mockito.verify(skillRepository, Mockito.times(1)).deleteById(any());
+  }
+
+  @Test
+  public void delete_position_success() {
+    // given
+
+    // when
+    skillSetService.deletePosition(1L);
+
+    // then
+    Mockito.verify(positionRepository, Mockito.times(1)).deleteById(any());
+  }
 
 }

@@ -26,4 +26,8 @@ public interface SkillSetService {
   PositionDto updatePositionDisplayName(Long positionId, String displayName);
 
   PositionDto addSkillListToPosition(Long positionId, List<Long> skillIds);
+
+  void deleteSkill(Long skillId);
+
+  void deletePosition(Long positionId);
 }

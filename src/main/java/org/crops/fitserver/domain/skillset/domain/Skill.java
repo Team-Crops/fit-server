@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import org.crops.fitserver.global.entity.BaseTimeEntity;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Table(indexes = {
@@ -26,6 +27,7 @@ import org.hibernate.annotations.SQLDelete;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @DynamicInsert
 @SQLDelete(sql = "UPDATE skill SET is_deleted = true WHERE skill_id = ?")
+@Where(clause = "is_deleted = false")
 public class Skill extends BaseTimeEntity {
 
   @Id
