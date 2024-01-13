@@ -2,7 +2,7 @@ package org.crops.fitserver.domain.school.dto;
 
 import lombok.Builder;
 import org.crops.fitserver.domain.school.constant.SchoolType;
-import org.crops.fitserver.domain.school.entity.School;
+import org.crops.fitserver.domain.school.domain.School;
 
 @Builder
 public record SchoolDto (Long id, String name, SchoolType type){

@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 import java.util.List;
-import org.crops.fitserver.domain.school.entity.School;
+import org.crops.fitserver.domain.school.domain.School;
 import org.crops.fitserver.domain.school.repository.SchoolRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
