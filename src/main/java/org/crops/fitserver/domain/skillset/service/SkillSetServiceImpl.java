@@ -76,6 +76,48 @@ class SkillSetServiceImpl implements SkillSetService {
     return positionRepository.findByPositionId(positionId).stream().map(SkillDto::from).toList();
   }
 
+  @Override
+  @Transactional
+  public SkillDto updateSkillDisplayName(Long skillId, String displayName) {
+    return skillRepository.findById(skillId)
+        .map(skill -> {
+          skill.updateDisplayName(displayName);
+          return SkillDto.from(skill);
+        })
+        .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
+  }
+
+  @Override
+  @Transactional
+  public SkillDto addSkillToPositionList(Long SkillId, List<Long> positionIds) {
+    return skillRepository.findById(SkillId)
+        .map(skill -> {
+          addSkillToPositionList(skill, positionIds);
+          return SkillDto.from(skill);
+        })
+        .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
+  }
+
+  @Override
+  public PositionDto updatePositionDisplayName(Long positionId, String displayName) {
+    return positionRepository.findById(positionId)
+        .map(position -> {
+          position.updateDisplayName(displayName);
+          return PositionDto.from(position);
+        })
+        .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
+  }
+
+  @Override
+  public PositionDto addSkillListToPosition(Long positionId, List<Long> skillIds) {
+    return positionRepository.findById(positionId)
+        .map(position -> {
+          addSkillListToPosition(position, skillIds);
+          return PositionDto.from(position);
+        })
+        .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
+  }
+
   /**
    * private이기 때문에 부모의 트랜잭션을 이어받음.
    */

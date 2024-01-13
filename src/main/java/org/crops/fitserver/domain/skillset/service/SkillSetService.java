@@ -18,4 +18,12 @@ public interface SkillSetService {
 
 
   List<SkillDto> getSkillListByPositionId(Long positionId);
+
+  SkillDto updateSkillDisplayName(Long skillId, String displayName);
+
+  SkillDto addSkillToPositionList(Long SkillId, List<Long> positionIds);
+
+  PositionDto updatePositionDisplayName(Long positionId, String displayName);
+
+  PositionDto addSkillListToPosition(Long positionId, List<Long> skillIds);
 }

@@ -57,9 +57,7 @@ pdf 파일의 키를 입력받으면 S3에 알려서 좀 더 영구적인 저장
 ---
 # TODO list
 - [ ] **_기술/포지션을 조회하는 api 구현_**
-- [x] ~~**_Service 단계의 포지션 입장에서 create 구현(기술 연관관계 포함)_**~~
-- [x] ~~**_Service 단계의 read 구현_**~~
-- [ ] Service 단계의 update 구현
+- [x] **_~~Service 단계의 update 구현~~_**
 - [ ] Service 단계의 delete 구현
 - [ ] 학교 조회하는 api 구현
 - [ ] 유저정보를 입력하는 api 구현

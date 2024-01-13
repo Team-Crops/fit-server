@@ -232,5 +232,67 @@ public class SkillSetServiceTest {
     assertThat(result).hasSize(1);
   }
 
+  @Test
+  public void update_skill_display_name_success() {
+    // given
+    given(skillRepository.findById(any())).willReturn(Optional.of(
+        Skill.builder().displayName("test").build()
+    ));
+
+    // when
+    var result = skillSetService.updateSkillDisplayName(1L, "test");
+
+    // then
+    assertThat(result.displayName()).isEqualTo("test");
+  }
+
+  @Test
+  public void update_skill_add_position_success() {
+    // given
+    given(skillRepository.findById(any())).willReturn(Optional.of(
+        Skill.builder().displayName("test").build()
+    ));
+    given(positionRepository.findAllById(any())).willReturn(List.of(
+        Position.builder().displayName("test").build()
+    ));
+
+    // when
+    var result = skillSetService.addSkillToPositionList(1L, List.of(1L));
+
+    // then
+    assertThat(result.displayName()).isEqualTo("test");
+  }
+
+  @Test
+  public void update_position_display_name_success() {
+    // given
+    given(positionRepository.findById(any())).willReturn(Optional.of(
+        Position.builder().displayName("test").build()
+    ));
+
+    // when
+    var result = skillSetService.updatePositionDisplayName(1L, "test");
+
+    // then
+    assertThat(result.displayName()).isEqualTo("test");
+  }
+
+  @Test
+  public void update_position_add_skillList_success() {
+    // given
+    given(positionRepository.findById(any())).willReturn(Optional.of(
+        Position.builder().displayName("test").build()
+    ));
+    given(skillRepository.findAllById(any())).willReturn(List.of(
+        Skill.builder().displayName("test").build()
+    ));
+
+    // when
+    var result = skillSetService.addSkillListToPosition(1L, List.of(1L));
+
+    // then
+    assertThat(result.displayName()).isEqualTo("test");
+  }
+
 
 }
