@@ -1,10 +1,10 @@
-package org.crops.fitserver.domain.skillset.service;
+package org.crops.fitserver.domain.skillSet.service;
 
 import java.util.List;
-import org.crops.fitserver.domain.skillset.dto.PositionDto;
-import org.crops.fitserver.domain.skillset.dto.SkillDto;
-import org.crops.fitserver.domain.skillset.dto.request.CreatePositionRequest;
-import org.crops.fitserver.domain.skillset.dto.request.CreateSkillRequest;
+import org.crops.fitserver.domain.skillSet.dto.PositionDto;
+import org.crops.fitserver.domain.skillSet.dto.SkillDto;
+import org.crops.fitserver.domain.skillSet.dto.request.CreatePositionRequest;
+import org.crops.fitserver.domain.skillSet.dto.request.CreateSkillRequest;
 
 public interface SkillSetService {
 

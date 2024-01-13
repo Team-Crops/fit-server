@@ -1,17 +1,17 @@
-package org.crops.fitserver.domain.skillset.service;
+package org.crops.fitserver.domain.skillSet.service;
 
 import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.crops.fitserver.domain.skillset.domain.Position;
-import org.crops.fitserver.domain.skillset.domain.Skill;
-import org.crops.fitserver.domain.skillset.dto.PositionDto;
-import org.crops.fitserver.domain.skillset.dto.SkillDto;
-import org.crops.fitserver.domain.skillset.dto.request.CreatePositionRequest;
-import org.crops.fitserver.domain.skillset.dto.request.CreateSkillRequest;
-import org.crops.fitserver.domain.skillset.repository.PositionRepository;
-import org.crops.fitserver.domain.skillset.repository.SkillRepository;
+import org.crops.fitserver.domain.skillSet.domain.Position;
+import org.crops.fitserver.domain.skillSet.domain.Skill;
+import org.crops.fitserver.domain.skillSet.dto.PositionDto;
+import org.crops.fitserver.domain.skillSet.dto.SkillDto;
+import org.crops.fitserver.domain.skillSet.dto.request.CreatePositionRequest;
+import org.crops.fitserver.domain.skillSet.dto.request.CreateSkillRequest;
+import org.crops.fitserver.domain.skillSet.repository.PositionRepository;
+import org.crops.fitserver.domain.skillSet.repository.SkillRepository;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;

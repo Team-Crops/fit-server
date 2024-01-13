@@ -1,4 +1,4 @@
-package org.crops.fitserver.domain.skillset.domain;
+package org.crops.fitserver.domain.skillSet.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

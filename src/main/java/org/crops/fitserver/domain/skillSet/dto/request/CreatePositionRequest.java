@@ -1,12 +1,12 @@
-package org.crops.fitserver.domain.skillset.dto.request;
+package org.crops.fitserver.domain.skillSet.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record CreateSkillRequest(
+public record CreatePositionRequest(
     @NotBlank String displayName,
-    List<Long> positionIds) {
+    List<Long> skillIds) {
 
 }

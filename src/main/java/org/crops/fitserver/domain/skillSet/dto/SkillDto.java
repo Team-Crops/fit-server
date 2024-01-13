@@ -1,7 +1,7 @@
-package org.crops.fitserver.domain.skillset.dto;
+package org.crops.fitserver.domain.skillSet.dto;
 
 import lombok.Builder;
-import org.crops.fitserver.domain.skillset.domain.Skill;
+import org.crops.fitserver.domain.skillSet.domain.Skill;
 
 @Builder
 public record SkillDto(Long id, String displayName) {

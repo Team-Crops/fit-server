@@ -1,9 +1,9 @@
-package org.crops.fitserver.domain.skillset.dto;
+package org.crops.fitserver.domain.skillSet.dto;
 
 
 import java.util.List;
 import lombok.Builder;
-import org.crops.fitserver.domain.skillset.domain.Position;
+import org.crops.fitserver.domain.skillSet.domain.Position;
 
 @Builder
 public record PositionDto(Long id, String displayName, List<SkillDto> skillList) {

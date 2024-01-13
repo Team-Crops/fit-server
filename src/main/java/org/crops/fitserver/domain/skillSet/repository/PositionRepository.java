@@ -1,7 +1,7 @@
-package org.crops.fitserver.domain.skillset.repository;
+package org.crops.fitserver.domain.skillSet.repository;
 
 import java.util.Optional;
-import org.crops.fitserver.domain.skillset.domain.Position;
+import org.crops.fitserver.domain.skillSet.domain.Position;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
