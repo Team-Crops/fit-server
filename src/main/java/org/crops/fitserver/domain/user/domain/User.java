@@ -7,12 +7,20 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.crops.fitserver.domain.region.domain.Region;
+import org.crops.fitserver.domain.skillset.domain.Position;
+import org.crops.fitserver.domain.skillset.domain.Skill;
 import org.crops.fitserver.global.entity.BaseTimeEntity;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -59,6 +67,9 @@ public class User extends BaseTimeEntity {
 
   @OneToOne(mappedBy = "user")
   private SocialUserInfo socialUserInfo;
+
+  @OneToOne(mappedBy = "user")
+  private UserInfo userInfo;
 
   public static User from(UserRole userRole) {
     return User.builder()
