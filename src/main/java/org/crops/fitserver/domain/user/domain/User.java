@@ -12,6 +12,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -70,6 +71,11 @@ public class User extends BaseTimeEntity {
 
   @OneToOne(mappedBy = "user")
   private UserInfo userInfo;
+
+  @PrePersist
+  public void prePersist() {
+    this.userInfo = UserInfo.from(this);
+  }
 
   public static User from(UserRole userRole) {
     return User.builder()
