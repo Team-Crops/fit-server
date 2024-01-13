@@ -17,7 +17,7 @@ import org.crops.fitserver.global.entity.BaseTimeEntity;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
-@Entity(name = "user_")
+@Entity
 @Getter
 @Builder
 @DynamicInsert
