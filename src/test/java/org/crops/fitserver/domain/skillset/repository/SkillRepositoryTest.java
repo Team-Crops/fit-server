@@ -3,6 +3,7 @@ package org.crops.fitserver.domain.skillset.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.crops.fitserver.domain.skillset.domain.Skill;
@@ -124,6 +125,6 @@ public class SkillRepositoryTest {
     var result = skillRepository.findById(skillId);
 
     // then
-    assertThat(result.get().isDeleted()).isEqualTo(true);
+    assertThat(result).isEqualTo(Optional.empty());
   }
 }
