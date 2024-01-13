@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.crops.fitserver.domain.region.domain.Region;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.domain.Skill;
@@ -51,10 +52,12 @@ public class UserInfo {
   private String linkJson;
 
   @Column(nullable = false)
-  private boolean isOpenProfile = false;
+  @Setter(AccessLevel.PRIVATE)
+  private Boolean isOpenProfile = false;
 
   @Enumerated(value = EnumType.STRING)
   @Column(nullable = false, length = 10)
+  @Setter(AccessLevel.PRIVATE)
   private UserInfoStatus status = UserInfoStatus.INCOMPLETE;
 
 
@@ -81,6 +84,7 @@ public class UserInfo {
         .user(user)
         .build();
   }
+
 
   private boolean isReadyToComplete() {
     return this.projectCount != null
