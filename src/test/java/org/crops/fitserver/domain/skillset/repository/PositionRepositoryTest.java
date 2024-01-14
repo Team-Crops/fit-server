@@ -108,7 +108,7 @@ public class PositionRepositoryTest {
 
     // then
     assertThat(result.getId()).isNotNull();
-    assertThat(result.getSkills().size()).isEqualTo(1);
+    assertThat(result.getSkillSets().size()).isEqualTo(1);
   }
 
   @Test
@@ -130,7 +130,7 @@ public class PositionRepositoryTest {
 
     // then
     assertThat(result.getId()).isNotNull();
-    assertThat(result.getSkills().size()).isEqualTo(0);
+    assertThat(result.getSkillSets().size()).isEqualTo(0);
   }
 
   @Test
@@ -157,7 +157,7 @@ public class PositionRepositoryTest {
 
     // then
     assertThat(result.getId()).isNotNull();
-    assertThat(result.getSkills().size()).isEqualTo(0);
+    assertThat(result.getSkillSets().size()).isEqualTo(0);
   }
 
 

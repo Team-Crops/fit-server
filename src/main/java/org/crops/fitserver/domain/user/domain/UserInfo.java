@@ -6,11 +6,11 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PreUpdate;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,6 +22,7 @@ import org.crops.fitserver.domain.region.domain.Region;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.domain.Skill;
 import org.crops.fitserver.domain.user.constant.UserInfoStatus;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.util.CollectionUtils;
 
@@ -38,7 +39,7 @@ public class UserInfo {
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
-  @Column(length = 255)
+  @Column(length = 2048)
   private String portfolioUrl;
 
   private Integer projectCount;
@@ -52,18 +53,18 @@ public class UserInfo {
   private String linkJson;
 
   @Column(nullable = false)
+  @ColumnDefault("false")
   @Setter(AccessLevel.PRIVATE)
-  private Boolean isOpenProfile = false;
+  private Boolean isOpenProfile;
 
   @Enumerated(value = EnumType.STRING)
   @Column(nullable = false, length = 10)
+  @ColumnDefault("'INCOMPLETE'")
   @Setter(AccessLevel.PRIVATE)
-  private UserInfoStatus status = UserInfoStatus.INCOMPLETE;
+  private UserInfoStatus status;
 
-
-  @ManyToMany(targetEntity = Skill.class)
-  @JoinTable(name = "user_info_skill", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
-  private List<Skill> skills;
+  @OneToMany(mappedBy = "userInfo")
+  private final List<UserInfoSkill> userInfoSkills = new ArrayList<>();
 
   @ManyToOne
   @JoinColumn(name = "position_id")
@@ -72,6 +73,7 @@ public class UserInfo {
   @ManyToOne
   @JoinColumn(name = "region_id")
   private Region region;
+
 
   @PreUpdate
   public void preUpdate() {
@@ -82,16 +84,28 @@ public class UserInfo {
   public static UserInfo from(User user) {
     return UserInfo.builder()
         .user(user)
+        .isOpenProfile(false)
+        .status(UserInfoStatus.INCOMPLETE)
         .build();
   }
 
+  public void addSkill(Skill skill) {
+    this.userInfoSkills.add(UserInfoSkill.builder()
+        .userInfo(this)
+        .skill(skill)
+        .build());
+  }
+
+  public void removeSkill(Skill skill) {
+    this.userInfoSkills.removeIf(userInfoSkill -> userInfoSkill.getSkill().equals(skill));
+  }
 
   private boolean isReadyToComplete() {
     return this.projectCount != null
         && this.activityHour != null
         && this.introduce != null
         && this.linkJson != null
-        && !CollectionUtils.isEmpty(this.skills)
+        && !CollectionUtils.isEmpty(this.userInfoSkills)
         && this.position != null
         && this.region != null
         && this.user.getCareer() != null

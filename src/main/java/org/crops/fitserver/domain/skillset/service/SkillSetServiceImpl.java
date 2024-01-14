@@ -75,8 +75,10 @@ class SkillSetServiceImpl implements SkillSetService {
   public List<SkillDto> getSkillListByPositionId(Long positionId) {
     return positionRepository.findWithSkills(positionId)
         .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION))
-        .getSkills()
-        .stream().map(SkillDto::from).toList();
+        .getSkillSets()
+        .stream()
+        .map(skillSet -> SkillDto.from(skillSet.getSkill()))
+        .toList();
   }
 
   @Override

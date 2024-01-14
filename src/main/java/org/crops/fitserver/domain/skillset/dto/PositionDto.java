@@ -12,7 +12,9 @@ public record PositionDto(Long id, String displayName, List<SkillDto> skillList)
     return PositionDto.builder()
         .id(position.getId())
         .displayName(position.getDisplayName())
-        .skillList(position.getSkills().stream().map(SkillDto::from).toList())
+        .skillList(position.getSkillSets().stream().map(
+            skillSet -> SkillDto.from(skillSet.getSkill())
+        ).toList())
         .build();
   }
 }

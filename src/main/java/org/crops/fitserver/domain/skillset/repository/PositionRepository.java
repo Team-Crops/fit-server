@@ -9,6 +9,6 @@ public interface PositionRepository extends JpaRepository<Position, Long> {
 
   Optional<Position> findByDisplayName(String displayName);
 
-  @Query("select p from Position p left join fetch p.skills s where p.id = :positionId")
+  @Query("select p from Position p left join fetch p.skillSets s where p.id = :positionId")
   Optional<Position> findWithSkills(Long positionId);
 }

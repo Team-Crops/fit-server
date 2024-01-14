@@ -4,10 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -30,13 +27,9 @@ import org.hibernate.annotations.Where;
 @Where(clause = "is_deleted = false")
 public class Position extends BaseTimeEntity {
 
-  @ManyToMany
-  @JoinTable(name = "skillset",
-      joinColumns = @JoinColumn(name = "position_id"),
-      inverseJoinColumns = @JoinColumn(name = "skill_id"),
-      uniqueConstraints = @UniqueConstraint(columnNames = {"position_id", "skill_id"})
-  )
-  private final List<Skill> skills = new ArrayList<>();
+  @OneToMany(mappedBy = "position")
+  private final List<SkillSet> skillSets = new ArrayList<>();
+
   @Id
   @GeneratedValue
   @Column(name = "position_id")
@@ -49,10 +42,10 @@ public class Position extends BaseTimeEntity {
   }
 
   public void addSkill(Skill skill) {
-    this.skills.add(skill);
+    this.skillSets.add(SkillSet.create(skill, this));
   }
 
   public void removeSkill(Skill skill) {
-    this.skills.remove(skill);
+    this.skillSets.removeIf(skillSet -> skillSet.getSkill().equals(skill));
   }
 }
