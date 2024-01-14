@@ -65,4 +65,6 @@ pdf 파일의 키를 입력받으면 S3에 알려서 좀 더 영구적인 저장
 # TODO list
 
 - [x] 유저정보를 입력하는 api 구현
+- [ ] dto로 바로 반환하는 서비스 protected 메소드로 분리하기
+- [ ] updateUserWithInfo의 빈약한 부분 고치기(skillset,career)
 - [ ] pdf 파일 업로드 후 해당 링크로 정보 입력 시 S3에 알리기.
