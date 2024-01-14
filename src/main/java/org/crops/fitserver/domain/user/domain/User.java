@@ -1,5 +1,7 @@
 package org.crops.fitserver.domain.user.domain;
 
+import io.micrometer.common.util.StringUtils;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -7,21 +9,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.crops.fitserver.domain.region.domain.Region;
-import org.crops.fitserver.domain.skillset.domain.Position;
-import org.crops.fitserver.domain.skillset.domain.Skill;
+import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
 import org.crops.fitserver.global.entity.BaseTimeEntity;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -48,10 +43,10 @@ public class User extends BaseTimeEntity {
   private String profileImageUrl;
 
   @Column(length = 100)
-  private String userName;
+  private String username;
 
   @Column(length = 100)
-  private String nickName;
+  private String nickname;
 
   @Column(length = 20)
   private String phoneNumber;
@@ -69,7 +64,7 @@ public class User extends BaseTimeEntity {
   @OneToOne(mappedBy = "user")
   private SocialUserInfo socialUserInfo;
 
-  @OneToOne(mappedBy = "user")
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private UserInfo userInfo;
 
   @PrePersist
@@ -81,6 +76,55 @@ public class User extends BaseTimeEntity {
     return User.builder()
         .userRole(userRole)
         .build();
+  }
+
+
+  public void updateUser(UpdateUserRequest updateUserRequest) {
+    this.updateProfileImageUrl(updateUserRequest.getProfileImageUrl());
+    this.updateUsername(updateUserRequest.getUsername());
+    this.updateNickname(updateUserRequest.getNickname());
+    this.updatePhoneNumber(updateUserRequest.getPhoneNumber());
+    this.updateIsOpenPhoneNum(updateUserRequest.isOpenPhoneNum());
+    this.updateEmail(updateUserRequest.getEmail());
+    this.updateCareer(updateUserRequest.getCareer());
+    this.userInfo.updateUserInfo(updateUserRequest);
+  }
+
+  public void updateProfileImageUrl(String profileImageUrl) {
+    this.profileImageUrl = profileImageUrl;
+  }
+
+  public void updateUsername(String username) {
+    this.username = username;
+  }
+
+  public void updateNickname(String nickname) {
+    if (StringUtils.isNotBlank(this.nickname) && StringUtils.isBlank(nickname)) {
+      throw new IllegalArgumentException("nickname cannot be null");
+    }
+    this.nickname = nickname;
+  }
+
+  public void updatePhoneNumber(String phoneNumber) {
+    if (StringUtils.isNotBlank(this.phoneNumber) && StringUtils.isBlank(phoneNumber)) {
+      throw new IllegalArgumentException("phoneNumber cannot be null");
+    }
+    this.phoneNumber = phoneNumber;
+  }
+
+  public void updateIsOpenPhoneNum(boolean isOpenPhoneNum) {
+    this.isOpenPhoneNum = isOpenPhoneNum;
+  }
+
+  public void updateEmail(String email) {
+    if (StringUtils.isNotBlank(this.email) && StringUtils.isBlank(email)) {
+      throw new IllegalArgumentException("email cannot be null");
+    }
+    this.email = email;
+  }
+
+  public void updateCareer(String career) {
+    this.career = career;
   }
 }
 

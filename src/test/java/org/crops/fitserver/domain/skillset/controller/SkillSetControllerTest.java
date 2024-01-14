@@ -52,15 +52,12 @@ import org.springframework.web.context.WebApplicationContext;
 @WebMvcTest(SkillSetController.class)
 class SkillSetControllerTest {
 
+  private final ObjectMapper objectMapper = new ObjectMapper();
   private MockMvc mockMvc;
-
   @Autowired
   private WebApplicationContext context;
-
   @MockBean
   private SkillSetService skillSetService;
-
-  private final ObjectMapper objectMapper = new ObjectMapper();
 
   @BeforeEach
   public void setUp(RestDocumentationContextProvider restDocumentation) {
@@ -250,7 +247,7 @@ class SkillSetControllerTest {
     );
 
     //then
-    result.andExpect(status().isNotAcceptable())
+    result.andExpect(status().isNotFound())
         .andDo(
             document("skill-set/position/create-position-with-skills-fail-not-found",
                 resource(
@@ -689,7 +686,7 @@ class SkillSetControllerTest {
     );
 
     //then
-    result.andExpect(status().isNotAcceptable())
+    result.andExpect(status().isNotFound())
         .andDo(
             document("skill-set/skill/create-skill-with-positionIds-fail-not-found",
                 resource(

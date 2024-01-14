@@ -1,13 +1,8 @@
 package org.crops.fitserver.domain.user.repository;
 
-import java.util.Optional;
 import org.crops.fitserver.domain.user.domain.User;
-import org.springframework.data.repository.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends
-    Repository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
-  Optional<User> findById(Long id);
-
-  User save(User user);
 }
