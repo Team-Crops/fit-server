@@ -1,14 +1,9 @@
 package org.crops.fitserver.domain.auth.facade.dto;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import jakarta.validation.constraints.NotNull;
 
-@Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class SocialLoginPageResponse {
-
-  private String loginPageUrl;
+public record SocialLoginPageResponse(
+    @NotNull String loginPageUrl) {
 
   public static SocialLoginPageResponse from(String loginPageUrl) {
     return new SocialLoginPageResponse(loginPageUrl);
