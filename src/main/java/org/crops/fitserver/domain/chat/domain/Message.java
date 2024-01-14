@@ -38,7 +38,7 @@ public class Message extends BaseTimeEntity {
   private ChatRoom chatRoom;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
+  @JoinColumn(name = "user_id")
   private User user;
 
   @Enumerated(value = EnumType.STRING)

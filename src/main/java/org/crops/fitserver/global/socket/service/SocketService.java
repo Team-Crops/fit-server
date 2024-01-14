@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service;
 public class SocketService {
 
   @Transactional
-  public <T> void sendMessage(SocketIOClient senderClient, String eventName,
-      SocketResponse<T> message) {
-    String roomId = senderClient.getHandshakeData().getSingleUrlParam("roomId");
+  public void sendMessage(
+      SocketIOClient senderClient,
+      String eventName,
+      SocketResponse message) {
+    var roomId = senderClient.getHandshakeData().getSingleUrlParam("roomId");
     senderClient
         .getNamespace()
         .getRoomOperations(roomId)
@@ -27,11 +29,11 @@ public class SocketService {
         );
   }
 
-  private static <T> void sendMessageToOtherClient(
+  private static void sendMessageToOtherClient(
       SocketIOClient senderClient,
       SocketIOClient client,
       String eventName,
-      SocketResponse<T> message) {
+      SocketResponse message) {
     if (!Objects.equals(client.getSessionId(), senderClient.getSessionId())) {
       client.sendEvent(eventName, message);
     }

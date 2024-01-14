@@ -1,8 +1,9 @@
-package org.crops.fitserver.domain.chat.service;
+package org.crops.fitserver.domain.chat.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.domain.chat.domain.ChatRoom;
 import org.crops.fitserver.domain.chat.repository.ChatRoomRepository;
+import org.crops.fitserver.domain.chat.service.ChatRoomService;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
