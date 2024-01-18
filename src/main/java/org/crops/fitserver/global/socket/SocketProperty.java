@@ -12,4 +12,6 @@ import org.springframework.context.annotation.Configuration;
 public class SocketProperty {
 
   private Integer port;
+  private String userKey;
+  private String roomKey;
 }

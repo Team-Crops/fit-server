@@ -1,14 +1,24 @@
 package org.crops.fitserver.domain.chat.facade;
 
 import com.corundumstudio.socketio.SocketIOClient;
-import org.crops.fitserver.domain.chat.domain.MessageType;
 
 public interface ChatRoomFacade {
 
-  void sendMessage(
+  void sendTextMessage(
       SocketIOClient client,
       Long userId,
       Long roomId,
-      MessageType messageType,
       String content);
+
+  void sendImageMessage(
+      SocketIOClient client,
+      Long userId,
+      Long roomId,
+      String imageUrl);
+
+  void sendNoticeMessage(
+      SocketIOClient client,
+      Long userId,
+      Long roomId,
+      String notice);
 }

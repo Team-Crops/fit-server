@@ -7,9 +7,7 @@ import org.crops.fitserver.domain.chat.controller.dto.request.SendMessageRequest
 import org.crops.fitserver.domain.chat.facade.ChatRoomFacade;
 import org.crops.fitserver.global.annotation.SocketController;
 import org.crops.fitserver.global.annotation.SocketMapping;
-import org.crops.fitserver.global.http.HeaderTokenExtractor;
-import org.crops.fitserver.global.jwt.JwtResolver;
-import org.springframework.http.HttpHeaders;
+import org.crops.fitserver.global.socket.service.SocketService;
 
 @Slf4j
 @SocketController
@@ -17,18 +15,38 @@ import org.springframework.http.HttpHeaders;
 public class ChatController {
 
   private final ChatRoomFacade chatRoomFacade;
-  private final HeaderTokenExtractor headerTokenExtractor;
-  private final JwtResolver jwtResolver;
+  private final SocketService socketService;
 
-  @SocketMapping(endpoint = "/app/message", requestCls = SendMessageRequest.class)
-  public void sendChat(SocketIOClient client, SendMessageRequest request) {
-    String accessToken = headerTokenExtractor
-        .extractAccessToken(client
-            .getHandshakeData()
-            .getHttpHeaders()
-            .get(HttpHeaders.AUTHORIZATION));
-    Long userId = jwtResolver.getUserIdFromAccessToken(accessToken);
-    Long roomId = Long.valueOf(client.getHandshakeData().getSingleUrlParam("roomId"));
-    chatRoomFacade.sendMessage(client, userId, roomId, request.messageType(), request.content());
+  @SocketMapping(endpoint = "/app/chat/text", requestCls = SendMessageRequest.class)
+  public void sendTextMessage(SocketIOClient client, SendMessageRequest request) {
+    Long userId = socketService.getUserId(client);
+    Long roomId = socketService.getRoomId(client);
+    chatRoomFacade.sendTextMessage(
+        client,
+        userId,
+        roomId,
+        request.content());
+  }
+
+  @SocketMapping(endpoint = "/app/chat/image", requestCls = SendMessageRequest.class)
+  public void sendImageMessage(SocketIOClient client, SendMessageRequest request) {
+    Long userId = socketService.getUserId(client);
+    Long roomId = socketService.getRoomId(client);
+    chatRoomFacade.sendImageMessage(
+        client,
+        userId,
+        roomId,
+        request.content());
+  }
+
+  @SocketMapping(endpoint = "/app/chat/notice", requestCls = SendMessageRequest.class)
+  public void sendNoticeMessage(SocketIOClient client, SendMessageRequest request) {
+    Long userId = socketService.getUserId(client);
+    Long roomId = socketService.getRoomId(client);
+    chatRoomFacade.sendNoticeMessage(
+        client,
+        userId,
+        roomId,
+        request.content());
   }
 }

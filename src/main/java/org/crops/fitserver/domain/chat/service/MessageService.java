@@ -2,14 +2,18 @@ package org.crops.fitserver.domain.chat.service;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import org.crops.fitserver.domain.chat.domain.Message;
-import org.crops.fitserver.domain.chat.domain.MessageType;
 
 public interface MessageService {
 
-  String GET_MESSAGE_EVENT_NAME = "get_message";
-  boolean support(MessageType messageType);
+  Message sendTextMessage(
+      SocketIOClient client,
+      Message message);
 
-  Message sendMessage(
+  Message sendImageMessage(
+      SocketIOClient client,
+      Message message);
+
+  Message sendNoticeMessage(
       SocketIOClient client,
       Message message);
 }
