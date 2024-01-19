@@ -42,6 +42,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -105,27 +106,27 @@ public class UserControllerTest {
                     .summary("사용자 정보 조회")
                     .responseSchema(Schema.schema("UserInfoDto"))
                     .responseFields(
-                        fieldWithPath("id").description("사용자 id"),
-                        fieldWithPath("profileImageUrl").description("프로필 이미지 url"),
-                        fieldWithPath("username").description("사용자 이름"),
-                        fieldWithPath("nickname").description("사용자 닉네임"),
-                        fieldWithPath("phoneNumber").description("사용자 전화번호"),
-                        fieldWithPath("isOpenPhoneNum").description("전화번호 공개 여부"),
-                        fieldWithPath("email").description("사용자 이메일"),
-                        fieldWithPath("backgroundStatus").description("학력/경력 상태"),
-                        fieldWithPath("backgroundText").description("학력/경력 텍스트"),
-                        fieldWithPath("isOpenProfile").description("프로필 공개 여부"),
-                        fieldWithPath("status").description("사용자 정보 상태"),
-                        fieldWithPath("portfolioUrl").description("포트폴리오 url"),
-                        fieldWithPath("projectCount").description("프로젝트 수"),
-                        fieldWithPath("activityHour").description("활동 시간"),
-                        fieldWithPath("introduce").description("자기소개"),
-                        fieldWithPath("linkList").description("링크 list"),
-                        fieldWithPath("linkList[].linkUrl").description("링크 url"),
-                        fieldWithPath("linkList[].linkType").description("링크 타입"),
-                        fieldWithPath("skillIdList").description("스킬 id list"),
-                        fieldWithPath("positionId").description("직군 id"),
-                        fieldWithPath("regionId").description("지역 id")
+                        fieldWithPath("id").type(JsonFieldType.NUMBER).description("사용자 id"),
+                        fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("프로필 이미지 url").optional(),
+                        fieldWithPath("username").type(JsonFieldType.STRING).description("사용자 이름").optional(),
+                        fieldWithPath("nickname").type(JsonFieldType.STRING).description("사용자 닉네임").optional(),
+                        fieldWithPath("phoneNumber").type(JsonFieldType.STRING).description("사용자 전화번호").optional(),
+                        fieldWithPath("isOpenPhoneNum").type(JsonFieldType.BOOLEAN).description("전화번호 공개 여부").optional(),
+                        fieldWithPath("email").type(JsonFieldType.STRING).description("사용자 이메일").optional(),
+                        fieldWithPath("backgroundStatus").type(JsonFieldType.STRING).description("학력/경력 상태").optional(),
+                        fieldWithPath("backgroundText").type(JsonFieldType.STRING).description("학력/경력 텍스트").optional(),
+                        fieldWithPath("isOpenProfile").type(JsonFieldType.BOOLEAN).description("프로필 공개 여부").optional(),
+                        fieldWithPath("status").type(JsonFieldType.STRING).description("사용자 정보 상태").optional(),
+                        fieldWithPath("portfolioUrl").type(JsonFieldType.STRING).description("포트폴리오 url").optional(),
+                        fieldWithPath("projectCount").type(JsonFieldType.NUMBER).description("프로젝트 수").optional(),
+                        fieldWithPath("activityHour").type(JsonFieldType.NUMBER).description("활동 시간").optional(),
+                        fieldWithPath("introduce").type(JsonFieldType.STRING).description("자기소개").optional(),
+                        fieldWithPath("linkList").type(JsonFieldType.ARRAY).description("링크 list").optional(),
+                        fieldWithPath("linkList[].linkUrl").type(JsonFieldType.STRING).description("링크 url").optional(),
+                        fieldWithPath("linkList[].linkType").type(JsonFieldType.STRING).description("링크 타입").optional(),
+                        fieldWithPath("skillIdList").type(JsonFieldType.ARRAY).description("스킬 id list").optional(),
+                        fieldWithPath("positionId").type(JsonFieldType.NUMBER).description("직군 id").optional(),
+                        fieldWithPath("regionId").type(JsonFieldType.NUMBER).description("지역 id").optional()
                     )
                     .build()
             )
@@ -217,48 +218,48 @@ public class UserControllerTest {
                     .requestSchema(Schema.schema("UpdateUserRequest"))
                     .responseSchema(Schema.schema("UserInfoDto"))
                     .requestFields(
-                        fieldWithPath("profileImageUrl").description("프로필 이미지 url"),
-                        fieldWithPath("username").description("사용자 이름"),
-                        fieldWithPath("nickname").description("사용자 닉네임"),
-                        fieldWithPath("phoneNumber").description("사용자 전화번호"),
-                        fieldWithPath("isOpenPhoneNum").description("전화번호 공개 여부"),
-                        fieldWithPath("email").description("사용자 이메일"),
-                        fieldWithPath("backgroundStatus").description("학력/경력 상태"),
-                        fieldWithPath("backgroundText").description("학력/경력 텍스트"),
-                        fieldWithPath("isOpenProfile").description("프로필 공개 여부"),
-                        fieldWithPath("portfolioUrl").description("포트폴리오 url"),
-                        fieldWithPath("projectCount").description("프로젝트 수"),
-                        fieldWithPath("activityHour").description("활동 시간"),
-                        fieldWithPath("introduce").description("자기소개"),
-                        fieldWithPath("linkList").description("링크 list"),
-                        fieldWithPath("linkList[].linkUrl").description("링크 url"),
-                        fieldWithPath("linkList[].linkType").description("링크 타입"),
-                        fieldWithPath("skillIdList").description("스킬 id list"),
-                        fieldWithPath("positionId").description("직군 id"),
-                        fieldWithPath("regionId").description("지역 id")
+                        fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("프로필 이미지 url").optional(),
+                        fieldWithPath("username").type(JsonFieldType.STRING).description("사용자 이름").optional(),
+                        fieldWithPath("nickname").type(JsonFieldType.STRING).description("사용자 닉네임").optional(),
+                        fieldWithPath("phoneNumber").type(JsonFieldType.STRING).description("사용자 전화번호").optional(),
+                        fieldWithPath("isOpenPhoneNum").type(JsonFieldType.BOOLEAN).description("전화번호 공개 여부").optional(),
+                        fieldWithPath("email").type(JsonFieldType.STRING).description("사용자 이메일").optional(),
+                        fieldWithPath("backgroundStatus").type(JsonFieldType.STRING).description("학력/경력 상태").optional(),
+                        fieldWithPath("backgroundText").type(JsonFieldType.STRING).description("학력/경력 텍스트").optional(),
+                        fieldWithPath("isOpenProfile").type(JsonFieldType.BOOLEAN).description("프로필 공개 여부").optional(),
+                        fieldWithPath("portfolioUrl").type(JsonFieldType.STRING).description("포트폴리오 url").optional(),
+                        fieldWithPath("projectCount").type(JsonFieldType.NUMBER).description("프로젝트 수").optional(),
+                        fieldWithPath("activityHour").type(JsonFieldType.NUMBER).description("활동 시간").optional(),
+                        fieldWithPath("introduce").type(JsonFieldType.STRING).description("자기소개").optional(),
+                        fieldWithPath("linkList[]").description("링크 list").optional(),
+                        fieldWithPath("linkList[].linkUrl").type(JsonFieldType.STRING).description("링크 url").optional(),
+                        fieldWithPath("linkList[].linkType").type(JsonFieldType.STRING).description("링크 타입").optional(),
+                        fieldWithPath("skillIdList").description("스킬 id list").optional(),
+                        fieldWithPath("positionId").type(JsonFieldType.NUMBER).description("직군 id").optional(),
+                        fieldWithPath("regionId").type(JsonFieldType.NUMBER).description("지역 id").optional()
                     )
                     .responseFields(
-                        fieldWithPath("id").description("사용자 id"),
-                        fieldWithPath("profileImageUrl").description("프로필 이미지 url"),
-                        fieldWithPath("username").description("사용자 이름"),
-                        fieldWithPath("nickname").description("사용자 닉네임"),
-                        fieldWithPath("phoneNumber").description("사용자 전화번호"),
-                        fieldWithPath("isOpenPhoneNum").description("전화번호 공개 여부"),
-                        fieldWithPath("email").description("사용자 이메일"),
-                        fieldWithPath("backgroundStatus").description("학력/경력 상태"),
-                        fieldWithPath("backgroundText").description("학력/경력 텍스트"),
-                        fieldWithPath("isOpenProfile").description("프로필 공개 여부"),
-                        fieldWithPath("portfolioUrl").description("포트폴리오 url"),
-                        fieldWithPath("projectCount").description("프로젝트 수"),
-                        fieldWithPath("activityHour").description("활동 시간"),
-                        fieldWithPath("introduce").description("자기소개"),
-                        fieldWithPath("linkList").description("링크 list"),
-                        fieldWithPath("linkList[].linkUrl").description("링크 url"),
-                        fieldWithPath("linkList[].linkType").description("링크 타입"),
-                        fieldWithPath("positionId").description("직군 id"),
-                        fieldWithPath("regionId").description("지역 id"),
-                        fieldWithPath("skillIdList").description("스킬 id list"),
-                        fieldWithPath("status").description("사용자 정보 상태")
+                        fieldWithPath("id").type(JsonFieldType.NUMBER).description("사용자 id"),
+                        fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("프로필 이미지 url").optional(),
+                        fieldWithPath("username").type(JsonFieldType.STRING).description("사용자 이름").optional(),
+                        fieldWithPath("nickname").type(JsonFieldType.STRING).description("사용자 닉네임").optional(),
+                        fieldWithPath("phoneNumber").type(JsonFieldType.STRING).description("사용자 전화번호").optional(),
+                        fieldWithPath("isOpenPhoneNum").type(JsonFieldType.BOOLEAN).description("전화번호 공개 여부").optional(),
+                        fieldWithPath("email").type(JsonFieldType.STRING).description("사용자 이메일").optional(),
+                        fieldWithPath("backgroundStatus").type(JsonFieldType.STRING).description("학력/경력 상태").optional(),
+                        fieldWithPath("backgroundText").type(JsonFieldType.STRING).description("학력/경력 텍스트").optional(),
+                        fieldWithPath("isOpenProfile").type(JsonFieldType.BOOLEAN).description("프로필 공개 여부").optional(),
+                        fieldWithPath("portfolioUrl").type(JsonFieldType.STRING).description("포트폴리오 url").optional(),
+                        fieldWithPath("projectCount").type(JsonFieldType.NUMBER).description("프로젝트 수").optional(),
+                        fieldWithPath("activityHour").type(JsonFieldType.NUMBER).description("활동 시간").optional(),
+                        fieldWithPath("introduce").type(JsonFieldType.STRING).description("자기소개").optional(),
+                        fieldWithPath("linkList[]").description("링크 list").optional(),
+                        fieldWithPath("linkList[].linkUrl").type(JsonFieldType.STRING).description("링크 url").optional(),
+                        fieldWithPath("linkList[].linkType").type(JsonFieldType.STRING).description("링크 타입").optional(),
+                        fieldWithPath("positionId").type(JsonFieldType.NUMBER).description("직군 id").optional(),
+                        fieldWithPath("regionId").type(JsonFieldType.NUMBER).description("지역 id").optional(),
+                        fieldWithPath("skillIdList").description("스킬 id list").optional(),
+                        fieldWithPath("status").type(JsonFieldType.STRING).description("사용자 정보 상태")
                     )
                     .build()
             )
