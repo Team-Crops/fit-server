@@ -7,4 +7,6 @@ public interface ChatRoomService {
   ChatRoom createChatRoom();
 
   ChatRoom getById(Long roomId);
+
+  boolean isExistById(Long roomId);
 }

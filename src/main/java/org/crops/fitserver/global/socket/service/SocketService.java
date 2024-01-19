@@ -4,6 +4,8 @@ import com.corundumstudio.socketio.SocketIOClient;
 import jakarta.transaction.Transactional;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.crops.fitserver.global.exception.BusinessException;
+import org.crops.fitserver.global.exception.ErrorCode;
 import org.crops.fitserver.global.socket.SocketProperty;
 import org.springframework.stereotype.Service;
 
@@ -19,16 +21,16 @@ public class SocketService {
       String eventName,
       SocketResponse message) {
     var roomId = String.valueOf(getRoomId(senderClient));
-    for (SocketIOClient client : senderClient
+    senderClient
         .getNamespace()
         .getRoomOperations(roomId)
-        .getClients()) {
-      sendMessageToOtherClient(
-          senderClient,
-          client,
-          eventName,
-          message);
-    }
+        .getClients()
+        .forEach(client ->
+            sendMessageToOtherClient(
+                senderClient,
+                client,
+                eventName,
+                message));
   }
 
   public void setUserId(SocketIOClient socketIOClient, Long userId) {
@@ -40,11 +42,19 @@ public class SocketService {
   }
 
   public Long getRoomId(SocketIOClient socketIOClient) {
-    return socketIOClient.get(socketProperty.getRoomKey());
+    var roomId = (Long) socketIOClient.get(socketProperty.getRoomKey());
+    if (Objects.isNull(roomId)) {
+      throw new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION);
+    }
+    return roomId;
   }
 
   public Long getUserId(SocketIOClient socketIOClient) {
-    return socketIOClient.get(socketProperty.getUserKey());
+    var userId = (Long) socketIOClient.get(socketProperty.getUserKey());
+    if (Objects.isNull(userId)) {
+      throw new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION);
+    }
+    return userId;
   }
 
   private static void sendMessageToOtherClient(

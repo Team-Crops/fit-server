@@ -24,4 +24,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     return chatRoomRepository.findById(roomId)
         .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
   }
+
+  @Override
+  public boolean isExistById(Long roomId) {
+    return chatRoomRepository.existsById(roomId);
+  }
 }

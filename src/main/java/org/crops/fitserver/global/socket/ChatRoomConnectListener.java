@@ -42,7 +42,16 @@ public class ChatRoomConnectListener implements ConnectListener {
                 .getHandshakeData()
                 .getHttpHeaders()
                 .get(HttpHeaders.AUTHORIZATION));
-    return jwtResolver.getUserIdFromAccessToken(accessToken);
+    Long userId = jwtResolver.getUserIdFromAccessToken(accessToken);
+    validUserId(userId);
+    return userId;
+  }
+
+  private void validUserId(Long userId) {
+//    if (!userService.isExistById(userId) {
+    if (false)  {
+      throw new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION);
+    }
   }
 
   private Long getRoomId(SocketIOClient socketIOClient) {
@@ -58,6 +67,8 @@ public class ChatRoomConnectListener implements ConnectListener {
     if (roomId == null) {
       throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE);
     }
-    chatRoomService.getById(roomId);
+    if (!chatRoomService.isExistById(roomId)) {
+      throw new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION);
+    }
   }
 }

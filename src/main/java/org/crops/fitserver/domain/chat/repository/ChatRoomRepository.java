@@ -9,4 +9,6 @@ public interface ChatRoomRepository extends Repository<ChatRoom, Long> {
   ChatRoom save(ChatRoom chatRoom);
 
   Optional<ChatRoom> findById(Long roomId);
+
+  boolean existsById(Long roomId);
 }

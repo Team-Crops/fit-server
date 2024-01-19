@@ -28,11 +28,11 @@ public class SocketConfig implements CommandLineRunner {
     com.corundumstudio.socketio.Configuration config = new com.corundumstudio.socketio.Configuration();
     config.setPort(socketProperty.getPort());
     config.setOrigin("*");
+    config.setExceptionListener(exceptionListener);
     SocketIOServer server = new SocketIOServer(config);
     mappingSupporter.addListeners(server);
     server.addConnectListener(connectListener);
     server.addDisconnectListener(disconnectListener);
-    config.setExceptionListener(exceptionListener);
     return server;
   }
 

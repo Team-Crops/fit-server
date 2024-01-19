@@ -1,6 +1,7 @@
 package org.crops.fitserver.domain.chat.controller;
 
 import com.corundumstudio.socketio.SocketIOClient;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.chat.controller.dto.request.SendMessageRequest;
@@ -18,7 +19,7 @@ public class ChatController {
   private final SocketService socketService;
 
   @SocketMapping(endpoint = "/app/chat/text", requestCls = SendMessageRequest.class)
-  public void sendTextMessage(SocketIOClient client, SendMessageRequest request) {
+  public void sendTextMessage(SocketIOClient client, @Valid SendMessageRequest request) {
     Long userId = socketService.getUserId(client);
     Long roomId = socketService.getRoomId(client);
     chatRoomFacade.sendTextMessage(
@@ -29,7 +30,7 @@ public class ChatController {
   }
 
   @SocketMapping(endpoint = "/app/chat/image", requestCls = SendMessageRequest.class)
-  public void sendImageMessage(SocketIOClient client, SendMessageRequest request) {
+  public void sendImageMessage(SocketIOClient client, @Valid SendMessageRequest request) {
     Long userId = socketService.getUserId(client);
     Long roomId = socketService.getRoomId(client);
     chatRoomFacade.sendImageMessage(
@@ -40,7 +41,7 @@ public class ChatController {
   }
 
   @SocketMapping(endpoint = "/app/chat/notice", requestCls = SendMessageRequest.class)
-  public void sendNoticeMessage(SocketIOClient client, SendMessageRequest request) {
+  public void sendNoticeMessage(SocketIOClient client, @Valid SendMessageRequest request) {
     Long userId = socketService.getUserId(client);
     Long roomId = socketService.getRoomId(client);
     chatRoomFacade.sendNoticeMessage(
