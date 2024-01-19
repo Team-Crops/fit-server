@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
+import org.crops.fitserver.domain.user.constant.BackgroundStatus;
 import org.crops.fitserver.domain.user.domain.Link;
 
 @Builder
@@ -23,7 +24,8 @@ public class UpdateUserRequest {
 
   private String email;
 
-  private String career;
+  private BackgroundStatus backgroundStatus;
+  private String backgroundText;
 
   private String portfolioUrl;
 

@@ -65,7 +65,6 @@ public class UserRepositoryTest {
         .phoneNumber("010-1234-5678")
         .isOpenPhoneNum(false)
         .email("test@gmail.com")
-        .career("test")
         .build();
     Position position = Position.builder()
         .displayName("test")
@@ -112,7 +111,6 @@ public class UserRepositoryTest {
         .phoneNumber("010-1234-5678")
         .isOpenPhoneNum(false)
         .email("test@gmail.com")
-        .career("test2")
         .portfolioUrl("test2.com")
         .projectCount(2)
         .activityHour(2)
@@ -148,7 +146,6 @@ public class UserRepositoryTest {
         .phoneNumber("010-1234-5678")
         .isOpenPhoneNum(false)
         .email("test@gmail.com")
-        .career("test2")
         .portfolioUrl("test2.com")
         .projectCount(2)
         .activityHour(2)

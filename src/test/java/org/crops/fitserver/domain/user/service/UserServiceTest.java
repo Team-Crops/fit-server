@@ -32,8 +32,7 @@ public class UserServiceTest {
       .nickname("test")
       .phoneNumber("010-1234-5678")
       .isOpenPhoneNum(false)
-      .email("test@gmail.com")
-      .career("test");
+      .email("test@gmail.com");
   private final UserInfo.UserInfoBuilder userInfoBuilder = UserInfo.builder()
       .id(1L)
       .user(userBuilder.build())
@@ -77,7 +76,6 @@ public class UserServiceTest {
         .phoneNumber("010-1234-5678")
         .isOpenPhoneNum(false)
         .email("test@gmail.com")
-        .career("test")
         .portfolioUrl("test.com")
         .projectCount(1)
         .activityHour(1)

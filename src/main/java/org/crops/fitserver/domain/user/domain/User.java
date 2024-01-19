@@ -58,9 +58,6 @@ public class User extends BaseTimeEntity {
   @Column(length = 2048)
   private String email;
 
-  @Column(length = 100)
-  private String career;
-
   @OneToOne(mappedBy = "user")
   private SocialUserInfo socialUserInfo;
 
@@ -85,7 +82,6 @@ public class User extends BaseTimeEntity {
     this.updatePhoneNumber(updateUserRequest.getPhoneNumber());
     this.updateIsOpenPhoneNum(updateUserRequest.getIsOpenPhoneNum());
     this.updateEmail(updateUserRequest.getEmail());
-    this.updateCareer(updateUserRequest.getCareer());
     this.userInfo.updateUserInfo(updateUserRequest);
   }
 
@@ -120,10 +116,6 @@ public class User extends BaseTimeEntity {
       throw new IllegalArgumentException("email cannot be null");
     }
     this.email = email;
-  }
-
-  public void updateCareer(String career) {
-    this.career = career;
   }
 }
 

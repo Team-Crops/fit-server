@@ -26,6 +26,7 @@ import lombok.ToString;
 import org.crops.fitserver.domain.region.domain.Region;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.domain.Skill;
+import org.crops.fitserver.domain.user.constant.BackgroundStatus;
 import org.crops.fitserver.domain.user.constant.UserInfoStatus;
 import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
 import org.crops.fitserver.domain.user.util.LinkUtil;
@@ -59,6 +60,14 @@ public class UserInfo {
   private String introduce;
   @Column(length = 2048)
   private String linkJson;
+
+  @Enumerated(value = EnumType.STRING)
+  @Column(length = 10)
+  private BackgroundStatus backgroundStatus;
+
+  private String career;
+  private String education;
+
   @Column(nullable = false)
   @ColumnDefault("false")
   @Setter(AccessLevel.PRIVATE)
@@ -115,16 +124,13 @@ public class UserInfo {
     this.updateActivityHour(updateUserRequest.getActivityHour());
     this.updateIntroduce(updateUserRequest.getIntroduce());
     this.updateLinkJson(LinkUtil.parseToJson(updateUserRequest.getLinkList()));
+    this.updateBackground(updateUserRequest.getBackgroundStatus(),
+        updateUserRequest.getBackgroundText());
     this.updateIsOpenProfile(updateUserRequest.getIsOpenProfile());
-
-    var position = updateUserRequest.getPositionId() != null ? Position.builder()
-        .id(updateUserRequest.getPositionId()).build() : null;
-    this.updatePosition(position);
-
-    var region = updateUserRequest.getRegionId() != null ? Region.builder()
-        .id(updateUserRequest.getRegionId()).build() : null;
-    this.updateRegion(region);
+    this.updatePosition(updateUserRequest.getPositionId());
+    this.updateRegion(updateUserRequest.getRegionId());
   }
+
 
   public void updatePortfolioUrl(String portfolioUrl) {
     this.portfolioUrl = portfolioUrl;
@@ -158,15 +164,51 @@ public class UserInfo {
     this.linkJson = linkJson;
   }
 
+  public void updateBackground(BackgroundStatus backgroundStatus, String backgroundText) {
+    if(this.backgroundStatus != null && backgroundStatus == null) {
+      throw new IllegalArgumentException("backgroundStatus cannot be null");
+    }
+    this.backgroundStatus = backgroundStatus;
+
+    if(this.backgroundStatus == null) {
+      this.career = null;
+      this.education = null;
+      return;
+    }
+
+    switch (backgroundStatus.getBackgroundType()) {
+      case CAREER -> {
+        this.career = backgroundText;
+        this.education = null;
+      }
+      case EDUCATION -> {
+        this.career = null;
+        this.education = backgroundText;
+      }
+    }
+
+  }
+
   public void updateIsOpenProfile(boolean isOpenProfile) {
     this.isOpenProfile = isOpenProfile;
   }
+
+  private void updatePosition(Long positionId) {
+    updatePosition(positionId != null ? Position.builder()
+        .id(positionId).build() : null);
+  }
+
 
   public void updatePosition(Position position) {
     if (this.position != null && position == null) {
       throw new IllegalArgumentException("position cannot be null");
     }
     this.position = position;
+  }
+
+  private void updateRegion(Long regionId) {
+    updateRegion(regionId != null ? Region.builder()
+        .id(regionId).build() : null);
   }
 
   public void updateRegion(Region region) {
@@ -195,7 +237,7 @@ public class UserInfo {
         && !CollectionUtils.isEmpty(this.userInfoSkills)
         && this.position != null
         && this.region != null
-        && this.user.getCareer() != null
+        && this.backgroundStatus != null
         && this.user.getEmail() != null
         && this.user.getNickname() != null
         && this.user.getPhoneNumber() != null

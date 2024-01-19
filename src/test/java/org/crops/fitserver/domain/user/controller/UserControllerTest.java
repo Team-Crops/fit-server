@@ -112,7 +112,8 @@ public class UserControllerTest {
                         fieldWithPath("phoneNumber").description("사용자 전화번호"),
                         fieldWithPath("isOpenPhoneNum").description("전화번호 공개 여부"),
                         fieldWithPath("email").description("사용자 이메일"),
-                        fieldWithPath("career").description("사용자 경력"),
+                        fieldWithPath("backgroundStatus").description("학력/경력 상태"),
+                        fieldWithPath("backgroundText").description("학력/경력 텍스트"),
                         fieldWithPath("isOpenProfile").description("프로필 공개 여부"),
                         fieldWithPath("status").description("사용자 정보 상태"),
                         fieldWithPath("portfolioUrl").description("포트폴리오 url"),
@@ -153,7 +154,6 @@ public class UserControllerTest {
         .phoneNumber("010-1234-1234")
         .isOpenPhoneNum(true)
         .email("test@gmail.com")
-        .career("test")
         .portfolioUrl("test.com")
         .projectCount(1)
         .activityHour(1)
@@ -192,7 +192,6 @@ public class UserControllerTest {
         .isOpenPhoneNum(true)
         .userInfo(newUserInfo)
         .email("test@gmail.com")
-        .career("test")
         .build();
 
     given(userFacade.updateUserWithInfo(any(), any())).willReturn(UserInfoDto.from(newUser));
@@ -224,7 +223,8 @@ public class UserControllerTest {
                         fieldWithPath("phoneNumber").description("사용자 전화번호"),
                         fieldWithPath("isOpenPhoneNum").description("전화번호 공개 여부"),
                         fieldWithPath("email").description("사용자 이메일"),
-                        fieldWithPath("career").description("사용자 경력"),
+                        fieldWithPath("backgroundStatus").description("학력/경력 상태"),
+                        fieldWithPath("backgroundText").description("학력/경력 텍스트"),
                         fieldWithPath("isOpenProfile").description("프로필 공개 여부"),
                         fieldWithPath("portfolioUrl").description("포트폴리오 url"),
                         fieldWithPath("projectCount").description("프로젝트 수"),
@@ -245,7 +245,8 @@ public class UserControllerTest {
                         fieldWithPath("phoneNumber").description("사용자 전화번호"),
                         fieldWithPath("isOpenPhoneNum").description("전화번호 공개 여부"),
                         fieldWithPath("email").description("사용자 이메일"),
-                        fieldWithPath("career").description("사용자 경력"),
+                        fieldWithPath("backgroundStatus").description("학력/경력 상태"),
+                        fieldWithPath("backgroundText").description("학력/경력 텍스트"),
                         fieldWithPath("isOpenProfile").description("프로필 공개 여부"),
                         fieldWithPath("portfolioUrl").description("포트폴리오 url"),
                         fieldWithPath("projectCount").description("프로젝트 수"),

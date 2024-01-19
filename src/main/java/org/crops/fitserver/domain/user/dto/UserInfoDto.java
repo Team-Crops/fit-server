@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
+import org.crops.fitserver.domain.user.constant.BackgroundStatus;
+import org.crops.fitserver.domain.user.constant.BackgroundStatus.BackgroundType;
 import org.crops.fitserver.domain.user.constant.UserInfoStatus;
 import org.crops.fitserver.domain.user.domain.Link;
 import org.crops.fitserver.domain.user.domain.User;
@@ -23,7 +25,8 @@ public class UserInfoDto {
   @JsonProperty("isOpenPhoneNum")
   private Boolean isOpenPhoneNum;
   private String email;
-  private String career;
+  private BackgroundStatus backgroundStatus;
+  private String backgroundText;
   @JsonProperty("isOpenProfile")
   private Boolean isOpenProfile;
   private String portfolioUrl;
@@ -51,7 +54,16 @@ public class UserInfoDto {
         .phoneNumber(user.getPhoneNumber())
         .isOpenPhoneNum(user.isOpenPhoneNum())
         .email(user.getEmail())
-        .career(user.getCareer());
+        .backgroundStatus(user.getUserInfo().getBackgroundStatus());
+
+    if(user.getUserInfo().getBackgroundStatus() != null) {
+      userInfoDtoBuilder = userInfoDtoBuilder
+          .backgroundText(
+              user.getUserInfo().getBackgroundStatus().getBackgroundType()
+                  == BackgroundType.CAREER ? user.getUserInfo().getCareer()
+                  : user.getUserInfo().getEducation()
+          );
+    }
 
     if (user.getUserInfo() != null) {
       userInfoDtoBuilder = userInfoDtoBuilder
