@@ -1,0 +1,267 @@
+package org.crops.fitserver.domain.user.controller;
+
+import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static org.crops.fitserver.domain.user.util.PrincipalDetailsUtil.getPrincipalDetails;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.epages.restdocs.apispec.ResourceSnippetParameters;
+import com.epages.restdocs.apispec.Schema;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
+import org.crops.fitserver.domain.region.domain.Region;
+import org.crops.fitserver.domain.skillset.domain.Position;
+import org.crops.fitserver.domain.skillset.domain.Skill;
+import org.crops.fitserver.domain.user.constant.LinkType;
+import org.crops.fitserver.domain.user.constant.UserInfoStatus;
+import org.crops.fitserver.domain.user.domain.Link;
+import org.crops.fitserver.domain.user.domain.User;
+import org.crops.fitserver.domain.user.domain.UserInfo;
+import org.crops.fitserver.domain.user.domain.UserRole;
+import org.crops.fitserver.domain.user.dto.UserInfoDto;
+import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
+import org.crops.fitserver.domain.user.facade.UserFacade;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.operation.preprocess.Preprocessors;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+
+@AutoConfigureMockMvc
+@AutoConfigureRestDocs
+@ExtendWith({RestDocumentationExtension.class})
+@WebMvcTest(UserController.class)
+public class UserControllerTest {
+
+  private final ObjectMapper objectMapper = new ObjectMapper();
+  private MockMvc mockMvc;
+  @Autowired
+  private WebApplicationContext context;
+  @MockBean
+  private UserFacade userFacade;
+
+
+  @BeforeEach
+  public void setUp(RestDocumentationContextProvider restDocumentation) {
+    this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
+        .apply(springSecurity())
+        .apply(
+            documentationConfiguration(restDocumentation)
+                .operationPreprocessors()
+                .withResponseDefaults(Preprocessors.prettyPrint())
+        )
+        .build();
+  }
+
+  @Test
+  public void getUser_success() throws Exception {
+    // given
+    var linkList = List.of(
+        Link.builder().linkType(LinkType.GITHUB).linkUrl("github.com").build(),
+        Link.builder().linkType(LinkType.ETC).linkUrl("test.com").build()
+    );
+    var userInfo = UserInfo.builder()
+        .id(1L)
+        .linkJson(objectMapper.writeValueAsString(linkList))
+        .build();
+    var user = User.builder().id(1L).userRole(UserRole.MEMBER).userInfo(userInfo).build();
+    var principalDetails = getPrincipalDetails(user.getId(), user.getUserRole());
+    var url = "/v1/user";
+    given(userFacade.getUserWithInfo(user.getId())).willReturn(UserInfoDto.from(user));
+    // when
+    var result = mockMvc.perform(get(url)
+        .contentType(MediaType.APPLICATION_JSON)
+        .with(user(principalDetails))
+        .with(csrf())
+    );
+
+    // then
+    result.andExpect(status().isOk())
+        .andDo(document("user/getUser",
+            resource(
+                ResourceSnippetParameters.builder()
+                    .tag("user")
+                    .description("사용자 정보 조회")
+                    .summary("사용자 정보 조회")
+                    .responseSchema(Schema.schema("UserInfoDto"))
+                    .responseFields(
+                        fieldWithPath("id").description("사용자 id"),
+                        fieldWithPath("profileImageUrl").description("프로필 이미지 url"),
+                        fieldWithPath("username").description("사용자 이름"),
+                        fieldWithPath("nickname").description("사용자 닉네임"),
+                        fieldWithPath("phoneNumber").description("사용자 전화번호"),
+                        fieldWithPath("isOpenPhoneNum").description("전화번호 공개 여부"),
+                        fieldWithPath("email").description("사용자 이메일"),
+                        fieldWithPath("career").description("사용자 경력"),
+                        fieldWithPath("isOpenProfile").description("프로필 공개 여부"),
+                        fieldWithPath("status").description("사용자 정보 상태"),
+                        fieldWithPath("portfolioUrl").description("포트폴리오 url"),
+                        fieldWithPath("projectCount").description("프로젝트 수"),
+                        fieldWithPath("activityHour").description("활동 시간"),
+                        fieldWithPath("introduce").description("자기소개"),
+                        fieldWithPath("linkList").description("링크 list"),
+                        fieldWithPath("linkList[].linkUrl").description("링크 url"),
+                        fieldWithPath("linkList[].linkType").description("링크 타입"),
+                        fieldWithPath("skillIdList").description("스킬 id list"),
+                        fieldWithPath("positionId").description("직군 id"),
+                        fieldWithPath("regionId").description("지역 id")
+                    )
+                    .build()
+            )
+        ));
+  }
+
+  @Test
+  public void updateUser_success() throws Exception {
+    // given
+    var url = "/v1/user";
+    var userInfo = UserInfo.builder()
+        .id(1L)
+        .build();
+    var user = User.builder().id(1L).userRole(UserRole.MEMBER).userInfo(userInfo).build();
+
+    var linkList = List.of(
+        Link.builder().linkType(LinkType.GITHUB).linkUrl("github.com").build(),
+        Link.builder().linkType(LinkType.ETC).linkUrl("test.com").build()
+    );
+    var skillIdList = List.of(1L, 2L, 3L);
+
+    var updateUserRequest = UpdateUserRequest.builder()
+        .profileImageUrl("test.com")
+        .username("test")
+        .nickname("test")
+        .phoneNumber("010-1234-1234")
+        .isOpenPhoneNum(true)
+        .email("test@gmail.com")
+        .career("test")
+        .portfolioUrl("test.com")
+        .projectCount(1)
+        .activityHour(1)
+        .introduce("test")
+        .isOpenProfile(true)
+        .positionId(1L)
+        .regionId(1L)
+        .linkList(linkList)
+        .skillIdList(skillIdList)
+        .build();
+
+    var newUserInfo = UserInfo.builder()
+        .id(1L)
+        .user(user)
+        .portfolioUrl("test.com")
+        .projectCount(1)
+        .activityHour(1)
+        .introduce("test")
+        .isOpenProfile(true)
+        .position(Position.builder().id(1L).build())
+        .region(Region.builder().id(1L).build())
+        .linkJson(objectMapper.writeValueAsString(linkList))
+        .status(UserInfoStatus.INCOMPLETE)
+        .build();
+    newUserInfo.addSkill(Skill.builder().id(1L).build());
+    newUserInfo.addSkill(Skill.builder().id(2L).build());
+    newUserInfo.addSkill(Skill.builder().id(3L).build());
+
+    var newUser = User.builder()
+        .id(1L)
+        .userRole(UserRole.MEMBER)
+        .profileImageUrl("test.com")
+        .username("test")
+        .nickname("test")
+        .phoneNumber("010-1234-1234")
+        .isOpenPhoneNum(true)
+        .userInfo(newUserInfo)
+        .email("test@gmail.com")
+        .career("test")
+        .build();
+
+    given(userFacade.updateUserWithInfo(any(), any())).willReturn(UserInfoDto.from(newUser));
+    var principalDetails = getPrincipalDetails(1L, UserRole.MEMBER);
+
+    // when
+
+    var result = mockMvc.perform(put(url)
+        .contentType(MediaType.APPLICATION_JSON)
+        .with(user(principalDetails))
+        .with(csrf())
+        .content(objectMapper.writeValueAsString(updateUserRequest))
+    );
+
+    // then
+    result.andExpect(status().isOk())
+        .andDo(document("user/updateUser",
+            resource(
+                ResourceSnippetParameters.builder()
+                    .tag("user")
+                    .description("사용자 정보 수정")
+                    .summary("사용자 정보 수정")
+                    .requestSchema(Schema.schema("UpdateUserRequest"))
+                    .responseSchema(Schema.schema("UserInfoDto"))
+                    .requestFields(
+                        fieldWithPath("profileImageUrl").description("프로필 이미지 url"),
+                        fieldWithPath("username").description("사용자 이름"),
+                        fieldWithPath("nickname").description("사용자 닉네임"),
+                        fieldWithPath("phoneNumber").description("사용자 전화번호"),
+                        fieldWithPath("isOpenPhoneNum").description("전화번호 공개 여부"),
+                        fieldWithPath("email").description("사용자 이메일"),
+                        fieldWithPath("career").description("사용자 경력"),
+                        fieldWithPath("isOpenProfile").description("프로필 공개 여부"),
+                        fieldWithPath("portfolioUrl").description("포트폴리오 url"),
+                        fieldWithPath("projectCount").description("프로젝트 수"),
+                        fieldWithPath("activityHour").description("활동 시간"),
+                        fieldWithPath("introduce").description("자기소개"),
+                        fieldWithPath("linkList").description("링크 list"),
+                        fieldWithPath("linkList[].linkUrl").description("링크 url"),
+                        fieldWithPath("linkList[].linkType").description("링크 타입"),
+                        fieldWithPath("skillIdList").description("스킬 id list"),
+                        fieldWithPath("positionId").description("직군 id"),
+                        fieldWithPath("regionId").description("지역 id")
+                    )
+                    .responseFields(
+                        fieldWithPath("id").description("사용자 id"),
+                        fieldWithPath("profileImageUrl").description("프로필 이미지 url"),
+                        fieldWithPath("username").description("사용자 이름"),
+                        fieldWithPath("nickname").description("사용자 닉네임"),
+                        fieldWithPath("phoneNumber").description("사용자 전화번호"),
+                        fieldWithPath("isOpenPhoneNum").description("전화번호 공개 여부"),
+                        fieldWithPath("email").description("사용자 이메일"),
+                        fieldWithPath("career").description("사용자 경력"),
+                        fieldWithPath("isOpenProfile").description("프로필 공개 여부"),
+                        fieldWithPath("portfolioUrl").description("포트폴리오 url"),
+                        fieldWithPath("projectCount").description("프로젝트 수"),
+                        fieldWithPath("activityHour").description("활동 시간"),
+                        fieldWithPath("introduce").description("자기소개"),
+                        fieldWithPath("linkList").description("링크 list"),
+                        fieldWithPath("linkList[].linkUrl").description("링크 url"),
+                        fieldWithPath("linkList[].linkType").description("링크 타입"),
+                        fieldWithPath("positionId").description("직군 id"),
+                        fieldWithPath("regionId").description("지역 id"),
+                        fieldWithPath("skillIdList").description("스킬 id list"),
+                        fieldWithPath("status").description("사용자 정보 상태")
+                    )
+                    .build()
+            )
+        ));
+  }
+
+}

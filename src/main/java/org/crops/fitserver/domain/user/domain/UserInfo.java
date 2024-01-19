@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.domain.Skill;
 import org.crops.fitserver.domain.user.constant.UserInfoStatus;
 import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
+import org.crops.fitserver.domain.user.util.LinkUtil;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.util.CollectionUtils;
@@ -40,43 +42,32 @@ import org.springframework.util.CollectionUtils;
 @ToString
 public class UserInfo {
 
+  @OneToMany(mappedBy = "userInfo")
+  private final List<UserInfoSkill> userInfoSkills = new ArrayList<>();
   @Id
   @Column(name = "user_id")
   private Long id;
-
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "user_id", nullable = false)
   @MapsId
   private User user;
-
   @Column(length = 2048)
   private String portfolioUrl;
-
   private Integer projectCount;
-
   private Integer activityHour;
-
   @Column(length = 255)
   private String introduce;
-
   @Column(length = 2048)
   private String linkJson;
-
   @Column(nullable = false)
   @ColumnDefault("false")
   @Setter(AccessLevel.PRIVATE)
   private boolean isOpenProfile;
-
   @Enumerated(value = EnumType.STRING)
   @Column(nullable = false, length = 10)
   @ColumnDefault("'INCOMPLETE'")
   @Setter(AccessLevel.PRIVATE)
   private UserInfoStatus status;
-
-
-  @OneToMany(mappedBy = "userInfo")
-  private final List<UserInfoSkill> userInfoSkills = new ArrayList<>();
-
   /**
    * cascade = CascadeType.ALL 을 사용하면 id만으로 entity 교체할 때 문제가 발생한다.
    */
@@ -88,12 +79,6 @@ public class UserInfo {
   @JoinColumn(name = "region_id")
   private Region region;
 
-
-  @PreUpdate
-  public void preUpdate() {
-    this.status = this.isReadyToComplete() ? UserInfoStatus.COMPLETE : UserInfoStatus.INCOMPLETE;
-  }
-
   public static UserInfo from(User user) {
     return UserInfo.builder()
         .id(user.getId())
@@ -101,6 +86,16 @@ public class UserInfo {
         .isOpenProfile(false)
         .status(UserInfoStatus.INCOMPLETE)
         .build();
+  }
+
+  @PrePersist
+  public void prePersist() {
+    this.status = this.isReadyToComplete() ? UserInfoStatus.COMPLETE : UserInfoStatus.INCOMPLETE;
+  }
+
+  @PreUpdate
+  public void preUpdate() {
+    this.status = this.isReadyToComplete() ? UserInfoStatus.COMPLETE : UserInfoStatus.INCOMPLETE;
   }
 
   public void updateUserInfo(UserInfo userInfo) {
@@ -119,8 +114,8 @@ public class UserInfo {
     this.updateProjectCount(updateUserRequest.getProjectCount());
     this.updateActivityHour(updateUserRequest.getActivityHour());
     this.updateIntroduce(updateUserRequest.getIntroduce());
-    this.updateLinkJson(updateUserRequest.getLinkJson());
-    this.updateIsOpenProfile(updateUserRequest.isOpenProfile());
+    this.updateLinkJson(LinkUtil.parseToJson(updateUserRequest.getLinkList()));
+    this.updateIsOpenProfile(updateUserRequest.getIsOpenProfile());
 
     var position = updateUserRequest.getPositionId() != null ? Position.builder()
         .id(updateUserRequest.getPositionId()).build() : null;

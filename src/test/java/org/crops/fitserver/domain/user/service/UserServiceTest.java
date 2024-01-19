@@ -4,9 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
+import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.crops.fitserver.domain.user.constant.LinkType;
 import org.crops.fitserver.domain.user.constant.UserInfoStatus;
+import org.crops.fitserver.domain.user.domain.Link;
 import org.crops.fitserver.domain.user.domain.User;
 import org.crops.fitserver.domain.user.domain.UserInfo;
 import org.crops.fitserver.domain.user.domain.UserRole;
@@ -21,12 +24,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
-  @InjectMocks
-  private UserServiceImpl userService;
-
-  @Mock
-  private UserRepository userRepository;
-
   private final User.UserBuilder userBuilder = User.builder()
       .id(1L)
       .userRole(UserRole.MEMBER)
@@ -37,7 +34,6 @@ public class UserServiceTest {
       .isOpenPhoneNum(false)
       .email("test@gmail.com")
       .career("test");
-
   private final UserInfo.UserInfoBuilder userInfoBuilder = UserInfo.builder()
       .id(1L)
       .user(userBuilder.build())
@@ -48,7 +44,10 @@ public class UserServiceTest {
       .linkJson("test")
       .status(UserInfoStatus.INCOMPLETE)
       .isOpenProfile(false);
-
+  @InjectMocks
+  private UserServiceImpl userService;
+  @Mock
+  private UserRepository userRepository;
 
   @Test
   public void getUserWithInfo_success() {
@@ -83,7 +82,12 @@ public class UserServiceTest {
         .projectCount(1)
         .activityHour(1)
         .introduce("test")
-        .linkJson("test")
+        .linkList(List.of(
+            Link.builder()
+                .linkType(LinkType.GITHUB)
+                .linkUrl("test2.com")
+                .build()
+        ))
         .isOpenProfile(false)
         .build();
     var userInfo = userInfoBuilder.build();

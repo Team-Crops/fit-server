@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
@@ -11,7 +12,9 @@ import org.crops.fitserver.domain.region.domain.Region;
 import org.crops.fitserver.domain.region.repository.RegionRepository;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.repository.PositionRepository;
+import org.crops.fitserver.domain.user.constant.LinkType;
 import org.crops.fitserver.domain.user.constant.UserInfoStatus;
+import org.crops.fitserver.domain.user.domain.Link;
 import org.crops.fitserver.domain.user.domain.User;
 import org.crops.fitserver.domain.user.domain.UserInfo;
 import org.crops.fitserver.domain.user.domain.UserRole;
@@ -100,7 +103,7 @@ public class UserRepositoryTest {
   @Transactional
   public void update_user_with_info_failed_null_field() {
     //given
-    User user = userRepository.findById(this.user.getId()).get();
+    User user = userRepository.findWithInfoById(this.user.getId()).get();
 
     UpdateUserRequest updateUserRequest = UpdateUserRequest.builder()
         .profileImageUrl("test2.jpg")
@@ -114,7 +117,12 @@ public class UserRepositoryTest {
         .projectCount(2)
         .activityHour(2)
         .introduce("test2")
-        .linkJson("test2")
+        .linkList(List.of(
+            Link.builder()
+                .linkType(LinkType.GITHUB)
+                .linkUrl("test2.com")
+                .build()
+        ))
         .isOpenProfile(false)
         .positionId(this.position.getId())
         .regionId(this.region2.getId())
@@ -145,7 +153,12 @@ public class UserRepositoryTest {
         .projectCount(2)
         .activityHour(2)
         .introduce("test2")
-        .linkJson("test2")
+        .linkList(List.of(
+            Link.builder()
+                .linkType(LinkType.GITHUB)
+                .linkUrl("test2.com")
+                .build()
+        ))
         .isOpenProfile(false)
         .positionId(this.position.getId())
         .regionId(this.region2.getId())

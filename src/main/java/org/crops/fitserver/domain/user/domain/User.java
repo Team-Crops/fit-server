@@ -67,24 +67,23 @@ public class User extends BaseTimeEntity {
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private UserInfo userInfo;
 
-  @PrePersist
-  public void prePersist() {
-    this.userInfo = UserInfo.from(this);
-  }
-
   public static User from(UserRole userRole) {
     return User.builder()
         .userRole(userRole)
         .build();
   }
 
+  @PrePersist
+  public void prePersist() {
+    this.userInfo = UserInfo.from(this);
+  }
 
   public void updateUser(UpdateUserRequest updateUserRequest) {
     this.updateProfileImageUrl(updateUserRequest.getProfileImageUrl());
     this.updateUsername(updateUserRequest.getUsername());
     this.updateNickname(updateUserRequest.getNickname());
     this.updatePhoneNumber(updateUserRequest.getPhoneNumber());
-    this.updateIsOpenPhoneNum(updateUserRequest.isOpenPhoneNum());
+    this.updateIsOpenPhoneNum(updateUserRequest.getIsOpenPhoneNum());
     this.updateEmail(updateUserRequest.getEmail());
     this.updateCareer(updateUserRequest.getCareer());
     this.userInfo.updateUserInfo(updateUserRequest);
