@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties("socket")
 public class SocketProperty {
 
+  private final String getMessageEvent = "get_message";
   private Integer port;
   private String userKey;
   private String roomKey;

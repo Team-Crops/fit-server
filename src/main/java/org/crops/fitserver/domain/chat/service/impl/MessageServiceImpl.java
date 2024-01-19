@@ -8,6 +8,7 @@ import org.crops.fitserver.domain.chat.controller.dto.response.TextMessageRespon
 import org.crops.fitserver.domain.chat.domain.Message;
 import org.crops.fitserver.domain.chat.repository.MessageRepository;
 import org.crops.fitserver.domain.chat.service.MessageService;
+import org.crops.fitserver.global.socket.SocketProperty;
 import org.crops.fitserver.global.socket.service.SocketService;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +18,7 @@ public class MessageServiceImpl implements MessageService {
 
   private final MessageRepository messageRepository;
   private final SocketService socketService;
-
-  String GET_MESSAGE_EVENT_NAME = "get_message";
+  private final SocketProperty socketProperty;
 
   @Override
   public Message sendTextMessage(
@@ -26,7 +26,7 @@ public class MessageServiceImpl implements MessageService {
       Message message) {
     messageRepository.save(message);
     var response = TextMessageResponse.from(message);
-    socketService.sendMessage(client, GET_MESSAGE_EVENT_NAME, response);
+    socketService.sendMessage(client, socketProperty.getGetMessageEvent(), response);
     return message;
   }
 
@@ -36,7 +36,7 @@ public class MessageServiceImpl implements MessageService {
       Message message) {
     messageRepository.save(message);
     var response = ImageMessageResponse.from(message);
-    socketService.sendMessage(client, GET_MESSAGE_EVENT_NAME, response);
+    socketService.sendMessage(client, socketProperty.getGetMessageEvent(), response);
     return message;
   }
 
@@ -46,7 +46,7 @@ public class MessageServiceImpl implements MessageService {
       Message message) {
     messageRepository.save(message);
     var response = NoticeMessageResponse.from(message);
-    socketService.sendMessage(client, GET_MESSAGE_EVENT_NAME, response);
+    socketService.sendMessage(client, socketProperty.getGetMessageEvent(), response);
     return message;
   }
 }
