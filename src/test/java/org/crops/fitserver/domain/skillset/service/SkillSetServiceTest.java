@@ -41,11 +41,7 @@ public class SkillSetServiceTest {
     CreateSkillRequest request = CreateSkillRequest.builder()
         .displayName("test")
         .build();
-    given(skillRepository.findByDisplayName(any())).willReturn(
-        Optional.of(Skill.builder()
-            .displayName("test")
-            .build())
-    );
+    given(skillRepository.existsByDisplayName(any())).willReturn(true);
 
     // when
     ThrowingCallable result = () -> skillSetService.createSkill(request);

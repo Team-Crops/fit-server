@@ -6,5 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RegionRepository extends JpaRepository<Region, Long> {
 
-   Optional<Region> findByDisplayName(String displayName );
+  Optional<Region> findByDisplayName(String displayName);
+
+  boolean existsByDisplayName(String displayName);
 }

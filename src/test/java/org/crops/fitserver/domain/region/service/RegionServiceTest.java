@@ -58,7 +58,7 @@ public class RegionServiceTest {
   @Test
   public void create_region() {
     // given
-    when(regionRepository.findByDisplayName(any())).thenReturn(Optional.empty());
+    when(regionRepository.existsByDisplayName(any())).thenReturn(false);
     when(regionRepository.save(any())).thenReturn(region);
 
     // when
@@ -71,10 +71,10 @@ public class RegionServiceTest {
   @Test
   public void create_region_fail_exist_display_name() {
     // given
-    when(regionRepository.findByDisplayName(any())).thenReturn(Optional.of(region));
+    when(regionRepository.existsByDisplayName(any())).thenReturn(true);
 
     // then
-    assertThatThrownBy(() -> target.createRegion(CreateRegionRequest.builder().displayName("test").build()))
+    assertThatThrownBy(() -> target.createRegion(new CreateRegionRequest("test")))
         .isInstanceOf(BusinessException.class)
         ;
   }
@@ -85,7 +85,7 @@ public class RegionServiceTest {
     when(regionRepository.findById(any())).thenReturn(Optional.empty());
 
     // when, then
-    assertThatThrownBy(() -> target.updateRegion(1L, UpdateRegionRequest.builder().displayName("test").build()))
+    assertThatThrownBy(() -> target.updateRegion(1L, new UpdateRegionRequest("test")))
         .isInstanceOf(BusinessException.class)
         ;
   }
@@ -99,12 +99,12 @@ public class RegionServiceTest {
         .displayName("test1")
         .build();
     when(regionRepository.findById(any())).thenReturn(Optional.of(region2));
-    when(regionRepository.findByDisplayName(any())).thenReturn(Optional.of(region));
+    when(regionRepository.existsByDisplayName(any())).thenReturn(true);
 
 
 
     // when, then
-    assertThatThrownBy(() -> target.updateRegion(region2.getId(), UpdateRegionRequest.builder().displayName(newDisplayName).build()))
+    assertThatThrownBy(() -> target.updateRegion(region2.getId(), new UpdateRegionRequest(newDisplayName)))
         .isInstanceOf(BusinessException.class)
         ;
   }
@@ -118,11 +118,11 @@ public class RegionServiceTest {
         .build();
     // given
     when(regionRepository.findById(any())).thenReturn(Optional.of(region));
-    when(regionRepository.findByDisplayName(any())).thenReturn(Optional.empty());
+    when(regionRepository.existsByDisplayName(any())).thenReturn(false);
     when(regionRepository.save(any())).thenReturn(newRegion);
 
     // when
-    var result = target.updateRegion(region.getId(), UpdateRegionRequest.builder().displayName(newDisplayName).build());
+    var result = target.updateRegion(region.getId(), new UpdateRegionRequest(newDisplayName));
 
     // then
     assertThat(result.getDisplayName()).isEqualTo(newDisplayName);

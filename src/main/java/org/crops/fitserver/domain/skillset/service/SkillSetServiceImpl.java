@@ -28,7 +28,7 @@ class SkillSetServiceImpl implements SkillSetService {
   @Override
   @Transactional
   public SkillDto createSkill(CreateSkillRequest createSkillRequest) {
-    if (skillRepository.findByDisplayName(createSkillRequest.displayName()).isPresent()) {
+    if (skillRepository.existsByDisplayName(createSkillRequest.displayName())) {
       throw new BusinessException(ErrorCode.DUPLICATED_RESOURCE_EXCEPTION);
     }
 

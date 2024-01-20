@@ -17,7 +17,6 @@ import org.crops.fitserver.global.annotation.V1;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -26,13 +25,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @V1
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("/skill-set")
 @RequiredArgsConstructor
 public class SkillSetController {
+
   private final SkillSetService skillSetService;
 
   @GetMapping("/position")
@@ -42,14 +43,18 @@ public class SkillSetController {
 
   @PostMapping("/position")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
-  public ResponseEntity<PositionDto> createPosition(@Valid @RequestBody CreatePositionRequest createPositionRequest) {
-    return ResponseEntity.status(HttpStatus.CREATED).body(skillSetService.createPosition(createPositionRequest));
+  public ResponseEntity<PositionDto> createPosition(
+      @Valid @RequestBody CreatePositionRequest createPositionRequest) {
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(skillSetService.createPosition(createPositionRequest));
   }
 
   @PutMapping("/position/{positionId}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
-  public ResponseEntity<PositionDto> updatePosition(@PathVariable Long positionId, @Valid @RequestBody UpdatePositionRequest updatePositionRequest) {
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).body(skillSetService.updatePositionDisplayName(positionId, updatePositionRequest.displayName()));
+  public ResponseEntity<PositionDto> updatePosition(@PathVariable Long positionId,
+      @Valid @RequestBody UpdatePositionRequest updatePositionRequest) {
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
+        skillSetService.updatePositionDisplayName(positionId, updatePositionRequest.displayName()));
   }
 
   @DeleteMapping("/position/{positionId}")
@@ -63,11 +68,15 @@ public class SkillSetController {
   public ResponseEntity<List<SkillDto>> getSkillListByPositionId(@PathVariable Long positionId) {
     return ResponseEntity.ok(skillSetService.getSkillListByPositionId(positionId));
   }
+
   @PatchMapping("/position/{positionId}/skill")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
-  public ResponseEntity<PositionDto> addSkillToPosition(@PathVariable Long positionId, @Valid @RequestBody
+  public ResponseEntity<PositionDto> addSkillToPosition(@PathVariable Long positionId,
+      @Valid @RequestBody
       AddSkillListToPositionRequest addSkillListToPositionRequest) {
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).body(skillSetService.addSkillListToPosition(positionId, addSkillListToPositionRequest.skillIds()));
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
+        skillSetService.addSkillListToPosition(positionId,
+            addSkillListToPositionRequest.skillIds()));
   }
 
   @GetMapping("/skill")
@@ -77,14 +86,18 @@ public class SkillSetController {
 
   @PostMapping("/skill")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
-  public ResponseEntity<SkillDto> createSkill(@Valid @RequestBody CreateSkillRequest createSkillRequest) {
-    return ResponseEntity.status(HttpStatus.CREATED).body(skillSetService.createSkill(createSkillRequest));
+  public ResponseEntity<SkillDto> createSkill(
+      @Valid @RequestBody CreateSkillRequest createSkillRequest) {
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(skillSetService.createSkill(createSkillRequest));
   }
 
   @PutMapping("/skill/{skillId}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
-  public ResponseEntity<SkillDto> updateSkill(@PathVariable Long skillId, @Valid @RequestBody UpdateSkillRequest updateSkillRequest) {
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).body(skillSetService.updateSkillDisplayName(skillId, updateSkillRequest.displayName()));
+  public ResponseEntity<SkillDto> updateSkill(@PathVariable Long skillId,
+      @Valid @RequestBody UpdateSkillRequest updateSkillRequest) {
+    return ResponseEntity.status(HttpStatus.NO_CONTENT)
+        .body(skillSetService.updateSkillDisplayName(skillId, updateSkillRequest.displayName()));
   }
 
   @DeleteMapping("/skill/{skillId}")
@@ -96,7 +109,10 @@ public class SkillSetController {
 
   @PatchMapping("/skill/{skillId}/position")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
-  public ResponseEntity<SkillDto> addSkillToPositionList(@PathVariable Long skillId, @Valid @RequestBody AddSkillToPositionListRequest addSkillToPositionListRequest) {
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).body(skillSetService.addSkillToPositionList(skillId, addSkillToPositionListRequest.positionIds()));
+  public ResponseEntity<SkillDto> addSkillToPositionList(@PathVariable Long skillId,
+      @Valid @RequestBody AddSkillToPositionListRequest addSkillToPositionListRequest) {
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
+        skillSetService.addSkillToPositionList(skillId,
+            addSkillToPositionListRequest.positionIds()));
   }
 }

@@ -27,7 +27,7 @@ public class SkillRepositoryTest {
   private final SkillRepository skillRepository;
 
   @Test
-  public void find_by_display_name() {
+  public void exists_by_display_name() {
     // given
     Skill skill = Skill.builder()
         .displayName("test")
@@ -35,10 +35,10 @@ public class SkillRepositoryTest {
     em.persist(skill);
 
     // when
-    var result = skillRepository.findByDisplayName("test");
+    var result = skillRepository.existsByDisplayName("test");
 
     // then
-    assertThat(result.get().getDisplayName()).isEqualTo("test");
+    assertThat(result).isEqualTo(true);
   }
 
   @Test

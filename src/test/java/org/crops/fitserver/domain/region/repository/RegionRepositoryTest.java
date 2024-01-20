@@ -70,4 +70,20 @@ public class RegionRepositoryTest {
     assertThat(regions2).hasSize(0);
   }
 
+  @Test
+  public void 지역_삭제_아무것도_삭제하지_못함(){
+    // given
+    Region region = Region.builder()
+        .displayName("서울")
+        .build();
+    regionRepository.save(region);
+    var regions = regionRepository.findAll();
+    assertThat(regions).hasSize(1);
+    // when
+    regionRepository.deleteById(100L);
+    var regions2 = regionRepository.findAll();
+    // then
+    assertThat(regions2).hasSize(1);
+  }
+
 }

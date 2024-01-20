@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SkillRepository extends JpaRepository<Skill, Long> {
 
-  Optional<Skill> findByDisplayName(String displayName);
+  boolean existsByDisplayName(String displayName);
 }

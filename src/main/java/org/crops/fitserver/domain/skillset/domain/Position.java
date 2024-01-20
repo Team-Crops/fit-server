@@ -27,13 +27,14 @@ import org.hibernate.annotations.Where;
 @Where(clause = "is_deleted = false")
 public class Position extends BaseTimeEntity {
 
-  @OneToMany(mappedBy = "position")
-  private final List<SkillSet> skillSets = new ArrayList<>();
-
   @Id
   @GeneratedValue
   @Column(name = "position_id")
   private Long id;
+
+  @OneToMany(mappedBy = "position")
+  private final List<SkillSet> skillSets = new ArrayList<>();
+
   @Column(nullable = false)
   private String displayName;
 

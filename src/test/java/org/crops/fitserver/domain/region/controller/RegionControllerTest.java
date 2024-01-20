@@ -17,7 +17,6 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
-import org.crops.fitserver.domain.region.controller.RegionController;
 import org.crops.fitserver.domain.region.dto.RegionDto;
 import org.crops.fitserver.domain.region.dto.request.CreateRegionRequest;
 import org.crops.fitserver.domain.region.dto.request.UpdateRegionRequest;
@@ -29,7 +28,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -41,7 +39,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-@AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @ExtendWith(RestDocumentationExtension.class)
 @WebMvcTest(RegionController.class)
@@ -109,9 +106,7 @@ class RegionControllerTest {
     var url = "/v1/region";
     var request = objectMapper
         .writeValueAsString(
-            UpdateRegionRequest.builder()
-                .displayName("")
-                .build()
+            new CreateRegionRequest("")
         );
     //when
     var result = mockMvc.perform(post(url)
@@ -150,9 +145,7 @@ class RegionControllerTest {
     var url = "/v1/region";
     var request = objectMapper
         .writeValueAsString(
-            CreateRegionRequest.builder()
-                .displayName("test")
-                .build()
+            new CreateRegionRequest("test")
         );
     given(regionService.createRegion(any())).willThrow(
         new BusinessException(ErrorCode.DUPLICATED_RESOURCE_EXCEPTION)
@@ -197,9 +190,7 @@ class RegionControllerTest {
     var url = "/v1/region";
     var request = objectMapper
         .writeValueAsString(
-            CreateRegionRequest.builder()
-                .displayName("test")
-                .build()
+            new CreateRegionRequest("test")
         );
     given(regionService.createRegion(any())).willReturn(RegionDto.of(1L, "test"));
 
@@ -241,9 +232,7 @@ class RegionControllerTest {
     var url = "/v1/region/1";
     var request = objectMapper
         .writeValueAsString(
-            UpdateRegionRequest.builder()
-                .displayName("test")
-                .build()
+            new UpdateRegionRequest("test")
         );
     given(regionService.updateRegion(any(), any()))
         .willReturn(RegionDto.of(1L, "test"));

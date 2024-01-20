@@ -1,5 +1,6 @@
 package org.crops.fitserver.domain.region.service;
 
+import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.domain.region.domain.Region;
@@ -23,8 +24,9 @@ public class RegionServiceImpl implements RegionService {
   }
 
   @Override
+  @Transactional
   public RegionDto createRegion(CreateRegionRequest request) {
-    if (regionRepository.findByDisplayName(request.displayName()).isPresent()) {
+    if (regionRepository.existsByDisplayName(request.displayName())) {
       throw new BusinessException(ErrorCode.DUPLICATED_RESOURCE_EXCEPTION);
     }
 
@@ -36,6 +38,7 @@ public class RegionServiceImpl implements RegionService {
   }
 
   @Override
+  @Transactional
   public RegionDto updateRegion(Long regionId, UpdateRegionRequest updateRegionRequest) {
     var region = regionRepository.findById(regionId)
         .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
@@ -43,7 +46,7 @@ public class RegionServiceImpl implements RegionService {
       return RegionDto.from(region);
     }
 
-    if (regionRepository.findByDisplayName(updateRegionRequest.displayName()).isPresent()) {
+    if (regionRepository.existsByDisplayName(updateRegionRequest.displayName())) {
       throw new BusinessException(ErrorCode.DUPLICATED_RESOURCE_EXCEPTION);
     }
 

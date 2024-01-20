@@ -48,7 +48,7 @@ public class UserInfo {
   @Id
   @Column(name = "user_id")
   private Long id;
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne
   @JoinColumn(name = "user_id", nullable = false)
   @MapsId
   private User user;
@@ -70,12 +70,11 @@ public class UserInfo {
 
   @Column(nullable = false)
   @ColumnDefault("false")
-  @Setter(AccessLevel.PRIVATE)
   private boolean isOpenProfile;
+
   @Enumerated(value = EnumType.STRING)
   @Column(nullable = false, length = 10)
   @ColumnDefault("'INCOMPLETE'")
-  @Setter(AccessLevel.PRIVATE)
   private UserInfoStatus status;
   /**
    * cascade = CascadeType.ALL 을 사용하면 id만으로 entity 교체할 때 문제가 발생한다.
@@ -88,6 +87,9 @@ public class UserInfo {
   @JoinColumn(name = "region_id")
   private Region region;
 
+  /**
+   * User.prePersist() 에서 호출. 다른 곳에서 절대로 호출해서는 안됨.
+   * */
   public static UserInfo from(User user) {
     return UserInfo.builder()
         .id(user.getId())

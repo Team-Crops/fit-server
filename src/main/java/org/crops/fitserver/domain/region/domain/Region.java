@@ -17,8 +17,8 @@ import org.hibernate.annotations.Where;
 @Entity
 @Builder
 @DynamicInsert
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @Getter
 @SQLDelete(sql = "UPDATE region SET is_deleted = true WHERE region_id = ?")
 @Where(clause = "is_deleted = false")

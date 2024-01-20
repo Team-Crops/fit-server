@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.RestDocumentationContextProvider;
@@ -32,7 +31,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-@AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @ExtendWith(RestDocumentationExtension.class)
 @WebMvcTest(SchoolController.class)
@@ -96,7 +94,8 @@ public class SchoolControllerTest {
                         .description("get school list")
                         .responseFields(
                             fieldWithPath("[]").type(JsonFieldType.ARRAY).description("학교 리스트"),
-                            fieldWithPath("[].name").type(JsonFieldType.STRING).description("학교 이름"),
+                            fieldWithPath("[].name").type(JsonFieldType.STRING)
+                                .description("학교 이름"),
                             fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("학교 id"),
                             new EnumFields(SchoolType.class).withPath("[].type")
                                 .description("학교 타입")
@@ -139,7 +138,8 @@ public class SchoolControllerTest {
                         .description("get school list by keyword")
                         .responseFields(
                             fieldWithPath("[]").type(JsonFieldType.ARRAY).description("학교 리스트"),
-                            fieldWithPath("[].name").type(JsonFieldType.STRING).description("학교 이름"),
+                            fieldWithPath("[].name").type(JsonFieldType.STRING)
+                                .description("학교 이름"),
                             fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("학교 id"),
                             new EnumFields(SchoolType.class).withPath("[].type")
                                 .description("학교 타입")

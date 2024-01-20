@@ -2,6 +2,8 @@ package org.crops.fitserver.domain.school.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
@@ -32,6 +34,7 @@ public class School extends BaseTimeEntity {
   private String name;
 
   @Column()
+  @Enumerated(value = EnumType.STRING)
   private SchoolType type;
 
 }
