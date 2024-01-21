@@ -16,7 +16,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User getUserWithInfo(Long userId) {
-    return userRepository.findWithInfoById(userId).orElseThrow(() -> new BusinessException(
+    return userRepository.findWithInfo(userId).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
   }
 

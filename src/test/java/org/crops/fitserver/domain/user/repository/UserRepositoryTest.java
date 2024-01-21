@@ -102,7 +102,7 @@ public class UserRepositoryTest {
   @Transactional
   public void update_user_with_info_failed_null_field() {
     //given
-    User user = userRepository.findWithInfoById(this.user.getId()).get();
+    User user = userRepository.findWithInfo(this.user.getId()).get();
 
     UpdateUserRequest updateUserRequest = UpdateUserRequest.builder()
         .profileImageUrl("test2.jpg")

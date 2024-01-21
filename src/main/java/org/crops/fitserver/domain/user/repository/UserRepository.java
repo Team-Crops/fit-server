@@ -11,5 +11,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
       + "left join u.userInfo ui "
       + "left join ui.userInfoSkills uis "
       + "where u.id = :userId")
-  Optional<User> findWithInfoById(Long userId);
+  Optional<User> findWithInfo(Long userId);
 }

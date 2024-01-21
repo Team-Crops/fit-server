@@ -1,10 +1,9 @@
 package org.crops.fitserver.domain.school.controller;
 
 import io.micrometer.common.util.StringUtils;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.crops.fitserver.domain.school.dto.SchoolDto;
+import org.crops.fitserver.domain.school.dto.response.GetSchoolListResponse;
 import org.crops.fitserver.domain.school.service.SchoolService;
 import org.crops.fitserver.global.annotation.V1;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +23,14 @@ public class SchoolController {
 
 
   @GetMapping("")
-  public ResponseEntity<List<SchoolDto>> getSchoolList(
+  public ResponseEntity<GetSchoolListResponse> getSchoolList(
       @RequestParam(required = false, name = "keyword") String keyword) {
     return ResponseEntity.ok(
-        StringUtils.isBlank(keyword) ?
-            schoolService.getSchoolList()
-            : schoolService.getSchoolListByKeyword(keyword)
+        GetSchoolListResponse.of(
+            StringUtils.isBlank(keyword) ?
+                schoolService.getSchoolList()
+                : schoolService.getSchoolListByKeyword(keyword)
+        )
     );
   }
 }

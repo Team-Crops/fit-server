@@ -12,6 +12,8 @@ import org.crops.fitserver.domain.skillset.dto.request.CreatePositionRequest;
 import org.crops.fitserver.domain.skillset.dto.request.CreateSkillRequest;
 import org.crops.fitserver.domain.skillset.dto.request.UpdatePositionRequest;
 import org.crops.fitserver.domain.skillset.dto.request.UpdateSkillRequest;
+import org.crops.fitserver.domain.skillset.dto.response.GetPositionListResponse;
+import org.crops.fitserver.domain.skillset.dto.response.GetSkillListResponse;
 import org.crops.fitserver.domain.skillset.service.SkillSetService;
 import org.crops.fitserver.global.annotation.V1;
 import org.springframework.http.HttpStatus;
@@ -37,8 +39,8 @@ public class SkillSetController {
   private final SkillSetService skillSetService;
 
   @GetMapping("/position")
-  public ResponseEntity<List<PositionDto>> getPositionList() {
-    return ResponseEntity.ok(skillSetService.getPositionList());
+  public ResponseEntity<GetPositionListResponse> getPositionList() {
+    return ResponseEntity.ok(GetPositionListResponse.of(skillSetService.getPositionList()));
   }
 
   @PostMapping("/position")
@@ -65,8 +67,8 @@ public class SkillSetController {
   }
 
   @GetMapping("/position/{positionId}/skill")
-  public ResponseEntity<List<SkillDto>> getSkillListByPositionId(@PathVariable Long positionId) {
-    return ResponseEntity.ok(skillSetService.getSkillListByPositionId(positionId));
+  public ResponseEntity<GetSkillListResponse> getSkillListByPositionId(@PathVariable Long positionId) {
+    return ResponseEntity.ok(GetSkillListResponse.of(skillSetService.getSkillListByPositionId(positionId)));
   }
 
   @PatchMapping("/position/{positionId}/skill")
@@ -80,8 +82,8 @@ public class SkillSetController {
   }
 
   @GetMapping("/skill")
-  public ResponseEntity<List<SkillDto>> getSkillList() {
-    return ResponseEntity.ok(skillSetService.getSkillList());
+  public ResponseEntity<GetSkillListResponse> getSkillList() {
+    return ResponseEntity.ok(GetSkillListResponse.of(skillSetService.getSkillList()));
   }
 
   @PostMapping("/skill")

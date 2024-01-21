@@ -56,7 +56,7 @@ public class UserServiceTest {
     var userInfo = UserInfo.builder().id(1L).user(userBuilder.build()).build();
     var user = userBuilder.userInfo(userInfo).build();
 
-    given(userRepository.findWithInfoById(userId)).willReturn(Optional.of(user));
+    given(userRepository.findWithInfo(userId)).willReturn(Optional.of(user));
 
     //when
     var result = userService.getUserWithInfo(userId);
