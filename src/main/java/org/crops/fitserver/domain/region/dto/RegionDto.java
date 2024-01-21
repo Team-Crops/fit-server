@@ -1,17 +1,14 @@
 package org.crops.fitserver.domain.region.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.crops.fitserver.domain.region.domain.Region;
 
-@AllArgsConstructor(staticName = "of")
-@Getter
-public class RegionDto {
+public record RegionDto(Long id, String displayName) {
 
-  private Long id;
-  private String displayName;
-
-  public static RegionDto from(Region region){
+  public static RegionDto from(Region region) {
     return RegionDto.of(region.getId(), region.getDisplayName());
+  }
+
+  public static RegionDto of(Long id, String displayName) {
+    return new RegionDto(id, displayName);
   }
 }
