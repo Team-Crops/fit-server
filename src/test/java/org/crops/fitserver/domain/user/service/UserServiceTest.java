@@ -7,6 +7,9 @@ import static org.mockito.BDDMockito.given;
 import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.crops.fitserver.domain.region.repository.RegionRepository;
+import org.crops.fitserver.domain.skillset.repository.PositionRepository;
+import org.crops.fitserver.domain.skillset.repository.SkillRepository;
 import org.crops.fitserver.domain.user.constant.LinkType;
 import org.crops.fitserver.domain.user.constant.UserInfoStatus;
 import org.crops.fitserver.domain.user.domain.Link;
@@ -47,6 +50,12 @@ public class UserServiceTest {
   private UserServiceImpl userService;
   @Mock
   private UserRepository userRepository;
+  @Mock
+  private PositionRepository positionRepository;
+  @Mock
+  private RegionRepository regionRepository;
+  @Mock
+  private SkillRepository skillRepository;
 
   @Test
   public void getUserWithInfo_success() {
@@ -90,7 +99,15 @@ public class UserServiceTest {
         .build();
     var userInfo = userInfoBuilder.build();
     var user = userBuilder.userInfo(userInfo).build();
+    var Position = org.crops.fitserver.domain.skillset.domain.Position.builder().id(1L).build();
+    var Region = org.crops.fitserver.domain.region.domain.Region.builder().id(1L).build();
+    var skill = org.crops.fitserver.domain.skillset.domain.Skill.builder().id(1L).build();
     given(userRepository.findById(userId)).willReturn(Optional.of(user));
+    given(positionRepository.findById(updateUserRequest.getPositionId())).willReturn(
+        Optional.of(Position));
+    given(regionRepository.findById(updateUserRequest.getRegionId())).willReturn(Optional.of(Region));
+    given(skillRepository.findAllById(updateUserRequest.getSkillIdList())).willReturn(
+        List.of(skill));
 
     //when
     ThrowingCallable result = () -> userService.updateUserWithInfo(userId, updateUserRequest);

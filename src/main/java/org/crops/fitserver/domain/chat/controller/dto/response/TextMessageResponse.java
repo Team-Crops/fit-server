@@ -10,19 +10,19 @@ import org.crops.fitserver.global.socket.service.SocketResponse;
 public class TextMessageResponse extends SocketResponse {
 
   private Long userId;
-  private String userName;
+  private String usermame;
   private String profileImageUrl;
   private String content;
 
   @Builder
   private TextMessageResponse(
       Long userId,
-      String userName,
+      String usermame,
       String profileImageUrl,
       String content,
       MessageType messageType) {
     this.userId = userId;
-    this.userName = userName;
+    this.usermame = usermame;
     this.profileImageUrl = profileImageUrl;
     this.content = content;
     this.messageType = messageType;
@@ -31,7 +31,7 @@ public class TextMessageResponse extends SocketResponse {
   public static SocketResponse from(Message message) {
     return TextMessageResponse.builder()
         .userId(message.getUser().getId())
-        .userName(message.getUser().getUserName())
+        .usermame(message.getUser().getUsername())
         .profileImageUrl(message.getUser().getProfileImageUrl())
         .content(message.getContent())
         .messageType(MessageType.TEXT)

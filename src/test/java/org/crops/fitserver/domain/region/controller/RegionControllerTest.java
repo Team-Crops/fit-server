@@ -88,9 +88,9 @@ class RegionControllerTest {
                         .description("지역 리스트 조회")
                         .summary("지역 리스트 조회")
                         .responseFields(
-                            fieldWithPath("[]").type(JsonFieldType.ARRAY).description("지역 리스트"),
-                            fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("지역 id"),
-                            fieldWithPath("[].displayName").type(JsonFieldType.STRING)
+                            fieldWithPath("regionList[]").type(JsonFieldType.ARRAY).description("지역 리스트"),
+                            fieldWithPath("regionList[].id").type(JsonFieldType.NUMBER).description("지역 id"),
+                            fieldWithPath("regionList[].displayName").type(JsonFieldType.STRING)
                                 .description("지역명")
                         )
                         .build()

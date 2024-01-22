@@ -65,6 +65,7 @@ public class UserRepositoryTest {
         .phoneNumber("010-1234-5678")
         .isOpenPhoneNum(false)
         .email("test@gmail.com")
+        .userInfo(UserInfo.builder().build())
         .build();
     Position position = Position.builder()
         .displayName("test")
@@ -75,25 +76,20 @@ public class UserRepositoryTest {
     Region region2 = Region.builder()
         .displayName("test2")
         .build();
-    this.user = userRepository.save(user);
     this.position = positionRepository.save(position);
     this.region = regionRepository.save(region);
     this.region2 = regionRepository.save(region2);
 
-    UserInfo userInfo = UserInfo.builder()
-        .id(1L)
-        .user(user)
-        .portfolioUrl("test.com")
-        .projectCount(1)
-        .activityHour(1)
-        .introduce("test")
-        .linkJson("test")
-        .status(UserInfoStatus.INCOMPLETE)
-        .isOpenProfile(false)
-        .position(position)
-        .region(region)
-        .build();
-    user.getUserInfo().updateUserInfo(userInfo);
+    user.getUserInfo()
+        .withPortfolioUrl("test.com")
+        .withProjectCount(1)
+        .withActivityHour(1)
+        .withIntroduce("test")
+        .withLinkJson("test")
+        .withIsOpenProfile(false)
+        .withPosition(position)
+        .withRegion(region);
+    this.user = userRepository.save(user);
     em.flush();
     em.clear();
   }
@@ -127,8 +123,8 @@ public class UserRepositoryTest {
         .build();
 
     //when
-    ThrowingCallable result = () -> user.updateUser(updateUserRequest);
 
+    ThrowingCallable result = () -> user.withNickname(updateUserRequest.getNickname());
     //then
     assertThatThrownBy(result).isInstanceOf(IllegalArgumentException.class);
   }
@@ -162,7 +158,24 @@ public class UserRepositoryTest {
         .build();
 
     //when
-    user.updateUser(updateUserRequest);
+    user.withEmail(updateUserRequest.getEmail())
+        .withProfileImageUrl(updateUserRequest.getProfileImageUrl())
+        .withUsername(updateUserRequest.getUsername())
+        .withNickname(updateUserRequest.getNickname())
+        .withPhoneNumber(updateUserRequest.getPhoneNumber())
+        .withIsOpenPhoneNum(updateUserRequest.getIsOpenPhoneNum());
+
+    user.getUserInfo()
+        .withBackground(updateUserRequest.getBackgroundStatus(),
+            updateUserRequest.getBackgroundText())
+        .withPortfolioUrl(updateUserRequest.getPortfolioUrl())
+        .withProjectCount(updateUserRequest.getProjectCount())
+        .withActivityHour(updateUserRequest.getActivityHour())
+        .withIntroduce(updateUserRequest.getIntroduce())
+        .withLinkJson(Link.parseToJson(updateUserRequest.getLinkList()))
+        .withIsOpenProfile(updateUserRequest.getIsOpenProfile())
+        .withPosition(positionRepository.findById(updateUserRequest.getPositionId()).get())
+        .withRegion(regionRepository.findById(updateUserRequest.getRegionId()).get());
     userRepository.save(user);
     em.flush();
     em.clear();

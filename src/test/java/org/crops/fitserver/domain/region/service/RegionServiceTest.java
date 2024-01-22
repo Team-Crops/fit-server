@@ -52,7 +52,7 @@ public class RegionServiceTest {
 
     // then
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).getDisplayName()).isEqualTo("test");
+    assertThat(result.get(0).displayName()).isEqualTo("test");
   }
 
   @Test
@@ -65,7 +65,7 @@ public class RegionServiceTest {
     var result = target.createRegion(new CreateRegionRequest("test"));
 
     // then
-    assertThat(result.getDisplayName()).isEqualTo("test");
+    assertThat(result.displayName()).isEqualTo("test");
   }
 
   @Test
@@ -125,7 +125,7 @@ public class RegionServiceTest {
     var result = target.updateRegion(region.getId(), new UpdateRegionRequest(newDisplayName));
 
     // then
-    assertThat(result.getDisplayName()).isEqualTo(newDisplayName);
+    assertThat(result.displayName()).isEqualTo(newDisplayName);
   }
 
   @Test

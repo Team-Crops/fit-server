@@ -93,11 +93,11 @@ public class SchoolControllerTest {
                         .summary("학교 리스트 조회")
                         .description("get school list")
                         .responseFields(
-                            fieldWithPath("[]").type(JsonFieldType.ARRAY).description("학교 리스트"),
-                            fieldWithPath("[].name").type(JsonFieldType.STRING)
+                            fieldWithPath("schoolList[]").type(JsonFieldType.ARRAY).description("학교 리스트"),
+                            fieldWithPath("schoolList[].name").type(JsonFieldType.STRING)
                                 .description("학교 이름"),
-                            fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("학교 id"),
-                            new EnumFields(SchoolType.class).withPath("[].type")
+                            fieldWithPath("schoolList[].id").type(JsonFieldType.NUMBER).description("학교 id"),
+                            new EnumFields(SchoolType.class).withPath("schoolList[].type")
                                 .description("학교 타입")
                         )
                         .build()
@@ -137,11 +137,11 @@ public class SchoolControllerTest {
                         .summary("학교 리스트 조회")
                         .description("get school list by keyword")
                         .responseFields(
-                            fieldWithPath("[]").type(JsonFieldType.ARRAY).description("학교 리스트"),
-                            fieldWithPath("[].name").type(JsonFieldType.STRING)
+                            fieldWithPath("schoolList[]").type(JsonFieldType.ARRAY).description("학교 리스트"),
+                            fieldWithPath("schoolList[].name").type(JsonFieldType.STRING)
                                 .description("학교 이름"),
-                            fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("학교 id"),
-                            new EnumFields(SchoolType.class).withPath("[].type")
+                            fieldWithPath("schoolList[].id").type(JsonFieldType.NUMBER).description("학교 id"),
+                            new EnumFields(SchoolType.class).withPath("schoolList[].type")
                                 .description("학교 타입")
                         )
                         .build()
