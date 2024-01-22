@@ -14,7 +14,7 @@ public class OAuthServiceProvider {
 
   private final List<OAuthService> socialServices;
 
-  public OAuthService getOAuthService(SocialPlatform socialPlatform) {
+  public OAuthService getService(SocialPlatform socialPlatform) {
     for (OAuthService oAuthService : socialServices) {
       if (oAuthService.support(socialPlatform)) {
         return oAuthService;
