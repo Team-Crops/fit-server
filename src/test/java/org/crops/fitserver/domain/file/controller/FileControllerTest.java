@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -35,13 +34,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-@AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @ExtendWith(RestDocumentationExtension.class)
 @WebMvcTest(FileController.class)
 class FileControllerTest {
 
-  @Autowired
   private MockMvc mockMvc;
 
   @Autowired
@@ -87,12 +84,14 @@ class FileControllerTest {
                         .requestSchema(Schema.schema("generatePreSignedUrlRequest"))
                         .requestFields(
                             fieldWithPath("fileName").description("파일 이름"),
-                            new EnumFields(FileDomain.class).withPath("fileDomain").description("파일 도메인")
+                            new EnumFields(FileDomain.class).withPath("fileDomain")
+                                .description("파일 도메인")
                         )
                         .responseSchema(Schema.schema("errorResponse"))
                         .responseFields(
                             fieldWithPath("code").type(JsonFieldType.STRING).description("에러 코드"),
-                            fieldWithPath("message").type(JsonFieldType.STRING).description("에러 메시지")
+                            fieldWithPath("message").type(JsonFieldType.STRING)
+                                .description("에러 메시지")
                         )
                         .build()
                 )
@@ -130,8 +129,10 @@ class FileControllerTest {
                         .summary("generate pre-signed url")
                         .requestSchema(Schema.schema("generatePreSignedUrlRequest"))
                         .requestFields(
-                            fieldWithPath("fileName").type(JsonFieldType.STRING).description("파일 이름"),
-                            new EnumFields(FileDomain.class).withPath("fileDomain").description("파일 도메인")
+                            fieldWithPath("fileName").type(JsonFieldType.STRING)
+                                .description("파일 이름"),
+                            new EnumFields(FileDomain.class).withPath("fileDomain")
+                                .description("파일 도메인")
                         )
                         .responseSchema(Schema.schema("preSignedUrlDto"))
                         .responseFields(
