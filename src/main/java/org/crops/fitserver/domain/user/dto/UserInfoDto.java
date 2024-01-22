@@ -1,6 +1,7 @@
 package org.crops.fitserver.domain.user.dto;
 
-import static org.crops.fitserver.domain.user.util.LinkUtil.parseToLinkList;
+
+import static org.crops.fitserver.domain.user.domain.Link.parseToLinkList;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
@@ -56,7 +57,7 @@ public class UserInfoDto {
         .email(user.getEmail())
         .backgroundStatus(user.getUserInfo().getBackgroundStatus());
 
-    if(user.getUserInfo().getBackgroundStatus() != null) {
+    if (user.getUserInfo().getBackgroundStatus() != null) {
       userInfoDtoBuilder = userInfoDtoBuilder
           .backgroundText(
               user.getUserInfo().getBackgroundStatus().getBackgroundType()

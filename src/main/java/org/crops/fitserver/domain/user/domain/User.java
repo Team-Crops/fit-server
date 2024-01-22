@@ -16,7 +16,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
 import org.crops.fitserver.global.entity.BaseTimeEntity;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -75,47 +74,43 @@ public class User extends BaseTimeEntity {
     this.userInfo = UserInfo.from(this);
   }
 
-  public void updateUser(UpdateUserRequest updateUserRequest) {
-    this.updateProfileImageUrl(updateUserRequest.getProfileImageUrl());
-    this.updateUsername(updateUserRequest.getUsername());
-    this.updateNickname(updateUserRequest.getNickname());
-    this.updatePhoneNumber(updateUserRequest.getPhoneNumber());
-    this.updateIsOpenPhoneNum(updateUserRequest.getIsOpenPhoneNum());
-    this.updateEmail(updateUserRequest.getEmail());
-    this.userInfo.updateUserInfo(updateUserRequest);
-  }
-
-  public void updateProfileImageUrl(String profileImageUrl) {
+  public User withProfileImageUrl(String profileImageUrl) {
     this.profileImageUrl = profileImageUrl;
+    return this;
   }
 
-  public void updateUsername(String username) {
+  public User withUsername(String username) {
     this.username = username;
+    return this;
   }
 
-  public void updateNickname(String nickname) {
+  public User withNickname(String nickname) {
     if (StringUtils.isNotBlank(this.nickname) && StringUtils.isBlank(nickname)) {
       throw new IllegalArgumentException("nickname cannot be null");
     }
     this.nickname = nickname;
+    return this;
   }
 
-  public void updatePhoneNumber(String phoneNumber) {
+  public User withPhoneNumber(String phoneNumber) {
     if (StringUtils.isNotBlank(this.phoneNumber) && StringUtils.isBlank(phoneNumber)) {
       throw new IllegalArgumentException("phoneNumber cannot be null");
     }
     this.phoneNumber = phoneNumber;
+    return this;
   }
 
-  public void updateIsOpenPhoneNum(boolean isOpenPhoneNum) {
+  public User withIsOpenPhoneNum(boolean isOpenPhoneNum) {
     this.isOpenPhoneNum = isOpenPhoneNum;
+    return this;
   }
 
-  public void updateEmail(String email) {
+  public User withEmail(String email) {
     if (StringUtils.isNotBlank(this.email) && StringUtils.isBlank(email)) {
       throw new IllegalArgumentException("email cannot be null");
     }
     this.email = email;
+    return this;
   }
 }
 
