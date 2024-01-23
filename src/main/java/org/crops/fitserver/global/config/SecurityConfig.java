@@ -1,6 +1,7 @@
 package org.crops.fitserver.global.config;
 
 import java.util.Arrays;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.domain.user.domain.UserRole;
 import org.crops.fitserver.global.filter.JwtAccessDeniedHandler;
@@ -115,7 +116,18 @@ public class SecurityConfig {
 
   private CorsConfiguration getDefaultCorsConfiguration() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(Arrays.asList("https://api.f-it.com"));
+
+    //active profile에 따라 다르게 설정
+    // prod를 제외한 나머지는 모두 localhost:3000을 허용
+
+    var activeProfile = System.getProperty("spring.profiles.active");
+
+    if(activeProfile.equals("prod")) {
+      configuration.setAllowedOrigins(List.of("https://api.f-it.com"));
+    } else {
+      configuration.setAllowedOrigins(List.of("https://api.f-it.com", "http://localhost:3000"));
+    }
+
     configuration.setAllowedMethods(
         Arrays.asList(
             HttpMethod.GET.name(),
