@@ -72,7 +72,12 @@ public class SecurityConfig {
         )
         .csrf(
             AbstractHttpConfigurer::disable
-        );
+        )
+        .cors(
+            cors -> cors
+                .configurationSource(corsConfigurationSource())
+        )
+    ;
 
     http.authorizeHttpRequests(
         authorize -> authorize
@@ -122,7 +127,7 @@ public class SecurityConfig {
 
     var activeProfile = System.getProperty("spring.profiles.active");
 
-    if(activeProfile.equals("prod")) {
+    if("prod".equals(activeProfile)) {
       configuration.setAllowedOrigins(List.of("https://api.f-it.com"));
     } else {
       configuration.setAllowedOrigins(List.of("https://api.f-it.com", "http://localhost:3000"));
