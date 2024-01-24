@@ -2,9 +2,11 @@ package org.crops.fitserver.domain.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.crops.fitserver.domain.user.domain.User;
 import org.crops.fitserver.domain.user.dto.UserInfoDto;
 import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
 import org.crops.fitserver.domain.user.facade.UserFacade;
+import org.crops.fitserver.global.annotation.CurrentUserId;
 import org.crops.fitserver.global.annotation.V1;
 import org.crops.fitserver.global.security.PrincipalDetails;
 import org.springframework.http.ResponseEntity;
@@ -25,16 +27,14 @@ public class UserController {
 
   @GetMapping()
   public ResponseEntity<UserInfoDto> getUser(
-      @AuthenticationPrincipal PrincipalDetails principalDetails) {
-    var userId = principalDetails.getUserId();
+      @CurrentUserId Long userId) {
     return ResponseEntity.ok(userFacade.getUserWithInfo(userId));
   }
 
   @PutMapping()
   public ResponseEntity<UserInfoDto> updateUser(
-      @AuthenticationPrincipal PrincipalDetails principalDetails,
+      @CurrentUserId Long userId,
       UpdateUserRequest updateUserRequest) {
-    var userId = principalDetails.getUserId();
     return ResponseEntity.ok(userFacade.updateUserWithInfo(userId, updateUserRequest));
   }
 }

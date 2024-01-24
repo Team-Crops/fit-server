@@ -108,13 +108,14 @@ public class SecurityConfig {
         .requestMatchers(new AntPathRequestMatcher("/actuator/**"))
         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
         .requestMatchers(new AntPathRequestMatcher("/v1/auth/social/**"))
+        .requestMatchers(new AntPathRequestMatcher("/**"))
         .requestMatchers(new AntPathRequestMatcher("/h2-console/**")
         );
   }
 
   @Bean
   protected CorsConfigurationSource corsConfigurationSource() {
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    var source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", getDefaultCorsConfiguration());
     return source;
   }
@@ -130,7 +131,7 @@ public class SecurityConfig {
     if("prod".equals(activeProfile)) {
       configuration.setAllowedOrigins(List.of("https://api.f-it.com"));
     } else {
-      configuration.setAllowedOrigins(List.of("https://api.f-it.com", "http://localhost:3000"));
+      configuration.setAllowedOrigins(List.of("http://dev-api.f-it.team", "http://localhost:3000"));
     }
 
     configuration.setAllowedMethods(
@@ -141,7 +142,7 @@ public class SecurityConfig {
             HttpMethod.PATCH.name(),
             HttpMethod.DELETE.name()));
     configuration.setAllowedHeaders(Arrays.asList("*"));
-    configuration.setExposedHeaders(Arrays.asList("Refresh-Token"));
+    configuration.setExposedHeaders(Arrays.asList("*"));
     configuration.setAllowCredentials(true);
     configuration.setMaxAge(3600L);
     return configuration;
