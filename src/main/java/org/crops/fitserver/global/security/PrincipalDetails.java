@@ -19,6 +19,10 @@ public class PrincipalDetails implements UserDetails {
     return new PrincipalDetails(user);
   }
 
+  public Long getUserId() {
+    return user.getId();
+  }
+
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     List<GrantedAuthority> auth = new ArrayList<>();
@@ -33,7 +37,7 @@ public class PrincipalDetails implements UserDetails {
 
   @Override
   public String getUsername() {
-    return user.getNickName();
+    return user.getNickname();
   }
 
   @Override
