@@ -16,14 +16,14 @@ public class CorsConfig {
   @Value("${spring.profiles.active}")
   private String activeProfile;
 
-  private static final String[] PRODUCTION_ALLOWED_ORIGINS = {
+  private static final List<String> PRODUCTION_ALLOWED_ORIGINS = List.of(
       "https://api.f-it.team"
-  };
+  );
 
-  private static final String[] DEFAULT_ALLOWED_ORIGINS = {
+  private static final List<String> DEFAULT_ALLOWED_ORIGINS = List.of(
       "http://dev-api.f-it.team",
       "http://localhost:3000"
-  };
+  );
 
   @Bean
   protected CorsConfigurationSource corsConfigurationSource() {
@@ -36,8 +36,8 @@ public class CorsConfig {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.setAllowedOrigins(
         "prod".equals(activeProfile) ?
-            List.of(PRODUCTION_ALLOWED_ORIGINS) :
-            List.of(DEFAULT_ALLOWED_ORIGINS));
+            PRODUCTION_ALLOWED_ORIGINS :
+            DEFAULT_ALLOWED_ORIGINS);
 
     configuration.setAllowedMethods(
         Arrays.asList(

@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,17 +32,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private final HeaderTokenExtractor headerTokenExtractor;
   private final JwtResolver jwtResolver;
 
-  private static final String[] whiteListPatterns = {
-      "/actuator/**",
-      "/swagger-resources/**",
-      "/swagger-ui.html",
-      "/swagger-ui/**",
-      "/v3/api-docs/**",
-      "/api-docs/**",
-      "/webjars/**",
-      "/docs/**",
-      "/h2-console/**"
-  };
+  private static final List<AntPathRequestMatcher> whiteListPatterns = List.of(
+      new AntPathRequestMatcher("/actuator/**"),
+      new AntPathRequestMatcher("/swagger-resources/**"),
+      new AntPathRequestMatcher("/swagger-ui.html"),
+      new AntPathRequestMatcher("/swagger-ui/**"),
+      new AntPathRequestMatcher("/v3/api-docs/**"),
+      new AntPathRequestMatcher("/api-docs/**"),
+      new AntPathRequestMatcher("/webjars/**"),
+      new AntPathRequestMatcher("/docs/**"),
+      new AntPathRequestMatcher("/h2-console/**")
+  );
+
+  private static final List<AntPathRequestMatcher> whiteRequestList = List.of(
+      new AntPathRequestMatcher("/v1/auth/social/**")
+  );
 
   @Override
   protected void doFilterInternal(
@@ -58,16 +61,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   @Override
   protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-    List<AntPathRequestMatcher> skipPathList = new ArrayList<>();
-    Arrays.stream(whiteListPatterns)
-        .map(AntPathRequestMatcher::new)
-        .forEach(skipPathList::add);
+    List<AntPathRequestMatcher> skipList = new ArrayList<>();
+    skipList.addAll(whiteListPatterns);
+    skipList.addAll(whiteRequestList);
 
-    skipPathList.add(new AntPathRequestMatcher("/v1/auth/social/**"));
-
-    OrRequestMatcher orRequestMatcher = new OrRequestMatcher(new ArrayList<>(skipPathList));
-    return skipPathList.stream()
-        .anyMatch(p -> orRequestMatcher.matches(request));
+    OrRequestMatcher orRequestMatcher = new OrRequestMatcher(new ArrayList<>(skipList));
+    return orRequestMatcher.matches(request);
   }
 
   private void checkAccessTokenValidation(String accessToken) {

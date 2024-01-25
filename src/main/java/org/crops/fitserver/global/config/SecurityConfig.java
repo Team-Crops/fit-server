@@ -60,8 +60,7 @@ public class SecurityConfig {
         .cors(
             cors -> cors
                 .configurationSource(corsConfigurationSource)
-        )
-    ;
+        );
 
     http.authorizeHttpRequests(
         authorize -> authorize
