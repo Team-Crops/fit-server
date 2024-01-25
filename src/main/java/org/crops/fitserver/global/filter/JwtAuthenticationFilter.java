@@ -44,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       new AntPathRequestMatcher("/h2-console/**")
   );
 
-  private static final List<AntPathRequestMatcher> whiteRequestList = List.of(
+  private static final List<AntPathRequestMatcher> whiteListPatternsForApi = List.of(
       new AntPathRequestMatcher("/v1/auth/social/**")
   );
 
@@ -63,7 +63,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
     List<AntPathRequestMatcher> skipList = new ArrayList<>();
     skipList.addAll(whiteListPatterns);
-    skipList.addAll(whiteRequestList);
+    skipList.addAll(whiteListPatternsForApi);
 
     OrRequestMatcher orRequestMatcher = new OrRequestMatcher(new ArrayList<>(skipList));
     return orRequestMatcher.matches(request);
