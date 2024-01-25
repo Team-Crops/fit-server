@@ -53,20 +53,20 @@ public class KakaoOAuthServiceImpl implements OAuthService {
         SocialPlatform.KAKAO,
         String.valueOf(socialUserProfile.getId()));
 
-    SocialUserInfo socialUserInfo = socialUserInfoRepository
+    return socialUserInfoRepository
         .findBySocialCode(socialCode)
-        .orElseGet(
-            () -> {
-              User newUser = userRepository.save(
-                  User.from(UserRole.NON_MEMBER));
-              return socialUserInfoRepository.save(
+        .map(SocialUserInfo::getUser)
+        .orElseGet(() -> {
+          User newUser = userRepository.save(
+              User.from(UserRole.NON_MEMBER));
+
+          return socialUserInfoRepository.save(
                   SocialUserInfo.newInstance(
                       newUser,
                       SocialPlatform.KAKAO,
-                      socialCode));
-            });
-
-    return socialUserInfo.getUser();
+                      socialCode))
+              .getUser();
+        });
   }
 
   @Override

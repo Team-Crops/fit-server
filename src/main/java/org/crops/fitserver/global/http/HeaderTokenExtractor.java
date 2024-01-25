@@ -11,37 +11,40 @@ import org.springframework.util.StringUtils;
 @Component
 public class HeaderTokenExtractor {
 
-  private static final String HEADER_PREFIX = "Bearer ";
+  private static final String BEARER_PREFIX = "Bearer ";
   private static final String AUTHORIZATION_HEADER = "Authorization";
   private static final String REFRESH_TOKEN_HEADER = "Refresh-Token";
 
   public String extractAccessToken(HttpServletRequest request) {
-    String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-    checkValidBearerToken(AUTHORIZATION_HEADER, bearerToken);
-    return bearerToken.substring(HEADER_PREFIX.length());
+    String authorizationHeader = request.getHeader(AUTHORIZATION_HEADER);
+    return extractAccessToken(authorizationHeader);
   }
 
   public String extractAccessToken(String authorizationHeader) {
     checkValidBearerToken(AUTHORIZATION_HEADER, authorizationHeader);
-    return authorizationHeader.substring(HEADER_PREFIX.length());
+    return authorizationHeader.substring(BEARER_PREFIX.length());
   }
 
   public String extractRefreshToken(HttpServletRequest request) {
-    String bearerToken = request.getHeader(REFRESH_TOKEN_HEADER);
-    checkValidBearerToken(REFRESH_TOKEN_HEADER, bearerToken);
-    return bearerToken.substring(HEADER_PREFIX.length());
+    String refreshTokenHeader = request.getHeader(REFRESH_TOKEN_HEADER);
+    return extractRefreshToken(refreshTokenHeader);
   }
 
-  private static void checkValidBearerToken(String headerPrefix, String bearerToken) {
+  public String extractRefreshToken(String refreshTokenHeader) {
+    checkValidBearerToken(REFRESH_TOKEN_HEADER, refreshTokenHeader);
+    return refreshTokenHeader.substring(BEARER_PREFIX.length());
+  }
+
+  private static void checkValidBearerToken(String headerName, String bearerToken) {
     if (!isValidBearerToken(bearerToken)) {
       log.error("{} Header does not begin with \"Bearer\" String : [{}]",
-          headerPrefix,
+          headerName,
           bearerToken);
       throw new BusinessException(ErrorCode.INVALID_ACCESS_TOKEN_EXCEPTION);
     }
   }
 
-  private static boolean isValidBearerToken(String bearerHeader) {
-    return StringUtils.hasText(bearerHeader) && bearerHeader.startsWith(HEADER_PREFIX);
+  private static boolean isValidBearerToken(String bearerToken) {
+    return StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX);
   }
 }

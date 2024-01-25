@@ -22,7 +22,9 @@ public class AuthFacadeImpl implements AuthFacade {
 
   @Override
   @Transactional
-  public TokenResponse socialLogin(String redirectUrl, String authorizationCode,
+  public TokenResponse socialLogin(
+      String redirectUrl,
+      String authorizationCode,
       SocialPlatform socialPlatform) {
     OAuthService oAuthService = oAuthServiceProvider.getService(socialPlatform);
     User user = oAuthService.socialUserLogin(
