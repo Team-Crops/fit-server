@@ -144,7 +144,7 @@ class AuthControllerTest {
       @ParameterizedTest
       @ValueSource(strings = {"wrongSocialPlatformName", "wrongSocialPlatformName2"})
       void notSupportSocialPlatformType(String wrongSocialPlatformName) throws Exception {
-        System.out.println("wrongSocialPlatformName = " + wrongSocialPlatformName);
+
         //when
         var result = mockMvc.perform(
                 get(URL, wrongSocialPlatformName)
