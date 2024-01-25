@@ -36,13 +36,16 @@ public class BusinessExceptionHandler {
     return ErrorResponse.createErrorResponseEntity(ErrorCode.INVALID_INPUT_VALUE);
   }
 
-  @ExceptionHandler({
-      NotFoundException.class,
-      NoHandlerFoundException.class
-  })
+  @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFoundException(Exception e) {
-    log.error("Exception : {}", e.getMessage(), e);
+    log.error("NotFoundException : {}", e.getMessage(), e);
     return ErrorResponse.createErrorResponseEntity(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION);
+  }
+
+  @ExceptionHandler(NoHandlerFoundException.class)
+  public ResponseEntity<ErrorResponse> handleNoHandlerFoundException(NoHandlerFoundException e) {
+    log.error("NoHandlerFoundException : {}", e.getMessage(), e);
+    return ErrorResponse.createErrorResponseEntity(ErrorCode.NOT_FOUND_HANDLER_EXCEPTION);
   }
 
   @ExceptionHandler(Exception.class)
