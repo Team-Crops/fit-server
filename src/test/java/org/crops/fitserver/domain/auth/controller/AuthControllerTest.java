@@ -49,7 +49,6 @@ import org.springframework.web.context.WebApplicationContext;
 @DisplayName("[Auth][Controller] AuthController Test")
 class AuthControllerTest {
 
-  @Autowired
   MockMvc mockMvc;
 
   @Autowired
