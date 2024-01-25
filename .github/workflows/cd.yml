@@ -4,6 +4,8 @@ run-name: Deploy ${{ github.ref_name }} by @${{ github.actor }}
 on:
   push:
     branches: [ main, develop ]
+  pull_request:
+    branches: [ develop ]
 
 jobs:
   build:
