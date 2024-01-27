@@ -7,69 +7,36 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.crops.fitserver.domain.auth.facade.AuthFacade;
 import org.crops.fitserver.domain.auth.facade.dto.SocialLoginPageResponse;
 import org.crops.fitserver.domain.auth.facade.dto.TokenResponse;
+import org.crops.fitserver.domain.common.MockMvcDocsTest;
 import org.crops.fitserver.domain.user.domain.SocialPlatform;
 import org.crops.fitserver.global.jwt.TokenCollection;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.RestDocumentationContextProvider;
-import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 @WebMvcTest(AuthController.class)
-@AutoConfigureRestDocs
-@ExtendWith(RestDocumentationExtension.class)
 @DisplayName("[Auth][Controller] AuthController Test")
-class AuthControllerTest {
-
-  MockMvc mockMvc;
-
-  @Autowired
-  WebApplicationContext context;
-
-  @Autowired
-  ObjectMapper objectMapper;
+class AuthControllerTest extends MockMvcDocsTest {
 
   @MockBean
   AuthFacade authFacade;
-
-  @BeforeEach
-  public void setUp(RestDocumentationContextProvider restDocumentation) {
-    this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
-        .apply(
-            documentationConfiguration(restDocumentation)
-                .operationPreprocessors()
-                .withResponseDefaults(Preprocessors.prettyPrint())
-        )
-        .build();
-  }
 
   @Nested
   @DisplayName("[GET] OAuth Login 테스트")
@@ -101,8 +68,7 @@ class AuthControllerTest {
                 get(URL, socialPlatform.getName())
                     .contentType(MediaType.APPLICATION_JSON)
                     .header("Request URL", REQUEST_URL_HEADER, socialPlatform.getName())
-                    .queryParam("code", AUTHORIZATION_CODE))
-            .andDo(print());
+                    .queryParam("code", AUTHORIZATION_CODE));
 
         //then
         result.andExpect(status().isOk())
@@ -149,8 +115,7 @@ class AuthControllerTest {
                 get(URL, wrongSocialPlatformName)
                     .contentType(MediaType.APPLICATION_JSON)
                     .header("Request URL", REQUEST_URL_HEADER, wrongSocialPlatformName)
-                    .queryParam("code", AUTHORIZATION_CODE))
-            .andDo(print());
+                    .queryParam("code", AUTHORIZATION_CODE));
 
         //then
         result.andExpect(status().isBadRequest())
@@ -183,8 +148,7 @@ class AuthControllerTest {
         var result = mockMvc.perform(
                 get(URL, socialPlatform.getName())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .header("Request URL", REQUEST_URL_HEADER, socialPlatform.getName()))
-            .andDo(print());
+                    .header("Request URL", REQUEST_URL_HEADER, socialPlatform.getName()));
 
         //then
         result.andExpect(status().isBadRequest())
@@ -233,8 +197,7 @@ class AuthControllerTest {
         //when
         var result = mockMvc.perform(
                 get(URL, socialPlatform.getName())
-                    .contentType(MediaType.APPLICATION_JSON))
-            .andDo(print());
+                    .contentType(MediaType.APPLICATION_JSON));
 
         //then
         result.andExpect(status().isOk())
@@ -269,8 +232,7 @@ class AuthControllerTest {
         //when
         var result = mockMvc.perform(
                 get(URL, wrongSocialPlatformName)
-                    .contentType(MediaType.APPLICATION_JSON))
-            .andDo(print());
+                    .contentType(MediaType.APPLICATION_JSON));
 
         //then
         result.andExpect(status().isBadRequest())
@@ -293,6 +255,5 @@ class AuthControllerTest {
                         .build())));
       }
     }
-
   }
 }
