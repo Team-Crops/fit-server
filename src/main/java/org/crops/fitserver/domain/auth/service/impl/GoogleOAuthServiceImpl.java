@@ -54,20 +54,20 @@ public class GoogleOAuthServiceImpl implements OAuthService {
         SocialPlatform.GOOGLE,
         socialUserProfile.getSub());
 
-    SocialUserInfo socialUserInfo = socialUserInfoRepository
+    return socialUserInfoRepository
         .findBySocialCode(socialCode)
-        .orElseGet(
-            () -> {
-              User newUser = userRepository.save(
-                  User.from(UserRole.NON_MEMBER));
-              return socialUserInfoRepository.save(
+        .map(SocialUserInfo::getUser)
+        .orElseGet(() -> {
+          User newUser = userRepository.save(
+              User.from(UserRole.NON_MEMBER));
+
+          return socialUserInfoRepository.save(
                   SocialUserInfo.newInstance(
                       newUser,
                       SocialPlatform.GOOGLE,
-                      socialCode));
-            });
-
-    return socialUserInfo.getUser();
+                      socialCode))
+              .getUser();
+        });
   }
 
   @Override

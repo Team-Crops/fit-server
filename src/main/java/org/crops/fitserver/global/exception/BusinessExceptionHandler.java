@@ -1,11 +1,17 @@
 package org.crops.fitserver.global.exception;
 
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 @Slf4j
 @RestControllerAdvice
@@ -17,10 +23,26 @@ public class BusinessExceptionHandler {
     return ErrorResponse.createErrorResponseEntity(e.getErrorCode());
   }
 
-  @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-    log.error("MethodArgumentNotValidException : {}", e.getMessage(), e);
+  @ExceptionHandler({
+      BindException.class,
+      MethodArgumentTypeMismatchException.class,
+      IllegalArgumentException.class,
+      HttpMessageNotReadableException.class,
+      InvalidFormatException.class,
+      ServletRequestBindingException.class
+  })
+  public ResponseEntity<ErrorResponse> handleBadRequestException(Exception e) {
+    log.error("Exception : {}", e.getMessage(), e);
     return ErrorResponse.createErrorResponseEntity(ErrorCode.INVALID_INPUT_VALUE);
+  }
+
+  @ExceptionHandler({
+      NotFoundException.class,
+      NoHandlerFoundException.class
+  })
+    public ResponseEntity<ErrorResponse> handleNotFoundException(Exception e) {
+    log.error("Exception : {}", e.getMessage(), e);
+    return ErrorResponse.createErrorResponseEntity(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION);
   }
 
   @ExceptionHandler(Exception.class)

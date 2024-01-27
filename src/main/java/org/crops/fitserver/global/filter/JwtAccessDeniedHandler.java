@@ -23,13 +23,16 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
   private final ObjectMapper objectMapper;
 
   @Override
-  public void handle(HttpServletRequest request, HttpServletResponse response,
-      AccessDeniedException accessDeniedException) throws IOException, ServletException {
+  public void handle(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      AccessDeniedException accessDeniedException) throws IOException {
     log.warn("user id {} has Role {}",
         SecurityContextHolder.getContext().getAuthentication().getName(),
         SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
     log.error(
-        "error : {}", accessDeniedException.getMessage(),
+        "error : {}",
+        accessDeniedException.getMessage(),
         accessDeniedException);
     ErrorCode errorCode = ErrorCode.FORBIDDEN_EXCEPTION;
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -38,6 +41,5 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
     response.getWriter()
         .write(objectMapper.writeValueAsString(
             ErrorResponse.from(errorCode)));
-
   }
 }
