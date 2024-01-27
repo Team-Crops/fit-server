@@ -17,12 +17,12 @@ public class TextMessageResponse extends SocketResponse {
   @Builder
   private TextMessageResponse(
       Long userId,
-      String usermame,
+      String username,
       String profileImageUrl,
       String content,
       MessageType messageType) {
     this.userId = userId;
-    this.usermame = usermame;
+    this.usermame = username;
     this.profileImageUrl = profileImageUrl;
     this.content = content;
     this.messageType = messageType;
@@ -31,7 +31,7 @@ public class TextMessageResponse extends SocketResponse {
   public static SocketResponse from(Message message) {
     return TextMessageResponse.builder()
         .userId(message.getUser().getId())
-        .usermame(message.getUser().getUsername())
+        .username(message.getUser().getUsername())
         .profileImageUrl(message.getUser().getProfileImageUrl())
         .content(message.getContent())
         .messageType(MessageType.TEXT)
