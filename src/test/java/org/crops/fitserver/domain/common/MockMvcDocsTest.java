@@ -30,7 +30,7 @@ public abstract class MockMvcDocsTest {
   protected ObjectMapper objectMapper;
 
   @BeforeEach
-  public void setUp(RestDocumentationContextProvider restDocumentation) {
+  protected void setUp(RestDocumentationContextProvider restDocumentation) {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
         .apply(
             documentationConfiguration(restDocumentation)
