@@ -5,19 +5,17 @@ import static org.crops.fitserver.domain.user.util.PrincipalDetailsUtil.getPrinc
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import org.crops.fitserver.domain.common.MockMvcDocsTest;
 import org.crops.fitserver.domain.region.domain.Region;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.domain.Skill;
@@ -30,47 +28,18 @@ import org.crops.fitserver.domain.user.domain.UserRole;
 import org.crops.fitserver.domain.user.dto.UserInfoDto;
 import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
 import org.crops.fitserver.domain.user.facade.UserFacade;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.RestDocumentationContextProvider;
-import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 
-@AutoConfigureRestDocs
-@ExtendWith({RestDocumentationExtension.class})
 @WebMvcTest(UserController.class)
-public class UserControllerTest {
+class UserControllerTest extends MockMvcDocsTest {
 
-  private final ObjectMapper objectMapper = new ObjectMapper();
-  private MockMvc mockMvc;
-  @Autowired
-  private WebApplicationContext context;
   @MockBean
-  private UserFacade userFacade;
-
-
-  @BeforeEach
-  public void setUp(RestDocumentationContextProvider restDocumentation) {
-    this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
-        .apply(springSecurity())
-        .apply(
-            documentationConfiguration(restDocumentation)
-                .operationPreprocessors()
-                .withResponseDefaults(Preprocessors.prettyPrint())
-        )
-        .build();
-  }
+  UserFacade userFacade;
 
   @Test
   public void getUser_success() throws Exception {

@@ -18,6 +18,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import org.crops.fitserver.domain.common.MockMvcDocsTest;
 import org.crops.fitserver.domain.skillset.dto.PositionDto;
 import org.crops.fitserver.domain.skillset.dto.SkillDto;
 import org.crops.fitserver.domain.skillset.dto.request.AddSkillListToPositionRequest;
@@ -45,28 +46,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-@AutoConfigureRestDocs
-@ExtendWith(RestDocumentationExtension.class)
 @WebMvcTest(SkillSetController.class)
-class SkillSetControllerTest {
+class SkillSetControllerTest extends MockMvcDocsTest {
 
-  private final ObjectMapper objectMapper = new ObjectMapper();
-  private MockMvc mockMvc;
-  @Autowired
-  private WebApplicationContext context;
   @MockBean
-  private SkillSetService skillSetService;
-
-  @BeforeEach
-  public void setUp(RestDocumentationContextProvider restDocumentation) {
-    this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
-        .apply(
-            documentationConfiguration(restDocumentation)
-                .operationPreprocessors()
-                .withResponseDefaults(Preprocessors.prettyPrint())
-        )
-        .build();
-  }
+  SkillSetService skillSetService;
 
   @Test
   public void getPositionList_success() throws Exception {

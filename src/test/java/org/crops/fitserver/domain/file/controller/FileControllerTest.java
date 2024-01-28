@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -13,52 +12,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.EnumFields;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.crops.fitserver.domain.common.MockMvcDocsTest;
 import org.crops.fitserver.domain.file.constant.FileDomain;
 import org.crops.fitserver.domain.file.dto.PreSignedUrlDto;
 import org.crops.fitserver.domain.file.dto.request.GeneratePreSignedUrlRequest;
 import org.crops.fitserver.domain.file.service.FileService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.RestDocumentationContextProvider;
-import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-@AutoConfigureRestDocs
-@ExtendWith(RestDocumentationExtension.class)
 @WebMvcTest(FileController.class)
-class FileControllerTest {
-
-  private MockMvc mockMvc;
-
-  @Autowired
-  private WebApplicationContext context;
+class FileControllerTest extends MockMvcDocsTest {
 
   @MockBean
-  private FileService fileService;
-
-  private final ObjectMapper objectMapper = new ObjectMapper();
-
-  @BeforeEach
-  public void setUp(RestDocumentationContextProvider restDocumentation) {
-    this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
-        .apply(
-            documentationConfiguration(restDocumentation)
-                .operationPreprocessors()
-                .withResponseDefaults(Preprocessors.prettyPrint())
-        )
-        .build();
-  }
+  FileService fileService;
 
   @Test
   void generatePreSignedUrl_failed_when_parameter_is_null() throws Exception {

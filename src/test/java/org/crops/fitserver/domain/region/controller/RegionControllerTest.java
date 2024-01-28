@@ -5,7 +5,6 @@ import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -15,56 +14,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import org.crops.fitserver.domain.common.MockMvcDocsTest;
 import org.crops.fitserver.domain.region.dto.RegionDto;
 import org.crops.fitserver.domain.region.dto.request.CreateRegionRequest;
 import org.crops.fitserver.domain.region.dto.request.UpdateRegionRequest;
 import org.crops.fitserver.domain.region.service.RegionService;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.RestDocumentationContextProvider;
-import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-@AutoConfigureRestDocs
-@ExtendWith(RestDocumentationExtension.class)
 @WebMvcTest(RegionController.class)
-class RegionControllerTest {
-
-
-  private MockMvc mockMvc;
-
-  @Autowired
-  private WebApplicationContext context;
+class RegionControllerTest extends MockMvcDocsTest {
 
   @MockBean
-  private RegionService regionService;
-
-  private final ObjectMapper objectMapper = new ObjectMapper();
-
-  @BeforeEach
-  public void setUp(RestDocumentationContextProvider restDocumentation) {
-    this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
-        .apply(
-            documentationConfiguration(restDocumentation)
-                .operationPreprocessors()
-                .withResponseDefaults(Preprocessors.prettyPrint())
-        )
-        .build();
-  }
+  RegionService regionService;
 
   @Test
   public void getRegionList_Success() throws Exception {
