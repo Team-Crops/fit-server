@@ -5,11 +5,14 @@ import static org.crops.fitserver.domain.user.util.PrincipalDetailsUtil.getPrinc
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
@@ -28,21 +31,39 @@ import org.crops.fitserver.domain.user.domain.UserRole;
 import org.crops.fitserver.domain.user.dto.UserInfoDto;
 import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
 import org.crops.fitserver.domain.user.facade.UserFacade;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 
 @WebMvcTest(UserController.class)
 class UserControllerTest extends MockMvcDocsTest {
 
   @MockBean
-  UserFacade userFacade;
+  private UserFacade userFacade;
+
+  @Override
+  @BeforeEach
+  protected void setUp(RestDocumentationContextProvider restDocumentation) {
+    this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
+        .apply(springSecurity())
+        .apply(
+            documentationConfiguration(restDocumentation)
+                .operationPreprocessors()
+                .withResponseDefaults(Preprocessors.prettyPrint())
+        )
+        .alwaysDo(print())
+        .build();
+  }
 
   @Test
-  public void getUser_success() throws Exception {
+  void getUser_success() throws Exception {
     // given
     var linkList = List.of(
         Link.builder().linkType(LinkType.GITHUB).linkUrl("github.com").build(),
@@ -121,7 +142,7 @@ class UserControllerTest extends MockMvcDocsTest {
   }
 
   @Test
-  public void updateUser_success() throws Exception {
+  void updateUser_success() throws Exception {
     // given
     var url = "/v1/user";
     var userInfo = UserInfo.builder()
