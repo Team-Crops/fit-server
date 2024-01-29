@@ -17,6 +17,7 @@ import org.crops.fitserver.global.exception.ErrorCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,7 +37,7 @@ public class UserController {
     return ResponseEntity.ok(userFacade.getUserWithInfo(userId));
   }
 
-  @PostMapping()
+  @PutMapping()
   public ResponseEntity<UserInfoDto> updateUser(
       @CurrentUserId Long userId,
       @Valid @RequestBody UpdateUserRequest updateUserRequest) {
@@ -50,7 +51,7 @@ public class UserController {
         GetPolicyAgreementResponse.of(userFacade.getPolicyAgreementList(userId)));
   }
 
-  @PostMapping("/policy-agreement")
+  @PutMapping("/policy-agreement")
   public ResponseEntity<UpdatePolicyAgreementResponse> updatePolicyAgreement(
       @CurrentUserId Long userId,
       @Valid @RequestBody UpdatePolicyAgreementRequest updatePolicyAgreementRequest) {
