@@ -33,10 +33,6 @@ import org.springframework.test.context.TestConstructor;
 @DataJpaTest
 @ActiveProfiles("test")
 @EnableJpaAuditing
-
-/**
- * user 라는 키워드를 기본 메모리 DB에서 사용하면 오류가 발생한다. 그래서 따로 설정한 메모리 DB를 사용하도록 설정한다.
- * */
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Slf4j
 public class UserRepositoryTest {
