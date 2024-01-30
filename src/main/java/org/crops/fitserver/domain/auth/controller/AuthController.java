@@ -1,6 +1,5 @@
 package org.crops.fitserver.domain.auth.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.auth.facade.dto.SocialLoginPageResponse;
@@ -8,10 +7,7 @@ import org.crops.fitserver.domain.auth.facade.AuthFacade;
 import org.crops.fitserver.domain.user.domain.SocialPlatform;
 import org.crops.fitserver.domain.auth.facade.dto.TokenResponse;
 import org.crops.fitserver.global.annotation.V1;
-import org.crops.fitserver.global.exception.BusinessException;
-import org.crops.fitserver.global.exception.ErrorCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,16 +25,12 @@ public class AuthController {
 
   @GetMapping("/social/{socialPlatform}/login")
   public ResponseEntity<TokenResponse> socialLogin(
-      HttpServletRequest request,
       @RequestParam(name = "code") String code,
+      @RequestParam(name = "redirect_url") String redirectUrl,
       @PathVariable(name = "socialPlatform") SocialPlatform socialPlatform
   ) {
-    String requestUrl = request.getRequestURL().toString();
-    if (!StringUtils.hasText(requestUrl)) {
-      throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE);
-    }
     TokenResponse tokenResponse = authFacade.socialLogin(
-        requestUrl,
+        redirectUrl,
         code,
         socialPlatform);
     return ResponseEntity.ok(tokenResponse);

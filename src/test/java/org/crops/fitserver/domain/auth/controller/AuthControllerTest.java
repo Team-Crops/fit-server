@@ -1,6 +1,5 @@
 package org.crops.fitserver.domain.auth.controller;
 
-import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.ArgumentMatchers.any;
@@ -44,7 +43,7 @@ class AuthControllerTest extends MockMvcDocsTest {
 
     private static final String URL = "http://localhost:8080/v1/auth/social/{socialPlatform}/login";
     private static final String AUTHORIZATION_CODE = "testAuthorizationCode";
-    private static final String REQUEST_URL_HEADER = "http://localhost:8080/v1/auth/social/{socialPlatform}/login";
+    private static final String REDIRECT_URI = "http://localhost:3000/login/callback";
 
     @Nested
     @DisplayName("성공")
@@ -65,10 +64,10 @@ class AuthControllerTest extends MockMvcDocsTest {
 
         //when
         var result = mockMvc.perform(
-                get(URL, socialPlatform.getName())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header("Request URL", REQUEST_URL_HEADER, socialPlatform.getName())
-                    .queryParam("code", AUTHORIZATION_CODE));
+            get(URL, socialPlatform.getName())
+                .contentType(MediaType.APPLICATION_JSON)
+                .queryParam("code", AUTHORIZATION_CODE)
+                .queryParam("redirect_url", REDIRECT_URI));
 
         //then
         result.andExpect(status().isOk())
@@ -79,15 +78,15 @@ class AuthControllerTest extends MockMvcDocsTest {
                         .tag("Auth")
                         .summary("OAuth Login api")
                         .description("소셜 로그인 api")
-                        .requestHeaders(
-                            headerWithName("Request URL")
-                                .description("브라우저가 자동으로 요청하는 HTTP Header의 Request URL"))
                         .pathParameters(
                             parameterWithName("socialPlatform")
-                                .description("소셜 플랫폼 - { kakao, google }"))
+                                .description("소셜 플랫폼 - { kakao, google }")
+                                .defaultValue("kakao, google"))
                         .queryParameters(
                             parameterWithName("code")
-                                .description("OAuth Authorization Code"))
+                                .description("OAuth Authorization Code"),
+                            parameterWithName("redirect_url")
+                                .description("OAuth redirect url"))
                         .responseSchema(
                             Schema.schema("TokenResponse"))
                         .responseFields(
@@ -114,8 +113,8 @@ class AuthControllerTest extends MockMvcDocsTest {
         var result = mockMvc.perform(
                 get(URL, wrongSocialPlatformName)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .header("Request URL", REQUEST_URL_HEADER, wrongSocialPlatformName)
-                    .queryParam("code", AUTHORIZATION_CODE));
+                    .queryParam("code", AUTHORIZATION_CODE)
+                    .queryParam("redirect_uri", REDIRECT_URI));
 
         //then
         result.andExpect(status().isBadRequest())
@@ -148,7 +147,40 @@ class AuthControllerTest extends MockMvcDocsTest {
         var result = mockMvc.perform(
                 get(URL, socialPlatform.getName())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .header("Request URL", REQUEST_URL_HEADER, socialPlatform.getName()));
+                    .queryParam("redirect_uri", REDIRECT_URI));
+
+        //then
+        result.andExpect(status().isBadRequest())
+            .andExpect(handler().handlerType(AuthController.class))
+            .andDo(
+                document("OAuth Login Failed",
+                    resource(ResourceSnippetParameters.builder()
+                        .tag("Auth")
+                        .summary("OAuth Login api")
+                        .description("소셜 로그인 api")
+                        .responseSchema(
+                            Schema.schema("ErrorResponse"))
+                        .responseFields(
+                            fieldWithPath("code")
+                                .type(JsonFieldType.STRING)
+                                .description("F-it Error Code"),
+                            fieldWithPath("message")
+                                .type(JsonFieldType.STRING)
+                                .description("Error Message"))
+                        .build())));
+      }
+
+      @Test
+      @DisplayName("[400] Query Parameter의 redirect_uri가 존재하지 않는 경우")
+      void notExistRedirectUriQueryParameter() throws Exception {
+        //given
+        SocialPlatform socialPlatform = SocialPlatform.KAKAO;
+
+        //when
+        var result = mockMvc.perform(
+                get(URL, socialPlatform.getName())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .queryParam("code", AUTHORIZATION_CODE));
 
         //then
         result.andExpect(status().isBadRequest())
@@ -210,7 +242,8 @@ class AuthControllerTest extends MockMvcDocsTest {
                         .description("소셜 로그인 페이지 조회 api")
                         .pathParameters(
                             parameterWithName("socialPlatform")
-                                .description("소셜 플랫폼 - { kakao, google }"))
+                                .description("소셜 플랫폼 - { kakao, google }")
+                                .defaultValue("kakao, google"))
                         .responseSchema(
                             Schema.schema("SocialLoginPageResponse"))
                         .responseFields(
