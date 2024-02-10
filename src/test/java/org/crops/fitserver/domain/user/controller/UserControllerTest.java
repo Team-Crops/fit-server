@@ -8,6 +8,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -47,11 +48,12 @@ import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.context.WebApplicationContext;
 
 
 @AutoConfigureRestDocs
-@ExtendWith({RestDocumentationExtension.class})
+@ExtendWith(RestDocumentationExtension.class)
 @WebMvcTest(UserController.class)
 public class UserControllerTest {
 
@@ -221,7 +223,7 @@ public class UserControllerTest {
 
     // when
 
-    var result = mockMvc.perform(post(url)
+    var result = mockMvc.perform(put(url)
         .contentType(MediaType.APPLICATION_JSON)
         .with(user(principalDetails))
         .with(csrf())
@@ -355,6 +357,7 @@ public class UserControllerTest {
                     .tag("user")
                     .description("개인정보 동의 조회")
                     .summary("개인정보 동의 조회")
+                    .requestFields()
                     .responseSchema(Schema.schema("PolicyAgreementDto"))
                     .responseFields(
                         fieldWithPath("policyAgreementList[]").description("개인정보 동의 list")
@@ -366,6 +369,7 @@ public class UserControllerTest {
                         fieldWithPath("policyAgreementList[].isAgree").type(JsonFieldType.BOOLEAN)
                             .description("개인정보 동의 여부"),
                         fieldWithPath("policyAgreementList[].updatedAt").type(JsonFieldType.NULL)
+                            .description("개인정보 동의 업데이트 시간")
                             .optional()
                     )
                     .build()
@@ -387,7 +391,7 @@ public class UserControllerTest {
     var principalDetails = getPrincipalDetails(1L, UserRole.MEMBER);
 
     //when
-    var result = mockMvc.perform(post(url)
+    var result = mockMvc.perform(put(url)
         .contentType(MediaType.APPLICATION_JSON)
         .with(user(principalDetails))
         .with(csrf())
@@ -414,6 +418,7 @@ public class UserControllerTest {
                         fieldWithPath("policyAgreementList[].isAgree").type(JsonFieldType.NULL)
                             .description("개인정보 동의 여부"),
                         fieldWithPath("policyAgreementList[].updatedAt").type(JsonFieldType.NULL)
+                            .description("무시해주세요!!! 문서 자동화로 인해 추가된 필드입니다. 실제로는 필요없습니다.")
                             .optional()
                     )
                     .responseFields(
@@ -448,7 +453,7 @@ public class UserControllerTest {
     given(userFacade.updatePolicyAgreement(any(), any())).willReturn(policyAgreementDtoList);
 
     //when
-    var result = mockMvc.perform(post(url)
+    var result = mockMvc.perform(put(url)
         .contentType(MediaType.APPLICATION_JSON)
         .with(user(principalDetails))
         .with(csrf())
@@ -474,6 +479,7 @@ public class UserControllerTest {
                         fieldWithPath("policyAgreementList[].isAgree").type(JsonFieldType.BOOLEAN)
                             .description("개인정보 동의 여부"),
                         fieldWithPath("policyAgreementList[].updatedAt").type(JsonFieldType.NULL)
+                            .description("무시해주세요!!! 문서 자동화로 인해 추가된 필드입니다. 실제로는 필요없습니다.")
                             .optional()
                     )
                     .responseFields(
@@ -522,7 +528,7 @@ public class UserControllerTest {
         newPolicyAgreementDtoList);
 
     //when
-    var result = mockMvc.perform(post(url)
+    var result = mockMvc.perform(put(url)
         .contentType(MediaType.APPLICATION_JSON)
         .with(user(principalDetails))
         .with(csrf())
@@ -548,6 +554,7 @@ public class UserControllerTest {
                         fieldWithPath("policyAgreementList[].isAgree").type(JsonFieldType.BOOLEAN)
                             .description("개인정보 동의 여부"),
                         fieldWithPath("policyAgreementList[].updatedAt").type(JsonFieldType.NULL)
+                            .description("무시해주세요!!! 문서 자동화로 인해 추가된 필드입니다. 실제로는 필요없습니다.")
                             .optional()
                     )
                     .responseFields(

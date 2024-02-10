@@ -133,6 +133,7 @@ public class UserServiceTest {
         .builder()
         .policyType(PolicyType.PRIVACY_POLICY)
         .id(1L)
+        .user(userBuilder.build())
         .isAgree(true)
         .build();
     given(userPolicyAgreementRepository.findAllByUserId(userId)).willReturn(
