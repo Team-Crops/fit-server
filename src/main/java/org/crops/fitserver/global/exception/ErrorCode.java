@@ -37,7 +37,18 @@ public enum ErrorCode {
   /**
    * file. code prefix: file-
    */
-  FILE_UPLOAD_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "file-1", "파일 업로드에 실패했습니다.");
+  FILE_UPLOAD_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "file-1", "파일 업로드에 실패했습니다."),
+
+
+  /**
+   * user-policy-agreement. code prefix: user-policy-agreement-
+   */
+  DUPLICATED_POLICY_REQUEST_EXCEPTION(HttpStatus.BAD_REQUEST, "user-policy-agreement-1", "같은 약관을 한 번에 여러 번 동의할 수 없습니다."),
+
+
+
+  ;
+
 
 
   private final HttpStatus httpStatus;

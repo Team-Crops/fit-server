@@ -2,6 +2,7 @@ package org.crops.fitserver.domain.user.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import java.util.List;
@@ -11,12 +12,16 @@ import org.crops.fitserver.domain.region.repository.RegionRepository;
 import org.crops.fitserver.domain.skillset.repository.PositionRepository;
 import org.crops.fitserver.domain.skillset.repository.SkillRepository;
 import org.crops.fitserver.domain.user.constant.LinkType;
+import org.crops.fitserver.domain.user.constant.PolicyType;
 import org.crops.fitserver.domain.user.constant.UserInfoStatus;
 import org.crops.fitserver.domain.user.domain.Link;
 import org.crops.fitserver.domain.user.domain.User;
 import org.crops.fitserver.domain.user.domain.UserInfo;
+import org.crops.fitserver.domain.user.domain.UserPolicyAgreement;
 import org.crops.fitserver.domain.user.domain.UserRole;
+import org.crops.fitserver.domain.user.dto.PolicyAgreementDto;
 import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
+import org.crops.fitserver.domain.user.repository.UserPolicyAgreementRepository;
 import org.crops.fitserver.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,6 +61,8 @@ public class UserServiceTest {
   private RegionRepository regionRepository;
   @Mock
   private SkillRepository skillRepository;
+  @Mock
+  private UserPolicyAgreementRepository userPolicyAgreementRepository;
 
   @Test
   public void getUserWithInfo_success() {
@@ -105,7 +112,8 @@ public class UserServiceTest {
     given(userRepository.findById(userId)).willReturn(Optional.of(user));
     given(positionRepository.findById(updateUserRequest.getPositionId())).willReturn(
         Optional.of(Position));
-    given(regionRepository.findById(updateUserRequest.getRegionId())).willReturn(Optional.of(Region));
+    given(regionRepository.findById(updateUserRequest.getRegionId())).willReturn(
+        Optional.of(Region));
     given(skillRepository.findAllById(updateUserRequest.getSkillIdList())).willReturn(
         List.of(skill));
 
@@ -115,5 +123,54 @@ public class UserServiceTest {
     //then
     assertThatThrownBy(result).isInstanceOf(IllegalArgumentException.class);
 
+  }
+
+  @Test
+  public void getPolicyAgreementList_success() {
+    //given
+    var userId = 1L;
+    var userPolicyAgreement = UserPolicyAgreement
+        .builder()
+        .policyType(PolicyType.PRIVACY_POLICY)
+        .id(1L)
+        .user(userBuilder.build())
+        .isAgree(true)
+        .build();
+    given(userPolicyAgreementRepository.findAllByUserId(userId)).willReturn(
+        List.of(userPolicyAgreement));
+
+    //when
+    var result = userService.getPolicyAgreementList(userId);
+
+    //then
+    assertThat(result.get(0).getUser().getId()).isEqualTo(userPolicyAgreement.getUser().getId());
+  }
+
+  @Test
+  public void updatePolicyAgreement_중복() {
+    //given
+    var user = userBuilder.build();
+    var policyType = PolicyType.PRIVACY_POLICY;
+    var userPolicyAgreement = UserPolicyAgreement
+        .builder()
+        .policyType(policyType)
+        .id(1L)
+        .user(user)
+        .version("1.0.0")
+        .isAgree(false)
+        .build();
+    given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
+    given(userPolicyAgreementRepository.findAllByUserId(user.getId())).willReturn(
+        List.of(userPolicyAgreement));
+    given(userPolicyAgreementRepository.saveAll(any())).willReturn(
+        List.of(userPolicyAgreement));
+
+
+    //when
+    List<UserPolicyAgreement> result = userService.updatePolicyAgreement(user.getId(), List.of(
+        PolicyAgreementDto.of(policyType, "1.0.0",true, null)));
+
+    //then
+    assertThat(result.get(0).getIsAgree()).isEqualTo(true);
   }
 }

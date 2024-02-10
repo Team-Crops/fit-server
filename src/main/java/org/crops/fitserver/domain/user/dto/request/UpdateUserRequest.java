@@ -1,6 +1,7 @@
 package org.crops.fitserver.domain.user.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,8 +19,9 @@ public class UpdateUserRequest {
   private String nickname;
 
   private String phoneNumber;
-  @JsonProperty("isOpenPhoneNum")
 
+  @JsonProperty("isOpenPhoneNum")
+  @NotNull
   private Boolean isOpenPhoneNum;
 
   private String email;
@@ -36,12 +38,14 @@ public class UpdateUserRequest {
   private String introduce;
 
   private List<Link> linkList;
-  @JsonProperty("isOpenProfile")
 
+  @JsonProperty("isOpenProfile")
+  @NotNull
   private Boolean isOpenProfile;
 
   private Long positionId;
 
   private Long regionId;
+
   private List<Long> skillIdList;
 }

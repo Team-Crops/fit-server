@@ -1,0 +1,67 @@
+package org.crops.fitserver.domain.user.repository;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.crops.fitserver.domain.user.constant.PolicyType;
+import org.crops.fitserver.domain.user.domain.User;
+import org.crops.fitserver.domain.user.domain.UserPolicyAgreement;
+import org.crops.fitserver.domain.user.domain.UserRole;
+import org.hibernate.exception.ConstraintViolationException;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestConstructor;
+
+@DataJpaTest
+@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@RequiredArgsConstructor
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ActiveProfiles("test")
+@EnableJpaAuditing
+@Slf4j
+public class UserPolicyAgreementRepositoryTest {
+
+  private final UserPolicyAgreementRepository userPolicyAgreementRepository;
+  private final TestEntityManager em;
+
+  @Test
+  public void 같은정책_같은버전을_insert할_수_없다() {
+    //given
+    var user = User.builder()
+        .userRole(UserRole.MEMBER)
+        .build();
+    user = em.persist(user);
+    var userPolicyAgreement1 = UserPolicyAgreement.builder()
+        .policyType(PolicyType.PRIVACY_POLICY)
+        .isAgree(true)
+        .user(user)
+
+        .version("20240331")
+        .build();
+    var userPolicyAgreement2 = UserPolicyAgreement.builder()
+        .policyType(PolicyType.PRIVACY_POLICY)
+        .isAgree(true)
+        .user(user)
+        .version("20240331")
+        .build();
+    userPolicyAgreement1 = userPolicyAgreementRepository.save(userPolicyAgreement1);
+    em.flush();
+    //when
+    ThrowingCallable callable = () -> {
+      userPolicyAgreementRepository.save(userPolicyAgreement2);
+      em.flush();
+    };
+
+    //then
+    assertThatThrownBy(callable)
+        .isInstanceOf(ConstraintViolationException.class);
+  }
+
+}

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.domain.school.domain.School;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.test.context.ActiveProfiles;
@@ -15,6 +16,7 @@ import org.springframework.test.context.TestConstructor;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @RequiredArgsConstructor
 @EnableJpaAuditing
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class SchoolRepositoryTest {
   private final SchoolRepository schoolRepository;
 

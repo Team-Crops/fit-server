@@ -13,13 +13,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.crops.fitserver.domain.skillset.domain.Skill;
+import org.crops.fitserver.global.entity.BaseTimeEntity;
 
 @Entity(name = "user_info_skill")
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class UserInfoSkill {
+public class UserInfoSkill extends BaseTimeEntity {
 
   @Id
   @GeneratedValue
