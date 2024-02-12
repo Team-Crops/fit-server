@@ -7,18 +7,18 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import org.crops.fitserver.domain.common.MockMvcDocsTest;
 import org.crops.fitserver.domain.region.domain.Region;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.domain.Skill;
@@ -36,37 +36,24 @@ import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
 import org.crops.fitserver.domain.user.facade.UserFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
-import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.context.WebApplicationContext;
 
 
-@AutoConfigureRestDocs
-@ExtendWith(RestDocumentationExtension.class)
 @WebMvcTest(UserController.class)
-public class UserControllerTest {
+class UserControllerTest extends MockMvcDocsTest {
 
-  private final ObjectMapper objectMapper = new ObjectMapper();
-  private MockMvc mockMvc;
-  @Autowired
-  private WebApplicationContext context;
   @MockBean
   private UserFacade userFacade;
 
-
+  @Override
   @BeforeEach
-  public void setUp(RestDocumentationContextProvider restDocumentation) {
+  protected void setUp(RestDocumentationContextProvider restDocumentation) {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
         .apply(springSecurity())
         .apply(
@@ -74,11 +61,12 @@ public class UserControllerTest {
                 .operationPreprocessors()
                 .withResponseDefaults(Preprocessors.prettyPrint())
         )
+        .alwaysDo(print())
         .build();
   }
 
   @Test
-  public void getUser_success() throws Exception {
+  void getUser_success() throws Exception {
     // given
     var linkList = List.of(
         Link.builder().linkType(LinkType.GITHUB).linkUrl("github.com").build(),
@@ -157,7 +145,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void updateUser_success() throws Exception {
+  void updateUser_success() throws Exception {
     // given
     var url = "/v1/user";
     var userInfo = UserInfo.builder()
@@ -324,7 +312,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void getPolicyAgreement() throws Exception {
+  void getPolicyAgreement() throws Exception {
     //given
     var url = "/v1/user/policy-agreement";
     var policyAgreementDtoList = List.of(
@@ -378,7 +366,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void updatePolicyAgreement_failed_빈값() throws Exception {
+  void updatePolicyAgreement_failed_빈값() throws Exception {
     var url = "/v1/user/policy-agreement";
     var policyAgreementDtoList = List.of(
         PolicyAgreementDto.builder()
@@ -433,7 +421,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void updatePolicyAgreement_failed_중복() throws Exception {
+  void updatePolicyAgreement_failed_중복() throws Exception {
     //given
     var url = "/v1/user/policy-agreement";
     var policyAgreementDtoList = List.of(
@@ -493,7 +481,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void updatePolicyAgreement_success() throws Exception {
+  void updatePolicyAgreement_success() throws Exception {
     //given
     var url = "/v1/user/policy-agreement";
     var policyAgreementDtoList = List.of(

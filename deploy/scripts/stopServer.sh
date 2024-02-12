@@ -22,7 +22,6 @@ if [ -n "$(docker ps | grep fit-was-$DEPRECATED_STATE)" ]; then
 fi
 
 if [ -n "$(docker images -q 728702143069.dkr.ecr.ap-northeast-2.amazonaws.com/fit-was:$ENV)" ]; then
-  echo "[$TIME] > Remove WAS Docker images not latest version." >> /home/ubuntu/app/deploy/deploy.log
+  echo "[$TIME] > Remove WAS images not latest version." >> /home/ubuntu/app/deploy/deploy.log
   docker rmi -f $(docker images -a 728702143069.dkr.ecr.ap-northeast-2.amazonaws.com/fit-was --filter "before=728702143069.dkr.ecr.ap-northeast-2.amazonaws.com/fit-was:$ENV" -q)
 fi
-
