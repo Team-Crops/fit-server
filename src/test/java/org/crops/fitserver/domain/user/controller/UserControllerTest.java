@@ -312,7 +312,7 @@ class UserControllerTest extends MockMvcDocsTest {
   }
 
   @Test
-  public void getPolicyAgreement() throws Exception {
+  void getPolicyAgreement() throws Exception {
     //given
     var url = "/v1/user/policy-agreement";
     var policyAgreementDtoList = List.of(
@@ -366,7 +366,7 @@ class UserControllerTest extends MockMvcDocsTest {
   }
 
   @Test
-  public void updatePolicyAgreement_failed_빈값() throws Exception {
+  void updatePolicyAgreement_failed_빈값() throws Exception {
     var url = "/v1/user/policy-agreement";
     var policyAgreementDtoList = List.of(
         PolicyAgreementDto.builder()
@@ -421,7 +421,7 @@ class UserControllerTest extends MockMvcDocsTest {
   }
 
   @Test
-  public void updatePolicyAgreement_failed_중복() throws Exception {
+  void updatePolicyAgreement_failed_중복() throws Exception {
     //given
     var url = "/v1/user/policy-agreement";
     var policyAgreementDtoList = List.of(
@@ -481,7 +481,7 @@ class UserControllerTest extends MockMvcDocsTest {
   }
 
   @Test
-  public void updatePolicyAgreement_success() throws Exception {
+  void updatePolicyAgreement_success() throws Exception {
     //given
     var url = "/v1/user/policy-agreement";
     var policyAgreementDtoList = List.of(
