@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.domain.Skill;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
@@ -18,6 +19,7 @@ import org.springframework.test.context.TestConstructor;
 @DataJpaTest
 @ActiveProfiles("test")
 @EnableJpaAuditing
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class PositionRepositoryTest {
 
   private final TestEntityManager em;

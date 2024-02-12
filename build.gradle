@@ -86,7 +86,7 @@ dependencies {
 }
 
 openapi3 {
-    setServer('http://localhost:8080')
+    setServer(System.getProperty("env", "test") == "local" ? "http://localhost:8080" : "http://dev-api.f-it.team")
     setTitle('Crops API')
     setDescription('Crops API Docs')
     setVersion(version)
