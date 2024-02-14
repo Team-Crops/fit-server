@@ -55,7 +55,7 @@ class AuthControllerTest extends MockMvcDocsTest {
       void kakaoOAuthLogin(SocialPlatform socialPlatform) throws Exception {
         //given
         given(
-            authFacade.socialLogin(anyString(), anyString(), any(SocialPlatform.class)))
+            authFacade.socialLogin(anyString(), any(SocialPlatform.class)))
             .willReturn(
                 TokenResponse.from(
                     TokenCollection.of(
@@ -66,8 +66,7 @@ class AuthControllerTest extends MockMvcDocsTest {
         var result = mockMvc.perform(
             get(URL, socialPlatform.getName())
                 .contentType(MediaType.APPLICATION_JSON)
-                .queryParam("code", AUTHORIZATION_CODE)
-                .queryParam("redirect_url", REDIRECT_URI));
+                .queryParam("code", AUTHORIZATION_CODE));
 
         //then
         result.andExpect(status().isOk())
@@ -84,9 +83,7 @@ class AuthControllerTest extends MockMvcDocsTest {
                                 .defaultValue("kakao, google"))
                         .queryParameters(
                             parameterWithName("code")
-                                .description("OAuth Authorization Code"),
-                            parameterWithName("redirect_url")
-                                .description("OAuth redirect url"))
+                                .description("OAuth Authorization Code"))
                         .responseSchema(
                             Schema.schema("TokenResponse"))
                         .responseFields(
@@ -148,39 +145,6 @@ class AuthControllerTest extends MockMvcDocsTest {
                 get(URL, socialPlatform.getName())
                     .contentType(MediaType.APPLICATION_JSON)
                     .queryParam("redirect_uri", REDIRECT_URI));
-
-        //then
-        result.andExpect(status().isBadRequest())
-            .andExpect(handler().handlerType(AuthController.class))
-            .andDo(
-                document("OAuth Login Failed",
-                    resource(ResourceSnippetParameters.builder()
-                        .tag("Auth")
-                        .summary("OAuth Login api")
-                        .description("소셜 로그인 api")
-                        .responseSchema(
-                            Schema.schema("ErrorResponse"))
-                        .responseFields(
-                            fieldWithPath("code")
-                                .type(JsonFieldType.STRING)
-                                .description("F-it Error Code"),
-                            fieldWithPath("message")
-                                .type(JsonFieldType.STRING)
-                                .description("Error Message"))
-                        .build())));
-      }
-
-      @Test
-      @DisplayName("[400] Query Parameter의 redirect_uri가 존재하지 않는 경우")
-      void notExistRedirectUriQueryParameter() throws Exception {
-        //given
-        SocialPlatform socialPlatform = SocialPlatform.KAKAO;
-
-        //when
-        var result = mockMvc.perform(
-                get(URL, socialPlatform.getName())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .queryParam("code", AUTHORIZATION_CODE));
 
         //then
         result.andExpect(status().isBadRequest())

@@ -65,14 +65,13 @@ class AuthFacadeImplTest {
         // given
         given(oAuthServiceProvider.getService(any(SocialPlatform.class)))
             .willReturn(oAuthService);
-        given(oAuthService.socialUserLogin(anyString(), anyString()))
+        given(oAuthService.socialUserLogin(anyString()))
             .willReturn(user);
         given(jwtProvider.createTokenCollection(any(TokenInfo.class)))
             .willReturn(tokenCollection);
 
         // when
         var actual = authFacadeImpl.socialLogin(
-            redirectUrl,
             authorizationCode,
             socialPlatform);
 
