@@ -7,7 +7,6 @@ import org.crops.fitserver.domain.auth.facade.dto.TokenResponse;
 public interface AuthFacade {
 
   TokenResponse socialLogin(
-      String redirectUrl,
       String authorizationCode,
       SocialPlatform socialPlatform);
 

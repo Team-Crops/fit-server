@@ -26,11 +26,9 @@ public class AuthController {
   @GetMapping("/social/{socialPlatform}/login")
   public ResponseEntity<TokenResponse> socialLogin(
       @RequestParam(name = "code") String code,
-      @RequestParam(name = "redirect_url") String redirectUrl,
       @PathVariable(name = "socialPlatform") SocialPlatform socialPlatform
   ) {
     TokenResponse tokenResponse = authFacade.socialLogin(
-        redirectUrl,
         code,
         socialPlatform);
     return ResponseEntity.ok(tokenResponse);
