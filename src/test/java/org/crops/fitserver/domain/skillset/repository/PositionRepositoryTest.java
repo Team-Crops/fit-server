@@ -103,9 +103,12 @@ public class PositionRepositoryTest {
     Skill skill = Skill.builder()
         .displayName("test")
         .build();
+    skillRepository.save(skill);
+    em.flush();
 
-    position.addSkill(skill);
+
     // when
+    position.addSkill(skill);
     var result = positionRepository.save(position);
 
     // then
@@ -124,6 +127,7 @@ public class PositionRepositoryTest {
         .build();
 
     position.addSkill(skill);
+    skillRepository.save(skill);
     positionRepository.save(position);
 
     // when
@@ -151,10 +155,11 @@ public class PositionRepositoryTest {
     em.flush();
     em.clear();
 
+    // when
     skillRepository.deleteById(skill.getId());
     em.flush();
 
-    // when
+
     var result = positionRepository.findWithSkills(position.getId()).get();
 
     // then
