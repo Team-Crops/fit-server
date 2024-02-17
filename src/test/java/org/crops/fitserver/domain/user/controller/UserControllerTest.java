@@ -115,7 +115,7 @@ class UserControllerTest extends MockMvcDocsTest {
                         fieldWithPath("backgroundText").type(JsonFieldType.STRING)
                             .description("학력/경력 텍스트").optional(),
                         fieldWithPath("isOpenProfile").type(JsonFieldType.BOOLEAN)
-                            .description("프로필 공개 여부").optional(),
+                            .description("프로필 공개 여부"),
                         fieldWithPath("status").type(JsonFieldType.STRING).description("사용자 정보 상태")
                             .optional(),
                         fieldWithPath("portfolioUrl").type(JsonFieldType.STRING)
@@ -246,7 +246,7 @@ class UserControllerTest extends MockMvcDocsTest {
                         fieldWithPath("backgroundText").type(JsonFieldType.STRING)
                             .description("학력/경력 텍스트").optional(),
                         fieldWithPath("isOpenProfile").type(JsonFieldType.BOOLEAN)
-                            .description("프로필 공개 여부").optional(),
+                            .description("프로필 공개 여부"),
                         fieldWithPath("portfolioUrl").type(JsonFieldType.STRING)
                             .description("포트폴리오 url").optional(),
                         fieldWithPath("projectCount").type(JsonFieldType.NUMBER)
@@ -285,7 +285,7 @@ class UserControllerTest extends MockMvcDocsTest {
                         fieldWithPath("backgroundText").type(JsonFieldType.STRING)
                             .description("학력/경력 텍스트").optional(),
                         fieldWithPath("isOpenProfile").type(JsonFieldType.BOOLEAN)
-                            .description("프로필 공개 여부").optional(),
+                            .description("프로필 공개 여부"),
                         fieldWithPath("portfolioUrl").type(JsonFieldType.STRING)
                             .description("포트폴리오 url").optional(),
                         fieldWithPath("projectCount").type(JsonFieldType.NUMBER)
