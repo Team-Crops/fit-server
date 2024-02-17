@@ -15,7 +15,7 @@ public record Link(String linkUrl, LinkType linkType) {
 
   public static List<Link> parseToLinkList(String linkJson) {
     if (StringUtils.isBlank(linkJson)) {
-      return List.of();
+      return null;
     }
 
     return parseJson(linkJson, new TypeReference<>() {

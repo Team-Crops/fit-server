@@ -1,9 +1,11 @@
 package org.crops.fitserver.domain.user.service;
 
 import jakarta.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.domain.region.repository.RegionRepository;
+import org.crops.fitserver.domain.skillset.domain.Skill;
 import org.crops.fitserver.domain.skillset.repository.PositionRepository;
 import org.crops.fitserver.domain.skillset.repository.SkillRepository;
 import org.crops.fitserver.domain.user.domain.Link;
@@ -16,6 +18,7 @@ import org.crops.fitserver.domain.user.repository.UserRepository;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -38,13 +41,19 @@ public class UserServiceImpl implements UserService {
   public User updateUserWithInfo(Long userId, UpdateUserRequest updateUserRequest) {
     var user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
-    var position = positionRepository.findById(updateUserRequest.getPositionId())
-        .orElseThrow(() -> new BusinessException(
-            ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
-    var region = regionRepository.findById(updateUserRequest.getRegionId())
-        .orElseThrow(() -> new BusinessException(
-            ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
-    var skillList = skillRepository.findAllById(updateUserRequest.getSkillIdList());
+    var position = updateUserRequest.getPositionId() != null ?
+        positionRepository.findById(updateUserRequest.getPositionId())
+            .orElseThrow(() -> new BusinessException(
+                ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION))
+        : null;
+    var region = updateUserRequest.getRegionId() != null ?
+        regionRepository.findById(updateUserRequest.getRegionId())
+            .orElseThrow(() -> new BusinessException(
+                ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION))
+        : null;
+    var skillList = CollectionUtils.isEmpty(updateUserRequest.getSkillIdList()) ?
+        skillRepository.findAllById(updateUserRequest.getSkillIdList())
+        : new ArrayList<Skill>();
 
     user = user
         .withProfileImageUrl(updateUserRequest.getProfileImageUrl())

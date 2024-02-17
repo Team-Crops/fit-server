@@ -48,4 +48,20 @@ public class UpdateUserRequest {
   private Long regionId;
 
   private List<Long> skillIdList;
+
+  public Boolean getIsOpenPhoneNum() {
+    return isOpenPhoneNum;
+  }
+
+  public Boolean getIsOpenProfile() {
+    return isOpenProfile;
+  }
+
+  public void setIsOpenPhoneNum(Boolean isOpenPhoneNum) {
+    this.isOpenPhoneNum = isOpenPhoneNum;
+  }
+
+  public void setIsOpenProfile(Boolean isOpenProfile) {
+    this.isOpenProfile = isOpenProfile;
+  }
 }
