@@ -22,7 +22,6 @@ public class MethodSecurityConfig {
     return AuthorizationManagerBeforeMethodInterceptor.preAuthorize();
   }
 
-
   @Bean
   @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
   @Profile("prod")
