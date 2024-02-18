@@ -104,6 +104,7 @@ class SkillSetServiceImpl implements SkillSetService {
   }
 
   @Override
+  @Transactional
   public PositionDto updatePositionDisplayName(Long positionId, String displayName) {
     return positionRepository.findById(positionId)
         .map(position -> {
@@ -114,6 +115,7 @@ class SkillSetServiceImpl implements SkillSetService {
   }
 
   @Override
+  @Transactional
   public PositionDto addSkillListToPosition(Long positionId, List<Long> skillIds) {
     return positionRepository.findById(positionId)
         .map(position -> {
@@ -124,11 +126,13 @@ class SkillSetServiceImpl implements SkillSetService {
   }
 
   @Override
+  @Transactional
   public void deleteSkill(Long skillId) {
     skillRepository.deleteById(skillId);
   }
 
   @Override
+  @Transactional
   public void deletePosition(Long positionId) {
     positionRepository.deleteById(positionId);
   }
