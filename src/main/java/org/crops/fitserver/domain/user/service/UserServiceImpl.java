@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
             .orElseThrow(() -> new BusinessException(
                 ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION))
         : null;
-    var skillList = CollectionUtils.isEmpty(updateUserRequest.getSkillIdList()) ?
+    var skillList = !CollectionUtils.isEmpty(updateUserRequest.getSkillIdList()) ?
         skillRepository.findAllById(updateUserRequest.getSkillIdList())
         : new ArrayList<Skill>();
 
