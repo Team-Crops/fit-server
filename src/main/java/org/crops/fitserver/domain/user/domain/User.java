@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 import org.crops.fitserver.global.entity.BaseTimeEntity;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 @Entity
 @Getter
@@ -74,8 +75,22 @@ public class User extends BaseTimeEntity {
     this.userInfo = UserInfo.from(this);
   }
 
+  public User withProfileImageUrl(JsonNullable<String> profileImageUrl) {
+    if (profileImageUrl.isPresent()) {
+      withProfileImageUrl(profileImageUrl.get());
+    }
+    return this;
+  }
+
   public User withProfileImageUrl(String profileImageUrl) {
     this.profileImageUrl = profileImageUrl;
+    return this;
+  }
+
+  public User withUsername(JsonNullable<String> username) {
+    if (username.isPresent()) {
+      withUsername(username.get());
+    }
     return this;
   }
 
@@ -84,19 +99,40 @@ public class User extends BaseTimeEntity {
     return this;
   }
 
+  public User withNickname(JsonNullable<String> nickname) {
+    if (nickname.isPresent()) {
+      withNickname(nickname.get());
+    }
+    return this;
+  }
+
   public User withNickname(String nickname) {
-    if (StringUtils.isNotBlank(this.nickname) && StringUtils.isBlank(nickname)) {
+    if (StringUtils.isBlank(nickname)) {
       throw new IllegalArgumentException("nickname cannot be null");
     }
     this.nickname = nickname;
     return this;
   }
 
+  public User withPhoneNumber(JsonNullable<String> phoneNumber) {
+    if (phoneNumber.isPresent()) {
+      withPhoneNumber(phoneNumber.get());
+    }
+    return this;
+  }
+
   public User withPhoneNumber(String phoneNumber) {
-    if (StringUtils.isNotBlank(this.phoneNumber) && StringUtils.isBlank(phoneNumber)) {
+    if (StringUtils.isBlank(phoneNumber)) {
       throw new IllegalArgumentException("phoneNumber cannot be null");
     }
     this.phoneNumber = phoneNumber;
+    return this;
+  }
+
+  public User withIsOpenPhoneNum(JsonNullable<Boolean> isOpenPhoneNum) {
+    if (isOpenPhoneNum.isPresent()) {
+      withIsOpenPhoneNum(isOpenPhoneNum.get());
+    }
     return this;
   }
 
@@ -105,8 +141,15 @@ public class User extends BaseTimeEntity {
     return this;
   }
 
+  public User withEmail(JsonNullable<String> email) {
+    if (email.isPresent()) {
+      withEmail(email.get());
+    }
+    return this;
+  }
+
   public User withEmail(String email) {
-    if (StringUtils.isNotBlank(this.email) && StringUtils.isBlank(email)) {
+    if (StringUtils.isBlank(email)) {
       throw new IllegalArgumentException("email cannot be null");
     }
     this.email = email;

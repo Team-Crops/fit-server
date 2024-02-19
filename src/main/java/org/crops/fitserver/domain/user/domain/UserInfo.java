@@ -28,6 +28,7 @@ import org.crops.fitserver.domain.user.constant.BackgroundStatus;
 import org.crops.fitserver.domain.user.constant.UserInfoStatus;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.util.CollectionUtils;
 
 @Entity(name = "user_info")
@@ -58,7 +59,7 @@ public class UserInfo {
   private String linkJson;
 
   @Enumerated(value = EnumType.STRING)
-  @Column(length = 10)
+  @Column(length = 20)
   private BackgroundStatus backgroundStatus;
 
   private String career;
@@ -105,55 +106,104 @@ public class UserInfo {
     this.status = this.isReadyToComplete() ? UserInfoStatus.COMPLETE : UserInfoStatus.INCOMPLETE;
   }
 
+  public UserInfo withPortfolioUrl(JsonNullable<String> portfolioUrl) {
+    if (portfolioUrl.isPresent()) {
+      withPortfolioUrl(portfolioUrl.get());
+    }
+    return this;
+  }
+
 
   public UserInfo withPortfolioUrl(String portfolioUrl) {
     this.portfolioUrl = portfolioUrl;
     return this;
   }
 
+  public UserInfo withProjectCount(JsonNullable<Integer> projectCount) {
+    if (projectCount.isPresent()) {
+      withProjectCount(projectCount.get());
+    }
+    return this;
+  }
+
   public UserInfo withProjectCount(Integer projectCount) {
-    if (this.projectCount != null && projectCount == null) {
+    if (projectCount == null) {
       throw new IllegalArgumentException("projectCount cannot be null");
     }
     this.projectCount = projectCount;
     return this;
   }
 
+  public UserInfo withActivityHour(JsonNullable<Integer> activityHour) {
+    if (activityHour.isPresent()) {
+      withActivityHour(activityHour.get());
+    }
+    return this;
+  }
+
   public UserInfo withActivityHour(Integer activityHour) {
-    if (this.activityHour != null && activityHour == null) {
+    if (activityHour == null) {
       throw new IllegalArgumentException("activityHour cannot be null");
     }
     this.activityHour = activityHour;
     return this;
   }
 
+  public UserInfo withIntroduce(JsonNullable<String> introduce) {
+    if (introduce.isPresent()) {
+      withIntroduce(introduce.get());
+    }
+    return this;
+  }
+
   public UserInfo withIntroduce(String introduce) {
-    if (StringUtils.isNotBlank(this.introduce) && StringUtils.isBlank(introduce)) {
+    if (StringUtils.isBlank(introduce)) {
       throw new IllegalArgumentException("introduce cannot be null");
     }
     this.introduce = introduce;
     return this;
   }
 
+  public UserInfo withLinkJson(JsonNullable<String> linkJson) {
+    if (linkJson.isPresent()) {
+      withLinkJson(linkJson.get());
+    }
+    return this;
+  }
+
   public UserInfo withLinkJson(String linkJson) {
-    if (StringUtils.isNotBlank(this.linkJson) && StringUtils.isBlank(linkJson)) {
+    if (StringUtils.isBlank(linkJson)) {
       throw new IllegalArgumentException("linkJson cannot be null");
     }
     this.linkJson = linkJson;
     return this;
   }
 
+  public UserInfo withBackground(JsonNullable<BackgroundStatus> backgroundStatus,
+      JsonNullable<String> backgroundText) {
+    if (!backgroundStatus.isPresent() && !backgroundText.isPresent()) {
+      return this;
+    }
+
+    withBackground(
+        backgroundStatus.orElse(this.backgroundStatus),
+        backgroundStatus.get() == this.backgroundStatus
+            ? backgroundText.orElse(getBackgroundText())
+            : null);
+
+    return this;
+  }
+
+  private String getBackgroundText() {
+    return this.backgroundStatus.getBackgroundType() == BackgroundStatus.BackgroundType.CAREER
+        ? this.career : this.education;
+  }
+
   public UserInfo withBackground(BackgroundStatus backgroundStatus, String backgroundText) {
-    if (this.backgroundStatus != null && backgroundStatus == null) {
+    if (backgroundStatus == null) {
       throw new IllegalArgumentException("backgroundStatus cannot be null");
     }
     this.backgroundStatus = backgroundStatus;
-
-    if (this.backgroundStatus == null) {
-      this.career = null;
-      this.education = null;
-      return this;
-    }
 
     switch (backgroundStatus.getBackgroundType()) {
       case CAREER -> {
@@ -168,14 +218,20 @@ public class UserInfo {
     return this;
   }
 
+  public UserInfo withIsOpenProfile(JsonNullable<Boolean> isOpenProfile) {
+    if (isOpenProfile.isPresent()) {
+      withIsOpenProfile(isOpenProfile.get());
+    }
+    return this;
+  }
+
   public UserInfo withIsOpenProfile(boolean isOpenProfile) {
     this.isOpenProfile = isOpenProfile;
     return this;
   }
 
-
   public UserInfo withPosition(Position position) {
-    if (this.position != null && position == null) {
+    if (position == null) {
       throw new IllegalArgumentException("position cannot be null");
     }
     this.position = position;
@@ -183,7 +239,7 @@ public class UserInfo {
   }
 
   public UserInfo withRegion(Region region) {
-    if (this.region != null && region == null) {
+    if (region == null) {
       throw new IllegalArgumentException("region cannot be null");
     }
     this.region = region;

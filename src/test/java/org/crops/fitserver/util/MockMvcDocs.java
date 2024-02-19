@@ -3,9 +3,13 @@ package org.crops.fitserver.util;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.openapitools.jackson.nullable.JsonNullableModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -23,13 +27,10 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(RestDocumentationExtension.class)
 public abstract class MockMvcDocs {
 
+  protected final ObjectMapper objectMapper = objectMapper();
   protected MockMvc mockMvc;
-
   @Autowired
   protected WebApplicationContext context;
-
-  @Autowired
-  protected ObjectMapper objectMapper;
 
   @BeforeEach
   protected void setUp(RestDocumentationContextProvider restDocumentation) {
@@ -41,5 +42,15 @@ public abstract class MockMvcDocs {
         )
         .alwaysDo(print())
         .build();
+  }
+
+  public ObjectMapper objectMapper() {
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.setSerializationInclusion(JsonInclude.Include.ALWAYS);
+    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS,
+        SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    objectMapper.registerModules(new JsonNullableModule());
+    return objectMapper;
   }
 }

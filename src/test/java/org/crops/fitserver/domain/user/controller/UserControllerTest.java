@@ -7,6 +7,7 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -18,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import java.util.List;
-import org.crops.fitserver.util.MockMvcDocs;
+import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.region.domain.Region;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.domain.Skill;
@@ -34,6 +35,7 @@ import org.crops.fitserver.domain.user.dto.UserInfoDto;
 import org.crops.fitserver.domain.user.dto.request.UpdatePolicyAgreementRequest;
 import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
 import org.crops.fitserver.domain.user.facade.UserFacade;
+import org.crops.fitserver.util.MockMvcDocs;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -46,6 +48,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 
 @WebMvcTest(UserController.class)
+@Slf4j
 class UserControllerTest extends MockMvcDocs {
 
   @MockBean
@@ -176,8 +179,7 @@ class UserControllerTest extends MockMvcDocs {
     var principalDetails = getPrincipalDetails(1L, UserRole.MEMBER);
 
     // when
-
-    var result = mockMvc.perform(put(url)
+    var result = mockMvc.perform(patch(url)
         .contentType(MediaType.APPLICATION_JSON)
         .with(user(principalDetails))
         .with(csrf())
@@ -337,7 +339,7 @@ class UserControllerTest extends MockMvcDocs {
 
     // when
 
-    var result = mockMvc.perform(put(url)
+    var result = mockMvc.perform(patch(url)
         .contentType(MediaType.APPLICATION_JSON)
         .with(user(principalDetails))
         .with(csrf())
