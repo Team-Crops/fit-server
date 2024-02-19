@@ -51,12 +51,13 @@ public class SkillSetController {
         .body(skillSetService.createPosition(createPositionRequest));
   }
 
-  @PutMapping("/position/{positionId}")
+  @PatchMapping("/position/{positionId}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   public ResponseEntity<PositionDto> updatePosition(@PathVariable Long positionId,
       @Valid @RequestBody UpdatePositionRequest updatePositionRequest) {
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
-        skillSetService.updatePositionDisplayName(positionId, updatePositionRequest.displayName()));
+    return ResponseEntity.status(HttpStatus.OK).body(
+        skillSetService.updatePositionDisplayName(positionId, updatePositionRequest.displayName().get())
+    );
   }
 
   @DeleteMapping("/position/{positionId}")
@@ -76,7 +77,7 @@ public class SkillSetController {
   public ResponseEntity<PositionDto> addSkillToPosition(@PathVariable Long positionId,
       @Valid @RequestBody
       AddSkillListToPositionRequest addSkillListToPositionRequest) {
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
+    return ResponseEntity.status(HttpStatus.OK).body(
         skillSetService.addSkillListToPosition(positionId,
             addSkillListToPositionRequest.skillIds()));
   }
@@ -94,12 +95,12 @@ public class SkillSetController {
         .body(skillSetService.createSkill(createSkillRequest));
   }
 
-  @PutMapping("/skill/{skillId}")
+  @PatchMapping("/skill/{skillId}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   public ResponseEntity<SkillDto> updateSkill(@PathVariable Long skillId,
       @Valid @RequestBody UpdateSkillRequest updateSkillRequest) {
-    return ResponseEntity.status(HttpStatus.NO_CONTENT)
-        .body(skillSetService.updateSkillDisplayName(skillId, updateSkillRequest.displayName()));
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(skillSetService.updateSkillDisplayName(skillId, updateSkillRequest.displayName().get()));
   }
 
   @DeleteMapping("/skill/{skillId}")
@@ -113,7 +114,7 @@ public class SkillSetController {
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   public ResponseEntity<SkillDto> addSkillToPositionList(@PathVariable Long skillId,
       @Valid @RequestBody AddSkillToPositionListRequest addSkillToPositionListRequest) {
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
+    return ResponseEntity.status(HttpStatus.OK).body(
         skillSetService.addSkillToPositionList(skillId,
             addSkillToPositionListRequest.positionIds()));
   }

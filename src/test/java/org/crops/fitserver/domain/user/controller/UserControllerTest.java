@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import java.util.List;
-import org.crops.fitserver.domain.common.MockMvcDocsTest;
+import org.crops.fitserver.util.MockMvcDocs;
 import org.crops.fitserver.domain.region.domain.Region;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.domain.Skill;
@@ -46,7 +46,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 
 @WebMvcTest(UserController.class)
-class UserControllerTest extends MockMvcDocsTest {
+class UserControllerTest extends MockMvcDocs {
 
   @MockBean
   private UserFacade userFacade;

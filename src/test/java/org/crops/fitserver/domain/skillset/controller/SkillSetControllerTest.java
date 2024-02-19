@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import java.util.List;
-import org.crops.fitserver.domain.common.MockMvcDocsTest;
+import org.crops.fitserver.util.MockMvcDocs;
 import org.crops.fitserver.domain.skillset.dto.PositionDto;
 import org.crops.fitserver.domain.skillset.dto.SkillDto;
 import org.crops.fitserver.domain.skillset.dto.request.AddSkillListToPositionRequest;
@@ -29,13 +29,14 @@ import org.crops.fitserver.domain.skillset.service.SkillSetService;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
 import org.junit.jupiter.api.Test;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 @WebMvcTest(SkillSetController.class)
-class SkillSetControllerTest extends MockMvcDocsTest {
+class SkillSetControllerTest extends MockMvcDocs {
 
   @MockBean
   SkillSetService skillSetService;
@@ -309,14 +310,14 @@ class SkillSetControllerTest extends MockMvcDocsTest {
   @Test
   public void update_position_displayName_fail_duplicate() throws Exception {
     //given
-    var url = "/v1/skill-set/position/1";
-    var updatePositionRequest = new UpdatePositionRequest("test");
+    var url = "/v1/skill-set/position/{positionId}";
+    var updatePositionRequest = new UpdatePositionRequest(JsonNullable.of("test"));
     given(skillSetService.updatePositionDisplayName(any(), any())).willThrow(
         new BusinessException(ErrorCode.DUPLICATED_RESOURCE_EXCEPTION)
     );
 
     //when
-    var result = mockMvc.perform(put(url)
+    var result = mockMvc.perform(patch(url,1L)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(updatePositionRequest))
     );
@@ -350,21 +351,21 @@ class SkillSetControllerTest extends MockMvcDocsTest {
   @Test
   public void update_position_displayName_success() throws Exception {
     //given
-    var url = "/v1/skill-set/position/1";
-    var updatePositionRequest = new UpdatePositionRequest("test");
+    var url = "/v1/skill-set/position/{positionId}";
+    var updatePositionRequest = new UpdatePositionRequest(JsonNullable.of("test"));
     given(skillSetService.updatePositionDisplayName(any(), any())).willReturn(PositionDto.builder()
         .id(1L)
         .displayName("test")
         .build());
 
     //when
-    var result = mockMvc.perform(put(url)
+    var result = mockMvc.perform(patch(url,1L)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(updatePositionRequest))
     );
 
     //then
-    result.andExpect(status().isNoContent())
+    result.andExpect(status().isOk())
         .andDo(
             document("skill-set/position/update-position-displayName-success",
                 resource(
@@ -418,7 +419,7 @@ class SkillSetControllerTest extends MockMvcDocsTest {
     );
 
     //then
-    result.andExpect(status().isNoContent())
+    result.andExpect(status().isOk())
         .andDo(
             document("skill-set/position/add-position-skillList",
                 resource(
@@ -451,10 +452,10 @@ class SkillSetControllerTest extends MockMvcDocsTest {
   @Test
   public void delete_position_success() throws Exception {
     //given
-    var url = "/v1/skill-set/position/1";
+    var url = "/v1/skill-set/position/{positionId}";
 
     //when
-    var result = mockMvc.perform(delete(url));
+    var result = mockMvc.perform(delete(url,1L));
 
     //then
     result.andExpect(status().isOk())
@@ -733,14 +734,14 @@ class SkillSetControllerTest extends MockMvcDocsTest {
   @Test
   public void updateSkill_displayName_fail_duplicate() throws Exception {
     //given
-    var url = "/v1/skill-set/skill/1";
-    var updateSkillRequest = new UpdateSkillRequest("test");
+    var url = "/v1/skill-set/skill/{skillId}";
+    var updateSkillRequest = new UpdateSkillRequest(JsonNullable.of("test"));
     given(skillSetService.updateSkillDisplayName(any(), any())).willThrow(
         new BusinessException(ErrorCode.DUPLICATED_RESOURCE_EXCEPTION)
     );
 
     //when
-    var result = mockMvc.perform(put(url)
+    var result = mockMvc.perform(patch(url, 1L)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(updateSkillRequest))
     );
@@ -774,21 +775,21 @@ class SkillSetControllerTest extends MockMvcDocsTest {
   @Test
   public void updateSkill_displayName_success() throws Exception {
     //given
-    var url = "/v1/skill-set/skill/1";
-    var updateSkillRequest = new UpdateSkillRequest("test");
+    var url = "/v1/skill-set/skill/{skillId}";
+    var updateSkillRequest = new UpdateSkillRequest(JsonNullable.of("test"));
     given(skillSetService.updateSkillDisplayName(any(), any())).willReturn(SkillDto.builder()
         .id(1L)
         .displayName("test")
         .build());
 
     //when
-    var result = mockMvc.perform(put(url)
+    var result = mockMvc.perform(patch(url, 1L)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(updateSkillRequest))
     );
 
     //then
-    result.andExpect(status().isNoContent())
+    result.andExpect(status().isOk())
         .andDo(
             document("skill-set/skill/update-skill-displayName-success",
                 resource(
@@ -832,7 +833,7 @@ class SkillSetControllerTest extends MockMvcDocsTest {
     );
 
     //then
-    result.andExpect(status().isNoContent())
+    result.andExpect(status().isOk())
         .andDo(
             document("skill-set/skill/add-skill-to-position-list",
                 resource(
@@ -860,10 +861,10 @@ class SkillSetControllerTest extends MockMvcDocsTest {
   @Test
   public void deleteSkill_success() throws Exception {
     //given
-    var url = "/v1/skill-set/skill/1";
+    var url = "/v1/skill-set/skill/{skillId}";
 
     //when
-    var result = mockMvc.perform(delete(url));
+    var result = mockMvc.perform(delete(url, 1L));
 
     //then
     result.andExpect(status().isOk())
