@@ -123,7 +123,7 @@ public class UserRepositoryTest {
 
     //when
 
-    ThrowingCallable result = () -> user.withNickname(updateUserRequest.getNickname());
+    ThrowingCallable result = () -> user.withNickname(updateUserRequest.getNickname().orElse(null));
     //then
     assertThatThrownBy(result).isInstanceOf(IllegalArgumentException.class);
   }

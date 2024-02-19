@@ -106,23 +106,9 @@ public class UserInfo {
     this.status = this.isReadyToComplete() ? UserInfoStatus.COMPLETE : UserInfoStatus.INCOMPLETE;
   }
 
-  public UserInfo withPortfolioUrl(JsonNullable<String> portfolioUrl) {
-    if (portfolioUrl.isPresent()) {
-      withPortfolioUrl(portfolioUrl.get());
-    }
-    return this;
-  }
-
 
   public UserInfo withPortfolioUrl(String portfolioUrl) {
     this.portfolioUrl = portfolioUrl;
-    return this;
-  }
-
-  public UserInfo withProjectCount(JsonNullable<Integer> projectCount) {
-    if (projectCount.isPresent()) {
-      withProjectCount(projectCount.get());
-    }
     return this;
   }
 
@@ -134,13 +120,6 @@ public class UserInfo {
     return this;
   }
 
-  public UserInfo withActivityHour(JsonNullable<Integer> activityHour) {
-    if (activityHour.isPresent()) {
-      withActivityHour(activityHour.get());
-    }
-    return this;
-  }
-
   public UserInfo withActivityHour(Integer activityHour) {
     if (activityHour == null) {
       throw new IllegalArgumentException("activityHour cannot be null");
@@ -149,25 +128,11 @@ public class UserInfo {
     return this;
   }
 
-  public UserInfo withIntroduce(JsonNullable<String> introduce) {
-    if (introduce.isPresent()) {
-      withIntroduce(introduce.get());
-    }
-    return this;
-  }
-
   public UserInfo withIntroduce(String introduce) {
     if (StringUtils.isBlank(introduce)) {
       throw new IllegalArgumentException("introduce cannot be null");
     }
     this.introduce = introduce;
-    return this;
-  }
-
-  public UserInfo withLinkJson(JsonNullable<String> linkJson) {
-    if (linkJson.isPresent()) {
-      withLinkJson(linkJson.get());
-    }
     return this;
   }
 
@@ -214,13 +179,6 @@ public class UserInfo {
         this.career = null;
         this.education = backgroundText;
       }
-    }
-    return this;
-  }
-
-  public UserInfo withIsOpenProfile(JsonNullable<Boolean> isOpenProfile) {
-    if (isOpenProfile.isPresent()) {
-      withIsOpenProfile(isOpenProfile.get());
     }
     return this;
   }

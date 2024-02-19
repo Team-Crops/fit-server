@@ -75,34 +75,13 @@ public class User extends BaseTimeEntity {
     this.userInfo = UserInfo.from(this);
   }
 
-  public User withProfileImageUrl(JsonNullable<String> profileImageUrl) {
-    if (profileImageUrl.isPresent()) {
-      withProfileImageUrl(profileImageUrl.get());
-    }
-    return this;
-  }
-
   public User withProfileImageUrl(String profileImageUrl) {
     this.profileImageUrl = profileImageUrl;
     return this;
   }
 
-  public User withUsername(JsonNullable<String> username) {
-    if (username.isPresent()) {
-      withUsername(username.get());
-    }
-    return this;
-  }
-
   public User withUsername(String username) {
     this.username = username;
-    return this;
-  }
-
-  public User withNickname(JsonNullable<String> nickname) {
-    if (nickname.isPresent()) {
-      withNickname(nickname.get());
-    }
     return this;
   }
 
@@ -114,13 +93,6 @@ public class User extends BaseTimeEntity {
     return this;
   }
 
-  public User withPhoneNumber(JsonNullable<String> phoneNumber) {
-    if (phoneNumber.isPresent()) {
-      withPhoneNumber(phoneNumber.get());
-    }
-    return this;
-  }
-
   public User withPhoneNumber(String phoneNumber) {
     if (StringUtils.isBlank(phoneNumber)) {
       throw new IllegalArgumentException("phoneNumber cannot be null");
@@ -129,22 +101,8 @@ public class User extends BaseTimeEntity {
     return this;
   }
 
-  public User withIsOpenPhoneNum(JsonNullable<Boolean> isOpenPhoneNum) {
-    if (isOpenPhoneNum.isPresent()) {
-      withIsOpenPhoneNum(isOpenPhoneNum.get());
-    }
-    return this;
-  }
-
   public User withIsOpenPhoneNum(boolean isOpenPhoneNum) {
     this.isOpenPhoneNum = isOpenPhoneNum;
-    return this;
-  }
-
-  public User withEmail(JsonNullable<String> email) {
-    if (email.isPresent()) {
-      withEmail(email.get());
-    }
     return this;
   }
 
