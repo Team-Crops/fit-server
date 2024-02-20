@@ -16,11 +16,13 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.epages.restdocs.apispec.EnumFields;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.region.domain.Region;
+import org.crops.fitserver.domain.school.constant.SchoolType;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.domain.Skill;
 import org.crops.fitserver.domain.user.constant.LinkType;
@@ -478,7 +480,7 @@ class UserControllerTest extends MockMvcDocs {
                     .responseFields(
                         fieldWithPath("policyAgreementList[]").description("개인정보 동의 list")
                             .optional(),
-                        fieldWithPath("policyAgreementList[].policyType").type(JsonFieldType.STRING)
+                        new EnumFields(PolicyType.class).withPath("policyAgreementList[].policyType")
                             .description("개인정보 동의 타입"),
                         fieldWithPath("policyAgreementList[].version").type(JsonFieldType.STRING)
                             .description("개인정보 동의 버전"),
@@ -527,7 +529,7 @@ class UserControllerTest extends MockMvcDocs {
                     .requestFields(
                         fieldWithPath("policyAgreementList[]").description("개인정보 동의 list")
                             .optional(),
-                        fieldWithPath("policyAgreementList[].policyType").type(JsonFieldType.STRING)
+                        new EnumFields(PolicyType.class).withPath("policyAgreementList[].policyType")
                             .description("개인정보 동의 타입"),
                         fieldWithPath("policyAgreementList[].version").type(JsonFieldType.STRING)
                             .description("개인정보 동의 버전"),
@@ -588,7 +590,7 @@ class UserControllerTest extends MockMvcDocs {
                     .requestFields(
                         fieldWithPath("policyAgreementList[]").description("개인정보 동의 list")
                             .optional(),
-                        fieldWithPath("policyAgreementList[].policyType").type(JsonFieldType.STRING)
+                        new EnumFields(PolicyType.class).withPath("policyAgreementList[].policyType")
                             .description("개인정보 동의 타입"),
                         fieldWithPath("policyAgreementList[].version").type(JsonFieldType.STRING)
                             .description("개인정보 동의 버전"),
@@ -663,7 +665,7 @@ class UserControllerTest extends MockMvcDocs {
                     .requestFields(
                         fieldWithPath("policyAgreementList[]").description("개인정보 동의 list")
                             .optional(),
-                        fieldWithPath("policyAgreementList[].policyType").type(JsonFieldType.STRING)
+                        new EnumFields(PolicyType.class).withPath("policyAgreementList[].policyType")
                             .description("개인정보 동의 타입"),
                         fieldWithPath("policyAgreementList[].version").type(JsonFieldType.STRING)
                             .description("개인정보 동의 버전"),
@@ -676,7 +678,7 @@ class UserControllerTest extends MockMvcDocs {
                     .responseFields(
                         fieldWithPath("policyAgreementList[]").description("개인정보 동의 list")
                             .optional(),
-                        fieldWithPath("policyAgreementList[].policyType").type(JsonFieldType.STRING)
+                        new EnumFields(PolicyType.class).withPath("policyAgreementList[].policyType")
                             .description("개인정보 동의 타입"),
                         fieldWithPath("policyAgreementList[].version").type(JsonFieldType.STRING)
                             .description("개인정보 동의 버전"),
