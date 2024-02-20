@@ -56,7 +56,7 @@ public class SkillSetController {
   public ResponseEntity<PositionDto> updatePosition(@PathVariable Long positionId,
       @Valid @RequestBody UpdatePositionRequest updatePositionRequest) {
     return ResponseEntity.status(HttpStatus.OK).body(
-        skillSetService.updatePositionDisplayName(positionId, updatePositionRequest.displayName().get())
+        skillSetService.updatePositionDisplayName(positionId, updatePositionRequest)
     );
   }
 

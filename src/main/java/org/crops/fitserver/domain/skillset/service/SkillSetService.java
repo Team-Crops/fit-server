@@ -5,6 +5,7 @@ import org.crops.fitserver.domain.skillset.dto.PositionDto;
 import org.crops.fitserver.domain.skillset.dto.SkillDto;
 import org.crops.fitserver.domain.skillset.dto.request.CreatePositionRequest;
 import org.crops.fitserver.domain.skillset.dto.request.CreateSkillRequest;
+import org.crops.fitserver.domain.skillset.dto.request.UpdatePositionRequest;
 
 public interface SkillSetService {
 
@@ -23,7 +24,7 @@ public interface SkillSetService {
 
   SkillDto addSkillToPositionList(Long SkillId, List<Long> positionIds);
 
-  PositionDto updatePositionDisplayName(Long positionId, String displayName);
+  PositionDto updatePositionDisplayName(Long positionId, UpdatePositionRequest request);
 
   PositionDto addSkillListToPosition(Long positionId, List<Long> skillIds);
 

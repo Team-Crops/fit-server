@@ -68,6 +68,7 @@ public class UserRepositoryTest {
         .build();
     Position position = Position.builder()
         .displayName("test")
+        .imageUrl("test")
         .build();
     Region region = Region.builder()
         .displayName("test")

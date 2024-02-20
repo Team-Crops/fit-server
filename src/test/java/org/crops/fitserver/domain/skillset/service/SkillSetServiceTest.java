@@ -8,10 +8,12 @@ import static org.mockito.BDDMockito.given;
 import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.crops.fitserver.domain.file.service.FileService;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.domain.Skill;
 import org.crops.fitserver.domain.skillset.dto.request.CreatePositionRequest;
 import org.crops.fitserver.domain.skillset.dto.request.CreateSkillRequest;
+import org.crops.fitserver.domain.skillset.dto.request.UpdatePositionRequest;
 import org.crops.fitserver.domain.skillset.repository.PositionRepository;
 import org.crops.fitserver.domain.skillset.repository.SkillRepository;
 import org.crops.fitserver.global.exception.BusinessException;
@@ -21,6 +23,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -34,6 +37,9 @@ public class SkillSetServiceTest {
 
   @Mock
   PositionRepository positionRepository;
+
+  @Mock
+  FileService fileService;
 
   @Test
   public void create_skill_fail_duplicated() {
@@ -114,6 +120,8 @@ public class SkillSetServiceTest {
     CreatePositionRequest request = CreatePositionRequest.builder()
         .displayName("test")
         .build();
+    given(positionRepository.findByDisplayName(any())).willReturn(Optional.empty());
+    given(fileService.isUploaded(any())).willReturn(true);
     given(positionRepository.save(any(Position.class))).willReturn(Position.builder()
         .displayName("test")
         .build());
@@ -150,6 +158,9 @@ public class SkillSetServiceTest {
         .displayName("test")
         .skillIds(List.of(1L, 2L))
         .build();
+    given(positionRepository.findByDisplayName(any())).willReturn(Optional.empty());
+    given(fileService.isUploaded(any())).willReturn(true);
+
     given(skillRepository.findAllById(any())).willReturn(List.of(
         Skill.builder().id(1L).build(),
         Skill.builder().id(2L).build()
@@ -171,11 +182,11 @@ public class SkillSetServiceTest {
     // given
     CreatePositionRequest request = CreatePositionRequest.builder()
         .displayName("test")
+        .imageUrl("test")
         .skillIds(List.of(1L, 2L))
         .build();
-    given(skillRepository.findAllById(any())).willReturn(List.of(
-        Skill.builder().id(1L).build()
-    ));
+    given(positionRepository.findByDisplayName(any())).willReturn(Optional.empty());
+    given(fileService.isUploaded(any())).willReturn(true);
 
     // when
     ThrowingCallable result = () -> skillSetService.createPosition(request);
@@ -261,12 +272,15 @@ public class SkillSetServiceTest {
   @Test
   public void update_position_display_name_success() {
     // given
+    given(positionRepository.findByDisplayName(any())).willReturn(Optional.empty());
+    given(fileService.isUploaded(any())).willReturn(true);
     given(positionRepository.findById(any())).willReturn(Optional.of(
-        Position.builder().displayName("test").build()
+        Position.builder().displayName("test").imageUrl("test").build()
     ));
 
     // when
-    var result = skillSetService.updatePositionDisplayName(1L, "test");
+    var result = skillSetService.updatePositionDisplayName(1L, UpdatePositionRequest.builder().displayName(
+        JsonNullable.of("test")).imageUrl(JsonNullable.of("test")).build());
 
     // then
     assertThat(result.displayName()).isEqualTo("test");

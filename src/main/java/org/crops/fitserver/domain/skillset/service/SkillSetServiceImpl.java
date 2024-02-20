@@ -4,16 +4,19 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.crops.fitserver.domain.file.service.FileService;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.domain.Skill;
 import org.crops.fitserver.domain.skillset.dto.PositionDto;
 import org.crops.fitserver.domain.skillset.dto.SkillDto;
 import org.crops.fitserver.domain.skillset.dto.request.CreatePositionRequest;
 import org.crops.fitserver.domain.skillset.dto.request.CreateSkillRequest;
+import org.crops.fitserver.domain.skillset.dto.request.UpdatePositionRequest;
 import org.crops.fitserver.domain.skillset.repository.PositionRepository;
 import org.crops.fitserver.domain.skillset.repository.SkillRepository;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -24,6 +27,7 @@ class SkillSetServiceImpl implements SkillSetService {
 
   private final SkillRepository skillRepository;
   private final PositionRepository positionRepository;
+  private final FileService fileService;
 
   @Override
   @Transactional
@@ -47,11 +51,11 @@ class SkillSetServiceImpl implements SkillSetService {
   @Override
   @Transactional
   public PositionDto createPosition(CreatePositionRequest request) {
-    if (positionRepository.findByDisplayName(request.displayName()).isPresent()) {
-      throw new BusinessException(ErrorCode.DUPLICATED_RESOURCE_EXCEPTION);
-    }
+    validatePositionDisplayName(request.displayName());
+    validateImageUrl(request.imageUrl());
 
-    var position = Position.builder().displayName(request.displayName()).build();
+    var position = Position.builder().displayName(request.displayName())
+        .imageUrl(request.imageUrl()).build();
     position = positionRepository.save(position);
 
     if (!CollectionUtils.isEmpty(request.skillIds())) {
@@ -105,10 +109,18 @@ class SkillSetServiceImpl implements SkillSetService {
 
   @Override
   @Transactional
-  public PositionDto updatePositionDisplayName(Long positionId, String displayName) {
+  public PositionDto updatePositionDisplayName(Long positionId, UpdatePositionRequest request) {
+    if(request.displayName().isPresent()) {
+      validatePositionDisplayName(request.displayName().get());
+    };
+    if(request.imageUrl().isPresent()){
+      validateImageUrl(request.imageUrl().get());
+    }
+
     return positionRepository.findById(positionId)
         .map(position -> {
-          position.updateDisplayName(displayName);
+          position.updateDisplayName(request.displayName().orElse(position.getDisplayName()));
+          position.updateImageUrl(request.imageUrl().orElse(position.getImageUrl()));
           return PositionDto.from(position);
         })
         .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
@@ -135,6 +147,18 @@ class SkillSetServiceImpl implements SkillSetService {
   @Transactional
   public void deletePosition(Long positionId) {
     positionRepository.deleteById(positionId);
+  }
+
+  private void validatePositionDisplayName(String displayName) {
+    if (positionRepository.findByDisplayName(displayName).isPresent()) {
+      throw new BusinessException(ErrorCode.DUPLICATED_RESOURCE_EXCEPTION);
+    }
+  }
+
+  private void validateImageUrl(String imageUrl) {
+    if (!fileService.isUploaded(imageUrl)) {
+      throw new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION);
+    }
   }
 
   /**
