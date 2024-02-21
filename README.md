@@ -10,7 +10,7 @@
 - 소셜로그인
 
 ## Backend Developer
-- <a href="https://github.com/junchanpp)">박준찬</a>
+- <a href="https://github.com/junchanpp">박준찬</a>
 - <a href="https://github.com/SeorinY">유서린</a>
 
 
