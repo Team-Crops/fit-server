@@ -16,7 +16,6 @@ import org.crops.fitserver.domain.skillset.repository.PositionRepository;
 import org.crops.fitserver.domain.skillset.repository.SkillRepository;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
-import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -51,7 +50,7 @@ class SkillSetServiceImpl implements SkillSetService {
   @Override
   @Transactional
   public PositionDto createPosition(CreatePositionRequest request) {
-    validatePositionDisplayName(request.displayName());
+    handleDuplicatedDisplayName(request.displayName());
     validateImageUrl(request.imageUrl());
 
     var position = Position.builder().displayName(request.displayName())
@@ -111,7 +110,7 @@ class SkillSetServiceImpl implements SkillSetService {
   @Transactional
   public PositionDto updatePositionDisplayName(Long positionId, UpdatePositionRequest request) {
     if(request.displayName().isPresent()) {
-      validatePositionDisplayName(request.displayName().get());
+      handleDuplicatedDisplayName(request.displayName().get());
     };
     if(request.imageUrl().isPresent()){
       validateImageUrl(request.imageUrl().get());
@@ -149,7 +148,7 @@ class SkillSetServiceImpl implements SkillSetService {
     positionRepository.deleteById(positionId);
   }
 
-  private void validatePositionDisplayName(String displayName) {
+  private void handleDuplicatedDisplayName(String displayName) {
     if (positionRepository.findByDisplayName(displayName).isPresent()) {
       throw new BusinessException(ErrorCode.DUPLICATED_RESOURCE_EXCEPTION);
     }
