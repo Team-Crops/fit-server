@@ -25,6 +25,7 @@ import org.crops.fitserver.domain.region.domain.Region;
 import org.crops.fitserver.domain.school.constant.SchoolType;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.domain.Skill;
+import org.crops.fitserver.domain.user.constant.BackgroundStatus;
 import org.crops.fitserver.domain.user.constant.LinkType;
 import org.crops.fitserver.domain.user.constant.PolicyType;
 import org.crops.fitserver.domain.user.constant.UserInfoStatus;
@@ -115,7 +116,7 @@ class UserControllerTest extends MockMvcDocs {
                             .description("전화번호 공개 여부").optional(),
                         fieldWithPath("email").type(JsonFieldType.STRING).description("사용자 이메일")
                             .optional(),
-                        fieldWithPath("backgroundStatus").type(JsonFieldType.STRING)
+                        new EnumFields(BackgroundStatus.class).withPath("backgroundStatus")
                             .description("학력/경력 상태").optional(),
                         fieldWithPath("backgroundText").type(JsonFieldType.STRING)
                             .description("학력/경력 텍스트").optional(),
@@ -211,7 +212,7 @@ class UserControllerTest extends MockMvcDocs {
                             .description("전화번호 공개 여부").optional(),
                         fieldWithPath("email").type(JsonFieldType.STRING).description("사용자 이메일")
                             .optional(),
-                        fieldWithPath("backgroundStatus").type(JsonFieldType.STRING)
+                        new EnumFields(BackgroundStatus.class).withPath("backgroundStatus")
                             .description("학력/경력 상태").optional(),
                         fieldWithPath("backgroundText").type(JsonFieldType.STRING)
                             .description("학력/경력 텍스트").optional(),
@@ -246,7 +247,7 @@ class UserControllerTest extends MockMvcDocs {
                             .description("전화번호 공개 여부").optional(),
                         fieldWithPath("email").type(JsonFieldType.STRING).description("사용자 이메일")
                             .optional(),
-                        fieldWithPath("backgroundStatus").type(JsonFieldType.STRING)
+                        new EnumFields(BackgroundStatus.class).withPath("backgroundStatus")
                             .description("학력/경력 상태").optional(),
                         fieldWithPath("backgroundText").type(JsonFieldType.STRING)
                             .description("학력/경력 텍스트").optional(),
@@ -371,7 +372,7 @@ class UserControllerTest extends MockMvcDocs {
                             .description("전화번호 공개 여부").optional(),
                         fieldWithPath("email").type(JsonFieldType.STRING).description("사용자 이메일")
                             .optional(),
-                        fieldWithPath("backgroundStatus").type(JsonFieldType.STRING)
+                        new EnumFields(BackgroundStatus.class).withPath("backgroundStatus")
                             .description("학력/경력 상태").optional(),
                         fieldWithPath("backgroundText").type(JsonFieldType.STRING)
                             .description("학력/경력 텍스트").optional(),
@@ -410,7 +411,7 @@ class UserControllerTest extends MockMvcDocs {
                             .description("전화번호 공개 여부").optional(),
                         fieldWithPath("email").type(JsonFieldType.STRING).description("사용자 이메일")
                             .optional(),
-                        fieldWithPath("backgroundStatus").type(JsonFieldType.STRING)
+                        new EnumFields(BackgroundStatus.class).withPath("backgroundStatus")
                             .description("학력/경력 상태").optional(),
                         fieldWithPath("backgroundText").type(JsonFieldType.STRING)
                             .description("학력/경력 텍스트").optional(),
