@@ -9,6 +9,11 @@
 - 내 프로젝트 관리하기
 - 소셜로그인
 
+## Backend Developer
+- <a href="https://github.com/junchanpp)">박준찬</a>
+- <a href="https://github.com/SeorinY">유서린</a>
+
+
 ## Tech Stack
 **Framework** - <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-social&logo=Spring Boot&logoColor=white">  <img src="https://img.shields.io/badge/Gradle-02303A?style=for-the-social&logo=Gradle&logoColor=white">
 
