@@ -60,11 +60,13 @@ public class PositionRepositoryTest {
     // given
     Position position1 = Position.builder()
         .displayName("test1")
+        .imageUrl("test")
         .build();
     positionRepository.save(position1);
 
     Position position2 = Position.builder()
         .displayName("test2")
+        .imageUrl("test")
         .build();
     positionRepository.save(position2);
 
@@ -80,6 +82,7 @@ public class PositionRepositoryTest {
     // given
     Position position = Position.builder()
         .displayName("test")
+        .imageUrl("test")
         .build();
     position = positionRepository.save(position);
     var positionId = position.getId();
@@ -144,6 +147,7 @@ public class PositionRepositoryTest {
     // given
     Position position = Position.builder()
         .displayName("test")
+        .imageUrl("test")
         .build();
     Skill skill = Skill.builder()
         .displayName("test")

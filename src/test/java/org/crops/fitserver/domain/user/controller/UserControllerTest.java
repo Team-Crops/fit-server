@@ -7,6 +7,7 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -15,13 +16,16 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.epages.restdocs.apispec.EnumFields;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import java.util.List;
-import org.crops.fitserver.domain.common.MockMvcDocsTest;
+import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.region.domain.Region;
+import org.crops.fitserver.domain.school.constant.SchoolType;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.domain.Skill;
+import org.crops.fitserver.domain.user.constant.BackgroundStatus;
 import org.crops.fitserver.domain.user.constant.LinkType;
 import org.crops.fitserver.domain.user.constant.PolicyType;
 import org.crops.fitserver.domain.user.constant.UserInfoStatus;
@@ -34,6 +38,7 @@ import org.crops.fitserver.domain.user.dto.UserInfoDto;
 import org.crops.fitserver.domain.user.dto.request.UpdatePolicyAgreementRequest;
 import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
 import org.crops.fitserver.domain.user.facade.UserFacade;
+import org.crops.fitserver.util.MockMvcDocs;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -46,7 +51,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 
 @WebMvcTest(UserController.class)
-class UserControllerTest extends MockMvcDocsTest {
+@Slf4j
+class UserControllerTest extends MockMvcDocs {
 
   @MockBean
   private UserFacade userFacade;
@@ -110,7 +116,7 @@ class UserControllerTest extends MockMvcDocsTest {
                             .description("전화번호 공개 여부").optional(),
                         fieldWithPath("email").type(JsonFieldType.STRING).description("사용자 이메일")
                             .optional(),
-                        fieldWithPath("backgroundStatus").type(JsonFieldType.STRING)
+                        new EnumFields(BackgroundStatus.class).withPath("backgroundStatus")
                             .description("학력/경력 상태").optional(),
                         fieldWithPath("backgroundText").type(JsonFieldType.STRING)
                             .description("학력/경력 텍스트").optional(),
@@ -176,8 +182,7 @@ class UserControllerTest extends MockMvcDocsTest {
     var principalDetails = getPrincipalDetails(1L, UserRole.MEMBER);
 
     // when
-
-    var result = mockMvc.perform(put(url)
+    var result = mockMvc.perform(patch(url)
         .contentType(MediaType.APPLICATION_JSON)
         .with(user(principalDetails))
         .with(csrf())
@@ -207,7 +212,7 @@ class UserControllerTest extends MockMvcDocsTest {
                             .description("전화번호 공개 여부").optional(),
                         fieldWithPath("email").type(JsonFieldType.STRING).description("사용자 이메일")
                             .optional(),
-                        fieldWithPath("backgroundStatus").type(JsonFieldType.STRING)
+                        new EnumFields(BackgroundStatus.class).withPath("backgroundStatus")
                             .description("학력/경력 상태").optional(),
                         fieldWithPath("backgroundText").type(JsonFieldType.STRING)
                             .description("학력/경력 텍스트").optional(),
@@ -242,7 +247,7 @@ class UserControllerTest extends MockMvcDocsTest {
                             .description("전화번호 공개 여부").optional(),
                         fieldWithPath("email").type(JsonFieldType.STRING).description("사용자 이메일")
                             .optional(),
-                        fieldWithPath("backgroundStatus").type(JsonFieldType.STRING)
+                        new EnumFields(BackgroundStatus.class).withPath("backgroundStatus")
                             .description("학력/경력 상태").optional(),
                         fieldWithPath("backgroundText").type(JsonFieldType.STRING)
                             .description("학력/경력 텍스트").optional(),
@@ -337,7 +342,7 @@ class UserControllerTest extends MockMvcDocsTest {
 
     // when
 
-    var result = mockMvc.perform(put(url)
+    var result = mockMvc.perform(patch(url)
         .contentType(MediaType.APPLICATION_JSON)
         .with(user(principalDetails))
         .with(csrf())
@@ -367,7 +372,7 @@ class UserControllerTest extends MockMvcDocsTest {
                             .description("전화번호 공개 여부").optional(),
                         fieldWithPath("email").type(JsonFieldType.STRING).description("사용자 이메일")
                             .optional(),
-                        fieldWithPath("backgroundStatus").type(JsonFieldType.STRING)
+                        new EnumFields(BackgroundStatus.class).withPath("backgroundStatus")
                             .description("학력/경력 상태").optional(),
                         fieldWithPath("backgroundText").type(JsonFieldType.STRING)
                             .description("학력/경력 텍스트").optional(),
@@ -406,7 +411,7 @@ class UserControllerTest extends MockMvcDocsTest {
                             .description("전화번호 공개 여부").optional(),
                         fieldWithPath("email").type(JsonFieldType.STRING).description("사용자 이메일")
                             .optional(),
-                        fieldWithPath("backgroundStatus").type(JsonFieldType.STRING)
+                        new EnumFields(BackgroundStatus.class).withPath("backgroundStatus")
                             .description("학력/경력 상태").optional(),
                         fieldWithPath("backgroundText").type(JsonFieldType.STRING)
                             .description("학력/경력 텍스트").optional(),
@@ -476,7 +481,7 @@ class UserControllerTest extends MockMvcDocsTest {
                     .responseFields(
                         fieldWithPath("policyAgreementList[]").description("개인정보 동의 list")
                             .optional(),
-                        fieldWithPath("policyAgreementList[].policyType").type(JsonFieldType.STRING)
+                        new EnumFields(PolicyType.class).withPath("policyAgreementList[].policyType")
                             .description("개인정보 동의 타입"),
                         fieldWithPath("policyAgreementList[].version").type(JsonFieldType.STRING)
                             .description("개인정보 동의 버전"),
@@ -525,7 +530,7 @@ class UserControllerTest extends MockMvcDocsTest {
                     .requestFields(
                         fieldWithPath("policyAgreementList[]").description("개인정보 동의 list")
                             .optional(),
-                        fieldWithPath("policyAgreementList[].policyType").type(JsonFieldType.STRING)
+                        new EnumFields(PolicyType.class).withPath("policyAgreementList[].policyType")
                             .description("개인정보 동의 타입"),
                         fieldWithPath("policyAgreementList[].version").type(JsonFieldType.STRING)
                             .description("개인정보 동의 버전"),
@@ -586,7 +591,7 @@ class UserControllerTest extends MockMvcDocsTest {
                     .requestFields(
                         fieldWithPath("policyAgreementList[]").description("개인정보 동의 list")
                             .optional(),
-                        fieldWithPath("policyAgreementList[].policyType").type(JsonFieldType.STRING)
+                        new EnumFields(PolicyType.class).withPath("policyAgreementList[].policyType")
                             .description("개인정보 동의 타입"),
                         fieldWithPath("policyAgreementList[].version").type(JsonFieldType.STRING)
                             .description("개인정보 동의 버전"),
@@ -661,7 +666,7 @@ class UserControllerTest extends MockMvcDocsTest {
                     .requestFields(
                         fieldWithPath("policyAgreementList[]").description("개인정보 동의 list")
                             .optional(),
-                        fieldWithPath("policyAgreementList[].policyType").type(JsonFieldType.STRING)
+                        new EnumFields(PolicyType.class).withPath("policyAgreementList[].policyType")
                             .description("개인정보 동의 타입"),
                         fieldWithPath("policyAgreementList[].version").type(JsonFieldType.STRING)
                             .description("개인정보 동의 버전"),
@@ -674,7 +679,7 @@ class UserControllerTest extends MockMvcDocsTest {
                     .responseFields(
                         fieldWithPath("policyAgreementList[]").description("개인정보 동의 list")
                             .optional(),
-                        fieldWithPath("policyAgreementList[].policyType").type(JsonFieldType.STRING)
+                        new EnumFields(PolicyType.class).withPath("policyAgreementList[].policyType")
                             .description("개인정보 동의 타입"),
                         fieldWithPath("policyAgreementList[].version").type(JsonFieldType.STRING)
                             .description("개인정보 동의 버전"),

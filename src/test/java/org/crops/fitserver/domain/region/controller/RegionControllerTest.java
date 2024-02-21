@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import java.util.List;
-import org.crops.fitserver.domain.common.MockMvcDocsTest;
+import org.crops.fitserver.util.MockMvcDocs;
 import org.crops.fitserver.domain.region.dto.RegionDto;
 import org.crops.fitserver.domain.region.dto.request.CreateRegionRequest;
 import org.crops.fitserver.domain.region.dto.request.UpdateRegionRequest;
@@ -29,7 +29,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 @WebMvcTest(RegionController.class)
-class RegionControllerTest extends MockMvcDocsTest {
+class RegionControllerTest extends MockMvcDocs {
 
   @MockBean
   RegionService regionService;

@@ -9,14 +9,12 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import java.util.List;
-import org.crops.fitserver.domain.common.MockMvcDocsTest;
 import org.crops.fitserver.domain.skillset.dto.PositionDto;
 import org.crops.fitserver.domain.skillset.dto.SkillDto;
 import org.crops.fitserver.domain.skillset.dto.request.AddSkillListToPositionRequest;
@@ -28,14 +26,16 @@ import org.crops.fitserver.domain.skillset.dto.request.UpdateSkillRequest;
 import org.crops.fitserver.domain.skillset.service.SkillSetService;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
+import org.crops.fitserver.util.MockMvcDocs;
 import org.junit.jupiter.api.Test;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 @WebMvcTest(SkillSetController.class)
-class SkillSetControllerTest extends MockMvcDocsTest {
+class SkillSetControllerTest extends MockMvcDocs {
 
   @MockBean
   SkillSetService skillSetService;
@@ -91,15 +91,19 @@ class SkillSetControllerTest extends MockMvcDocsTest {
                         .description("직군 리스트를 조회한다.")
                         .responseSchema(Schema.schema("position-list"))
                         .responseFields(
-                            fieldWithPath("positionList[]").type(JsonFieldType.ARRAY).description("직군 리스트"),
-                            fieldWithPath("positionList[].id").type(JsonFieldType.NUMBER).description("직군 id"),
+                            fieldWithPath("positionList[]").type(JsonFieldType.ARRAY)
+                                .description("직군 리스트"),
+                            fieldWithPath("positionList[].id").type(JsonFieldType.NUMBER)
+                                .description("직군 id"),
                             fieldWithPath("positionList[].displayName").type(JsonFieldType.STRING)
                                 .description("직군 이름"),
                             fieldWithPath("positionList[].skillList").type(JsonFieldType.ARRAY)
                                 .description("직군에 속한 스킬 리스트"),
-                            fieldWithPath("positionList[].skillList[].id").type(JsonFieldType.NUMBER)
+                            fieldWithPath("positionList[].skillList[].id").type(
+                                    JsonFieldType.NUMBER)
                                 .description("스킬 id"),
-                            fieldWithPath("positionList[].skillList[].displayName").type(JsonFieldType.STRING)
+                            fieldWithPath("positionList[].skillList[].displayName").type(
+                                    JsonFieldType.STRING)
                                 .description("스킬 이름")
                         )
                         .build()
@@ -113,7 +117,7 @@ class SkillSetControllerTest extends MockMvcDocsTest {
     //given
     var url = "/v1/skill-set/position";
     CreatePositionRequest createPositionRequest = CreatePositionRequest.builder()
-        .displayName("test").build();
+        .displayName("test").imageUrl("test").build();
     given(skillSetService.createPosition(any())).willThrow(
         new BusinessException(ErrorCode.DUPLICATED_RESOURCE_EXCEPTION)
     );
@@ -137,6 +141,8 @@ class SkillSetControllerTest extends MockMvcDocsTest {
                         .requestFields(
                             fieldWithPath("displayName").type(JsonFieldType.STRING)
                                 .description("직군 이름"),
+                            fieldWithPath("imageUrl").type(JsonFieldType.STRING)
+                                .description("직군 이미지 url(profileDefault)"),
                             fieldWithPath("skillIds").type(JsonFieldType.ARRAY)
                                 .description("직군에 속한 스킬 리스트").optional()
                         )
@@ -157,7 +163,7 @@ class SkillSetControllerTest extends MockMvcDocsTest {
     //given
     var url = "/v1/skill-set/position";
     CreatePositionRequest createPositionRequest = CreatePositionRequest.builder()
-        .displayName("test").build();
+        .displayName("test").imageUrl("test").build();
     given(skillSetService.createPosition(any())).willReturn(PositionDto.builder()
         .id(1L)
         .displayName("test")
@@ -182,6 +188,8 @@ class SkillSetControllerTest extends MockMvcDocsTest {
                         .requestFields(
                             fieldWithPath("displayName").type(JsonFieldType.STRING)
                                 .description("직군 이름"),
+                            fieldWithPath("imageUrl").type(JsonFieldType.STRING)
+                                .description("직군 이미지 url(profileDefault)"),
                             fieldWithPath("skillIds").description("직군에 속한 스킬 리스트").optional()
                         )
                         .responseSchema(Schema.schema("position"))
@@ -204,6 +212,7 @@ class SkillSetControllerTest extends MockMvcDocsTest {
     var url = "/v1/skill-set/position";
     CreatePositionRequest createPositionRequest = CreatePositionRequest.builder()
         .displayName("test")
+        .imageUrl("test")
         .skillIds(List.of(1L, 2L))
         .build();
     given(skillSetService.createPosition(any())).willThrow(
@@ -229,6 +238,8 @@ class SkillSetControllerTest extends MockMvcDocsTest {
                         .requestFields(
                             fieldWithPath("displayName").type(JsonFieldType.STRING)
                                 .description("직군 이름"),
+                            fieldWithPath("imageUrl").type(JsonFieldType.STRING)
+                                .description("직군 이미지 url(profileDefault)"),
                             fieldWithPath("skillIds").type(JsonFieldType.ARRAY)
                                 .description("직군에 속한 스킬 리스트").optional()
                         )
@@ -251,6 +262,7 @@ class SkillSetControllerTest extends MockMvcDocsTest {
     CreatePositionRequest createPositionRequest = CreatePositionRequest.builder()
         .displayName("test")
         .skillIds(List.of(1L, 2L))
+        .imageUrl("test")
         .build();
     given(skillSetService.createPosition(any())).willReturn(PositionDto.builder()
         .id(1L)
@@ -286,6 +298,8 @@ class SkillSetControllerTest extends MockMvcDocsTest {
                         .requestFields(
                             fieldWithPath("displayName").type(JsonFieldType.STRING)
                                 .description("직군 이름"),
+                            fieldWithPath("imageUrl").type(JsonFieldType.STRING)
+                                .description("직군 이미지 url(profileDefault)"),
                             fieldWithPath("skillIds").description("직군에 속한 스킬 리스트").optional()
                         )
                         .responseSchema(Schema.schema("position"))
@@ -309,14 +323,15 @@ class SkillSetControllerTest extends MockMvcDocsTest {
   @Test
   public void update_position_displayName_fail_duplicate() throws Exception {
     //given
-    var url = "/v1/skill-set/position/1";
-    var updatePositionRequest = new UpdatePositionRequest("test");
+    var url = "/v1/skill-set/position/{positionId}";
+    var updatePositionRequest = new UpdatePositionRequest(JsonNullable.of("test"),
+        JsonNullable.undefined());
     given(skillSetService.updatePositionDisplayName(any(), any())).willThrow(
         new BusinessException(ErrorCode.DUPLICATED_RESOURCE_EXCEPTION)
     );
 
     //when
-    var result = mockMvc.perform(put(url)
+    var result = mockMvc.perform(patch(url, 1L)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(updatePositionRequest))
     );
@@ -350,21 +365,22 @@ class SkillSetControllerTest extends MockMvcDocsTest {
   @Test
   public void update_position_displayName_success() throws Exception {
     //given
-    var url = "/v1/skill-set/position/1";
-    var updatePositionRequest = new UpdatePositionRequest("test");
+    var url = "/v1/skill-set/position/{positionId}";
+    var updatePositionRequest = new UpdatePositionRequest(JsonNullable.of("test"),
+        JsonNullable.undefined());
     given(skillSetService.updatePositionDisplayName(any(), any())).willReturn(PositionDto.builder()
         .id(1L)
         .displayName("test")
         .build());
 
     //when
-    var result = mockMvc.perform(put(url)
+    var result = mockMvc.perform(patch(url, 1L)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(updatePositionRequest))
     );
 
     //then
-    result.andExpect(status().isNoContent())
+    result.andExpect(status().isOk())
         .andDo(
             document("skill-set/position/update-position-displayName-success",
                 resource(
@@ -418,7 +434,7 @@ class SkillSetControllerTest extends MockMvcDocsTest {
     );
 
     //then
-    result.andExpect(status().isNoContent())
+    result.andExpect(status().isOk())
         .andDo(
             document("skill-set/position/add-position-skillList",
                 resource(
@@ -451,10 +467,10 @@ class SkillSetControllerTest extends MockMvcDocsTest {
   @Test
   public void delete_position_success() throws Exception {
     //given
-    var url = "/v1/skill-set/position/1";
+    var url = "/v1/skill-set/position/{positionId}";
 
     //when
-    var result = mockMvc.perform(delete(url));
+    var result = mockMvc.perform(delete(url, 1L));
 
     //then
     result.andExpect(status().isOk())
@@ -500,8 +516,10 @@ class SkillSetControllerTest extends MockMvcDocsTest {
                         .description("스킬 리스트를 조회한다.")
                         .responseSchema(Schema.schema("skill-list"))
                         .responseFields(
-                            fieldWithPath("skillList[]").type(JsonFieldType.ARRAY).description("스킬 리스트"),
-                            fieldWithPath("skillList[].id").type(JsonFieldType.NUMBER).description("스킬 id"),
+                            fieldWithPath("skillList[]").type(JsonFieldType.ARRAY)
+                                .description("스킬 리스트"),
+                            fieldWithPath("skillList[].id").type(JsonFieldType.NUMBER)
+                                .description("스킬 id"),
                             fieldWithPath("skillList[].displayName").type(JsonFieldType.STRING)
                                 .description("스킬 이름")
                         )
@@ -540,8 +558,10 @@ class SkillSetControllerTest extends MockMvcDocsTest {
                         .description("직군에 속한 스킬 리스트를 조회한다.")
                         .responseSchema(Schema.schema("skill-list"))
                         .responseFields(
-                            fieldWithPath("skillList[]").type(JsonFieldType.ARRAY).description("스킬 리스트"),
-                            fieldWithPath("skillList[].id").type(JsonFieldType.NUMBER).description("스킬 id"),
+                            fieldWithPath("skillList[]").type(JsonFieldType.ARRAY)
+                                .description("스킬 리스트"),
+                            fieldWithPath("skillList[].id").type(JsonFieldType.NUMBER)
+                                .description("스킬 id"),
                             fieldWithPath("skillList[].displayName").type(JsonFieldType.STRING)
                                 .description("스킬 이름")
                         )
@@ -733,14 +753,14 @@ class SkillSetControllerTest extends MockMvcDocsTest {
   @Test
   public void updateSkill_displayName_fail_duplicate() throws Exception {
     //given
-    var url = "/v1/skill-set/skill/1";
-    var updateSkillRequest = new UpdateSkillRequest("test");
+    var url = "/v1/skill-set/skill/{skillId}";
+    var updateSkillRequest = new UpdateSkillRequest(JsonNullable.of("test"));
     given(skillSetService.updateSkillDisplayName(any(), any())).willThrow(
         new BusinessException(ErrorCode.DUPLICATED_RESOURCE_EXCEPTION)
     );
 
     //when
-    var result = mockMvc.perform(put(url)
+    var result = mockMvc.perform(patch(url, 1L)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(updateSkillRequest))
     );
@@ -774,21 +794,21 @@ class SkillSetControllerTest extends MockMvcDocsTest {
   @Test
   public void updateSkill_displayName_success() throws Exception {
     //given
-    var url = "/v1/skill-set/skill/1";
-    var updateSkillRequest = new UpdateSkillRequest("test");
+    var url = "/v1/skill-set/skill/{skillId}";
+    var updateSkillRequest = new UpdateSkillRequest(JsonNullable.of("test"));
     given(skillSetService.updateSkillDisplayName(any(), any())).willReturn(SkillDto.builder()
         .id(1L)
         .displayName("test")
         .build());
 
     //when
-    var result = mockMvc.perform(put(url)
+    var result = mockMvc.perform(patch(url, 1L)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(updateSkillRequest))
     );
 
     //then
-    result.andExpect(status().isNoContent())
+    result.andExpect(status().isOk())
         .andDo(
             document("skill-set/skill/update-skill-displayName-success",
                 resource(
@@ -832,7 +852,7 @@ class SkillSetControllerTest extends MockMvcDocsTest {
     );
 
     //then
-    result.andExpect(status().isNoContent())
+    result.andExpect(status().isOk())
         .andDo(
             document("skill-set/skill/add-skill-to-position-list",
                 resource(
@@ -860,10 +880,10 @@ class SkillSetControllerTest extends MockMvcDocsTest {
   @Test
   public void deleteSkill_success() throws Exception {
     //given
-    var url = "/v1/skill-set/skill/1";
+    var url = "/v1/skill-set/skill/{skillId}";
 
     //when
-    var result = mockMvc.perform(delete(url));
+    var result = mockMvc.perform(delete(url, 1L));
 
     //then
     result.andExpect(status().isOk())

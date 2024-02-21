@@ -7,5 +7,7 @@ public interface FileService {
 
   PreSignedUrlDto generatePreSignedUrl(String fileName, FileDomain fileDomain);
 
+  boolean isUploaded(String fileName);
+
   void deleteFile(String fileKey);
 }

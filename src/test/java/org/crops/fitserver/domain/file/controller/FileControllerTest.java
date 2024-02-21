@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.EnumFields;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
-import org.crops.fitserver.domain.common.MockMvcDocsTest;
+import org.crops.fitserver.util.MockMvcDocs;
 import org.crops.fitserver.domain.file.constant.FileDomain;
 import org.crops.fitserver.domain.file.dto.PreSignedUrlDto;
 import org.crops.fitserver.domain.file.dto.request.GeneratePreSignedUrlRequest;
@@ -24,7 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 @WebMvcTest(FileController.class)
-class FileControllerTest extends MockMvcDocsTest {
+class FileControllerTest extends MockMvcDocs {
 
   @MockBean
   FileService fileService;

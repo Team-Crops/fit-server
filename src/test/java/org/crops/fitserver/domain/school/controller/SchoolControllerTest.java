@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.EnumFields;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import java.util.List;
-import org.crops.fitserver.domain.common.MockMvcDocsTest;
+import org.crops.fitserver.util.MockMvcDocs;
 import org.crops.fitserver.domain.school.constant.SchoolType;
 import org.crops.fitserver.domain.school.dto.SchoolDto;
 import org.crops.fitserver.domain.school.service.SchoolService;
@@ -21,7 +21,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 @WebMvcTest(SchoolController.class)
-class SchoolControllerTest extends MockMvcDocsTest {
+class SchoolControllerTest extends MockMvcDocs {
 
   @MockBean
   SchoolService schoolService;
