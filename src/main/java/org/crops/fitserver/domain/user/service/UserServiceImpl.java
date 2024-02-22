@@ -48,30 +48,30 @@ public class UserServiceImpl implements UserService {
 
     user = user
         .withProfileImageUrl(
-            updateUserRequest.getProfileImageUrl().orElse(user.getProfileImageUrl()))
-        .withUsername(updateUserRequest.getUsername().orElse(user.getUsername()))
-        .withNickname(updateUserRequest.getNickname().orElse(user.getNickname()))
-        .withPhoneNumber(updateUserRequest.getPhoneNumber().orElse(user.getPhoneNumber()))
-        .withIsOpenPhoneNum(updateUserRequest.getIsOpenPhoneNum().orElse(user.isOpenPhoneNum()))
-        .withEmail(updateUserRequest.getEmail().orElse(user.getEmail()));
+            updateUserRequest.profileImageUrl().orElse(user.getProfileImageUrl()))
+        .withUsername(updateUserRequest.username().orElse(user.getUsername()))
+        .withNickname(updateUserRequest.nickname().orElse(user.getNickname()))
+        .withPhoneNumber(updateUserRequest.phoneNumber().orElse(user.getPhoneNumber()))
+        .withIsOpenPhoneNum(updateUserRequest.isOpenPhoneNum().orElse(user.isOpenPhoneNum()))
+        .withEmail(updateUserRequest.email().orElse(user.getEmail()));
 
     user.getUserInfo()
-        .withBackground(updateUserRequest.getBackgroundStatus(),
-            updateUserRequest.getBackgroundText())
+        .withBackground(updateUserRequest.backgroundStatus(),
+            updateUserRequest.backgroundText())
         .withPortfolioUrl(
-            updateUserRequest.getPortfolioUrl().orElse(user.getUserInfo().getPortfolioUrl()))
+            updateUserRequest.portfolioUrl().orElse(user.getUserInfo().getPortfolioUrl()))
         .withProjectCount(
-            updateUserRequest.getProjectCount().orElse(user.getUserInfo().getProjectCount()))
+            updateUserRequest.projectCount().orElse(user.getUserInfo().getProjectCount()))
         .withActivityHour(
-            updateUserRequest.getActivityHour().orElse(user.getUserInfo().getActivityHour()))
-        .withIntroduce(updateUserRequest.getIntroduce().orElse(user.getUserInfo().getIntroduce()))
-        .withLinkJson(updateUserRequest.getLinkList().isPresent() ? Link.parseToJson(
-            updateUserRequest.getLinkList().orElse(List.of())) : user.getUserInfo().getLinkJson())
+            updateUserRequest.activityHour().orElse(user.getUserInfo().getActivityHour()))
+        .withIntroduce(updateUserRequest.introduce().orElse(user.getUserInfo().getIntroduce()))
+        .withLinkJson(updateUserRequest.linkList().isPresent() ? Link.parseToJson(
+            updateUserRequest.linkList().orElse(List.of())) : user.getUserInfo().getLinkJson())
         .withIsOpenProfile(
-            updateUserRequest.getIsOpenProfile().orElse(user.getUserInfo().isOpenProfile()))
-        .withPosition(getNewPosition(updateUserRequest.getPositionId(), user))
-        .withRegion(getNewRegion(updateUserRequest.getRegionId(), user))
-        .withSkills(getNewSkillList(updateUserRequest.getSkillIdList(), user));
+            updateUserRequest.isOpenProfile().orElse(user.getUserInfo().isOpenProfile()))
+        .withPosition(getNewPosition(updateUserRequest.positionId(), user))
+        .withRegion(getNewRegion(updateUserRequest.regionId(), user))
+        .withSkills(getNewSkillList(updateUserRequest.skillIdList(), user));
 
     user = userRepository.save(user);
     return user;

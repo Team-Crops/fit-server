@@ -22,7 +22,6 @@ import com.epages.restdocs.apispec.Schema;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.region.domain.Region;
-import org.crops.fitserver.domain.school.constant.SchoolType;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.domain.Skill;
 import org.crops.fitserver.domain.user.constant.BackgroundStatus;
@@ -121,7 +120,7 @@ class UserControllerTest extends MockMvcDocs {
                         fieldWithPath("backgroundText").type(JsonFieldType.STRING)
                             .description("학력/경력 텍스트").optional(),
                         fieldWithPath("isOpenProfile").type(JsonFieldType.BOOLEAN)
-                            .description("프로필 공개 여부"),
+                            .description("프로필 공개 여부").optional(),
                         fieldWithPath("status").type(JsonFieldType.STRING).description("사용자 정보 상태")
                             .optional(),
                         fieldWithPath("portfolioUrl").type(JsonFieldType.STRING)
@@ -152,6 +151,107 @@ class UserControllerTest extends MockMvcDocs {
 
   @Test
   void updateUser_success_minimum_insert() throws Exception {
+    // given
+    var url = "/v1/user";
+    var userInfo = UserInfo.builder()
+        .id(1L)
+        .build();
+    var user = User.builder().id(1L).userRole(UserRole.MEMBER).userInfo(userInfo).build();
+
+    var updateUserRequest = UpdateUserRequest.builder()
+        .isOpenPhoneNum(true)
+        .isOpenProfile(true)
+        .build();
+
+    var newUserInfo = UserInfo.builder()
+        .id(1L)
+        .user(user)
+        .isOpenProfile(true)
+        .status(UserInfoStatus.INCOMPLETE)
+        .build();
+
+    var newUser = User.builder()
+        .id(1L)
+        .userRole(UserRole.MEMBER)
+        .isOpenPhoneNum(true)
+        .userInfo(newUserInfo)
+        .build();
+
+    given(userFacade.updateUserWithInfo(any(), any())).willReturn(UserInfoDto.from(newUser));
+    var principalDetails = getPrincipalDetails(1L, UserRole.MEMBER);
+
+    // when
+    var result = mockMvc.perform(patch(url)
+        .contentType(MediaType.APPLICATION_JSON)
+        .with(user(principalDetails))
+        .with(csrf())
+        .content("{" +
+            "\"isOpenPhoneNum\": true," +
+            "\"isOpenProfile\": true" +
+            "}"
+        )
+    );
+
+    // then
+    result.andExpect(status().isOk())
+        .andDo(document("user/updateUser",
+            resource(
+                ResourceSnippetParameters.builder()
+                    .tag("user")
+                    .description("사용자 정보 수정")
+                    .summary("사용자 정보 수정")
+                    .requestSchema(Schema.schema("UpdateUserRequest"))
+                    .responseSchema(Schema.schema("UserInfoDto"))
+                    .requestFields(
+                        fieldWithPath("isOpenPhoneNum").type(JsonFieldType.BOOLEAN)
+                            .description("전화번호 공개 여부").optional(),
+                        fieldWithPath("isOpenProfile").type(JsonFieldType.BOOLEAN)
+                            .description("프로필 공개 여부").optional()
+                    )
+                    .responseFields(
+                        fieldWithPath("id").type(JsonFieldType.NUMBER).description("사용자 id"),
+                        fieldWithPath("profileImageUrl").type(JsonFieldType.STRING)
+                            .description("프로필 이미지 url").optional(),
+                        fieldWithPath("username").type(JsonFieldType.STRING).description("사용자 이름")
+                            .optional(),
+                        fieldWithPath("nickname").type(JsonFieldType.STRING).description("사용자 닉네임")
+                            .optional(),
+                        fieldWithPath("phoneNumber").type(JsonFieldType.STRING)
+                            .description("사용자 전화번호").optional(),
+                        fieldWithPath("isOpenPhoneNum").type(JsonFieldType.BOOLEAN)
+                            .description("전화번호 공개 여부").optional(),
+                        fieldWithPath("email").type(JsonFieldType.STRING).description("사용자 이메일")
+                            .optional(),
+                        new EnumFields(BackgroundStatus.class).withPath("backgroundStatus")
+                            .description("학력/경력 상태").optional(),
+                        fieldWithPath("backgroundText").type(JsonFieldType.STRING)
+                            .description("학력/경력 텍스트").optional(),
+                        fieldWithPath("isOpenProfile").type(JsonFieldType.BOOLEAN)
+                            .description("프로필 공개 여부").optional(),
+                        fieldWithPath("portfolioUrl").type(JsonFieldType.STRING)
+                            .description("포트폴리오 url").optional(),
+                        fieldWithPath("projectCount").type(JsonFieldType.NUMBER)
+                            .description("프로젝트 수").optional(),
+                        fieldWithPath("activityHour").type(JsonFieldType.NUMBER)
+                            .description("활동 시간").optional(),
+                        fieldWithPath("introduce").type(JsonFieldType.STRING).description("자기소개")
+                            .optional(),
+                        fieldWithPath("linkList").description("링크 list")
+                            .optional(),
+                        fieldWithPath("positionId").type(JsonFieldType.NUMBER).description("직군 id")
+                            .optional(),
+                        fieldWithPath("regionId").type(JsonFieldType.NUMBER).description("지역 id")
+                            .optional(),
+                        fieldWithPath("skillIdList").description("스킬 id list").optional(),
+                        fieldWithPath("status").type(JsonFieldType.STRING).description("사용자 정보 상태")
+                    )
+                    .build()
+            )
+        ));
+  }
+
+  @Test
+  void updateUser_success_1() throws Exception {
     // given
     var url = "/v1/user";
     var userInfo = UserInfo.builder()
@@ -217,7 +317,7 @@ class UserControllerTest extends MockMvcDocs {
                         fieldWithPath("backgroundText").type(JsonFieldType.STRING)
                             .description("학력/경력 텍스트").optional(),
                         fieldWithPath("isOpenProfile").type(JsonFieldType.BOOLEAN)
-                            .description("프로필 공개 여부"),
+                            .description("프로필 공개 여부").optional(),
                         fieldWithPath("portfolioUrl").type(JsonFieldType.STRING)
                             .description("포트폴리오 url").optional(),
                         fieldWithPath("projectCount").type(JsonFieldType.NUMBER)
@@ -252,7 +352,7 @@ class UserControllerTest extends MockMvcDocs {
                         fieldWithPath("backgroundText").type(JsonFieldType.STRING)
                             .description("학력/경력 텍스트").optional(),
                         fieldWithPath("isOpenProfile").type(JsonFieldType.BOOLEAN)
-                            .description("프로필 공개 여부"),
+                            .description("프로필 공개 여부").optional(),
                         fieldWithPath("portfolioUrl").type(JsonFieldType.STRING)
                             .description("포트폴리오 url").optional(),
                         fieldWithPath("projectCount").type(JsonFieldType.NUMBER)
@@ -377,7 +477,7 @@ class UserControllerTest extends MockMvcDocs {
                         fieldWithPath("backgroundText").type(JsonFieldType.STRING)
                             .description("학력/경력 텍스트").optional(),
                         fieldWithPath("isOpenProfile").type(JsonFieldType.BOOLEAN)
-                            .description("프로필 공개 여부"),
+                            .description("프로필 공개 여부").optional(),
                         fieldWithPath("portfolioUrl").type(JsonFieldType.STRING)
                             .description("포트폴리오 url").optional(),
                         fieldWithPath("projectCount").type(JsonFieldType.NUMBER)
@@ -416,7 +516,7 @@ class UserControllerTest extends MockMvcDocs {
                         fieldWithPath("backgroundText").type(JsonFieldType.STRING)
                             .description("학력/경력 텍스트").optional(),
                         fieldWithPath("isOpenProfile").type(JsonFieldType.BOOLEAN)
-                            .description("프로필 공개 여부"),
+                            .description("프로필 공개 여부").optional(),
                         fieldWithPath("portfolioUrl").type(JsonFieldType.STRING)
                             .description("포트폴리오 url").optional(),
                         fieldWithPath("projectCount").type(JsonFieldType.NUMBER)
@@ -481,7 +581,8 @@ class UserControllerTest extends MockMvcDocs {
                     .responseFields(
                         fieldWithPath("policyAgreementList[]").description("개인정보 동의 list")
                             .optional(),
-                        new EnumFields(PolicyType.class).withPath("policyAgreementList[].policyType")
+                        new EnumFields(PolicyType.class).withPath(
+                                "policyAgreementList[].policyType")
                             .description("개인정보 동의 타입"),
                         fieldWithPath("policyAgreementList[].version").type(JsonFieldType.STRING)
                             .description("개인정보 동의 버전"),
@@ -530,7 +631,8 @@ class UserControllerTest extends MockMvcDocs {
                     .requestFields(
                         fieldWithPath("policyAgreementList[]").description("개인정보 동의 list")
                             .optional(),
-                        new EnumFields(PolicyType.class).withPath("policyAgreementList[].policyType")
+                        new EnumFields(PolicyType.class).withPath(
+                                "policyAgreementList[].policyType")
                             .description("개인정보 동의 타입"),
                         fieldWithPath("policyAgreementList[].version").type(JsonFieldType.STRING)
                             .description("개인정보 동의 버전"),
@@ -591,7 +693,8 @@ class UserControllerTest extends MockMvcDocs {
                     .requestFields(
                         fieldWithPath("policyAgreementList[]").description("개인정보 동의 list")
                             .optional(),
-                        new EnumFields(PolicyType.class).withPath("policyAgreementList[].policyType")
+                        new EnumFields(PolicyType.class).withPath(
+                                "policyAgreementList[].policyType")
                             .description("개인정보 동의 타입"),
                         fieldWithPath("policyAgreementList[].version").type(JsonFieldType.STRING)
                             .description("개인정보 동의 버전"),
@@ -666,7 +769,8 @@ class UserControllerTest extends MockMvcDocs {
                     .requestFields(
                         fieldWithPath("policyAgreementList[]").description("개인정보 동의 list")
                             .optional(),
-                        new EnumFields(PolicyType.class).withPath("policyAgreementList[].policyType")
+                        new EnumFields(PolicyType.class).withPath(
+                                "policyAgreementList[].policyType")
                             .description("개인정보 동의 타입"),
                         fieldWithPath("policyAgreementList[].version").type(JsonFieldType.STRING)
                             .description("개인정보 동의 버전"),
@@ -679,7 +783,8 @@ class UserControllerTest extends MockMvcDocs {
                     .responseFields(
                         fieldWithPath("policyAgreementList[]").description("개인정보 동의 list")
                             .optional(),
-                        new EnumFields(PolicyType.class).withPath("policyAgreementList[].policyType")
+                        new EnumFields(PolicyType.class).withPath(
+                                "policyAgreementList[].policyType")
                             .description("개인정보 동의 타입"),
                         fieldWithPath("policyAgreementList[].version").type(JsonFieldType.STRING)
                             .description("개인정보 동의 버전"),

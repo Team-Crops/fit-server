@@ -1,72 +1,33 @@
 package org.crops.fitserver.domain.user.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.crops.fitserver.domain.user.constant.BackgroundStatus;
 import org.crops.fitserver.domain.user.domain.Link;
 import org.openapitools.jackson.nullable.JsonNullable;
 
 @Builder
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class UpdateUserRequest {
+public record UpdateUserRequest(
+    JsonNullable<String> profileImageUrl,
+    JsonNullable<String> username,
+    JsonNullable<String> nickname,
+    JsonNullable<String> phoneNumber,
+    JsonNullable<@NotNull Boolean> isOpenPhoneNum,
+    JsonNullable<String> email,
+    JsonNullable<BackgroundStatus> backgroundStatus,
+    JsonNullable<String> backgroundText,
+    JsonNullable<String> portfolioUrl,
+    JsonNullable<Integer> projectCount,
+    JsonNullable<Integer> activityHour,
+    JsonNullable<String> introduce,
+    JsonNullable<List<Link>> linkList,
+    JsonNullable<@NotNull Boolean> isOpenProfile,
+    JsonNullable<Long> positionId,
+    JsonNullable<Long> regionId,
+    JsonNullable<List<Long>> skillIdList
 
-  private JsonNullable<String> profileImageUrl;
-
-  private JsonNullable<String> username;
-
-  private JsonNullable<String> nickname;
-
-  private JsonNullable<String> phoneNumber;
-
-  @JsonProperty("isOpenPhoneNum")
-  private JsonNullable<@NotNull Boolean> isOpenPhoneNum;
-
-  private JsonNullable<String> email;
-
-  private JsonNullable<BackgroundStatus> backgroundStatus;
-  private JsonNullable<String> backgroundText;
-
-  private JsonNullable<String> portfolioUrl;
-
-  private JsonNullable<Integer> projectCount;
-
-  private JsonNullable<Integer> activityHour;
-
-  private JsonNullable<String> introduce;
-
-  private JsonNullable<List<Link>> linkList;
-
-  @JsonProperty("isOpenProfile")
-  private JsonNullable<@NotNull Boolean> isOpenProfile;
-
-  private JsonNullable<Long> positionId;
-
-  private JsonNullable<Long> regionId;
-
-  private JsonNullable<List<Long>> skillIdList;
-
-  public JsonNullable<Boolean> getIsOpenPhoneNum() {
-    return isOpenPhoneNum;
-  }
-
-  public void setIsOpenPhoneNum(Boolean isOpenPhoneNum) {
-    this.isOpenPhoneNum = JsonNullable.of(isOpenPhoneNum);
-  }
-
-  public JsonNullable<Boolean> getIsOpenProfile() {
-    return isOpenProfile;
-  }
-
-  public void setIsOpenProfile(Boolean isOpenProfile) {
-    this.isOpenProfile = JsonNullable.of(isOpenProfile);
-  }
+) {
 
   public static class UpdateUserRequestBuilder {
 
