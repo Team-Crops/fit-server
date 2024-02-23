@@ -16,7 +16,7 @@ import com.epages.restdocs.apispec.Schema;
 import org.crops.fitserver.domain.auth.facade.AuthFacade;
 import org.crops.fitserver.domain.auth.facade.dto.SocialLoginPageResponse;
 import org.crops.fitserver.domain.auth.facade.dto.TokenResponse;
-import org.crops.fitserver.domain.common.MockMvcDocsTest;
+import org.crops.fitserver.util.MockMvcDocs;
 import org.crops.fitserver.domain.user.domain.SocialPlatform;
 import org.crops.fitserver.global.jwt.TokenCollection;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +32,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 
 @WebMvcTest(AuthController.class)
 @DisplayName("[Auth][Controller] AuthController Test")
-class AuthControllerTest extends MockMvcDocsTest {
+class AuthControllerTest extends MockMvcDocs {
 
   @MockBean
   AuthFacade authFacade;

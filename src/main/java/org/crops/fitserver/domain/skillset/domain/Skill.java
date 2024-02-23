@@ -1,12 +1,16 @@
 package org.crops.fitserver.domain.skillset.domain;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,7 +42,22 @@ public class Skill extends BaseTimeEntity {
   @Column(name = "display_name", length = 50, nullable = false, unique = true)
   private String displayName;
 
+  @OneToMany(mappedBy = "skill", cascade = CascadeType.ALL, orphanRemoval = true)
+  private final List<SkillSet> skillSets = new ArrayList<>();
+
   public void updateDisplayName(String displayName) {
     this.displayName = displayName;
+  }
+
+
+  public void addPosition(Position position) {
+    if (this.skillSets.stream().anyMatch(skillSet -> skillSet.getPosition().equals(position))) {
+      return;
+    }
+    this.skillSets.add(SkillSet.create(this, position));
+  }
+
+  public void removePosition(Position position) {
+    this.skillSets.removeIf(skillSet -> skillSet.getPosition().equals(position));
   }
 }

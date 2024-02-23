@@ -12,15 +12,18 @@ import org.crops.fitserver.domain.region.domain.Region;
 import org.crops.fitserver.domain.region.repository.RegionRepository;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.repository.PositionRepository;
+import org.crops.fitserver.domain.user.constant.BackgroundStatus;
 import org.crops.fitserver.domain.user.constant.LinkType;
-import org.crops.fitserver.domain.user.constant.UserInfoStatus;
 import org.crops.fitserver.domain.user.domain.Link;
 import org.crops.fitserver.domain.user.domain.User;
 import org.crops.fitserver.domain.user.domain.UserInfo;
 import org.crops.fitserver.domain.user.domain.UserRole;
 import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
+import org.crops.fitserver.global.exception.BusinessException;
+import org.crops.fitserver.global.exception.ErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -65,6 +68,7 @@ public class UserRepositoryTest {
         .build();
     Position position = Position.builder()
         .displayName("test")
+        .imageUrl("test")
         .build();
     Region region = Region.builder()
         .displayName("test")
@@ -120,7 +124,7 @@ public class UserRepositoryTest {
 
     //when
 
-    ThrowingCallable result = () -> user.withNickname(updateUserRequest.getNickname());
+    ThrowingCallable result = () -> user.withNickname(updateUserRequest.nickname().orElse(null));
     //then
     assertThatThrownBy(result).isInstanceOf(IllegalArgumentException.class);
   }
@@ -148,30 +152,38 @@ public class UserRepositoryTest {
                 .linkUrl("test2.com")
                 .build()
         ))
+        .backgroundStatus(BackgroundStatus.GRADUATE_STUDENT)
         .isOpenProfile(false)
         .positionId(this.position.getId())
         .regionId(this.region2.getId())
         .build();
 
     //when
-    user.withEmail(updateUserRequest.getEmail())
-        .withProfileImageUrl(updateUserRequest.getProfileImageUrl())
-        .withUsername(updateUserRequest.getUsername())
-        .withNickname(updateUserRequest.getNickname())
-        .withPhoneNumber(updateUserRequest.getPhoneNumber())
-        .withIsOpenPhoneNum(updateUserRequest.getIsOpenPhoneNum());
+    user = user
+        .withProfileImageUrl(
+            updateUserRequest.profileImageUrl().orElse(user.getProfileImageUrl()))
+        .withUsername(updateUserRequest.username().orElse(user.getUsername()))
+        .withNickname(updateUserRequest.nickname().orElse(user.getNickname()))
+        .withPhoneNumber(updateUserRequest.phoneNumber().orElse(user.getPhoneNumber()))
+        .withIsOpenPhoneNum(updateUserRequest.isOpenPhoneNum().orElse(user.isOpenPhoneNum()))
+        .withEmail(updateUserRequest.email().orElse(user.getEmail()));
 
     user.getUserInfo()
-        .withBackground(updateUserRequest.getBackgroundStatus(),
-            updateUserRequest.getBackgroundText())
-        .withPortfolioUrl(updateUserRequest.getPortfolioUrl())
-        .withProjectCount(updateUserRequest.getProjectCount())
-        .withActivityHour(updateUserRequest.getActivityHour())
-        .withIntroduce(updateUserRequest.getIntroduce())
-        .withLinkJson(Link.parseToJson(updateUserRequest.getLinkList()))
-        .withIsOpenProfile(updateUserRequest.getIsOpenProfile())
-        .withPosition(positionRepository.findById(updateUserRequest.getPositionId()).get())
-        .withRegion(regionRepository.findById(updateUserRequest.getRegionId()).get());
+        .withBackground(updateUserRequest.backgroundStatus(),
+            updateUserRequest.backgroundText())
+        .withPortfolioUrl(
+            updateUserRequest.portfolioUrl().orElse(user.getUserInfo().getPortfolioUrl()))
+        .withProjectCount(
+            updateUserRequest.projectCount().orElse(user.getUserInfo().getProjectCount()))
+        .withActivityHour(
+            updateUserRequest.activityHour().orElse(user.getUserInfo().getActivityHour()))
+        .withIntroduce(updateUserRequest.introduce().orElse(user.getUserInfo().getIntroduce()))
+        .withLinkJson(updateUserRequest.linkList().isPresent() ? Link.parseToJson(
+            updateUserRequest.linkList().orElse(List.of())) : user.getUserInfo().getLinkJson())
+        .withIsOpenProfile(
+            updateUserRequest.isOpenProfile().orElse(user.getUserInfo().isOpenProfile()))
+        .withPosition(getNewPosition(updateUserRequest.positionId(), user))
+        .withRegion(getNewRegion(updateUserRequest.regionId(), user));
     userRepository.save(user);
     em.flush();
     em.clear();
@@ -181,5 +193,28 @@ public class UserRepositoryTest {
     assertThat(result.getUsername()).isEqualTo("test2");
     assertThat(result.getUserInfo().getRegion().getId()).isEqualTo(this.region2.getId());
   }
+
+  private Position getNewPosition(JsonNullable<Long> positionId, User user) {
+    if (!positionId.isPresent()) {
+      return user.getUserInfo().getPosition();
+    }
+    if (positionId.get() == null) {
+      return null;
+    }
+    return positionRepository.findById(positionId.get()).orElseThrow(() -> new BusinessException(
+        ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
+  }
+
+  private Region getNewRegion(JsonNullable<Long> regionId, User user) {
+    if (!regionId.isPresent()) {
+      return user.getUserInfo().getRegion();
+    }
+    if (regionId.get() == null) {
+      return null;
+    }
+    return regionRepository.findById(regionId.get()).orElseThrow(() -> new BusinessException(
+        ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
+  }
+
 
 }

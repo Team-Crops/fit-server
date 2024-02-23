@@ -1,5 +1,8 @@
 package org.crops.fitserver.domain.skillset.domain;
 
+import static jakarta.persistence.CascadeType.ALL;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,17 +36,27 @@ public class Position extends BaseTimeEntity {
   @Column(name = "position_id")
   private Long id;
 
-  @OneToMany(mappedBy = "position")
+  @OneToMany(mappedBy = "position", cascade = CascadeType.ALL, orphanRemoval = true)
   private final List<SkillSet> skillSets = new ArrayList<>();
 
   @Column(nullable = false)
   private String displayName;
 
+  @Column(nullable = false)
+  private String imageUrl;
+
   public void updateDisplayName(String displayName) {
     this.displayName = displayName;
   }
 
+  public void updateImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
+  }
+
   public void addSkill(Skill skill) {
+    if (this.skillSets.stream().anyMatch(skillSet -> skillSet.getSkill().equals(skill))) {
+      return;
+    }
     this.skillSets.add(SkillSet.create(skill, this));
   }
 

@@ -60,11 +60,13 @@ public class PositionRepositoryTest {
     // given
     Position position1 = Position.builder()
         .displayName("test1")
+        .imageUrl("test")
         .build();
     positionRepository.save(position1);
 
     Position position2 = Position.builder()
         .displayName("test2")
+        .imageUrl("test")
         .build();
     positionRepository.save(position2);
 
@@ -80,6 +82,7 @@ public class PositionRepositoryTest {
     // given
     Position position = Position.builder()
         .displayName("test")
+        .imageUrl("test")
         .build();
     position = positionRepository.save(position);
     var positionId = position.getId();
@@ -103,9 +106,12 @@ public class PositionRepositoryTest {
     Skill skill = Skill.builder()
         .displayName("test")
         .build();
+    skillRepository.save(skill);
+    em.flush();
 
-    position.addSkill(skill);
+
     // when
+    position.addSkill(skill);
     var result = positionRepository.save(position);
 
     // then
@@ -124,6 +130,7 @@ public class PositionRepositoryTest {
         .build();
 
     position.addSkill(skill);
+    skillRepository.save(skill);
     positionRepository.save(position);
 
     // when
@@ -140,6 +147,7 @@ public class PositionRepositoryTest {
     // given
     Position position = Position.builder()
         .displayName("test")
+        .imageUrl("test")
         .build();
     Skill skill = Skill.builder()
         .displayName("test")
@@ -151,10 +159,11 @@ public class PositionRepositoryTest {
     em.flush();
     em.clear();
 
+    // when
     skillRepository.deleteById(skill.getId());
     em.flush();
 
-    // when
+
     var result = positionRepository.findWithSkills(position.getId()).get();
 
     // then

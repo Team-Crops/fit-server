@@ -7,6 +7,6 @@ import lombok.Builder;
 @Builder
 public record CreatePositionRequest(
     @NotBlank String displayName,
-    List<Long> skillIds) {
+    List<Long> skillIds, @NotBlank String imageUrl) {
 
 }

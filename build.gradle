@@ -60,6 +60,9 @@ dependencies {
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     runtimeOnly 'com.h2database:h2'
 
+    // for undefined value in json
+    implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
+
     // open feign
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.3'
 

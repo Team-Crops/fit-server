@@ -8,6 +8,7 @@ import org.crops.fitserver.domain.file.dto.PreSignedUrlDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
@@ -47,6 +48,16 @@ public class S3FileServiceImpl implements FileService {
   @Override
   public void deleteFile(String fileKey) {
     s3Client.deleteObject(builder -> builder.bucket(bucket).key(fileKey));
+  }
+
+  @Override
+  public boolean isUploaded(String fileName) {
+    try {
+      s3Client.headObject(builder -> builder.bucket(bucket).key(fileName));
+    } catch (NoSuchKeyException e) {
+      return false;
+    }
+    return true;
   }
 
   private static String createFileKey(String fileName, String directory, boolean isTemporary) {
