@@ -3,6 +3,7 @@ package org.crops.fitserver.domain.skillset.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
@@ -19,8 +20,7 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(indexes = {
     @Index(name = "skill_display_name_idx", columnList = "display_name")
-}
-)
+})
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -31,7 +31,7 @@ import org.hibernate.annotations.Where;
 public class Skill extends BaseTimeEntity {
 
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "skill_id")
   private Long id;
 

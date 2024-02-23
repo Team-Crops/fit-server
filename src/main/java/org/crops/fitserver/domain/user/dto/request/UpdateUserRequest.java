@@ -33,7 +33,7 @@ public class UpdateUserRequest {
 
   private Integer projectCount;
 
-  private Integer activityHour;
+  private Short activityHour;
 
   private String introduce;
 

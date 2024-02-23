@@ -15,11 +15,11 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 @Entity
+@Getter
 @Builder
 @DynamicInsert
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-@Getter
 @SQLDelete(sql = "UPDATE region SET is_deleted = true WHERE region_id = ?")
 @Where(clause = "is_deleted = false")
 public class Region extends BaseTimeEntity {
@@ -28,7 +28,6 @@ public class Region extends BaseTimeEntity {
   @Column(name = "region_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
 
   @Column(nullable = false)
   private String displayName;

@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,8 +26,9 @@ import org.hibernate.annotations.Where;
 @SQLDelete(sql = "UPDATE school SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted = false")
 public class School extends BaseTimeEntity {
+
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "school_id")
   private Long id;
 
