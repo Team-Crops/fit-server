@@ -86,7 +86,7 @@ public class User extends BaseTimeEntity {
   }
 
   public User withNickname(String nickname) {
-    if (StringUtils.isBlank(nickname)) {
+    if (StringUtils.isNotBlank(this.nickname) && StringUtils.isBlank(nickname)) {
       throw new IllegalArgumentException("nickname cannot be null");
     }
     this.nickname = nickname;
@@ -94,7 +94,7 @@ public class User extends BaseTimeEntity {
   }
 
   public User withPhoneNumber(String phoneNumber) {
-    if (StringUtils.isBlank(phoneNumber)) {
+    if (StringUtils.isNotBlank(this.phoneNumber) && StringUtils.isBlank(phoneNumber)) {
       throw new IllegalArgumentException("phoneNumber cannot be null");
     }
     this.phoneNumber = phoneNumber;
@@ -107,7 +107,7 @@ public class User extends BaseTimeEntity {
   }
 
   public User withEmail(String email) {
-    if (StringUtils.isBlank(email)) {
+    if (StringUtils.isNotBlank(this.email) && StringUtils.isBlank(email)) {
       throw new IllegalArgumentException("email cannot be null");
     }
     this.email = email;

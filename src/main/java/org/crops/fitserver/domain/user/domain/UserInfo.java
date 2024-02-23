@@ -113,7 +113,7 @@ public class UserInfo {
   }
 
   public UserInfo withProjectCount(Integer projectCount) {
-    if (projectCount == null) {
+    if (this.projectCount != null && projectCount == null) {
       throw new IllegalArgumentException("projectCount cannot be null");
     }
     this.projectCount = projectCount;
@@ -121,7 +121,7 @@ public class UserInfo {
   }
 
   public UserInfo withActivityHour(Integer activityHour) {
-    if (activityHour == null) {
+    if (this.activityHour != null && activityHour == null) {
       throw new IllegalArgumentException("activityHour cannot be null");
     }
     this.activityHour = activityHour;
@@ -129,7 +129,7 @@ public class UserInfo {
   }
 
   public UserInfo withIntroduce(String introduce) {
-    if (StringUtils.isBlank(introduce)) {
+    if (StringUtils.isNotBlank(this.introduce) && StringUtils.isBlank(introduce)) {
       throw new IllegalArgumentException("introduce cannot be null");
     }
     this.introduce = introduce;
@@ -137,7 +137,7 @@ public class UserInfo {
   }
 
   public UserInfo withLinkJson(String linkJson) {
-    if (StringUtils.isBlank(linkJson)) {
+    if (StringUtils.isNotBlank(this.linkJson) &&StringUtils.isBlank(linkJson)) {
       throw new IllegalArgumentException("linkJson cannot be null");
     }
     this.linkJson = linkJson;
@@ -165,7 +165,7 @@ public class UserInfo {
   }
 
   public UserInfo withBackground(BackgroundStatus backgroundStatus, String backgroundText) {
-    if (backgroundStatus == null) {
+    if (this.backgroundStatus != null && backgroundStatus == null) {
       throw new IllegalArgumentException("backgroundStatus cannot be null");
     }
     this.backgroundStatus = backgroundStatus;
@@ -189,7 +189,7 @@ public class UserInfo {
   }
 
   public UserInfo withPosition(Position position) {
-    if (position == null) {
+    if (this.position != null && position == null) {
       throw new IllegalArgumentException("position cannot be null");
     }
     this.position = position;
@@ -197,7 +197,7 @@ public class UserInfo {
   }
 
   public UserInfo withRegion(Region region) {
-    if (region == null) {
+    if (this.region != null && region == null) {
       throw new IllegalArgumentException("region cannot be null");
     }
     this.region = region;
