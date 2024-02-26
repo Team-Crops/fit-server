@@ -31,6 +31,7 @@ public class PositionRepositoryTest {
     // given
     Position position = Position.builder()
         .displayName("test")
+        .imageUrl("test")
         .build();
     // when
     var result = positionRepository.save(position);
@@ -44,6 +45,7 @@ public class PositionRepositoryTest {
     // given
     Position position = Position.builder()
         .displayName("test")
+        .imageUrl("test")
         .build();
     positionRepository.save(position);
 
@@ -102,6 +104,7 @@ public class PositionRepositoryTest {
     // given
     Position position = Position.builder()
         .displayName("test")
+        .imageUrl("test")
         .build();
     Skill skill = Skill.builder()
         .displayName("test")
@@ -124,6 +127,7 @@ public class PositionRepositoryTest {
     // given
     Position position = Position.builder()
         .displayName("test")
+        .imageUrl("test")
         .build();
     Skill skill = Skill.builder()
         .displayName("test")
