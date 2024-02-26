@@ -26,6 +26,7 @@ import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.domain.Skill;
 import org.crops.fitserver.domain.user.constant.BackgroundStatus;
 import org.crops.fitserver.domain.user.constant.UserInfoStatus;
+import org.crops.fitserver.global.entity.BaseTimeEntity;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -38,7 +39,7 @@ import org.springframework.util.CollectionUtils;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
-public class UserInfo {
+public class UserInfo extends BaseTimeEntity {
 
   @Id
   @Column(name = "user_id")
