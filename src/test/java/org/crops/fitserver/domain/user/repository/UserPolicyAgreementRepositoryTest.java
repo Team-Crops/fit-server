@@ -61,7 +61,7 @@ public class UserPolicyAgreementRepositoryTest {
 
     //then
     assertThatThrownBy(callable)
-        .isInstanceOf(ConstraintViolationException.class);
+        .isInstanceOf(DataIntegrityViolationException.class);
   }
 
 }
