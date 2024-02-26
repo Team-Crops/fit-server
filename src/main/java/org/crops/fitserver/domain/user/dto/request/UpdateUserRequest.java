@@ -21,7 +21,7 @@ public record UpdateUserRequest(
     JsonNullable<String> backgroundText,
     JsonNullable<String> portfolioUrl,
     JsonNullable<Integer> projectCount,
-    JsonNullable<Integer> activityHour,
+    JsonNullable<Short> activityHour,
     JsonNullable<String> introduce,
     JsonNullable<List<Link>> linkList,
     JsonNullable<@NotNull Boolean> isOpenProfile,
@@ -78,7 +78,7 @@ public record UpdateUserRequest(
       return this;
     }
 
-    public UpdateUserRequestBuilder activityHour(Integer activityHour) {
+    public UpdateUserRequestBuilder activityHour(short activityHour) {
       this.activityHour = JsonNullable.of(activityHour);
       return this;
     }
