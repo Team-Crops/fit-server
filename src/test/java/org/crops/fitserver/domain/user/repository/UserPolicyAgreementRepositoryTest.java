@@ -1,5 +1,6 @@
 package org.crops.fitserver.domain.user.repository;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import lombok.RequiredArgsConstructor;
@@ -61,7 +62,38 @@ public class UserPolicyAgreementRepositoryTest {
 
     //then
     assertThatThrownBy(callable)
-        .isInstanceOf(ConstraintViolationException.class);
+        .isInstanceOf(DataIntegrityViolationException.class);
   }
+  @Test
+  public void 같은정책_다른버전은_insert할_수_있다() {
+    //given
+    var user = User.builder()
+        .userRole(UserRole.MEMBER)
+        .build();
+    user = em.persist(user);
+    var userPolicyAgreement1 = UserPolicyAgreement.builder()
+        .policyType(PolicyType.PRIVACY_POLICY)
+        .isAgree(true)
+        .user(user)
+
+        .version("20240331")
+        .build();
+    var userPolicyAgreement2 = UserPolicyAgreement.builder()
+        .policyType(PolicyType.PRIVACY_POLICY)
+        .isAgree(true)
+        .user(user)
+        .version("20240332")
+        .build();
+    userPolicyAgreement1 = userPolicyAgreementRepository.save(userPolicyAgreement1);
+    em.flush();
+    //when
+
+    userPolicyAgreementRepository.save(userPolicyAgreement2);
+    em.flush();
+
+    //then
+    assertThat(userPolicyAgreementRepository.findAllByUserId(user.getId()).size()).isEqualTo(2);
+  }
+
 
 }

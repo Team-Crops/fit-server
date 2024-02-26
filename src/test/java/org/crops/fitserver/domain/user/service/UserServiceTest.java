@@ -46,7 +46,7 @@ public class UserServiceTest {
       .user(userBuilder.build())
       .portfolioUrl("test.com")
       .projectCount(1)
-      .activityHour(1)
+      .activityHour((short) 1)
       .introduce("test")
       .linkJson("test")
       .status(UserInfoStatus.INCOMPLETE)
@@ -94,7 +94,7 @@ public class UserServiceTest {
         .email("test@gmail.com")
         .portfolioUrl("test.com")
         .projectCount(1)
-        .activityHour(1)
+        .activityHour((short) 1)
         .introduce("test")
         .linkList(List.of(
             Link.builder()

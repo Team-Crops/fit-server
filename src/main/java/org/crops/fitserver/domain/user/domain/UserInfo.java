@@ -26,6 +26,7 @@ import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.domain.Skill;
 import org.crops.fitserver.domain.user.constant.BackgroundStatus;
 import org.crops.fitserver.domain.user.constant.UserInfoStatus;
+import org.crops.fitserver.global.entity.BaseTimeEntity;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -38,10 +39,8 @@ import org.springframework.util.CollectionUtils;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
-public class UserInfo {
+public class UserInfo extends BaseTimeEntity {
 
-  @OneToMany(mappedBy = "userInfo")
-  private final List<UserInfoSkill> userInfoSkills = new ArrayList<>();
   @Id
   @Column(name = "user_id")
   private Long id;
@@ -52,7 +51,7 @@ public class UserInfo {
   @Column(length = 2048)
   private String portfolioUrl;
   private Integer projectCount;
-  private Integer activityHour;
+  private Short activityHour;
   @Column(length = 255)
   private String introduce;
   @Column(length = 2048)
@@ -83,6 +82,9 @@ public class UserInfo {
   @ManyToOne
   @JoinColumn(name = "region_id")
   private Region region;
+
+  @OneToMany(mappedBy = "userInfo")
+  private final List<UserInfoSkill> userInfoSkills = new ArrayList<>();
 
   /**
    * User.prePersist() 에서 호출. 다른 곳에서 절대로 호출해서는 안됨.
@@ -120,7 +122,7 @@ public class UserInfo {
     return this;
   }
 
-  public UserInfo withActivityHour(Integer activityHour) {
+  public UserInfo withActivityHour(Short activityHour) {
     if (this.activityHour != null && activityHour == null) {
       throw new IllegalArgumentException("activityHour cannot be null");
     }
@@ -197,7 +199,7 @@ public class UserInfo {
   }
 
   public UserInfo withRegion(Region region) {
-    if (this.region != null && region == null) {
+    if (region == null) {
       throw new IllegalArgumentException("region cannot be null");
     }
     this.region = region;

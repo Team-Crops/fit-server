@@ -1,8 +1,10 @@
 package org.crops.fitserver.domain.user.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.Builder;
+import lombok.Getter;
 import org.crops.fitserver.domain.user.constant.BackgroundStatus;
 import org.crops.fitserver.domain.user.domain.Link;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -19,7 +21,7 @@ public record UpdateUserRequest(
     JsonNullable<String> backgroundText,
     JsonNullable<String> portfolioUrl,
     JsonNullable<Integer> projectCount,
-    JsonNullable<Integer> activityHour,
+    JsonNullable<Short> activityHour,
     JsonNullable<String> introduce,
     JsonNullable<List<Link>> linkList,
     JsonNullable<@NotNull Boolean> isOpenProfile,
@@ -76,7 +78,7 @@ public record UpdateUserRequest(
       return this;
     }
 
-    public UpdateUserRequestBuilder activityHour(Integer activityHour) {
+    public UpdateUserRequestBuilder activityHour(short activityHour) {
       this.activityHour = JsonNullable.of(activityHour);
       return this;
     }

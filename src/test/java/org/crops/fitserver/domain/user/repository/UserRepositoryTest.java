@@ -83,7 +83,7 @@ public class UserRepositoryTest {
     user.getUserInfo()
         .withPortfolioUrl("test.com")
         .withProjectCount(1)
-        .withActivityHour(1)
+        .withActivityHour((short) 1)
         .withIntroduce("test")
         .withLinkJson("test")
         .withIsOpenProfile(false)
@@ -109,7 +109,7 @@ public class UserRepositoryTest {
         .email("test@gmail.com")
         .portfolioUrl("test2.com")
         .projectCount(2)
-        .activityHour(2)
+        .activityHour((short) 2)
         .introduce("test2")
         .linkList(List.of(
             Link.builder()
@@ -144,7 +144,7 @@ public class UserRepositoryTest {
         .email("test@gmail.com")
         .portfolioUrl("test2.com")
         .projectCount(2)
-        .activityHour(2)
+        .activityHour((short) 2)
         .introduce("test2")
         .linkList(List.of(
             Link.builder()

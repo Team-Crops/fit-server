@@ -32,7 +32,7 @@ public class UserInfoDto {
   private Boolean isOpenProfile;
   private String portfolioUrl;
   private Integer projectCount;
-  private Integer activityHour;
+  private Short activityHour;
   private String introduce;
   private List<Link> linkList;
   private Long positionId;

@@ -7,20 +7,20 @@ TARGET_STATE=""
 
 if [ $CURRENT_PORT -eq 8081 ]; then
   CURRENT_STATE="blue"
-  TARGET_PORT=8082
   TARGET_STATE="green"
+  TARGET_PORT=8082
 elif [ $CURRENT_PORT -eq 8082 ]; then
   CURRENT_STATE="green"
-  TARGET_PORT=8081
   TARGET_STATE="blue"
+  TARGET_PORT=8081
 else
   echo "[$TIME] > No f-it WAS is connected to nginx port $CURRENT_PORT." >> /home/ubuntu/app/deploy/deploy.log
   echo "[$TIME] > Assign current to port 8081 in blue state." >> /home/ubuntu/app/deploy/deploy.log
-  CURRENT_PORT=8081
   CURRENT_STATE="blue"
-  echo "set \$service_url http://127.0.0.1:$CURRENT_PORT;" | tee /home/ubuntu/service-url.inc
-  TARGET_PORT=8082
+  CURRENT_PORT=8081
   TARGET_STATE="green"
+  TARGET_PORT=8082
+  echo "set \$service_url http://127.0.0.1:$CURRENT_PORT;" | tee /home/ubuntu/service-url.inc
 fi
 
 echo "[$TIME] > Current status of running f-it WAS is port $CURRENT_PORT in $CURRENT_STATE state." >> /home/ubuntu/app/deploy/deploy.log

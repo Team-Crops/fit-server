@@ -1,6 +1,5 @@
 package org.crops.fitserver.domain.chat.domain;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,6 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.crops.fitserver.global.entity.BaseTimeEntity;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
@@ -20,6 +21,8 @@ import org.hibernate.annotations.DynamicInsert;
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Where(clause = "is_deleted = false")
+@SQLDelete(sql = "UPDATE chat_room SET is_deleted = true WHERE chat_room_id = ?")
 public class ChatRoom extends BaseTimeEntity {
 
   @Id
