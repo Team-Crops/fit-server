@@ -1,6 +1,7 @@
 version: '3.9'
 services:
   mariadb:
+    hostname: fit_db_host
     container_name: fit-mariadb
     image: mariadb:latest
     ports:
