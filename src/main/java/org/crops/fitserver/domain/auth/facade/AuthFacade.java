@@ -1,8 +1,8 @@
 package org.crops.fitserver.domain.auth.facade;
 
-import org.crops.fitserver.domain.auth.facade.dto.SocialLoginPageResponse;
+import org.crops.fitserver.domain.auth.dto.response.SocialLoginPageResponse;
 import org.crops.fitserver.domain.user.domain.SocialPlatform;
-import org.crops.fitserver.domain.auth.facade.dto.TokenResponse;
+import org.crops.fitserver.domain.auth.dto.response.TokenResponse;
 
 public interface AuthFacade {
 

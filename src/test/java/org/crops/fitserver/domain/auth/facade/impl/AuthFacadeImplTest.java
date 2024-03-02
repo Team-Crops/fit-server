@@ -5,8 +5,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.crops.fitserver.domain.auth.facade.dto.SocialLoginPageResponse;
-import org.crops.fitserver.domain.auth.facade.dto.TokenResponse;
+import org.crops.fitserver.domain.auth.dto.response.SocialLoginPageResponse;
+import org.crops.fitserver.domain.auth.dto.response.TokenResponse;
 import org.crops.fitserver.domain.auth.service.OAuthService;
 import org.crops.fitserver.domain.auth.service.provider.OAuthServiceProvider;
 import org.crops.fitserver.domain.user.domain.SocialPlatform;

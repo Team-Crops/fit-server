@@ -2,9 +2,9 @@ package org.crops.fitserver.domain.chat.service.impl;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import lombok.RequiredArgsConstructor;
-import org.crops.fitserver.domain.chat.controller.dto.response.ImageMessageResponse;
-import org.crops.fitserver.domain.chat.controller.dto.response.NoticeMessageResponse;
-import org.crops.fitserver.domain.chat.controller.dto.response.TextMessageResponse;
+import org.crops.fitserver.domain.chat.dto.response.ImageMessageResponse;
+import org.crops.fitserver.domain.chat.dto.response.NoticeMessageResponse;
+import org.crops.fitserver.domain.chat.dto.response.TextMessageResponse;
 import org.crops.fitserver.domain.chat.domain.Message;
 import org.crops.fitserver.domain.chat.repository.MessageRepository;
 import org.crops.fitserver.domain.chat.service.MessageService;

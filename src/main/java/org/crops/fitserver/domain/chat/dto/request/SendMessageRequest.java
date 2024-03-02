@@ -1,4 +1,4 @@
-package org.crops.fitserver.domain.chat.controller.dto.request;
+package org.crops.fitserver.domain.chat.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 
