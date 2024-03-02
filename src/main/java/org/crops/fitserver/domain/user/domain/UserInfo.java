@@ -199,7 +199,7 @@ public class UserInfo extends BaseTimeEntity {
   }
 
   public UserInfo withRegion(Region region) {
-    if (region == null) {
+    if (this.position != null && region == null) {
       throw new IllegalArgumentException("region cannot be null");
     }
     this.region = region;
