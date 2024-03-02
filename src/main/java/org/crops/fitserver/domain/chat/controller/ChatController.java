@@ -4,7 +4,7 @@ import com.corundumstudio.socketio.SocketIOClient;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.crops.fitserver.domain.chat.controller.dto.request.SendMessageRequest;
+import org.crops.fitserver.domain.chat.dto.request.SendMessageRequest;
 import org.crops.fitserver.domain.chat.facade.ChatRoomFacade;
 import org.crops.fitserver.global.annotation.SocketController;
 import org.crops.fitserver.global.annotation.SocketMapping;

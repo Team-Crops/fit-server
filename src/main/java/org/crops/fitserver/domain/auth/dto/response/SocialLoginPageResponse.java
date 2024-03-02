@@ -1,4 +1,4 @@
-package org.crops.fitserver.domain.auth.facade.dto;
+package org.crops.fitserver.domain.auth.dto.response;
 
 import jakarta.validation.constraints.NotNull;
 

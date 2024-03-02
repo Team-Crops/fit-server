@@ -1,4 +1,4 @@
-package org.crops.fitserver.domain.chat.controller.dto.response;
+package org.crops.fitserver.domain.chat.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
