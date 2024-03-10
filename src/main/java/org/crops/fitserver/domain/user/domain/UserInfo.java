@@ -1,6 +1,7 @@
 package org.crops.fitserver.domain.user.domain;
 
 import io.micrometer.common.util.StringUtils;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -83,7 +84,7 @@ public class UserInfo extends BaseTimeEntity {
   @JoinColumn(name = "region_id")
   private Region region;
 
-  @OneToMany(mappedBy = "userInfo")
+  @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL, orphanRemoval = true)
   private final List<UserInfoSkill> userInfoSkills = new ArrayList<>();
 
   /**
