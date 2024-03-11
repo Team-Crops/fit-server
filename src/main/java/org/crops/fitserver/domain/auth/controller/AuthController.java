@@ -45,4 +45,16 @@ public class AuthController {
         authFacade.getSocialLoginPageUrl(socialPlatform);
     return ResponseEntity.ok(socialLoginPageResponse);
   }
+
+  @PostMapping("/social/test/login")
+  public ResponseEntity<TokenResponse> testLogin() {
+    TokenResponse tokenResponse = authFacade.testLogin();
+    return ResponseEntity.ok(tokenResponse);
+  }
+
+  @PostMapping("/social/test/login/{userId}")
+  public ResponseEntity<TokenResponse> testLogin(@PathVariable(name = "userId") Long userId) {
+    TokenResponse tokenResponse = authFacade.testLogin(userId);
+    return ResponseEntity.ok(tokenResponse);
+  }
 }
