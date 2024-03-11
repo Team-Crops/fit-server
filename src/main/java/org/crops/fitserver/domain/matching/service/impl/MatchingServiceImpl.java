@@ -1,0 +1,91 @@
+package org.crops.fitserver.domain.matching.service.impl;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.crops.fitserver.domain.matching.constant.MatchingStatus;
+import org.crops.fitserver.domain.matching.dto.response.CreateMatchingResponse;
+import org.crops.fitserver.domain.matching.dto.response.GetMatchingResponse;
+import org.crops.fitserver.domain.matching.dto.response.GetMatchingRoomResponse;
+import org.crops.fitserver.domain.matching.entity.Matching;
+import org.crops.fitserver.domain.matching.repository.MatchingRepository;
+import org.crops.fitserver.domain.matching.service.MatchingService;
+import org.crops.fitserver.domain.user.domain.User;
+import org.crops.fitserver.domain.user.repository.UserRepository;
+import org.crops.fitserver.global.exception.BusinessException;
+import org.crops.fitserver.global.exception.ErrorCode;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class MatchingServiceImpl implements MatchingService {
+
+  private final MatchingRepository matchingRepository;
+  private final UserRepository userRepository;
+
+  @Override
+  @Transactional
+  public CreateMatchingResponse createMatching(Long userId) {
+    var user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(
+        ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
+    //이미 매칭이 존재한다면 에러 발생.
+    if (getActiveMatching(user).isPresent()) {
+      throw new BusinessException(ErrorCode.ALREADY_EXIST_MATCHING_EXCEPTION);
+    }
+
+    var matching = matchingRepository.save(Matching.builder()
+        .user(user)
+        .status(MatchingStatus.WAITING)
+        .position(user.getUserInfo().getPosition())
+        .expiredAt(LocalDateTime.now().plusDays(3))
+        .build());
+    return CreateMatchingResponse.from(matching);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public GetMatchingResponse getMatching(Long userId) {
+    var user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(
+        ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
+    var matching = getActiveMatching(user).orElseThrow(() -> new BusinessException(
+        ErrorCode.NOT_EXIST_MATCHING_EXCEPTION));
+
+    return GetMatchingResponse.from(matching);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public GetMatchingRoomResponse getMatchingRoom(Long userId, Long roomId) {
+    var user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(
+        ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
+    var matching = getActiveMatching(user).orElseThrow(() -> new BusinessException(
+        ErrorCode.NOT_EXIST_MATCHING_EXCEPTION));
+
+    if(!Objects.equals(matching.getMatchingRoom().getId(), roomId)) {
+      throw new BusinessException(ErrorCode.NOT_EXIST_MATCHING_EXCEPTION);
+    }
+    var matchingRoom = matching.getMatchingRoom();
+
+    return GetMatchingRoomResponse.from(matchingRoom);
+  }
+
+  @Override
+  @Transactional
+  public void cancelMatching(Long userId) {
+    var user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(
+        ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
+    var matching = getActiveMatching(user).orElseThrow(() -> new BusinessException(
+        ErrorCode.NOT_EXIST_MATCHING_EXCEPTION));
+
+    matching.cancel();
+  }
+
+  private Optional<Matching> getActiveMatching(User user) {
+    return matchingRepository.findActiveMatchingByUser(user, List.of(MatchingStatus.WAITING, MatchingStatus.MATCHED));
+  }
+}

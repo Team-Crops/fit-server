@@ -48,7 +48,12 @@ public enum ErrorCode {
    */
   DUPLICATED_POLICY_REQUEST_EXCEPTION(HttpStatus.BAD_REQUEST, "user-policy-agreement-1", "같은 약관을 한 번에 여러 번 동의할 수 없습니다."),
 
-
+  //matching
+  /**
+   * matching. code prefix: matching-
+   */
+  ALREADY_EXIST_MATCHING_EXCEPTION(HttpStatus.CONFLICT, "matching-1", "이미 매칭이 존재합니다."),
+  NOT_EXIST_MATCHING_EXCEPTION(HttpStatus.NOT_FOUND, "matching-2", "매칭이 존재하지 않습니다."),
 
   ;
 
