@@ -102,11 +102,17 @@ public class UserInfo extends BaseTimeEntity {
   @PrePersist
   public void prePersist() {
     this.status = this.isReadyToComplete() ? UserInfoStatus.COMPLETE : UserInfoStatus.INCOMPLETE;
+    if(this.isReadyToComplete()){
+      this.user.promoteRole(UserRole.MEMBER);
+    }
   }
 
   @PreUpdate
   public void preUpdate() {
     this.status = this.isReadyToComplete() ? UserInfoStatus.COMPLETE : UserInfoStatus.INCOMPLETE;
+    if(this.isReadyToComplete()){
+      this.user.promoteRole(UserRole.MEMBER);
+    }
   }
 
 
