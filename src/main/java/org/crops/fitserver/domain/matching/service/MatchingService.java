@@ -14,6 +14,8 @@ public interface MatchingService {
 
   GetMatchingRoomResponse getMatchingRoom(Long userId, Long roomId);
 
+  void completeMatching(Long userId, Long roomId);
+
   void cancelMatching(Long userId);
 
   List<Matching> expireMatchingAll();

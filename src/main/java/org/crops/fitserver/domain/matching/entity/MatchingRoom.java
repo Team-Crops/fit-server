@@ -154,4 +154,9 @@ public class MatchingRoom extends BaseTimeEntity {
     matchingList.add(matching);
     matching.match(this);
   }
+
+  public void complete() {
+    isComplete = true;
+    completedAt = LocalDateTime.now();
+  }
 }

@@ -49,13 +49,22 @@ public class MatchingController {
   }
 
   //강제퇴장
-  @PostMapping("/rom/{roomId}/force-out")
+  @PostMapping("/room/{roomId}/force-out")
   public ResponseEntity<Void> forceOut(
       @CurrentUserId Long userId,
       @PathVariable("roomId") Long roomId,
       @RequestBody ForceOutRequest forceOutRequest
   ) {
     matchingService.forceOut(userId, roomId, forceOutRequest.userId());
+    return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/room/{roomId}/complete")
+  public ResponseEntity<Void> completeMatching(
+      @CurrentUserId Long userId,
+      @PathVariable("roomId") Long roomId
+  ) {
+    matchingService.completeMatching(userId, roomId);
     return ResponseEntity.ok().build();
   }
 
