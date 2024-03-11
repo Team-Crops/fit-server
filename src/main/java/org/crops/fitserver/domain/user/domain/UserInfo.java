@@ -102,7 +102,7 @@ public class UserInfo extends BaseTimeEntity {
   @PrePersist
   public void prePersist() {
     this.status = this.isReadyToComplete() ? UserInfoStatus.COMPLETE : UserInfoStatus.INCOMPLETE;
-    if(this.isReadyToComplete()){
+    if (this.isReadyToComplete()) {
       this.user.promoteRole(UserRole.MEMBER);
     }
   }
@@ -110,7 +110,7 @@ public class UserInfo extends BaseTimeEntity {
   @PreUpdate
   public void preUpdate() {
     this.status = this.isReadyToComplete() ? UserInfoStatus.COMPLETE : UserInfoStatus.INCOMPLETE;
-    if(this.isReadyToComplete()){
+    if (this.isReadyToComplete()) {
       this.user.promoteRole(UserRole.MEMBER);
     }
   }
@@ -146,7 +146,7 @@ public class UserInfo extends BaseTimeEntity {
   }
 
   public UserInfo withLinkJson(String linkJson) {
-    if (StringUtils.isNotBlank(this.linkJson) &&StringUtils.isBlank(linkJson)) {
+    if (StringUtils.isNotBlank(this.linkJson) && StringUtils.isBlank(linkJson)) {
       throw new IllegalArgumentException("linkJson cannot be null");
     }
     this.linkJson = linkJson;
@@ -222,7 +222,12 @@ public class UserInfo extends BaseTimeEntity {
   }
 
   public UserInfo withSkills(List<Skill> skillList) {
-    skillList.forEach(this::addSkill);
+    skillList.stream().filter(
+        skill -> this.userInfoSkills.stream()
+            .noneMatch(userInfoSkill -> userInfoSkill.getSkill().equals(skill))
+    ).forEach(this::addSkill);
+    this.userInfoSkills.removeIf(userInfoSkill -> skillList.stream()
+        .noneMatch(skill -> userInfoSkill.getSkill().equals(skill)));
 
     return this;
   }
