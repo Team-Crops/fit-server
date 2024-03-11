@@ -1,6 +1,5 @@
 package org.crops.fitserver.domain.matching.service.impl;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -12,6 +11,7 @@ import org.crops.fitserver.domain.matching.dto.response.GetMatchingResponse;
 import org.crops.fitserver.domain.matching.dto.response.GetMatchingRoomResponse;
 import org.crops.fitserver.domain.matching.entity.Matching;
 import org.crops.fitserver.domain.matching.repository.MatchingRepository;
+import org.crops.fitserver.domain.matching.repository.MatchingRoomRepository;
 import org.crops.fitserver.domain.matching.service.MatchingService;
 import org.crops.fitserver.domain.user.domain.User;
 import org.crops.fitserver.domain.user.repository.UserRepository;
@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MatchingServiceImpl implements MatchingService {
 
   private final MatchingRepository matchingRepository;
+  private final MatchingRoomRepository matchingRoomRepository;
   private final UserRepository userRepository;
 
   @Override
@@ -38,12 +39,7 @@ public class MatchingServiceImpl implements MatchingService {
       throw new BusinessException(ErrorCode.ALREADY_EXIST_MATCHING_EXCEPTION);
     }
 
-    var matching = matchingRepository.save(Matching.builder()
-        .user(user)
-        .status(MatchingStatus.WAITING)
-        .position(user.getUserInfo().getPosition())
-        .expiredAt(LocalDateTime.now().plusDays(3))
-        .build());
+    var matching = matchingRepository.save(Matching.create(user, user.getUserInfo().getPosition()));
     return CreateMatchingResponse.from(matching);
   }
 
@@ -66,7 +62,7 @@ public class MatchingServiceImpl implements MatchingService {
     var matching = getActiveMatching(user).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_EXIST_MATCHING_EXCEPTION));
 
-    if(!Objects.equals(matching.getMatchingRoom().getId(), roomId)) {
+    if (!Objects.equals(matching.getMatchingRoom().getId(), roomId)) {
       throw new BusinessException(ErrorCode.NOT_EXIST_MATCHING_EXCEPTION);
     }
     var matchingRoom = matching.getMatchingRoom();
@@ -85,7 +81,37 @@ public class MatchingServiceImpl implements MatchingService {
     matching.cancel();
   }
 
+  @Override
+  @Transactional
+  public List<Matching> expireMatchingAll() {
+    var matchingList = matchingRepository.findExpireMatching();
+    matchingList.forEach(Matching::expire);
+    matchingRepository.saveAll(matchingList);
+
+    return matchingList;
+  }
+
+  @Override
+  @Transactional
+  public void forceOut(Long userId, Long roomId, Long forceOutUserId) {
+    var user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(
+        ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
+    var matching = getActiveMatching(user).orElseThrow(() -> new BusinessException(
+        ErrorCode.NOT_EXIST_MATCHING_EXCEPTION));
+    var matchingRoom = matching.getMatchingRoom();
+
+    if (!Objects.equals(matchingRoom.getId(), roomId)) {
+      throw new BusinessException(ErrorCode.NOT_EXIST_MATCHING_EXCEPTION);
+    }
+    matchingRoom.forceOut(userId, forceOutUserId);
+
+    matchingRoomRepository.save(matchingRoom);
+    //TODO: 채팅방에 강제퇴장 메시지 전송
+    //TODO: 강제퇴장당한 유저에게 강제퇴장 알림 전송
+  }
+
   private Optional<Matching> getActiveMatching(User user) {
-    return matchingRepository.findActiveMatchingByUser(user, List.of(MatchingStatus.WAITING, MatchingStatus.MATCHED));
+    return matchingRepository.findActiveMatchingByUser(user,
+        List.of(MatchingStatus.WAITING, MatchingStatus.MATCHED));
   }
 }

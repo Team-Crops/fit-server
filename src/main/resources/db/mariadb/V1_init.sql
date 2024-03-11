@@ -135,6 +135,9 @@ CREATE TABLE IF NOT EXISTS `matching`
     `created_at`        datetime(6)    NOT NULL,
     `updated_at`        datetime(6)    NOT NULL,
     `is_deleted`   tinyint(1) NOT NULL DEFAULT false,
+    `last_batch_at`     datetime(6) NULL,
+    `expired_at`        datetime(6) NULL,
+    `status`            varchar(20) NULL
 );
 
 CREATE TABLE IF NOT EXISTS `matching_room`

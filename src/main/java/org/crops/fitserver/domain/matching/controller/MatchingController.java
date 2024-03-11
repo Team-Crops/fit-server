@@ -2,6 +2,7 @@ package org.crops.fitserver.domain.matching.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.crops.fitserver.domain.matching.dto.request.ForceOutRequest;
 import org.crops.fitserver.domain.matching.dto.response.CreateMatchingResponse;
 import org.crops.fitserver.domain.matching.dto.response.GetMatchingResponse;
 import org.crops.fitserver.domain.matching.dto.response.GetMatchingRoomResponse;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,6 +46,17 @@ public class MatchingController {
       @PathVariable("roomId") Long roomId
   ) {
     return ResponseEntity.ok(matchingService.getMatchingRoom(userId, roomId));
+  }
+
+  //강제퇴장
+  @PostMapping("/rom/{roomId}/force-out")
+  public ResponseEntity<Void> forceOut(
+      @CurrentUserId Long userId,
+      @PathVariable("roomId") Long roomId,
+      @RequestBody ForceOutRequest forceOutRequest
+  ) {
+    matchingService.forceOut(userId, roomId, forceOutRequest.userId());
+    return ResponseEntity.ok().build();
   }
 
   @PostMapping("/cancel")
