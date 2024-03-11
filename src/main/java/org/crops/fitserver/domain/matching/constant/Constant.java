@@ -1,6 +1,5 @@
 package org.crops.fitserver.domain.matching.constant;
 
-import java.util.List;
 import java.util.Map;
 import org.crops.fitserver.domain.skillset.constant.PositionType;
 

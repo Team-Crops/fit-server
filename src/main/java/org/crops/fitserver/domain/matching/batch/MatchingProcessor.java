@@ -3,6 +3,7 @@ package org.crops.fitserver.domain.matching.batch;
 
 import static java.util.stream.Collectors.groupingBy;
 
+import io.jsonwebtoken.lang.Collections;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -49,7 +50,7 @@ public class MatchingProcessor {
 
   //최소 인원이 채워지지 않은 룸에 매칭을 시도
   @Transactional
-  public void insertToNotEnoughRoom() {
+  public int insertToNotEnoughRoom() {
     var notEnoughRoomList = matchingRoomList.stream()
         .filter(MatchingRoom::isNotEnough).toList();
     notEnoughRoomList
@@ -60,11 +61,16 @@ public class MatchingProcessor {
         }));
 
     matchingRoomRepository.saveAll(notEnoughRoomList);
+
+    return notEnoughRoomList.size();
   }
 
   //룸이 없는 매칭끼리 최소인원 이상이 되도록 룸을 생성
   @Transactional
-  public void createNewRoom() {
+  public int createNewRoom() {
+    if (matchingMap.size() < 4) {
+      return 0;
+    }
     var size = matchingMap.values().stream().mapToInt(List::size).min().orElse(0);
 
     for (int i = 0; i < size; i++) {
@@ -75,23 +81,31 @@ public class MatchingProcessor {
       var newRoom = MatchingRoom.createRoom(matchingList, chatRoomService.createChatRoom().getId());
       matchingRoomRepository.save(newRoom);
     }
+
+    return size;
   }
 
   //최소인원수를 만족한 룸을 찾아서 매칭을 시도
-  public void joinRoom() {
+  public int joinRoom() {
+    int count = 0;
 
     //frontend, backend, designer, planner순으로 룸에 들어가기
-    joinRoomByType(PositionType.FRONTEND);
-    joinRoomByType(PositionType.BACKEND);
-    joinRoomByType(PositionType.DESIGNER);
-    joinRoomByType(PositionType.PLANNER);
+    count += joinRoomByType(PositionType.FRONTEND);
+    count += joinRoomByType(PositionType.BACKEND);
+    count += joinRoomByType(PositionType.DESIGNER);
+    count += joinRoomByType(PositionType.PLANNER);
+
+    return count;
   }
 
-  private void joinRoomByType(PositionType positionType) {
+  private int joinRoomByType(PositionType positionType) {
     var matchingList = matchingMap.get(positionType);
     var roomList = new ArrayList<>(matchingRoomList.stream()
         .filter(matchingRoom -> matchingRoom.isCanInsertPosition(positionType))
         .toList());
+    if (Collections.isEmpty(matchingList) || Collections.isEmpty(roomList)) {
+      return 0;
+    }
 
     matchingList.forEach(matching -> {
       var room = roomList.stream()
@@ -109,8 +123,10 @@ public class MatchingProcessor {
       if (room != null) {
         room.addMatching(matching);
         matchingRoomRepository.save(room);
-        roomList.remove(room);
+        matchingList.remove(matching);
       }
     });
+
+    return matchingList.size();
   }
 }
