@@ -66,7 +66,10 @@ public class MatchingRoom extends BaseTimeEntity {
         .chatRoomId(chatRoomId)
         .isComplete(false)
         .completedAt(null)
-        .hostUserId(matchingList.get(0).getUser().getId())
+        .hostUserId(matchingList.stream()
+            .filter(m -> PositionType.PLANNER.equals(m.getPosition().getType())).findFirst()
+            .orElse(matchingList.get(0))
+            .getUser().getId())
         .build();
   }
 

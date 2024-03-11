@@ -1,10 +1,8 @@
 package org.crops.fitserver.domain.matching.batch;
 
-import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.chat.service.ChatRoomService;
-import org.crops.fitserver.domain.matching.constant.Constant;
 import org.crops.fitserver.domain.matching.repository.MatchingRepository;
 import org.crops.fitserver.domain.matching.repository.MatchingRoomRepository;
 import org.crops.fitserver.domain.matching.service.MatchingService;
@@ -27,7 +25,8 @@ public class MatchingScheduler {
   @Scheduled(cron = "1/10 * * * * *")
   @Transactional
   public void matching() {
-    var matchingProcessor = new MatchingProcessor(matchingRepository, matchingRoomRepository, chatRoomService);
+    var matchingProcessor = new MatchingProcessor(matchingRepository, matchingRoomRepository,
+        chatRoomService);
 
     matchingProcessor.insertToNotEnoughRoom();
     matchingProcessor.createNewRoom();
