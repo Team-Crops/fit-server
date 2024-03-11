@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS `position`
 (
     `position_id`  bigint       NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `display_name` varchar(20)  NOT NULL,
+    `type`         varchar(20)  NOT NULL,
     `image_url`   varchar(2048)     NOT NULL,
     `created_at`   datetime(6)      NOT NULL,
     `updated_at`   datetime(6)      NOT NULL,
@@ -148,8 +149,8 @@ CREATE TABLE IF NOT EXISTS `matching_room`
     `created_at`   datetime(6) NOT NULL,
     `updated_at`   datetime(6) NOT NULL,
     `is_deleted`   tinyint(1) NOT NULL DEFAULT false,
-    `is_matched`   tinyint(1) NOT NULL DEFAULT false,
-    `matched_at`   datetime(6) NULL
+    `is_complete`   tinyint(1) NOT NULL DEFAULT false,
+    `completed_at`   datetime(6) NULL
 );
 
 CREATE TABLE IF NOT EXISTS `project`

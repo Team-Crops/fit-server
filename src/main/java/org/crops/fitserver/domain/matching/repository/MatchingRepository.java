@@ -21,4 +21,10 @@ public interface MatchingRepository extends JpaRepository<Matching, Long> {
       + "where m.expiredAt <= current_timestamp "
       + "and m.isDeleted = false")
   List<Matching> findExpireMatching();
+
+  @Query("select m from Matching m "
+      + "where m.status = 'WAITING'"
+      + "and m.matchingRoom is null "
+      + "and m.isDeleted = false")
+  List<Matching> findMatchingWithoutRoom();
 }

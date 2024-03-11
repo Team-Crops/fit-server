@@ -10,6 +10,7 @@ import org.crops.fitserver.domain.matching.dto.response.CreateMatchingResponse;
 import org.crops.fitserver.domain.matching.dto.response.GetMatchingResponse;
 import org.crops.fitserver.domain.matching.dto.response.GetMatchingRoomResponse;
 import org.crops.fitserver.domain.matching.entity.Matching;
+import org.crops.fitserver.domain.matching.entity.MatchingRoom;
 import org.crops.fitserver.domain.matching.repository.MatchingRepository;
 import org.crops.fitserver.domain.matching.repository.MatchingRoomRepository;
 import org.crops.fitserver.domain.matching.service.MatchingService;
