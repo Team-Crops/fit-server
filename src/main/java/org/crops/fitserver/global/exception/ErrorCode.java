@@ -54,8 +54,8 @@ public enum ErrorCode {
    */
   ALREADY_EXIST_MATCHING_EXCEPTION(HttpStatus.CONFLICT, "matching-1", "이미 매칭이 존재합니다."),
   NOT_EXIST_MATCHING_EXCEPTION(HttpStatus.NOT_FOUND, "matching-2", "매칭이 존재하지 않습니다."),
-
-  NOT_ENOUGH_MATCHING_EXCEPTION(HttpStatus.NOT_ACCEPTABLE, "matching-3", "매칭이 충분하지 않습니다."),
+  Not_EXIST_MATCHING_ROOM_EXCEPTION(HttpStatus.NOT_FOUND, "matching-3", "매칭 방이 존재하지 않습니다."),
+  NOT_ENOUGH_MATCHING_EXCEPTION(HttpStatus.NOT_ACCEPTABLE, "matching-4", "매칭 인원 수가 충분하지 않습니다."),
   ;
 
 

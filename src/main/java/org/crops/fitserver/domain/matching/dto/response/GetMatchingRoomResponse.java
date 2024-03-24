@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import org.crops.fitserver.domain.matching.entity.MatchingRoom;
 
 public record GetMatchingRoomResponse(
-    Long id,
+    Long matchingRoomId,
     Long chatRoomId,
     Boolean isComplete,
     LocalDateTime completedAt,

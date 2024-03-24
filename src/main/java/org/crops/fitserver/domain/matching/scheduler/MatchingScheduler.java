@@ -1,4 +1,4 @@
-package org.crops.fitserver.domain.matching.batch;
+package org.crops.fitserver.domain.matching.scheduler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

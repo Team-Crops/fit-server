@@ -1,4 +1,4 @@
-package org.crops.fitserver.domain.matching.batch;
+package org.crops.fitserver.domain.matching.scheduler;
 
 
 import static java.util.stream.Collectors.groupingBy;

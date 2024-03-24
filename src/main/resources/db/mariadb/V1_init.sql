@@ -111,7 +111,6 @@ CREATE TABLE IF NOT EXISTS `chat_room`
     `chat_room_id`   bigint      NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `created_at`     datetime(6)    NOT NULL,
     `updated_at`     datetime(6)    NOT NULL,
-    `chat_room_type` varchar(20) NOT NULL,
     `is_deleted`     tinyint(1) NOT NULL DEFAULT false
 );
 

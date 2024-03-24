@@ -3,11 +3,7 @@ package org.crops.fitserver.global.config;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.openapitools.jackson.nullable.JsonNullableModule;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -26,17 +22,17 @@ public class ObjectMapperConfig {
       builder.featuresToDisable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
       builder.featuresToDisable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
-      final SimpleModule localDateTimeModule = new SimpleModule();
-      localDateTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(
-          DateTimeFormatter.ISO_DATE_TIME));
-      localDateTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(
-          DateTimeFormatter.ISO_DATE_TIME));
-      builder.modules(jsonNullableModule(), localDateTimeModule);
+      builder.modules(jsonNullableModule(), javaTimeModule());
     };
   }
 
   @Bean
   public JsonNullableModule jsonNullableModule() {
     return new JsonNullableModule();
+  }
+
+  @Bean
+  public JavaTimeModule javaTimeModule(){
+    return new JavaTimeModule();
   }
 }
