@@ -63,7 +63,7 @@ public class Matching extends BaseTimeEntity {
 
   @Column(name = "status", nullable = false)
   @Enumerated(value = EnumType.STRING)
-  private MatchingStatus status = MatchingStatus.WAITING;
+  private MatchingStatus status;
 
   public static Matching create(User user, Position position) {
     return Matching.builder()

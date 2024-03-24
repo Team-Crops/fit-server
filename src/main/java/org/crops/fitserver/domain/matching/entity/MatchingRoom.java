@@ -55,14 +55,13 @@ public class MatchingRoom extends BaseTimeEntity {
   private Long hostUserId;
 
   @OneToMany(mappedBy = "matchingRoom")
-  private List<Matching> matchingList = new ArrayList<>();
+  private final List<Matching> matchingList = new ArrayList<>();
 
   public static MatchingRoom createRoom(List<Matching> matchingList, Long chatRoomId) {
     if (matchingList.stream().map(Matching::getPosition).distinct().count() < 4) {
       throw new BusinessException(ErrorCode.NOT_ENOUGH_MATCHING_EXCEPTION);
     }
-    return MatchingRoom.builder()
-        .matchingList(matchingList)
+    var newMatchingRoom =  MatchingRoom.builder()
         .chatRoomId(chatRoomId)
         .isComplete(false)
         .completedAt(null)
@@ -71,6 +70,9 @@ public class MatchingRoom extends BaseTimeEntity {
             .orElse(matchingList.get(0))
             .getUser().getId())
         .build();
+    matchingList.forEach(newMatchingRoom::addMatching);
+
+    return newMatchingRoom;
   }
 
   public void forceOut(Long userId, Long forceOutUserId) {
