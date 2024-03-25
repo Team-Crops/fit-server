@@ -56,6 +56,12 @@ public enum ErrorCode {
   NOT_EXIST_MATCHING_EXCEPTION(HttpStatus.NOT_FOUND, "matching-2", "매칭이 존재하지 않습니다."),
   Not_EXIST_MATCHING_ROOM_EXCEPTION(HttpStatus.NOT_FOUND, "matching-3", "매칭 방이 존재하지 않습니다."),
   NOT_ENOUGH_MATCHING_EXCEPTION(HttpStatus.NOT_ACCEPTABLE, "matching-4", "매칭 인원 수가 충분하지 않습니다."),
+
+  //project
+  /**
+   * project. code prefix: project-
+   */
+  NOT_EXIST_PROJECT_EXCEPTION(HttpStatus.NOT_FOUND, "project-1", "프로젝트가 존재하지 않습니다."),
   ;
 
 
