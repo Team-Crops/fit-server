@@ -10,5 +10,5 @@ public interface AuthFacade {
       String authorizationCode,
       SocialPlatform socialPlatform);
 
-  SocialLoginPageResponse getSocialLoginPageUrl(SocialPlatform socialPlatform);
+  SocialLoginPageResponse getSocialLoginPageUrl(String origin, SocialPlatform socialPlatform);
 }

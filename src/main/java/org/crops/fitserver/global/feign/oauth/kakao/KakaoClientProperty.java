@@ -15,5 +15,5 @@ public class KakaoClientProperty {
   private String grantType;
   private String clientId;
   private String loginPageUrl;
-  private String redirectUri;
+  private String redirectPath;
 }

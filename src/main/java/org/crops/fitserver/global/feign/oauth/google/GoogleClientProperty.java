@@ -16,5 +16,5 @@ public class GoogleClientProperty {
   private String clientId;
   private String clientSecret;
   private String loginPageUrl;
-  private String redirectUri;
+  private String redirectPath;
 }

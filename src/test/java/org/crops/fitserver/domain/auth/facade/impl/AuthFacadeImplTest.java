@@ -88,6 +88,7 @@ class AuthFacadeImplTest {
   class GetSocialLoginPageTest {
 
     String socialLoginPage = "test_kakao_login_page_url";
+    String origin = "https://origin";
 
     @Nested
     @DisplayName("성공")
@@ -100,11 +101,11 @@ class AuthFacadeImplTest {
         // given
         given(oAuthServiceProvider.getService(any(SocialPlatform.class)))
             .willReturn(oAuthService);
-        given(oAuthService.getLoginPageUrl())
+        given(oAuthService.getLoginPageUrl(anyString()))
             .willReturn(socialLoginPage);
 
         // when
-        var actual = authFacadeImpl.getSocialLoginPageUrl(socialPlatform);
+        var actual = authFacadeImpl.getSocialLoginPageUrl(origin, socialPlatform);
 
         // then
         var expected = SocialLoginPageResponse.from(socialLoginPage);

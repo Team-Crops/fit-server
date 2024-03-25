@@ -10,5 +10,5 @@ public interface OAuthService {
 
   User socialUserLogin(String authorizationCode);
 
-  String getLoginPageUrl();
+  String getLoginPageUrl(String origin);
 }
