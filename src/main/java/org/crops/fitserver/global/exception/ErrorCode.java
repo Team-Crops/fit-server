@@ -42,16 +42,21 @@ public enum ErrorCode {
    */
   FILE_UPLOAD_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "file-1", "파일 업로드에 실패했습니다."),
 
-
   /**
    * user-policy-agreement. code prefix: user-policy-agreement-
    */
-  DUPLICATED_POLICY_REQUEST_EXCEPTION(HttpStatus.BAD_REQUEST, "user-policy-agreement-1", "같은 약관을 한 번에 여러 번 동의할 수 없습니다."),
+  DUPLICATED_POLICY_REQUEST_EXCEPTION(HttpStatus.BAD_REQUEST, "user-policy-agreement-1",
+      "같은 약관을 한 번에 여러 번 동의할 수 없습니다."),
 
-
-
+  //matching
+  /**
+   * matching. code prefix: matching-
+   */
+  ALREADY_EXIST_MATCHING_EXCEPTION(HttpStatus.CONFLICT, "matching-1", "이미 매칭이 존재합니다."),
+  NOT_EXIST_MATCHING_EXCEPTION(HttpStatus.NOT_FOUND, "matching-2", "매칭이 존재하지 않습니다."),
+  Not_EXIST_MATCHING_ROOM_EXCEPTION(HttpStatus.NOT_FOUND, "matching-3", "매칭 방이 존재하지 않습니다."),
+  NOT_ENOUGH_MATCHING_EXCEPTION(HttpStatus.NOT_ACCEPTABLE, "matching-4", "매칭 인원 수가 충분하지 않습니다."),
   ;
-
 
 
   private final HttpStatus httpStatus;

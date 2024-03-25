@@ -5,6 +5,8 @@ import static jakarta.persistence.CascadeType.ALL;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,6 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.crops.fitserver.domain.skillset.constant.PositionType;
 import org.crops.fitserver.global.entity.BaseTimeEntity;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.SQLDelete;
@@ -44,6 +47,10 @@ public class Position extends BaseTimeEntity {
 
   @Column(nullable = false)
   private String imageUrl;
+
+  @Column(nullable = true)//마이그레이션을 위해 null 허용
+  @Enumerated(EnumType.STRING)
+  private PositionType type;
 
   public void updateDisplayName(String displayName) {
     this.displayName = displayName;

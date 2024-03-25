@@ -11,4 +11,8 @@ public interface AuthFacade {
       SocialPlatform socialPlatform);
 
   SocialLoginPageResponse getSocialLoginPageUrl(SocialPlatform socialPlatform);
+
+  TokenResponse testLogin();
+
+  TokenResponse testLogin(Long userId);
 }

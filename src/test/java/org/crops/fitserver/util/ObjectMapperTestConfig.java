@@ -3,6 +3,7 @@ package org.crops.fitserver.util;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.openapitools.jackson.nullable.JsonNullableModule;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -20,7 +21,7 @@ public class ObjectMapperTestConfig {
       builder.featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
       builder.featuresToDisable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
       builder.featuresToDisable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-      builder.modules(jsonNullableModule());
+      builder.modules(jsonNullableModule(), new JavaTimeModule());
     };
   }
 
