@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS `matching_room`
     `created_at`   datetime(6) NOT NULL,
     `updated_at`   datetime(6) NOT NULL,
     `is_deleted`   tinyint(1) NOT NULL DEFAULT false,
-    `is_complete`   tinyint(1) NOT NULL DEFAULT false,
+    `is_completed`   tinyint(1) NOT NULL DEFAULT false,
     `completed_at`   datetime(6) NULL
 );
 
