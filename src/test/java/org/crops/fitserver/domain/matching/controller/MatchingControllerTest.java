@@ -219,7 +219,7 @@ class MatchingControllerTest extends MockMvcDocs {
                             fieldWithPath("matchingRoomId").type(JsonFieldType.NUMBER).description("방 ID"),
                             fieldWithPath("chatRoomId").type(JsonFieldType.NUMBER)
                                 .description("채팅방 ID"),
-                            fieldWithPath("isComplete").type(JsonFieldType.BOOLEAN)
+                            fieldWithPath("isCompleted").type(JsonFieldType.BOOLEAN)
                                 .description("매칭 완료 여부. true: 매칭 모두 완료, false: 매칭 중"),
                             fieldWithPath("completedAt").type(JsonFieldType.STRING)
                                 .description("매칭 완료 일시. null: 매칭 중").optional(),

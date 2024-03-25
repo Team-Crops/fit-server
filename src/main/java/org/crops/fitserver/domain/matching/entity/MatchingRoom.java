@@ -45,8 +45,8 @@ public class MatchingRoom extends BaseTimeEntity {
   @Column(name = "chat_room_id", nullable = false)
   private Long chatRoomId;
 
-  @Column(name = "is_complete", nullable = false)
-  private Boolean isComplete;
+  @Column(name = "is_completed", nullable = false)
+  private Boolean isCompleted;
 
   @Column(name = "completed_at", nullable = true)
   private LocalDateTime completedAt;
@@ -63,7 +63,7 @@ public class MatchingRoom extends BaseTimeEntity {
     }
     var newMatchingRoom =  MatchingRoom.builder()
         .chatRoomId(chatRoomId)
-        .isComplete(false)
+        .isCompleted(false)
         .completedAt(null)
         .hostUserId(matchingList.stream()
             .filter(m -> PositionType.PLANNER.equals(m.getPosition().getType())).findFirst()
@@ -158,7 +158,7 @@ public class MatchingRoom extends BaseTimeEntity {
   }
 
   public void complete() {
-    isComplete = true;
+    isCompleted = true;
     completedAt = LocalDateTime.now();
   }
 }

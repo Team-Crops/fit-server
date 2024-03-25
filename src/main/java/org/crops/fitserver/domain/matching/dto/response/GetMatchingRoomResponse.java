@@ -6,7 +6,7 @@ import org.crops.fitserver.domain.matching.entity.MatchingRoom;
 public record GetMatchingRoomResponse(
     Long matchingRoomId,
     Long chatRoomId,
-    Boolean isComplete,
+    Boolean isCompleted,
     LocalDateTime completedAt,
     Long hostUserId
 ) {
@@ -15,7 +15,7 @@ public record GetMatchingRoomResponse(
     return new GetMatchingRoomResponse(
         matchingRoom.getId(),
         matchingRoom.getChatRoomId(),
-        matchingRoom.getIsComplete(),
+        matchingRoom.getIsCompleted(),
         matchingRoom.getCompletedAt(),
         matchingRoom.getHostUserId()
     );

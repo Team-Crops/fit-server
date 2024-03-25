@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface MatchingRoomRepository extends JpaRepository<MatchingRoom, Long> {
 
   @Query("select mr from MatchingRoom mr "
-      + "where mr.isComplete = false "
+      + "where mr.isCompleted = false "
       + "and mr.isDeleted = false")
   List<MatchingRoom> findMatchingRoomNotComplete();
 }
