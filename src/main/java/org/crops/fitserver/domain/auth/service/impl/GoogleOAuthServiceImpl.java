@@ -42,7 +42,7 @@ public class GoogleOAuthServiceImpl implements OAuthService {
         googleClientProperty.getGrantType(),
         googleClientProperty.getClientId(),
         googleClientProperty.getClientSecret(),
-        googleClientProperty.getRedirectUri(),
+        googleClientProperty.getRedirectPath(),
         authorizationCode);
 
     GoogleSocialUserProfile socialUserProfile = googleServerClient.getUserInformation(
@@ -69,12 +69,14 @@ public class GoogleOAuthServiceImpl implements OAuthService {
   }
 
   @Override
-  public String getLoginPageUrl() {
-    return new StringBuilder().append(googleClientProperty.getLoginPageUrl())
+  public String getLoginPageUrl(String origin) {
+    return new StringBuilder()
+        .append(googleClientProperty.getLoginPageUrl())
         .append("&client_id=")
         .append(googleClientProperty.getClientId())
         .append("&redirect_uri=")
-        .append(googleClientProperty.getRedirectUri())
+        .append(origin)
+        .append(googleClientProperty.getRedirectPath())
         .toString();
   }
 }

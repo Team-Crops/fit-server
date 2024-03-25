@@ -34,8 +34,8 @@ public class AuthFacadeImpl implements AuthFacade {
 
   @Override
   @Transactional(readOnly = true)
-  public SocialLoginPageResponse getSocialLoginPageUrl(SocialPlatform socialPlatform) {
+  public SocialLoginPageResponse getSocialLoginPageUrl(String origin, SocialPlatform socialPlatform) {
     OAuthService oAuthService = oAuthServiceProvider.getService(socialPlatform);
-    return SocialLoginPageResponse.from(oAuthService.getLoginPageUrl());
+    return SocialLoginPageResponse.from(oAuthService.getLoginPageUrl(origin));
   }
 }

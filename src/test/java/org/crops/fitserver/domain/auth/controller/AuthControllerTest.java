@@ -189,7 +189,9 @@ class AuthControllerTest extends MockMvcDocs {
   class GetSocialLoginPageTest {
 
     private static final String URL = "http://localhost:8080/v1/auth/social/{socialPlatform}/login-page";
-    private static final String LOGIN_PAGE_URL = "http://test-login-page-url.com";
+    private static final String LOGIN_PAGE_URL = "https://test-login-page-url.com";
+    private static final String REDIRECT_PATH = "/redirect";
+    private static final String ORIGIN = "https://origin";
 
     @Nested
     @DisplayName("성공")
@@ -201,18 +203,19 @@ class AuthControllerTest extends MockMvcDocs {
       void kakaoOAuthLogin(SocialPlatform socialPlatform) throws Exception {
         //given
         given(
-            authFacade.getSocialLoginPageUrl(any(SocialPlatform.class)))
-            .willReturn(SocialLoginPageResponse.from(LOGIN_PAGE_URL));
+            authFacade.getSocialLoginPageUrl(anyString(), any(SocialPlatform.class)))
+            .willReturn(SocialLoginPageResponse.from(ORIGIN + REDIRECT_PATH));
 
         //when
         var result = mockMvc.perform(
                 get(URL, socialPlatform.getName())
+                    .header("Origin", ORIGIN)
                     .contentType(MediaType.APPLICATION_JSON));
 
         //then
         result.andExpect(status().isOk())
             .andExpect(handler().handlerType(AuthController.class))
-            .andExpect(jsonPath("$.loginPageUrl").value(LOGIN_PAGE_URL))
+            .andExpect(jsonPath("$.loginPageUrl").value(ORIGIN + REDIRECT_PATH))
             .andDo(
                 document("Get OAuth Login Page Success",
                     resource(ResourceSnippetParameters.builder()

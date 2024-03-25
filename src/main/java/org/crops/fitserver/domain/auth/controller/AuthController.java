@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,18 +32,19 @@ public class AuthController {
       @Valid @RequestBody SocialLoginRequest request,
       @PathVariable(name = "socialPlatform") SocialPlatform socialPlatform
   ) {
-    TokenResponse tokenResponse = authFacade.socialLogin(
+    TokenResponse response = authFacade.socialLogin(
         request.code(),
         socialPlatform);
-    return ResponseEntity.ok(tokenResponse);
+    return ResponseEntity.ok(response);
   }
 
   @GetMapping("/social/{socialPlatform}/login-page")
   public ResponseEntity<SocialLoginPageResponse> getSocialLoginPageUrl(
+      @RequestHeader("Origin") String origin,
       @PathVariable(name = "socialPlatform") SocialPlatform socialPlatform
   ) {
-    SocialLoginPageResponse socialLoginPageResponse =
-        authFacade.getSocialLoginPageUrl(socialPlatform);
-    return ResponseEntity.ok(socialLoginPageResponse);
+    SocialLoginPageResponse response =
+        authFacade.getSocialLoginPageUrl(origin, socialPlatform);
+    return ResponseEntity.ok(response);
   }
 }
