@@ -1,5 +1,6 @@
 package org.crops.fitserver.domain.auth.controller;
 
+import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.epages.restdocs.apispec.Schema.*;
@@ -45,6 +46,7 @@ class AuthControllerTest extends MockMvcDocs {
   class OAuthLoginTest {
 
     private static final String URL = "http://localhost:8080/v1/auth/social/{socialPlatform}/login";
+    private static final String ORIGIN = "http://localhost:3000";
     private static final String AUTHORIZATION_CODE = "testAuthorizationCode";
     private static final String ACCESS_TOKEN = "accessToken example";
     private static final String REFRESH_TOKEN = "refreshToken example";
@@ -59,7 +61,7 @@ class AuthControllerTest extends MockMvcDocs {
       void oAuthLogin(SocialPlatform socialPlatform) throws Exception {
         //given
         given(
-            authFacade.socialLogin(anyString(), any(SocialPlatform.class)))
+            authFacade.socialLogin(anyString(), any(SocialPlatform.class), anyString()))
             .willReturn(TokenResponse.from(
                     TokenCollection.of(
                         ACCESS_TOKEN,
@@ -69,6 +71,7 @@ class AuthControllerTest extends MockMvcDocs {
         //when
         var result = mockMvc.perform(
             post(URL, socialPlatform.getName())
+                .header("Origin", ORIGIN)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
         );
@@ -84,6 +87,9 @@ class AuthControllerTest extends MockMvcDocs {
                         .tag("Auth")
                         .summary("OAuth Login api")
                         .description("소셜 로그인 api")
+                        .requestHeaders(
+                            headerWithName("Origin")
+                                .description("Request Origin"))
                         .pathParameters(
                             parameterWithName("socialPlatform")
                                 .description("소셜 플랫폼 - { kakao, google }")
@@ -189,9 +195,8 @@ class AuthControllerTest extends MockMvcDocs {
   class GetSocialLoginPageTest {
 
     private static final String URL = "http://localhost:8080/v1/auth/social/{socialPlatform}/login-page";
-    private static final String LOGIN_PAGE_URL = "https://test-login-page-url.com";
     private static final String REDIRECT_PATH = "/redirect";
-    private static final String ORIGIN = "https://origin";
+    private static final String ORIGIN = "http://localhost:3000";
 
     @Nested
     @DisplayName("성공")
@@ -222,6 +227,9 @@ class AuthControllerTest extends MockMvcDocs {
                         .tag("Auth")
                         .summary("Get OAuth Login Page api")
                         .description("소셜 로그인 페이지 조회 api")
+                        .requestHeaders(
+                            headerWithName("Origin")
+                                .description("Request Origin"))
                         .pathParameters(
                             parameterWithName("socialPlatform")
                                 .description("소셜 플랫폼 - { kakao, google }")

@@ -35,14 +35,14 @@ public class GoogleOAuthServiceImpl implements OAuthService {
 
   @Override
   @Transactional
-  public User socialUserLogin(String authorizationCode) {
+  public User socialUserLogin(String origin, String authorizationCode) {
 
     OAuthToken oAuthToken = googleAuthServerClient.getOAuth2AccessToken(
         googleClientProperty.getContentType(),
         googleClientProperty.getGrantType(),
         googleClientProperty.getClientId(),
         googleClientProperty.getClientSecret(),
-        googleClientProperty.getRedirectPath(),
+        origin + googleClientProperty.getRedirectPath(),
         authorizationCode);
 
     GoogleSocialUserProfile socialUserProfile = googleServerClient.getUserInformation(

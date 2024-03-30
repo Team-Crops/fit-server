@@ -35,12 +35,12 @@ public class KakaoOAuthServiceImpl implements OAuthService {
 
   @Override
   @Transactional
-  public User socialUserLogin(String authorizationCode) {
+  public User socialUserLogin(String origin, String authorizationCode) {
     OAuthToken oAuthToken = kakaoAuthServerClient.getOAuth2AccessToken(
         kakaoClientProperty.getContentType(),
         kakaoClientProperty.getGrantType(),
         kakaoClientProperty.getClientId(),
-        kakaoClientProperty.getRedirectPath(),
+        origin + kakaoClientProperty.getRedirectPath(),
         authorizationCode);
 
     KakaoSocialUserProfile socialUserProfile = kakaoServerClient.getUserInformation(

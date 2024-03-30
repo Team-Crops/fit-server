@@ -19,7 +19,6 @@ import lombok.NoArgsConstructor;
 import org.crops.fitserver.global.entity.BaseTimeEntity;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
-import org.openapitools.jackson.nullable.JsonNullable;
 
 @Entity
 @Getter
