@@ -20,7 +20,7 @@ import org.crops.fitserver.domain.auth.facade.AuthFacade;
 import org.crops.fitserver.domain.auth.dto.response.SocialLoginPageResponse;
 import org.crops.fitserver.domain.auth.dto.response.TokenResponse;
 import org.crops.fitserver.global.exception.ErrorCode;
-import org.crops.fitserver.util.MockMvcDocs;
+import org.crops.fitserver.config.MockMvcDocs;
 import org.crops.fitserver.domain.user.domain.SocialPlatform;
 import org.crops.fitserver.global.jwt.TokenCollection;
 import org.junit.jupiter.api.DisplayName;

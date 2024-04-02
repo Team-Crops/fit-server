@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import java.util.List;
-import org.crops.fitserver.util.MockMvcDocs;
+import org.crops.fitserver.config.MockMvcDocs;
 import org.crops.fitserver.domain.region.dto.RegionDto;
 import org.crops.fitserver.domain.region.dto.request.CreateRegionRequest;
 import org.crops.fitserver.domain.region.dto.request.UpdateRegionRequest;
