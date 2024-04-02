@@ -8,6 +8,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.crops.fitserver.config.QueryDslTestConfig;
 import org.crops.fitserver.domain.region.domain.Region;
 import org.crops.fitserver.domain.region.repository.RegionRepository;
 import org.crops.fitserver.domain.skillset.domain.Position;
@@ -27,17 +28,18 @@ import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestConstructor;
 
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-@RequiredArgsConstructor
 @DataJpaTest
-@ActiveProfiles("test")
 @EnableJpaAuditing
+@Import(QueryDslTestConfig.class)
+@ActiveProfiles("test")
+@RequiredArgsConstructor
+@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Slf4j
 public class UserRepositoryTest {
 
   private final TestEntityManager em;
