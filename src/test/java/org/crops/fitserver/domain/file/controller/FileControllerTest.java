@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.EnumFields;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
-import org.crops.fitserver.util.MockMvcDocs;
+import org.crops.fitserver.config.MockMvcDocs;
 import org.crops.fitserver.domain.file.constant.FileDomain;
 import org.crops.fitserver.domain.file.dto.PreSignedUrlDto;
 import org.crops.fitserver.domain.file.dto.request.GeneratePreSignedUrlRequest;
