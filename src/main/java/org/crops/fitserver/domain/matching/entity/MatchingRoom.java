@@ -37,31 +37,26 @@ import org.hibernate.annotations.Where;
 @Where(clause = "is_deleted = false")
 public class MatchingRoom extends BaseTimeEntity {
 
+  @OneToMany(mappedBy = "matchingRoom")
+  private final List<Matching> matchingList = new ArrayList<>();
   @Id
   @Column(name = "matching_room_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
   @Column(name = "chat_room_id", nullable = false)
   private Long chatRoomId;
-
   @Column(name = "is_completed", nullable = false)
   private Boolean isCompleted;
-
   @Column(name = "completed_at", nullable = true)
   private LocalDateTime completedAt;
-
   @Column(name = "host_user_id", nullable = false)
   private Long hostUserId;
-
-  @OneToMany(mappedBy = "matchingRoom")
-  private final List<Matching> matchingList = new ArrayList<>();
 
   public static MatchingRoom createRoom(List<Matching> matchingList, Long chatRoomId) {
     if (matchingList.stream().map(Matching::getPosition).distinct().count() < 4) {
       throw new BusinessException(ErrorCode.NOT_ENOUGH_MATCHING_EXCEPTION);
     }
-    var newMatchingRoom =  MatchingRoom.builder()
+    var newMatchingRoom = MatchingRoom.builder()
         .chatRoomId(chatRoomId)
         .isCompleted(false)
         .completedAt(null)
@@ -158,7 +153,12 @@ public class MatchingRoom extends BaseTimeEntity {
   }
 
   public void complete() {
+    //matching이 모두 ready 상태인지 확인
+    if (matchingList.stream().anyMatch(m -> !m.isReady())) {
+      throw new BusinessException(ErrorCode.NOT_READY_MATCHING_EXCEPTION);
+    }
     isCompleted = true;
     completedAt = LocalDateTime.now();
+    matchingList.forEach(Matching::complete);
   }
 }

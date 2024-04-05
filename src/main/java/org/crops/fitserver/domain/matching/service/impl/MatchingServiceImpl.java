@@ -63,11 +63,33 @@ public class MatchingServiceImpl implements MatchingService {
         ErrorCode.NOT_EXIST_MATCHING_EXCEPTION));
 
     if (!Objects.equals(matching.getMatchingRoom().getId(), roomId)) {
-      throw new BusinessException(ErrorCode.Not_EXIST_MATCHING_ROOM_EXCEPTION);
+      throw new BusinessException(ErrorCode.NOT_EXIST_MATCHING_ROOM_EXCEPTION);
     }
-    var matchingRoom = matching.getMatchingRoom();
+    var matchingRoom = matchingRoomRepository.findById(roomId)
+        .orElseThrow(() -> new BusinessException(
+            ErrorCode.NOT_EXIST_MATCHING_ROOM_EXCEPTION));
 
     return GetMatchingRoomResponse.from(matchingRoom);
+  }
+
+  @Override
+  @Transactional
+  public void readyMatching(Long userId, Long roomId) {
+    var user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(
+        ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
+    var matching = getActiveMatching(user).orElseThrow(() -> new BusinessException(
+        ErrorCode.NOT_EXIST_MATCHING_EXCEPTION));
+    var matchingRoom = matching.getMatchingRoom();
+
+    if (!Objects.equals(matchingRoom.getId(), roomId)) {
+      throw new BusinessException(ErrorCode.NOT_EXIST_MATCHING_ROOM_EXCEPTION);
+    }
+    if (Objects.equals(matchingRoom.getHostUserId(), userId)) {
+      throw new BusinessException(ErrorCode.NOT_ENABLE_READY_EXCEPTION);
+    }
+
+    matching.ready();
+    matchingRepository.save(matching);
   }
 
   @Override
@@ -80,7 +102,7 @@ public class MatchingServiceImpl implements MatchingService {
     var matchingRoom = matching.getMatchingRoom();
 
     if (!Objects.equals(matchingRoom.getId(), roomId)) {
-      throw new BusinessException(ErrorCode.NOT_EXIST_MATCHING_EXCEPTION);
+      throw new BusinessException(ErrorCode.NOT_EXIST_MATCHING_ROOM_EXCEPTION);
     }
     if (!Objects.equals(matchingRoom.getHostUserId(), userId)) {
       throw new BusinessException(ErrorCode.FORBIDDEN_EXCEPTION);
@@ -88,7 +110,6 @@ public class MatchingServiceImpl implements MatchingService {
 
     matchingRoom.complete();
     matchingRoomRepository.save(matchingRoom);
-
     //TODO: 내 프로젝트 생성 로직 추가
   }
 
