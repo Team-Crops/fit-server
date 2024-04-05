@@ -20,9 +20,11 @@ import com.epages.restdocs.apispec.EnumFields;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.matching.constant.MatchingStatus;
 import org.crops.fitserver.domain.matching.dto.MatchingDto;
+import org.crops.fitserver.domain.matching.dto.MatchingMemberView;
 import org.crops.fitserver.domain.matching.dto.request.ForceOutRequest;
 import org.crops.fitserver.domain.matching.dto.response.CreateMatchingResponse;
 import org.crops.fitserver.domain.matching.dto.response.GetMatchingResponse;
@@ -68,7 +70,7 @@ class MatchingControllerTest extends MockMvcDocs {
     //given
     var user = UserBuildUtil.buildUser().build();
     var principal = getPrincipalDetails(user.getId(), user.getUserRole());
-    var url = "/v1/matching/";
+    var url = "/v1/matching";
     given(matchingService.createMatching(principal.getUserId())).willReturn(
         new CreateMatchingResponse(
             new MatchingDto(1L, 1L, 1L, LocalDateTime.now(), LocalDateTime.now().plusDays(3),
@@ -90,8 +92,8 @@ class MatchingControllerTest extends MockMvcDocs {
                     .responseSchema(Schema.schema("createMatchingResponse"))
                     .responseFields(
                         fields(
-                            fieldWithPath("matching.matchingId").type(JsonFieldType.NUMBER)
-                                .description("매칭 ID"),
+                            fieldWithPath("matching.userId").type(JsonFieldType.NUMBER)
+                                .description("유저 ID"),
                             fieldWithPath("matching.roomId").type(JsonFieldType.NUMBER)
                                 .description("방 ID").optional(),
                             fieldWithPath("matching.positionId").type(JsonFieldType.NUMBER)
@@ -115,7 +117,7 @@ class MatchingControllerTest extends MockMvcDocs {
     //given
     var user = UserBuildUtil.buildUser().build();
     var principal = getPrincipalDetails(user.getId(), user.getUserRole());
-    var url = "/v1/matching/";
+    var url = "/v1/matching";
     given(matchingService.getMatching(principal.getUserId())).willReturn(
         new GetMatchingResponse(
             new MatchingDto(1L, 1L, 1L, LocalDateTime.now(), LocalDateTime.now().plusDays(3),
@@ -137,8 +139,8 @@ class MatchingControllerTest extends MockMvcDocs {
                     .responseSchema(Schema.schema("getMatchingResponse"))
                     .responseFields(
                         fields(
-                            fieldWithPath("matching.matchingId").type(JsonFieldType.NUMBER)
-                                .description("매칭 ID"),
+                            fieldWithPath("matching.userId").type(JsonFieldType.NUMBER)
+                                .description("유저 ID"),
                             fieldWithPath("matching.roomId").type(JsonFieldType.NUMBER)
                                 .description("방 ID").optional(),
                             fieldWithPath("matching.positionId").type(JsonFieldType.NUMBER)
@@ -161,7 +163,7 @@ class MatchingControllerTest extends MockMvcDocs {
     //given
     var user = UserBuildUtil.buildUser().build();
     var principal = getPrincipalDetails(user.getId(), user.getUserRole());
-    var url = "/v1/matching/";
+    var url = "/v1/matching";
     given(matchingService.getMatching(principal.getUserId())).willThrow(new BusinessException(
         ErrorCode.NOT_EXIST_MATCHING_EXCEPTION));
     //when
@@ -195,12 +197,17 @@ class MatchingControllerTest extends MockMvcDocs {
     var user = UserBuildUtil.buildUser().build();
     var principal = getPrincipalDetails(user.getId(), user.getUserRole());
     var roomId = 1L;
-    var url = "/v1/matching/room/" + roomId;
+    var url = "/v1/matching/room/{roomId}";
     given(matchingService.getMatchingRoom(principal.getUserId(), roomId)).willReturn(
         new GetMatchingRoomResponse(
-            roomId, 1L, false, null, principal.getUserId()));
+            roomId, 1L, false, null, principal.getUserId(), List.of(
+            new MatchingMemberView(principal.getUserId(), 1L, user.getUsername(),
+                user.getProfileImageUrl(), true, true),
+            new MatchingMemberView(0L, 1L, user.getUsername(), user.getProfileImageUrl(), true,
+                false)
+        )));
     //when
-    var result = mockMvc.perform(get(url)
+    var result = mockMvc.perform(get(url, roomId)
         .contentType(MediaType.APPLICATION_JSON)
         .with(user(principal))
         .with(csrf())
@@ -216,7 +223,8 @@ class MatchingControllerTest extends MockMvcDocs {
                     .responseSchema(Schema.schema("getMatchingRoomResponse"))
                     .responseFields(
                         fields(
-                            fieldWithPath("matchingRoomId").type(JsonFieldType.NUMBER).description("방 ID"),
+                            fieldWithPath("matchingRoomId").type(JsonFieldType.NUMBER)
+                                .description("방 ID"),
                             fieldWithPath("chatRoomId").type(JsonFieldType.NUMBER)
                                 .description("채팅방 ID"),
                             fieldWithPath("isCompleted").type(JsonFieldType.BOOLEAN)
@@ -224,7 +232,23 @@ class MatchingControllerTest extends MockMvcDocs {
                             fieldWithPath("completedAt").type(JsonFieldType.STRING)
                                 .description("매칭 완료 일시. null: 매칭 중").optional(),
                             fieldWithPath("hostUserId").type(JsonFieldType.NUMBER)
-                                .description("임시 방장 ID")
+                                .description("임시 방장 ID"),
+                            fieldWithPath("matchingUserList").type(JsonFieldType.ARRAY)
+                                .description("매칭 멤버 목록").optional(),
+                            fieldWithPath("matchingUserList[].userId").type(JsonFieldType.NUMBER)
+                                .description("유저 ID"),
+                            fieldWithPath("matchingUserList[].positionId").type(
+                                    JsonFieldType.NUMBER)
+                                .description("포지션 ID"),
+                            fieldWithPath("matchingUserList[].username").type(JsonFieldType.STRING)
+                                .description("유저 이름"),
+                            fieldWithPath("matchingUserList[].profileImageUrl").type(
+                                    JsonFieldType.STRING)
+                                .description("프로필 이미지 URL"),
+                            fieldWithPath("matchingUserList[].isHost").type(JsonFieldType.BOOLEAN)
+                                .description("방장 여부"),
+                            fieldWithPath("matchingUserList[].isReady").type(JsonFieldType.BOOLEAN)
+                                .description("준비 여부")
                         )
                     )
                     .build()
@@ -238,12 +262,12 @@ class MatchingControllerTest extends MockMvcDocs {
     var user = UserBuildUtil.buildUser().build();
     var principal = getPrincipalDetails(user.getId(), user.getUserRole());
     var roomId = 1L;
-    var url = "/v1/matching/room/" + roomId;
+    var url = "/v1/matching/room/{roomId}";
     given(matchingService.getMatchingRoom(principal.getUserId(), roomId)).willThrow(
         new BusinessException(
-            ErrorCode.Not_EXIST_MATCHING_ROOM_EXCEPTION));
+            ErrorCode.NOT_EXIST_MATCHING_ROOM_EXCEPTION));
     //when
-    var result = mockMvc.perform(get(url)
+    var result = mockMvc.perform(get(url, roomId)
         .contentType(MediaType.APPLICATION_JSON)
         .with(user(principal))
         .with(csrf())
@@ -273,10 +297,10 @@ class MatchingControllerTest extends MockMvcDocs {
     var user = UserBuildUtil.buildUser().build();
     var principal = getPrincipalDetails(user.getId(), user.getUserRole());
     var roomId = 1L;
-    var url = "/v1/matching/room/" + roomId + "/force-out";
+    var url = "/v1/matching/room/{roomId}/force-out";
     var forceOutRequest = new ForceOutRequest(2L);
     //when
-    var result = mockMvc.perform(post(url)
+    var result = mockMvc.perform(post(url, roomId)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(forceOutRequest))
         .with(user(principal))
@@ -308,13 +332,13 @@ class MatchingControllerTest extends MockMvcDocs {
     var principal = getPrincipalDetails(user.getId(), user.getUserRole());
     var roomId = 1L;
     var forceOutUserId = 2L;
-    var url = "/v1/matching/room/" + roomId + "/force-out";
+    var url = "/v1/matching/room/{roomId}/force-out";
     willThrow(new BusinessException(ErrorCode.FORBIDDEN_EXCEPTION)).willDoNothing().given(
         matchingService).forceOut(principal.getUserId(), roomId, forceOutUserId);
 
     var forceOutRequest = new ForceOutRequest(forceOutUserId);
     //when
-    var result = mockMvc.perform(post(url)
+    var result = mockMvc.perform(post(url, roomId)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(forceOutRequest))
         .with(user(principal))
@@ -346,13 +370,13 @@ class MatchingControllerTest extends MockMvcDocs {
     var principal = getPrincipalDetails(user.getId(), user.getUserRole());
     var roomId = 1L;
     var forceOutUserId = 2L;
-    var url = "/v1/matching/room/" + roomId + "/force-out";
+    var url = "/v1/matching/room/{roomId}/force-out";
     willThrow(new BusinessException(ErrorCode.FORBIDDEN_EXCEPTION)).willDoNothing().given(
         matchingService).forceOut(principal.getUserId(), roomId, forceOutUserId);
 
     var forceOutRequest = new ForceOutRequest(forceOutUserId);
     //when
-    var result = mockMvc.perform(post(url)
+    var result = mockMvc.perform(post(url, roomId)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(forceOutRequest))
         .with(user(principal))
@@ -379,14 +403,73 @@ class MatchingControllerTest extends MockMvcDocs {
   }
 
   @Test
+  void readyMatching_success() throws Exception {
+    //given
+    var user = UserBuildUtil.buildUser().build();
+    var principal = getPrincipalDetails(user.getId(), user.getUserRole());
+    var roomId = 1L;
+    var url = "/v1/matching/room/{roomId}/ready";
+    //when
+    var result = mockMvc.perform(post(url, roomId)
+        .contentType(MediaType.APPLICATION_JSON)
+        .with(user(principal))
+        .with(csrf())
+    );
+    //then
+    result.andExpect(status().isOk())
+        .andDo(document("matching/readyMatching",
+            resource(
+                ResourceSnippetParameters.builder()
+                    .tag("matching")
+                    .description("매칭 준비")
+                    .summary("매칭 준비")
+                    .build()
+            )
+        ));
+  }
+
+  @Test
+  void readyMatching_fail_host_can_not_ready() throws Exception {
+    //given
+    var user = UserBuildUtil.buildUser().build();
+    var principal = getPrincipalDetails(user.getId(), user.getUserRole());
+    var roomId = 1L;
+    var url = "/v1/matching/room/{roomId}/ready";
+    willThrow(new BusinessException(ErrorCode.FORBIDDEN_EXCEPTION)).willDoNothing().given(
+        matchingService).readyMatching(principal.getUserId(), roomId);
+    //when
+    var result = mockMvc.perform(post(url, roomId)
+        .contentType(MediaType.APPLICATION_JSON)
+        .with(user(principal))
+        .with(csrf())
+    );
+    //then
+    result.andExpect(status().isForbidden())
+        .andDo(document("matching/readyMatching_fail",
+            resource(
+                ResourceSnippetParameters.builder()
+                    .tag("matching")
+                    .description("매칭 준비 실패 - 방장은 준비할 수 없음")
+                    .summary("매칭 준비 실패 - 방장은 준비할 수 없음")
+                    .responseFields(
+                        fieldWithPath("code").type(JsonFieldType.STRING).description("에러 코드"),
+                        fieldWithPath("message").type(JsonFieldType.STRING)
+                            .description("에러 메시지")
+                    )
+                    .build()
+            )
+        ));
+  }
+
+  @Test
   void completeMatching_success() throws Exception {
     //given
     var user = UserBuildUtil.buildUser().build();
     var principal = getPrincipalDetails(user.getId(), user.getUserRole());
     var roomId = 1L;
-    var url = "/v1/matching/room/" + roomId + "/complete";
+    var url = "/v1/matching/room/{roomId}/complete";
     //when
-    var result = mockMvc.perform(post(url)
+    var result = mockMvc.perform(post(url, roomId)
         .contentType(MediaType.APPLICATION_JSON)
         .with(user(principal))
         .with(csrf())
@@ -410,11 +493,11 @@ class MatchingControllerTest extends MockMvcDocs {
     var user = UserBuildUtil.buildUser().build();
     var principal = getPrincipalDetails(user.getId(), user.getUserRole());
     var roomId = 1L;
-    var url = "/v1/matching/room/" + roomId + "/complete";
+    var url = "/v1/matching/room/{roomId}/complete";
     willThrow(new BusinessException(ErrorCode.FORBIDDEN_EXCEPTION)).willDoNothing().given(
         matchingService).completeMatching(principal.getUserId(), roomId);
     //when
-    var result = mockMvc.perform(post(url)
+    var result = mockMvc.perform(post(url, roomId)
         .contentType(MediaType.APPLICATION_JSON)
         .with(user(principal))
         .with(csrf())

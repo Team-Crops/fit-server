@@ -4,16 +4,17 @@ import java.time.LocalDateTime;
 import org.crops.fitserver.domain.matching.constant.MatchingStatus;
 import org.crops.fitserver.domain.matching.entity.Matching;
 
-public record MatchingDto(Long matchingId,
-                          Long roomId,
-                          Long positionId,
-                          LocalDateTime createdAt,
-                          LocalDateTime expiredAt,
-                          MatchingStatus status) {
+public record MatchingDto(
+    Long userId,
+    Long roomId,
+    Long positionId,
+    LocalDateTime createdAt,
+    LocalDateTime expiredAt,
+    MatchingStatus status) {
 
   public static MatchingDto from(Matching matching) {
     return new MatchingDto(
-        matching.getId(),
+        matching.getUser().getId(),
         matching.getMatchingRoom() != null ? matching.getMatchingRoom().getId() : null,
         matching.getPosition().getId(),
         matching.getCreatedAt(),

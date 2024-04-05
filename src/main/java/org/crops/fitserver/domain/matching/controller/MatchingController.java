@@ -26,14 +26,14 @@ public class MatchingController {
 
   private final MatchingService matchingService;
 
-  @PostMapping("/")
+  @PostMapping
   public ResponseEntity<CreateMatchingResponse> createMatching(
       @CurrentUserId Long userId
   ) {
     return ResponseEntity.ok(matchingService.createMatching(userId));
   }
 
-  @GetMapping("/")
+  @GetMapping
   public ResponseEntity<GetMatchingResponse> getMatching(
       @CurrentUserId Long userId
   ) {
@@ -48,7 +48,6 @@ public class MatchingController {
     return ResponseEntity.ok(matchingService.getMatchingRoom(userId, roomId));
   }
 
-  //강제퇴장
   @PostMapping("/room/{roomId}/force-out")
   public ResponseEntity<Void> forceOut(
       @CurrentUserId Long userId,
@@ -56,6 +55,15 @@ public class MatchingController {
       @RequestBody ForceOutRequest forceOutRequest
   ) {
     matchingService.forceOut(userId, roomId, forceOutRequest.userId());
+    return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/room/{roomId}/ready")
+  public ResponseEntity<Void> readyMatching(
+      @CurrentUserId Long userId,
+      @PathVariable("roomId") Long roomId
+  ) {
+    matchingService.readyMatching(userId, roomId);
     return ResponseEntity.ok().build();
   }
 

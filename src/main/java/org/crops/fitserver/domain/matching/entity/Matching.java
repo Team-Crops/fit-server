@@ -24,6 +24,8 @@ import org.crops.fitserver.domain.matching.constant.MatchingStatus;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.user.domain.User;
 import org.crops.fitserver.global.entity.BaseTimeEntity;
+import org.crops.fitserver.global.exception.BusinessException;
+import org.crops.fitserver.global.exception.ErrorCode;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.Where;
 
@@ -107,4 +109,21 @@ public class Matching extends BaseTimeEntity {
     return matchingRoom != null && matchingRoom.getHostUserId().equals(user.getId());
   }
 
+  public void complete() {
+    this.status = MatchingStatus.COMPLETED;
+  }
+
+  public void ready() {
+    if (this.status != MatchingStatus.MATCHED) {
+      throw new BusinessException(ErrorCode.FORBIDDEN_EXCEPTION);
+    }
+    if (isHost()) {
+      throw new BusinessException(ErrorCode.FORBIDDEN_EXCEPTION);
+    }
+    this.status = MatchingStatus.ACCEPTED;
+  }
+
+  public boolean isReady() {
+    return this.status == MatchingStatus.ACCEPTED;
+  }
 }
