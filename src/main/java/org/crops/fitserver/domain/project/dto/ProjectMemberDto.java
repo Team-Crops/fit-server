@@ -6,20 +6,18 @@ import org.crops.fitserver.domain.skillset.constant.PositionType;
 
 @Builder
 public record ProjectMemberDto(
-    Long projectMemberId,
     Long userId,
     String username,
     String profileImageUrl,
-    PositionType positionType
+    Long positionId
 ) {
 
   public static ProjectMemberDto from(ProjectMember projectMember) {
     return ProjectMemberDto.builder()
-        .projectMemberId(projectMember.getId())
         .userId(projectMember.getUser().getId())
         .username(projectMember.getUser().getUsername())
         .profileImageUrl(projectMember.getUser().getProfileImageUrl())
-        .positionType(projectMember.getPosition().getType())
+        .positionId(projectMember.getPosition().getId())
         .build();
   }
 }

@@ -45,7 +45,7 @@ public class ProjectServiceImpl implements ProjectService {
     var projectMember = project.getProjectMemberList().stream()
         .filter(pm -> pm.getUser().getId().equals(userId))
         .findFirst()
-        .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_PROJECT_EXCEPTION));
+        .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_USER_EXCEPTION));
 
     projectMember.updateProjectName(request.projectName());
     projectMember.updateStatus(request.projectStatus());
