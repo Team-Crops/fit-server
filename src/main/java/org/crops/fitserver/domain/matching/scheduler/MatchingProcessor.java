@@ -132,6 +132,9 @@ public class MatchingProcessor {
         .toList();
   }
 
+  /**
+   * TODO: 최적의 매칭 방을 찾아서 반환
+   * */
   private Optional<MatchingRoom> findBestRoom(List<MatchingRoom> roomList, Matching matching, PositionType positionType) {
     return roomList.stream()
         .filter(matchingRoom -> isCanJoinRoom(matching, matchingRoom, positionType))
