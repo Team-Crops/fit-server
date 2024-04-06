@@ -65,7 +65,7 @@ public class MatchingServiceImpl implements MatchingService {
     if (!Objects.equals(matching.getMatchingRoom().getId(), roomId)) {
       throw new BusinessException(ErrorCode.NOT_EXIST_MATCHING_ROOM_EXCEPTION);
     }
-    var matchingRoom = matchingRoomRepository.findById(roomId)
+    var matchingRoom = matchingRoomRepository.findWithMatchingMembersById(roomId)
         .orElseThrow(() -> new BusinessException(
             ErrorCode.NOT_EXIST_MATCHING_ROOM_EXCEPTION));
 

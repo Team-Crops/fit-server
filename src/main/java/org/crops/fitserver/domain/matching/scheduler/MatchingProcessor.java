@@ -22,7 +22,6 @@ public class MatchingProcessor {
   private final MatchingRepository matchingRepository;
   private final MatchingRoomRepository matchingRoomRepository;
   private final ChatRoomService chatRoomService;
-  private List<Matching> matchingList;
   private List<MatchingRoom> matchingRoomList;
 
   private Map<PositionType, List<Matching>> matchingMap;
@@ -37,11 +36,12 @@ public class MatchingProcessor {
   }
 
   private void init() {
-    matchingList = matchingRepository.findMatchingWithoutRoom();
-    matchingRoomList = matchingRoomRepository.findMatchingRoomNotComplete();
+    List<Matching> matchingList = matchingRepository.findMatchingWithoutRoom();
 
     matchingMap = matchingList.stream()
         .collect(groupingBy(matching -> matching.getPosition().getType()));
+
+    matchingRoomList = matchingRoomRepository.findMatchingRoomNotComplete();
 
     //매칭 만료 시간 순으로 정렬
     matchingMap.forEach((key, value) -> {
