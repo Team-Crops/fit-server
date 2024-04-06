@@ -1,6 +1,6 @@
 package org.crops.fitserver.domain.matching.entity;
 
-import static org.crops.fitserver.domain.matching.constant.Constant.MATCHING_EXPIRE_DAYS;
+import static org.crops.fitserver.domain.matching.constant.MatchingConstants.MATCHING_EXPIRE_DAYS;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;

@@ -1,9 +1,9 @@
 package org.crops.fitserver.domain.matching.entity;
 
 import static java.util.stream.Collectors.groupingBy;
-import static org.crops.fitserver.domain.matching.constant.Constant.MAXIMUM_POSITIONS;
-import static org.crops.fitserver.domain.matching.constant.Constant.MINIMUM_REQUIRED_POSITIONS;
-import static org.crops.fitserver.domain.matching.constant.Constant.MULTIPLE_POSITION_COMPARE_TO_OTHER_POSITIONS;
+import static org.crops.fitserver.domain.matching.constant.MatchingConstants.MAXIMUM_POSITIONS;
+import static org.crops.fitserver.domain.matching.constant.MatchingConstants.MINIMUM_REQUIRED_POSITIONS;
+import static org.crops.fitserver.domain.matching.constant.MatchingConstants.MULTIPLE_POSITION_COMPARE_TO_OTHER_POSITIONS;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

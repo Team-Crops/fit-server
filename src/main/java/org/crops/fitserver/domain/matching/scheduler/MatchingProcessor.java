@@ -17,6 +17,10 @@ import org.crops.fitserver.domain.matching.repository.MatchingRoomRepository;
 import org.crops.fitserver.domain.skillset.constant.PositionType;
 import org.springframework.transaction.annotation.Transactional;
 
+
+/**
+ * TODO: 싱글턴으로 전환
+ */
 public class MatchingProcessor {
 
   private final MatchingRepository matchingRepository;
@@ -127,6 +131,9 @@ public class MatchingProcessor {
     return matchingList.size();
   }
 
+  /**
+   * 최소한의 필터
+   */
   private List<MatchingRoom> filterEnableRoomList(Matching matching, List<MatchingRoom> roomList,
       PositionType positionType) {
     return roomList.stream()
