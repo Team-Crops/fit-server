@@ -79,7 +79,7 @@ public class MatchingProcessor {
       matchingMap.forEach((key, value) -> {
         matchingList.add(value.remove(0));
       });
-      var newRoom = MatchingRoom.createRoom(matchingList, chatRoomService.createChatRoom().getId());
+      var newRoom = MatchingRoom.create(matchingList, chatRoomService.createChatRoom().getId());
       matchingRoomRepository.save(newRoom);
     }
 
@@ -87,19 +87,20 @@ public class MatchingProcessor {
   }
 
   //최소인원수를 만족한 룸을 찾아서 매칭을 시도
+  @Transactional
   public int joinRoom() {
     int count = 0;
 
     //frontend, backend, designer, planner순으로 룸에 들어가기
-    count += joinRoomByType(PositionType.FRONTEND);
-    count += joinRoomByType(PositionType.BACKEND);
-    count += joinRoomByType(PositionType.DESIGNER);
-    count += joinRoomByType(PositionType.PLANNER);
+    count += joinRoom(PositionType.FRONTEND);
+    count += joinRoom(PositionType.BACKEND);
+    count += joinRoom(PositionType.DESIGNER);
+    count += joinRoom(PositionType.PLANNER);
 
     return count;
   }
 
-  private int joinRoomByType(PositionType positionType) {
+  private int joinRoom(PositionType positionType) {
     var matchingList = matchingMap.get(positionType);
     var roomList = new ArrayList<>(matchingRoomList.stream()
         .filter(matchingRoom -> matchingRoom.isCanInsertPosition(positionType))
@@ -113,7 +114,7 @@ public class MatchingProcessor {
     matchingList.forEach(matching -> {
       var enableRoomList = filterEnableRoomList(matching, roomList, positionType);
 
-      findBestRoom(enableRoomList, matching, positionType)
+      this.findBestRoom(enableRoomList)
           .ifPresent(matchingRoom -> {
             matchingRoom.addMatching(matching);
             matchingRoomRepository.save(matchingRoom);
@@ -126,30 +127,18 @@ public class MatchingProcessor {
     return matchingList.size();
   }
 
-  private List<MatchingRoom> filterEnableRoomList(Matching matching, List<MatchingRoom> roomList, PositionType positionType) {
+  private List<MatchingRoom> filterEnableRoomList(Matching matching, List<MatchingRoom> roomList,
+      PositionType positionType) {
     return roomList.stream()
-        .filter(matchingRoom -> isCanJoinRoom(matching, matchingRoom, positionType))
+        .filter(matchingRoom -> matchingRoom.isCanJoinRoom(matching, positionType))
         .toList();
   }
 
   /**
    * TODO: 최적의 매칭 방을 찾아서 반환
-   * */
-  private Optional<MatchingRoom> findBestRoom(List<MatchingRoom> roomList, Matching matching, PositionType positionType) {
+   */
+  private Optional<MatchingRoom> findBestRoom(List<MatchingRoom> roomList) {
     return roomList.stream()
-        .filter(matchingRoom -> isCanJoinRoom(matching, matchingRoom, positionType))
         .findFirst();
-  }
-
-  private boolean isCanJoinRoom(Matching matching, MatchingRoom room, PositionType positionType) {
-    return room.isCanInsertPosition(positionType) &&
-        room.getRequiredPositionId(positionType)
-            .orElse(matching.getPosition().getId())
-            .equals(matching.getPosition().getId()) &&
-        room.getRequiredSkillIds(positionType).retainAll(
-            matching.getUser().getUserInfo()
-                .getUserInfoSkills().stream()
-                .map(userInfoSkill -> userInfoSkill.getSkill().getId()).toList()
-        );
   }
 }

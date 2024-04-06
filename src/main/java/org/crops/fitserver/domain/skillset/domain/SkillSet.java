@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.crops.fitserver.domain.skillset.constant.PositionType;
 
 @Entity
 @Table(name = "skillset")
@@ -41,5 +42,9 @@ public class SkillSet {
         .skill(skill)
         .position(position)
         .build();
+  }
+
+  public boolean isEqualPositionType(PositionType positionType) {
+    return this.position.getType().equals(positionType);
   }
 }

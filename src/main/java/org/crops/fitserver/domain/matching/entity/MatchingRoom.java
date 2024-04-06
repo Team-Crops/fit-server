@@ -53,7 +53,7 @@ public class MatchingRoom extends BaseTimeEntity {
   @Column(name = "host_user_id", nullable = false)
   private Long hostUserId;
 
-  public static MatchingRoom createRoom(List<Matching> matchingList, Long chatRoomId) {
+  public static MatchingRoom create(List<Matching> matchingList, Long chatRoomId) {
     if (matchingList.stream().map(Matching::getPosition).distinct().count() < 4) {
       throw new BusinessException(ErrorCode.NOT_ENOUGH_MATCHING_EXCEPTION);
     }
@@ -61,14 +61,19 @@ public class MatchingRoom extends BaseTimeEntity {
         .chatRoomId(chatRoomId)
         .isCompleted(false)
         .completedAt(null)
-        .hostUserId(matchingList.stream()
-            .filter(m -> PositionType.PLANNER.equals(m.getPosition().getType())).findFirst()
-            .orElse(matchingList.get(0))
-            .getUser().getId())
+        .hostUserId(selectHostUserId(matchingList))
         .build();
     matchingList.forEach(newMatchingRoom::addMatching);
 
     return newMatchingRoom;
+  }
+
+  private static Long selectHostUserId(List<Matching> matchingList) {
+    return matchingList.stream()
+        .filter(m -> PositionType.PLANNER.equals(m.getPosition().getType()))
+        .findFirst()
+        .orElse(matchingList.get(0))
+        .getUser().getId();
   }
 
   public void forceOut(Long userId, Long forceOutUserId) {
@@ -109,6 +114,18 @@ public class MatchingRoom extends BaseTimeEntity {
         .count() < MINIMUM_REQUIRED_POSITIONS.get(positionType);
   }
 
+  public boolean isCanJoinRoom(Matching matching, PositionType positionType) {
+    return isCanInsertPosition(positionType) &&
+        getRequiredPositionId(positionType)
+            .orElse(matching.getPosition().getId())
+            .equals(matching.getPosition().getId()) &&
+        getRequiredSkillIds(positionType).retainAll(
+            matching.getUser().getUserInfo()
+                .getUserInfoSkills().stream()
+                .map(userInfoSkill -> userInfoSkill.getSkill().getId()).toList()
+        );
+  }
+
   //현재 포지션이 다른 포지션의 최대 인원수보다 2배이상 많으면 안된다.
   //MAXIMUM_POSITIONS에 제한된 인원수를 넘으면 안된다.
   public boolean isCanInsertPosition(PositionType positionType) {
@@ -130,6 +147,17 @@ public class MatchingRoom extends BaseTimeEntity {
     return nowSize < limitSize;
   }
 
+  //백엔드와 프론트엔드는 포지션 id까지 일치해야 한다.
+  public Optional<Long> getRequiredPositionId(PositionType positionType) {
+    if(PositionType.PLANNER.equals(positionType) || PositionType.DESIGNER.equals(positionType)) {
+      return Optional.empty();
+    }
+    return matchingList.stream()
+        .filter(m -> m.getPosition().getType().equals(positionType))
+        .map(m -> m.getPosition().getId())
+        .findFirst();
+  }
+
   //플래너와 디자이너는 필요한 스킬이 없다.
   //백엔드와 프론트엔드는 기존에 있는 사람과 skill이 일치하는 것이 존재해야 한다.
   public List<Long> getRequiredSkillIds(PositionType positionType) {
@@ -143,7 +171,7 @@ public class MatchingRoom extends BaseTimeEntity {
         .map(UserInfoSkill::getSkill)
         .distinct()
         .filter(skill -> skill.getSkillSets().stream()
-            .anyMatch(skillSet -> skillSet.getPosition().getType().equals(positionType)))
+            .anyMatch(skillSet -> skillSet.isEqualPositionType(positionType)))
         .map(Skill::getId)
         .toList();
   }
@@ -161,17 +189,5 @@ public class MatchingRoom extends BaseTimeEntity {
     isCompleted = true;
     completedAt = LocalDateTime.now();
     matchingList.forEach(Matching::complete);
-  }
-
-
-  //백엔드와 프론트엔드는 포지션 id까지 일치해야 한다.
-  public Optional<Long> getRequiredPositionId(PositionType positionType) {
-    if(PositionType.PLANNER.equals(positionType) || PositionType.DESIGNER.equals(positionType)) {
-      return Optional.empty();
-    }
-    return matchingList.stream()
-        .filter(m -> m.getPosition().getType().equals(positionType))
-        .map(m -> m.getPosition().getId())
-        .findFirst();
   }
 }
