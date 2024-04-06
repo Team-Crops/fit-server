@@ -80,7 +80,7 @@ class RecommendControllerTest extends MockMvcDocsWithLogin {
             .forEach(user ->
                 user
                     .getUserInfo()
-                    .addSkill(Skill.builder().id(1L).displayName("skillName").build()));
+                    .addSkill(Skill.builder().id(1L).build()));
 
         List<RecommendUserDto> list = users
             .stream()
@@ -103,7 +103,6 @@ class RecommendControllerTest extends MockMvcDocsWithLogin {
                 .queryParam("projectCount", "3")
                 .queryParam("activityHour","3, 6") // 6, 9, 12
                 .queryParam("page", "1")
-                .queryParam("size", "10")
         );
 
         // then
@@ -131,9 +130,7 @@ class RecommendControllerTest extends MockMvcDocsWithLogin {
                             parameterWithName("liked").
                                 description("좋아요 여부"),
                             parameterWithName("page").
-                                description("페이지"),
-                            parameterWithName("size").
-                                description("사이즈")
+                                description("페이지")
                         )
                         .responseSchema(
                             schema("RecommendUserResponse"))
@@ -153,7 +150,7 @@ class RecommendControllerTest extends MockMvcDocsWithLogin {
                             fieldWithPath("recommendUserList[].userSummary.profileImageUrl")
                                 .type(JsonFieldType.STRING)
                                 .description("User Profile Image Url"),
-                            fieldWithPath("recommendUserList[].userSummary.skill[]")
+                            fieldWithPath("recommendUserList[].userSummary.skillIdList[]")
                                 .type(JsonFieldType.ARRAY)
                                 .description("User Skill"),
                             fieldWithPath("recommendUserList[].isLiked")

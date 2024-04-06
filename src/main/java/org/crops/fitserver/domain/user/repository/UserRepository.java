@@ -5,7 +5,9 @@ import org.crops.fitserver.domain.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends
+    JpaRepository<User, Long>,
+    UserRepositoryCustom {
 
   @Query("select u from User u "
       + "left join u.userInfo ui "

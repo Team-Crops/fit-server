@@ -28,6 +28,7 @@ import org.crops.fitserver.domain.skillset.domain.Skill;
 import org.crops.fitserver.domain.user.constant.BackgroundStatus;
 import org.crops.fitserver.domain.user.constant.UserInfoStatus;
 import org.crops.fitserver.global.entity.BaseTimeEntity;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -84,6 +85,7 @@ public class UserInfo extends BaseTimeEntity {
   @JoinColumn(name = "region_id")
   private Region region;
 
+  @BatchSize(size = 50)
   @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL, orphanRemoval = true)
   private final List<UserInfoSkill> userInfoSkills = new ArrayList<>();
 

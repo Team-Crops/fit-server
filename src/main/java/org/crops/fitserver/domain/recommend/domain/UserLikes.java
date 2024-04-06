@@ -37,4 +37,11 @@ public class UserLikes extends BaseTimeEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "liked_user_id", nullable = false)
   private User likedUser;
+
+  public static UserLikes of(User likeUser, User likedUser) {
+    return UserLikes.builder()
+        .likeUser(likeUser)
+        .likedUser(likedUser)
+        .build();
+  }
 }
