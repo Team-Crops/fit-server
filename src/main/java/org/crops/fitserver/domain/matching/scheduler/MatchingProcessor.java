@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.crops.fitserver.domain.chat.service.ChatRoomService;
 import org.crops.fitserver.domain.matching.entity.Matching;
 import org.crops.fitserver.domain.matching.entity.MatchingRoom;
@@ -107,26 +108,45 @@ public class MatchingProcessor {
       return 0;
     }
 
-    matchingList.forEach(matching -> {
-      var room = roomList.stream()
-          .filter(matchingRoom ->
-              matchingRoom.isCanInsertPosition(positionType) &&
-                  matchingRoom.getRequiredSkillIds(positionType).retainAll(
-                      matching.getUser().getUserInfo()
-                          .getUserInfoSkills().stream()
-                          .map(userInfoSkill -> userInfoSkill.getSkill().getId()).toList()
-                  )
-          )
-          .findFirst()
-          .orElse(null);
+    var removeList = new ArrayList<Matching>();
 
-      if (room != null) {
-        room.addMatching(matching);
-        matchingRoomRepository.save(room);
-        matchingList.remove(matching);
-      }
+    matchingList.forEach(matching -> {
+      var enableRoomList = filterEnableRoomList(matching, roomList, positionType);
+
+      findBestRoom(enableRoomList, matching, positionType)
+          .ifPresent(matchingRoom -> {
+            matchingRoom.addMatching(matching);
+            matchingRoomRepository.save(matchingRoom);
+            removeList.add(matching);
+          });
     });
 
+    matchingList.removeAll(removeList);
+
     return matchingList.size();
+  }
+
+  private List<MatchingRoom> filterEnableRoomList(Matching matching, List<MatchingRoom> roomList, PositionType positionType) {
+    return roomList.stream()
+        .filter(matchingRoom -> isCanJoinRoom(matching, matchingRoom, positionType))
+        .toList();
+  }
+
+  private Optional<MatchingRoom> findBestRoom(List<MatchingRoom> roomList, Matching matching, PositionType positionType) {
+    return roomList.stream()
+        .filter(matchingRoom -> isCanJoinRoom(matching, matchingRoom, positionType))
+        .findFirst();
+  }
+
+  private boolean isCanJoinRoom(Matching matching, MatchingRoom room, PositionType positionType) {
+    return room.isCanInsertPosition(positionType) &&
+        room.getRequiredPositionId(positionType)
+            .orElse(matching.getPosition().getId())
+            .equals(matching.getPosition().getId()) &&
+        room.getRequiredSkillIds(positionType).retainAll(
+            matching.getUser().getUserInfo()
+                .getUserInfoSkills().stream()
+                .map(userInfoSkill -> userInfoSkill.getSkill().getId()).toList()
+        );
   }
 }

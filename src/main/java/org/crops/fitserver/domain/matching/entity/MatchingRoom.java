@@ -14,6 +14,7 @@ import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -160,5 +161,17 @@ public class MatchingRoom extends BaseTimeEntity {
     isCompleted = true;
     completedAt = LocalDateTime.now();
     matchingList.forEach(Matching::complete);
+  }
+
+
+  //백엔드와 프론트엔드는 포지션 id까지 일치해야 한다.
+  public Optional<Long> getRequiredPositionId(PositionType positionType) {
+    if(PositionType.PLANNER.equals(positionType) || PositionType.DESIGNER.equals(positionType)) {
+      return Optional.empty();
+    }
+    return matchingList.stream()
+        .filter(m -> m.getPosition().getType().equals(positionType))
+        .map(m -> m.getPosition().getId())
+        .findFirst();
   }
 }
