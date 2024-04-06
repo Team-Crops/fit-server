@@ -101,17 +101,23 @@ public class UserInfo extends BaseTimeEntity {
 
   @PrePersist
   public void prePersist() {
-    this.status = this.isReadyToComplete() ? UserInfoStatus.COMPLETE : UserInfoStatus.INCOMPLETE;
-    if (this.isReadyToComplete()) {
-      this.user.promoteRole(UserRole.MEMBER);
-    }
+    this.updateUserIfEssentialFieldsFilled();
   }
 
   @PreUpdate
   public void preUpdate() {
-    this.status = this.isReadyToComplete() ? UserInfoStatus.COMPLETE : UserInfoStatus.INCOMPLETE;
-    if (this.isReadyToComplete()) {
+    this.updateUserIfEssentialFieldsFilled();
+  }
+
+  public void updateUserIfEssentialFieldsFilled() {
+    if (this.isEssentialFieldsFilled()) {
+      this.status = UserInfoStatus.COMPLETE;
       this.user.promoteRole(UserRole.MEMBER);
+    } else {
+      this.status = UserInfoStatus.INCOMPLETE;
+      if(UserRole.MEMBER.equals(this.user.getUserRole())) {
+        this.user.promoteRole(UserRole.NON_MEMBER);
+      }
     }
   }
 
@@ -236,7 +242,7 @@ public class UserInfo extends BaseTimeEntity {
     this.userInfoSkills.removeIf(userInfoSkill -> userInfoSkill.getSkill().equals(skill));
   }
 
-  private boolean isReadyToComplete() {
+  private boolean isEssentialFieldsFilled() {
     return this.projectCount != null
         && this.activityHour != null
         && this.introduce != null

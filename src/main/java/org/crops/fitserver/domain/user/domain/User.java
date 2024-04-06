@@ -114,9 +114,7 @@ public class User extends BaseTimeEntity {
   }
 
   public void promoteRole(UserRole userRole) {
-    if (this.userRole.compareTo(userRole) < 0) {
       this.userRole = userRole;
-    }
   }
 }
 
