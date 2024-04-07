@@ -8,7 +8,7 @@ import org.crops.fitserver.domain.user.domain.User;
 public record UserSummaryDto(
     Long userId,
     String username,
-    String positionName,
+    Long positionId,
     String introduce,
     String profileImageUrl,
     List<Long> skillIdList
@@ -18,7 +18,7 @@ public record UserSummaryDto(
         .userId(user.getId())
         .username(user.getUsername())
         .profileImageUrl(user.getProfileImageUrl())
-        .positionName(user.getUserInfo().getPosition().getDisplayName())
+        .positionId(user.getUserInfo().getPosition().getId())
         .introduce(user.getUserInfo().getIntroduce())
         .skillIdList(user
             .getUserInfo()
