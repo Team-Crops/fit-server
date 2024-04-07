@@ -32,7 +32,7 @@ public class RecommendController {
   @GetMapping("/users")
   public ResponseEntity<RecommendUserResponse> recommendUser(
       @CurrentUserId Long userId,
-      @ModelAttribute RecommendUserRequest request
+      @Valid @ModelAttribute RecommendUserRequest request
   ) {
     List<RecommendUserDto> response = recommendFacade.recommendUser(userId, request);
     return ResponseEntity.ok(RecommendUserResponse.of(response));
