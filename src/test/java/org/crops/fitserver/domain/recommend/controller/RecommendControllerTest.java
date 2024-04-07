@@ -47,7 +47,7 @@ class RecommendControllerTest extends MockMvcDocsWithLogin {
   @DisplayName("[GET] Recommend User Test")
   class RecommendUserTest {
 
-    private static final String URL = "http://localhost:8080/v1/recommend/users";
+    private static final String URL = "/v1/recommend/users";
     User user1 = User.builder()
         .id(1L)
         .username("username1")
@@ -165,7 +165,7 @@ class RecommendControllerTest extends MockMvcDocsWithLogin {
   @DisplayName("[POST] Like User Test")
   class LikeUserTest {
 
-    private static final String URL = "http://localhost:8080/v1/recommend/like/users";
+    private static final String URL = "/v1/recommend/like/users";
 
     @Nested
     @DisplayName("성공")
@@ -175,7 +175,9 @@ class RecommendControllerTest extends MockMvcDocsWithLogin {
       @Test
       void userlike() throws Exception {
         // given
-        LikeUserRequest request = new LikeUserRequest(2L, true);
+        long likedUserId = 2L;
+        boolean like = true;
+        LikeUserRequest request = new LikeUserRequest(likedUserId, like);
 
         // when
         var result = mockMvc.perform(
