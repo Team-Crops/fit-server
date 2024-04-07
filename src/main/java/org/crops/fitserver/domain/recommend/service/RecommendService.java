@@ -7,7 +7,7 @@ import org.crops.fitserver.domain.user.domain.Users;
 public interface RecommendService {
 
   Users recommendUser(
-      Long userId,
+      long userId,
       Boolean liked,
       List<Long> positionId,
       List<Long> skillId,
@@ -18,9 +18,9 @@ public interface RecommendService {
       Integer page,
       Integer size);
 
-  Boolean isLiked(Long userId, Long likeUserId);
+  boolean isLiked(long userId, long likeUserId);
 
-  void likeUser(Long likeUserId, Long likedUserId);
+  void likeUser(long likeUserId, long likedUserId);
 
-  void unlikeUser(Long likeUserId, Long likedUserId);
+  void unlikeUser(long likeUserId, long likedUserId);
 }

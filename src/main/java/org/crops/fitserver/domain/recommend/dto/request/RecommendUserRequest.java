@@ -12,7 +12,7 @@ public record RecommendUserRequest(
     Long regionId,
     Integer projectCount,
     List<Short> activityHour,
-    @NotNull Integer page
+    @NotNull int page
 ) {
 
 }

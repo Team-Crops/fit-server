@@ -22,7 +22,7 @@ public class RecommendServiceImpl implements RecommendService {
 
   @Override
   public Users recommendUser(
-      Long userId,
+      long userId,
       Boolean liked,
       List<Long> positionId,
       List<Long> skillId,
@@ -48,7 +48,7 @@ public class RecommendServiceImpl implements RecommendService {
   }
 
   @Override
-  public Boolean isLiked(Long likeUserId, Long likedUserId) {
+  public boolean isLiked(long likeUserId, long likedUserId) {
     User likeUser = userRepository.findById(likeUserId)
         .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
     User likedUser = userRepository.findById(likedUserId)
@@ -57,7 +57,7 @@ public class RecommendServiceImpl implements RecommendService {
   }
 
   @Override
-  public void likeUser(Long likeUserId, Long likedUserId) {
+  public void likeUser(long likeUserId, long likedUserId) {
     User likeUser = userRepository.findById(likeUserId)
         .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
     User likedUser = userRepository.findById(likedUserId)
@@ -69,7 +69,7 @@ public class RecommendServiceImpl implements RecommendService {
   }
 
   @Override
-  public void unlikeUser(Long likeUserId, Long likedUserId) {
+  public void unlikeUser(long likeUserId, long likedUserId) {
     User likeUser = userRepository.findById(likeUserId)
         .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
     User likedUser = userRepository.findById(likedUserId)

@@ -6,7 +6,7 @@ import org.crops.fitserver.domain.recommend.dto.request.RecommendUserRequest;
 
 public interface RecommendFacade {
 
-  List<RecommendUserDto> recommendUser(Long userId, RecommendUserRequest request);
+  List<RecommendUserDto> recommendUser(long userId, RecommendUserRequest request);
 
-  void likeUser(Long likeUserId, Long likedUserId, Boolean like);
+  void likeUser(long likeUserId, long likedUserId, boolean like);
 }

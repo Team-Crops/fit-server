@@ -6,7 +6,7 @@ import org.crops.fitserver.domain.user.domain.User;
 @Builder
 public record RecommendUserDto(
     UserSummaryDto userSummary,
-    Boolean isLiked
+    boolean isLiked
 ) {
 
   public static RecommendUserDto of(User user, boolean isLiked) {
