@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.chat.service.ChatRoomService;
 import org.crops.fitserver.domain.matching.entity.Matching;
 import org.crops.fitserver.domain.matching.entity.MatchingRoom;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * TODO: 싱글턴으로 전환
  */
+@Slf4j
 public class MatchingProcessor {
 
   private final MatchingRepository matchingRepository;
@@ -55,7 +57,8 @@ public class MatchingProcessor {
 
   //최소 인원이 채워지지 않은 룸에 매칭을 시도
   @Transactional
-  public int insertToNotEnoughRoom() {
+  public void insertToNotEnoughRoom() {
+    log.info("insertToNotEnoughRoom start");
     var notEnoughRoomList = matchingRoomList.stream()
         .filter(MatchingRoom::isNotEnough).toList();
     notEnoughRoomList
@@ -67,15 +70,17 @@ public class MatchingProcessor {
 
     matchingRoomRepository.saveAll(notEnoughRoomList);
 
-    return notEnoughRoomList.size();
+    log.info("insertToNotEnoughRoom end. size: {}",
+        notEnoughRoomList.size());
   }
 
   //룸이 없는 매칭끼리 최소인원 이상이 되도록 룸을 생성
   @Transactional
-  public int createNewRoom() {
+  public void createNewRoom() {
     if (matchingMap.size() < 4) {
-      return 0;
+      return;
     }
+    log.info("createNewRoom start");
     var size = matchingMap.values().stream().mapToInt(List::size).min().orElse(0);
 
     for (int i = 0; i < size; i++) {
@@ -87,12 +92,14 @@ public class MatchingProcessor {
       matchingRoomRepository.save(newRoom);
     }
 
-    return size;
+    log.info("createNewRoom end. size: {}", size);
   }
 
   //최소인원수를 만족한 룸을 찾아서 매칭을 시도
   @Transactional
-  public int joinRoom() {
+  public void joinRoom() {
+    log.info("joinRoom start");
+
     int count = 0;
 
     //frontend, backend, designer, planner순으로 룸에 들어가기
@@ -101,13 +108,13 @@ public class MatchingProcessor {
     count += joinRoom(PositionType.DESIGNER);
     count += joinRoom(PositionType.PLANNER);
 
-    return count;
+    log.info("joinRoom end. count: {}", count);
   }
 
   private int joinRoom(PositionType positionType) {
     var matchingList = matchingMap.get(positionType);
     var roomList = new ArrayList<>(matchingRoomList.stream()
-        .filter(matchingRoom -> matchingRoom.isCanInsertPosition(positionType))
+        .filter(matchingRoom -> matchingRoom.canInsertPosition(positionType))
         .toList());
     if (Collections.isEmpty(matchingList) || Collections.isEmpty(roomList)) {
       return 0;
@@ -137,7 +144,7 @@ public class MatchingProcessor {
   private List<MatchingRoom> filterEnableRoomList(Matching matching, List<MatchingRoom> roomList,
       PositionType positionType) {
     return roomList.stream()
-        .filter(matchingRoom -> matchingRoom.isCanJoinRoom(matching, positionType))
+        .filter(matchingRoom -> matchingRoom.canJoinRoom(matching, positionType))
         .toList();
   }
 

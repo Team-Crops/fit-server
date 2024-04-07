@@ -6,5 +6,7 @@ public enum MatchingStatus {
   ACCEPTED,
   EXPIRED,
   CANCELED,
+  FORCED_OUT,
+  EXITED,
   COMPLETED
 }

@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import lombok.AccessLevel;
@@ -38,8 +39,6 @@ import org.hibernate.annotations.Where;
 @Where(clause = "is_deleted = false")
 public class MatchingRoom extends BaseTimeEntity {
 
-  @OneToMany(mappedBy = "matchingRoom")
-  private final List<Matching> matchingList = new ArrayList<>();
   @Id
   @Column(name = "matching_room_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,6 +51,8 @@ public class MatchingRoom extends BaseTimeEntity {
   private LocalDateTime completedAt;
   @Column(name = "host_user_id", nullable = false)
   private Long hostUserId;
+  @OneToMany(mappedBy = "matchingRoom")
+  private final List<Matching> matchingList = new ArrayList<>();
 
   public static MatchingRoom create(List<Matching> matchingList, Long chatRoomId) {
     if (matchingList.stream().map(Matching::getPosition).distinct().count() < 4) {
@@ -89,7 +90,19 @@ public class MatchingRoom extends BaseTimeEntity {
         .findFirst()
         .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_MATCHING_EXCEPTION));
 
-    matching.cancel();
+    matching.forceOut();
+    matchingList.remove(matching);
+  }
+
+  public void exit(Matching matching) {
+    if(matchingList.stream().noneMatch(m -> m.getId().equals(matching.getId()))) {
+      throw new BusinessException(ErrorCode.NOT_EXIST_MATCHING_EXCEPTION);
+    }
+    if (matching.isHost()) {
+      changeHost();
+    }
+    matching.exit();
+    matchingList.remove(matching);
   }
 
   public void changeHost() {
@@ -103,32 +116,47 @@ public class MatchingRoom extends BaseTimeEntity {
   }
 
   public boolean isNotEnough() {
+    return this.isEnough();
+  }
+
+  public boolean isEnough() {
     return MINIMUM_REQUIRED_POSITIONS.keySet().stream()
-        .anyMatch(positionType -> matchingList.stream()
-            .noneMatch(m -> m.getPosition().getType().equals(positionType)));
+        .allMatch(this::isEnough);
   }
 
   public boolean isNotEnough(PositionType positionType) {
-    return matchingList.stream()
-        .filter(m -> m.getPosition().getType().equals(positionType))
-        .count() < MINIMUM_REQUIRED_POSITIONS.get(positionType);
+    return this.isEnough(positionType);
   }
 
-  public boolean isCanJoinRoom(Matching matching, PositionType positionType) {
-    return isCanInsertPosition(positionType) &&
-        getRequiredPositionId(positionType)
-            .orElse(matching.getPosition().getId())
-            .equals(matching.getPosition().getId()) &&
-        getRequiredSkillIds(positionType).retainAll(
-            matching.getUser().getUserInfo()
-                .getUserInfoSkills().stream()
-                .map(userInfoSkill -> userInfoSkill.getSkill().getId()).toList()
-        );
+  public boolean isEnough(PositionType positionType) {
+    return matchingList.stream()
+        .filter(m -> m.getPosition().getType().equals(positionType))
+        .count() >= MINIMUM_REQUIRED_POSITIONS.get(positionType);
+  }
+
+  public boolean canJoinRoom(Matching matching, PositionType positionType) {
+    if(!canInsertPosition(positionType)){
+      return false;
+    }
+
+    var requiredPositionId = getRequiredPositionId(positionType);
+    if(requiredPositionId.isPresent() && !requiredPositionId.get().equals(matching.getPosition().getId())){
+      return false;
+    }
+
+    var requiredSkillIds = getRequiredSkillIds(positionType);
+    var userSkillIds = matching.getUser().getUserInfo().getUserInfoSkills().stream()
+        .map(userInfoSkill -> userInfoSkill.getSkill().getId())
+        .toList();
+    var skillIdsIntersection = new HashSet<>(requiredSkillIds);
+    skillIdsIntersection.retainAll(userSkillIds);
+
+    return !skillIdsIntersection.isEmpty();
   }
 
   //현재 포지션이 다른 포지션의 최대 인원수보다 2배이상 많으면 안된다.
   //MAXIMUM_POSITIONS에 제한된 인원수를 넘으면 안된다.
-  public boolean isCanInsertPosition(PositionType positionType) {
+  public boolean canInsertPosition(PositionType positionType) {
 
     var otherPositionMinSize = matchingList.stream()
         .filter(m -> !m.getPosition().getType().equals(positionType))
@@ -179,6 +207,13 @@ public class MatchingRoom extends BaseTimeEntity {
   public void addMatching(Matching matching) {
     matchingList.add(matching);
     matching.match(this);
+  }
+
+  public void ready(Matching matching) {
+    if(matchingList.stream().noneMatch(m -> m.getId().equals(matching.getId()))) {
+      throw new BusinessException(ErrorCode.NOT_EXIST_MATCHING_EXCEPTION);
+    }
+    matching.ready();
   }
 
   public void complete() {

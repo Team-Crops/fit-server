@@ -12,13 +12,15 @@ public interface MatchingService {
 
   GetMatchingResponse getMatching(Long userId);
 
+  void cancel(Long userId);
+
   GetMatchingRoomResponse getMatchingRoom(Long userId, Long roomId);
 
-  void readyMatching(Long userId, Long roomId);
+  void ready(Long userId, Long roomId);
 
-  void completeMatching(Long userId, Long roomId);
+  void complete(Long userId, Long roomId);
 
-  void cancelMatching(Long userId);
+  void exit(Long userId, Long roomId);
 
   List<Matching> expireMatchingAll();
 

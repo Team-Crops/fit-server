@@ -2,7 +2,7 @@ package org.crops.fitserver.domain.matching.dto;
 
 import org.crops.fitserver.domain.matching.entity.Matching;
 
-public record MatchingMemberView(
+public record MatchingUserView(
     Long userId,
     Long positionId,
     String username,
@@ -11,8 +11,8 @@ public record MatchingMemberView(
     Boolean isHost
 ) {
 
-  public static MatchingMemberView from(Matching matching) {
-    return new MatchingMemberView(
+  public static MatchingUserView from(Matching matching) {
+    return new MatchingUserView(
         matching.getUser().getId(),
         matching.getPosition().getId(),
         matching.getUser().getUsername(),

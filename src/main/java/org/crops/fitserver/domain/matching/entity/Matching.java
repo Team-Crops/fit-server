@@ -67,19 +67,13 @@ public class Matching extends BaseTimeEntity {
   @Enumerated(value = EnumType.STRING)
   private MatchingStatus status;
 
-  public static Matching create(User user, Position position) {
+  public static Matching create(User user) {
     return Matching.builder()
         .user(user)
-        .position(position)
+        .position(user.getUserInfo().getPosition())
         .status(MatchingStatus.WAITING)
         .expiredAt(LocalDateTime.now().plusDays(MATCHING_EXPIRE_DAYS))
         .build();
-  }
-
-  public void match(MatchingRoom matchingRoom) {
-    this.status = MatchingStatus.MATCHED;
-    this.matchingRoom = matchingRoom;
-    this.expiredAt = null;//매칭이 성공하면 만료시간을 없앤다.
   }
 
   public void expire() {
@@ -95,30 +89,42 @@ public class Matching extends BaseTimeEntity {
     this.lastBatchAt = LocalDateTime.now();
   }
 
-
-  public void cancel() {
-    this.status = MatchingStatus.CANCELED;
-    if (isHost()) {
-      this.matchingRoom.changeHost();
-    }
-    this.matchingRoom = null;
-  }
-
-  //matchingRoom에게 만약 자신이 호스트라면 changeHost를 요청한다.
   public boolean isHost() {
     return matchingRoom != null && matchingRoom.getHostUserId().equals(user.getId());
   }
 
-  public void complete() {
+
+  protected void match(MatchingRoom matchingRoom) {
+    this.status = MatchingStatus.MATCHED;
+    this.matchingRoom = matchingRoom;
+    this.expiredAt = null;//매칭이 성공하면 만료시간을 없앤다.
+  }
+
+  public void cancel() {
+    if(this.matchingRoom != null){
+      throw new BusinessException(ErrorCode.ALREADY_EXIST_MATCHING_ROOM_EXCEPTION);
+    }
+    this.status = MatchingStatus.CANCELED;
+  }
+  protected void forceOut() {
+    this.status = MatchingStatus.FORCED_OUT;
+    this.matchingRoom = null;
+  }
+  protected void exit() {
+    this.status = MatchingStatus.EXITED;
+    this.matchingRoom = null;
+  }
+
+  protected void complete() {
     this.status = MatchingStatus.COMPLETED;
   }
 
-  public void ready() {
+  protected void ready() {
     if (this.status != MatchingStatus.MATCHED) {
-      throw new BusinessException(ErrorCode.FORBIDDEN_EXCEPTION);
+      throw new BusinessException(ErrorCode.NOT_ENABLE_READY_EXCEPTION);
     }
     if (isHost()) {
-      throw new BusinessException(ErrorCode.FORBIDDEN_EXCEPTION);
+      throw new BusinessException(ErrorCode.NOT_ENABLE_READY_EXCEPTION);
     }
     this.status = MatchingStatus.ACCEPTED;
   }

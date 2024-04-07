@@ -24,7 +24,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.matching.constant.MatchingStatus;
 import org.crops.fitserver.domain.matching.dto.MatchingDto;
-import org.crops.fitserver.domain.matching.dto.MatchingMemberView;
+import org.crops.fitserver.domain.matching.dto.MatchingUserView;
 import org.crops.fitserver.domain.matching.dto.request.ForceOutRequest;
 import org.crops.fitserver.domain.matching.dto.response.CreateMatchingResponse;
 import org.crops.fitserver.domain.matching.dto.response.GetMatchingResponse;
@@ -214,9 +214,9 @@ class MatchingControllerTest extends MockMvcDocs {
       given(matchingService.getMatchingRoom(principal.getUserId(), roomId)).willReturn(
           new GetMatchingRoomResponse(
               roomId, 1L, false, null, principal.getUserId(), List.of(
-              new MatchingMemberView(principal.getUserId(), 1L, user.getUsername(),
+              new MatchingUserView(principal.getUserId(), 1L, user.getUsername(),
                   user.getProfileImageUrl(), true, true),
-              new MatchingMemberView(0L, 1L, user.getUsername(), user.getProfileImageUrl(), true,
+              new MatchingUserView(0L, 1L, user.getUsername(), user.getProfileImageUrl(), true,
                   false)
           )));
       //when
@@ -468,7 +468,7 @@ class MatchingControllerTest extends MockMvcDocs {
       var roomId = 1L;
       var url = "/v1/matching/room/{roomId}/ready";
       willThrow(new BusinessException(ErrorCode.FORBIDDEN_EXCEPTION)).willDoNothing().given(
-          matchingService).readyMatching(principal.getUserId(), roomId);
+          matchingService).ready(principal.getUserId(), roomId);
       //when
       var result = mockMvc.perform(post(url, roomId)
           .contentType(MediaType.APPLICATION_JSON)
@@ -529,7 +529,7 @@ class MatchingControllerTest extends MockMvcDocs {
       var roomId = 1L;
       var url = "/v1/matching/room/{roomId}/complete";
       willThrow(new BusinessException(ErrorCode.FORBIDDEN_EXCEPTION)).willDoNothing().given(
-          matchingService).completeMatching(principal.getUserId(), roomId);
+          matchingService).complete(principal.getUserId(), roomId);
       //when
       var result = mockMvc.perform(post(url, roomId)
           .contentType(MediaType.APPLICATION_JSON)

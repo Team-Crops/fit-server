@@ -40,6 +40,15 @@ public class MatchingController {
     return ResponseEntity.ok(matchingService.getMatching(userId));
   }
 
+
+  @PostMapping("/cancel")
+  public ResponseEntity<Void> cancelMatching(
+      @CurrentUserId Long userId
+  ) {
+    matchingService.cancel(userId);
+    return ResponseEntity.ok().build();
+  }
+
   @GetMapping("/room/{roomId}")
   public ResponseEntity<GetMatchingRoomResponse> getMatchingRoom(
       @CurrentUserId Long userId,
@@ -63,7 +72,7 @@ public class MatchingController {
       @CurrentUserId Long userId,
       @PathVariable("roomId") Long roomId
   ) {
-    matchingService.readyMatching(userId, roomId);
+    matchingService.ready(userId, roomId);
     return ResponseEntity.ok().build();
   }
 
@@ -72,15 +81,15 @@ public class MatchingController {
       @CurrentUserId Long userId,
       @PathVariable("roomId") Long roomId
   ) {
-    matchingService.completeMatching(userId, roomId);
+    matchingService.complete(userId, roomId);
     return ResponseEntity.ok().build();
   }
-
-  @PostMapping("/cancel")
+  @PostMapping("/room/{roomId}/cancel")
   public ResponseEntity<Void> cancelMatching(
-      @CurrentUserId Long userId
+      @CurrentUserId Long userId,
+      @PathVariable("roomId") Long roomId
   ) {
-    matchingService.cancelMatching(userId);
+    matchingService.exit(userId, roomId);
     return ResponseEntity.ok().build();
   }
 
