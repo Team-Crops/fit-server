@@ -44,19 +44,20 @@ class AuthFacadeImplTest {
   @DisplayName("OAuth Login 테스트")
   class SocialLoginTest {
 
+    private static final String ORIGIN = "https://origin";
+    private static final String AUTHORIZATION_CODE = "testAuthorizationCode";
+    private User user = User.builder()
+        .id(1L)
+        .userRole(UserRole.NON_MEMBER)
+        .build();
+    private TokenCollection tokenCollection = TokenCollection.of(
+        "test accessToken",
+        "test refreshToken");
+
+
     @Nested
     @DisplayName("성공")
     class Success {
-
-      private static final String redirectUrl = "test redirectUrl";
-      private static final String authorizationCode = "testAuthorizationCode";
-      private static final User user = User.builder()
-          .id(1L)
-          .userRole(UserRole.NON_MEMBER)
-          .build();
-      private static final TokenCollection tokenCollection = TokenCollection.of(
-          "test accessToken",
-          "test refreshToken");
 
       @DisplayName("모든 소셜 플랫폼 성공")
       @ParameterizedTest
@@ -65,15 +66,16 @@ class AuthFacadeImplTest {
         // given
         given(oAuthServiceProvider.getService(any(SocialPlatform.class)))
             .willReturn(oAuthService);
-        given(oAuthService.socialUserLogin(anyString()))
+        given(oAuthService.socialUserLogin(anyString(), anyString()))
             .willReturn(user);
         given(jwtProvider.createTokenCollection(any(TokenInfo.class)))
             .willReturn(tokenCollection);
 
         // when
         var actual = authFacadeImpl.socialLogin(
-            authorizationCode,
-            socialPlatform);
+            ORIGIN,
+            socialPlatform,
+            AUTHORIZATION_CODE);
 
         // then
         var expected = TokenResponse.from(tokenCollection);
@@ -87,7 +89,8 @@ class AuthFacadeImplTest {
   @DisplayName("OAuth Login Page 조회 테스트")
   class GetSocialLoginPageTest {
 
-    String socialLoginPage = "test_kakao_login_page_url";
+    private static final String ORIGIN = "https://origin";
+    private static final String SOCIAL_LOGIN_PAGE = "test_kakao_login_page_url";
 
     @Nested
     @DisplayName("성공")
@@ -100,14 +103,14 @@ class AuthFacadeImplTest {
         // given
         given(oAuthServiceProvider.getService(any(SocialPlatform.class)))
             .willReturn(oAuthService);
-        given(oAuthService.getLoginPageUrl())
-            .willReturn(socialLoginPage);
+        given(oAuthService.getLoginPageUrl(anyString()))
+            .willReturn(SOCIAL_LOGIN_PAGE);
 
         // when
-        var actual = authFacadeImpl.getSocialLoginPageUrl(socialPlatform);
+        var actual = authFacadeImpl.getSocialLoginPageUrl(ORIGIN, socialPlatform);
 
         // then
-        var expected = SocialLoginPageResponse.from(socialLoginPage);
+        var expected = SocialLoginPageResponse.from(SOCIAL_LOGIN_PAGE);
         assertThat(actual)
             .isEqualTo(expected);
       }
