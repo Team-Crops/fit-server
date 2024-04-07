@@ -45,7 +45,7 @@ class AuthControllerTest extends MockMvcDocs {
   @DisplayName("[POST] OAuth Login 테스트")
   class OAuthLoginTest {
 
-    private static final String URL = "http://localhost:8080/v1/auth/social/{socialPlatform}/login";
+    private static final String URL = "/v1/auth/social/{socialPlatform}/login";
     private static final String ORIGIN = "http://localhost:3000";
     private static final String AUTHORIZATION_CODE = "testAuthorizationCode";
     private static final String ACCESS_TOKEN = "accessToken example";
@@ -194,7 +194,7 @@ class AuthControllerTest extends MockMvcDocs {
   @DisplayName("[GET] OAuth Login page 가져오기 테스트")
   class GetSocialLoginPageTest {
 
-    private static final String URL = "http://localhost:8080/v1/auth/social/{socialPlatform}/login-page";
+    private static final String URL = "/v1/auth/social/{socialPlatform}/login-page";
     private static final String REDIRECT_PATH = "/redirect";
     private static final String ORIGIN = "http://localhost:3000";
 
