@@ -29,7 +29,8 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
       Integer size) {
     return queryFactory
         .selectFrom(user)
-        .leftJoin(user.userInfo, userInfo).fetchJoin()
+        .leftJoin(user.userInfo, userInfo)
+        .fetchJoin()
         .where(
             user.id.ne(userId),
             eqLiked(userId, liked),

@@ -6,6 +6,7 @@ import org.crops.fitserver.domain.recommend.dto.RecommendUserDto;
 import org.crops.fitserver.domain.recommend.dto.request.RecommendUserRequest;
 import org.crops.fitserver.domain.recommend.facade.RecommendFacade;
 import org.crops.fitserver.domain.recommend.service.RecommendService;
+import org.crops.fitserver.domain.user.domain.User;
 import org.crops.fitserver.domain.user.domain.Users;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,13 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class RecommendFacadeImpl implements RecommendFacade {
 
-  private static final Integer DEFAULT_PAGE_SIZE = 10;
+  private static final int DEFAULT_PAGE_SIZE = 10;
   private final RecommendService recommendService;
 
   @Override
   @Transactional(readOnly = true)
-  public List<RecommendUserDto> recommendUser(Long userId, RecommendUserRequest request) {
-    Users users = recommendService.recommendUser(
+  public List<RecommendUserDto> recommendUser(long userId, RecommendUserRequest request) {
+    Users recommendedUsers = recommendService.recommendUser(
         userId,
         request.liked(),
         request.positionId(),
@@ -32,22 +33,29 @@ public class RecommendFacadeImpl implements RecommendFacade {
         request.page(),
         DEFAULT_PAGE_SIZE
     );
-    return users
+    return recommendedUsers
         .getUsers()
         .stream()
         .map(recommendUser ->
             RecommendUserDto.of(
                 recommendUser,
-                recommendService.isLiked(userId, recommendUser.getId())))
+                getLiked(userId, recommendUser)
+            ))
         .toList();
   }
 
+  private boolean getLiked(long userId, User recommendUser) {
+    return recommendUser
+        .getLikedUsers()
+        .stream()
+        .anyMatch(userLikes -> userLikes.getLikeUser().getId().equals(userId));
+  }
+
   @Override
-  public void likeUser(Long likeUserId, Long likedUserId, Boolean like) {
+  public void likeUser(long likeUserId, long likedUserId, boolean like) {
     if (like) {
       recommendService.likeUser(likeUserId, likedUserId);
-    }
-    if (!like) {
+    } else {
       recommendService.unlikeUser(likeUserId, likedUserId);
     }
   }

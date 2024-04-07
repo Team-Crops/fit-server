@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.crops.fitserver.domain.recommend.domain.UserLikes;
 import org.crops.fitserver.global.entity.BaseTimeEntity;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -70,6 +71,7 @@ public class User extends BaseTimeEntity {
   @OneToMany(mappedBy = "likeUser")
   private final List<UserLikes> likeUsers = new ArrayList<>();
 
+  @BatchSize(size = 50)
   @OneToMany(mappedBy = "likedUser")
   private final List<UserLikes> likedUsers = new ArrayList<>();
 
