@@ -29,7 +29,7 @@ public class RecommendController {
 
   private final RecommendFacade recommendFacade;
 
-  @GetMapping("/users")
+  @GetMapping("/user")
   public ResponseEntity<RecommendUserResponse> recommendUser(
       @CurrentUserId Long userId,
       @Valid @ModelAttribute RecommendUserRequest request
@@ -38,7 +38,7 @@ public class RecommendController {
     return ResponseEntity.ok(RecommendUserResponse.of(response));
   }
 
-  @PostMapping("/like/users")
+  @PostMapping("/like/user")
   public ResponseEntity<Void> likeUser(
       @CurrentUserId Long userId,
       @Valid @RequestBody LikeUserRequest request

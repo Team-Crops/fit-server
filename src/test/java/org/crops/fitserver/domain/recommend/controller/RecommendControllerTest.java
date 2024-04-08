@@ -46,7 +46,7 @@ class RecommendControllerTest extends MockMvcDocsWithLogin {
   @DisplayName("[GET] Recommend User Test")
   class RecommendUserTest {
 
-    private static final String URL = "/v1/recommend/users";
+    private static final String URL = "/v1/recommend/user";
     User user1 = User.builder()
         .id(1L)
         .username("username1")
@@ -172,7 +172,7 @@ class RecommendControllerTest extends MockMvcDocsWithLogin {
   @DisplayName("[POST] Like User Test")
   class LikeUserTest {
 
-    private static final String URL = "/v1/recommend/like/users";
+    private static final String URL = "/v1/recommend/like/user";
 
     @Nested
     @DisplayName("성공")
