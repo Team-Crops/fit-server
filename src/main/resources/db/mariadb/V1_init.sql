@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `matching`
 (
     `matching_id`     bigint      NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `user_id`           bigint      NOT NULL,
-    `room_id`           bigint NULL,
+    `matching_room_id`  bigint      NULL,
     `position_id`       bigint      NOT NULL,
     `created_at`        datetime(6)    NOT NULL,
     `updated_at`        datetime(6)    NOT NULL,
