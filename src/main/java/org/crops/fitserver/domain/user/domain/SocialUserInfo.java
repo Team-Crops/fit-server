@@ -36,7 +36,7 @@ public class SocialUserInfo {
   @Column(nullable = false, length = 10)
   private SocialPlatform socialType;
 
-  @Column(nullable = false, length = 255, unique = true)
+  @Column(nullable = false, unique = true)
   private String socialCode;
 
   public static SocialUserInfo newInstance(User user, SocialPlatform socialType,
