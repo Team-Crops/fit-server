@@ -12,4 +12,8 @@ public interface AuthFacade {
       String authorizationCode);
 
   SocialLoginPageResponse getSocialLoginPageUrl(String origin, SocialPlatform socialPlatform);
+
+  TokenResponse testLogin();
+
+  TokenResponse testLogin(Long userId);
 }

@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.EnumFields;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.region.domain.Region;
@@ -37,7 +38,8 @@ import org.crops.fitserver.domain.user.dto.UserInfoDto;
 import org.crops.fitserver.domain.user.dto.request.UpdatePolicyAgreementRequest;
 import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
 import org.crops.fitserver.domain.user.facade.UserFacade;
-import org.crops.fitserver.config.MockMvcDocs;
+import org.crops.fitserver.util.MockMvcDocs;
+import org.crops.fitserver.util.UserBuildUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -73,15 +75,7 @@ class UserControllerTest extends MockMvcDocs {
   @Test
   void getUser_success() throws Exception {
     // given
-    var linkList = List.of(
-        Link.builder().linkType(LinkType.GITHUB).linkUrl("github.com").build(),
-        Link.builder().linkType(LinkType.ETC).linkUrl("test.com").build()
-    );
-    var userInfo = UserInfo.builder()
-        .id(1L)
-        .linkJson(objectMapper.writeValueAsString(linkList))
-        .build();
-    var user = User.builder().id(1L).userRole(UserRole.MEMBER).userInfo(userInfo).build();
+    var user = UserBuildUtil.buildUser().build();
     var principalDetails = getPrincipalDetails(user.getId(), user.getUserRole());
     var url = "/v1/user";
     given(userFacade.getUserWithInfo(user.getId())).willReturn(UserInfoDto.from(user));
@@ -610,13 +604,13 @@ class UserControllerTest extends MockMvcDocs {
             .policyType(PolicyType.PRIVACY_POLICY)
             .version("1.0.0")
             .isAgree(true)
-            .updatedAt("2021-08-10T00:00:00.000+00:00")
+            .updatedAt(LocalDateTime.now())
             .build(),
         PolicyAgreementDto.builder()
             .policyType(PolicyType.PRIVACY_POLICY)
             .version("1.0.0")
             .isAgree(true)
-            .updatedAt("2021-08-10T00:00:00.000+00:00")
+            .updatedAt(LocalDateTime.now())
             .build()
     );
     var updatePolicyAgreementRequest = new UpdatePolicyAgreementRequest(policyAgreementDtoList);

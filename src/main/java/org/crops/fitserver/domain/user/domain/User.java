@@ -119,5 +119,9 @@ public class User extends BaseTimeEntity {
     this.email = email;
     return this;
   }
+
+  public void promoteRole(UserRole userRole) {
+      this.userRole = userRole;
+  }
 }
 
