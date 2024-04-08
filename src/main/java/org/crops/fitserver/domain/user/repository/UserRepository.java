@@ -14,4 +14,10 @@ public interface UserRepository extends
       + "left join ui.userInfoSkills uis "
       + "where u.id = :userId")
   Optional<User> findWithInfo(Long userId);
+
+  @Query("select u from User u "
+      + "left join fetch u.userInfo ui "
+      + "left join fetch u.likeUsers lu "
+      + "where u.id = :userId")
+  Optional<User> findWithLikeUsers(Long userId);
 }
