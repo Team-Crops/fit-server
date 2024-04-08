@@ -1,12 +1,9 @@
 package org.crops.fitserver.domain.recommend.controller;
 
-import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.epages.restdocs.apispec.Schema.schema;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -118,19 +115,27 @@ class RecommendControllerTest extends MockMvcDocsWithLogin {
                         .description("팀원 추천 api")
                         .queryParameters(
                             parameterWithName("positionId")
-                                .description("포지션 아이디"),
+                                .description("포지션 아이디")
+                                .optional(),
                             parameterWithName("skillId").
-                                description("스킬 아이디"),
+                                description("스킬 아이디")
+                                .optional(),
                             parameterWithName("backgroundStatus").
-                                description("학력"),
+                                description("학력")
+                                .optional(),
                             parameterWithName("regionId").
-                                description("지역 아이디"),
+                                description("지역 아이디")
+                                .optional(),
                             parameterWithName("projectCount").
-                                description("프로젝트 수"),
+                                description("프로젝트 수")
+                                .optional(),
                             parameterWithName("activityHour").
-                                description("활동 시간").defaultValue("3, 6, 9, 12, 24"),
+                                description("활동 시간")
+                                .defaultValue("3, 6, 9, 12, 24")
+                                .optional(),
                             parameterWithName("liked").
-                                description("좋아요 여부"),
+                                description("좋아요 여부")
+                                .optional(),
                             parameterWithName("page").
                                 description("페이지")
                         )
