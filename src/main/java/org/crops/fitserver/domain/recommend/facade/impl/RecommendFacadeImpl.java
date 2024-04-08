@@ -16,15 +16,15 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class RecommendFacadeImpl implements RecommendFacade {
 
-  private static final int DEFAULT_PAGE_SIZE = 10;
   private final UserService userService;
   private final RecommendService recommendService;
+  private static final int DEFAULT_PAGE_SIZE = 10;
 
   @Override
   @Transactional(readOnly = true)
-  public List<RecommendUserDto> recommendUser(long userId,RecommendUserRequest request) {
-    int randomSeed = (int) (Math.random() * 10);
+  public List<RecommendUserDto> recommendUser(long userId, RecommendUserRequest request) {
     User user = userService.getUserWithLikeUsers(userId);
+    int randomSeed = recommendService.getRandomSeed(userId, request.page());
     Users recommendedUsers = recommendService.recommendUser(
         userId,
         request.liked(),

@@ -1,6 +1,7 @@
 package org.crops.fitserver.domain.recommend.service.impl;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.domain.recommend.domain.UserLikes;
 import org.crops.fitserver.domain.recommend.repository.UserLikesRepository;
@@ -11,6 +12,7 @@ import org.crops.fitserver.domain.user.domain.Users;
 import org.crops.fitserver.domain.user.repository.UserRepository;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,6 +21,9 @@ public class RecommendServiceImpl implements RecommendService {
 
   private final UserLikesRepository userLikesRepository;
   private final UserRepository userRepository;
+  private final StringRedisTemplate stringRedisTemplate;
+
+  private static final String RANDOM_SEED_KEY = "recommend:randomSeed:";
 
   @Override
   public Users recommendUser(
@@ -71,5 +76,16 @@ public class RecommendServiceImpl implements RecommendService {
     UserLikes userLikes = userLikesRepository.findByLikeUserAndLikedUser(likeUser, likedUser)
         .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
     userLikesRepository.delete(userLikes);
+  }
+
+  @Override
+  public int getRandomSeed(long userId, int page) {
+    if (page == 0) {
+      int randomSeed = (int) (Math.random() * 10);
+      stringRedisTemplate.opsForValue().set(RANDOM_SEED_KEY + userId, String.valueOf(randomSeed), 1, TimeUnit.HOURS);
+      return randomSeed;
+    }
+    return Integer.parseInt(
+        stringRedisTemplate.opsForValue().get(RANDOM_SEED_KEY + userId));
   }
 }

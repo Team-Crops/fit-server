@@ -22,4 +22,6 @@ public interface RecommendService {
   void likeUser(long likeUserId, long likedUserId);
 
   void unlikeUser(long likeUserId, long likedUserId);
+
+  int getRandomSeed(long userId, int page);
 }

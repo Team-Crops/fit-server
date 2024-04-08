@@ -83,13 +83,12 @@ class RecommendControllerTest extends MockMvcDocsWithLogin {
                 user
                     .getUserInfo()
                     .addSkill(Skill.builder().id(1L).build()));
-        int randomSeed = 1;
 
         List<RecommendUserDto> list = users
             .stream()
             .map(user -> RecommendUserDto.of(user, true))
             .toList();
-        given(recommendFacade.recommendUser(anyLong(), anyInt(), any(RecommendUserRequest.class)))
+        given(recommendFacade.recommendUser(anyLong(), any(RecommendUserRequest.class)))
             .willReturn(list);
 
         // when
@@ -98,7 +97,6 @@ class RecommendControllerTest extends MockMvcDocsWithLogin {
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(user(loginPrincipal))
                 .with(csrf())
-                .header("random", randomSeed)
                 .queryParam("liked", "true")
                 .queryParam("positionId", "1, 2, 3")
                 .queryParam("skillId", "1, 2, 3")
@@ -118,9 +116,6 @@ class RecommendControllerTest extends MockMvcDocsWithLogin {
                         .tag("Recommend")
                         .summary("Recommend User api")
                         .description("팀원 추천 api")
-                        .requestHeaders(
-                            headerWithName("random")
-                                .description("random page seed"))
                         .queryParameters(
                             parameterWithName("positionId")
                                 .description("포지션 아이디"),
