@@ -141,16 +141,16 @@ class RecommendControllerTest extends MockMvcDocsWithLogin {
                             fieldWithPath("recommendUserList[].userSummary.username")
                                 .type(JsonFieldType.STRING)
                                 .description("User Name"),
-                            fieldWithPath("recommendUserList[].userSummary.positionName")
-                                .type(JsonFieldType.STRING)
-                                .description("Position Name"),
+                            fieldWithPath("recommendUserList[].userSummary.positionId")
+                                .type(JsonFieldType.NUMBER)
+                                .description("Position Id"),
                             fieldWithPath("recommendUserList[].userSummary.introduce")
                                 .type(JsonFieldType.STRING)
                                 .description("User Introduce"),
                             fieldWithPath("recommendUserList[].userSummary.profileImageUrl")
                                 .type(JsonFieldType.STRING)
                                 .description("User Profile Image Url"),
-                            fieldWithPath("recommendUserList[].userSummary.skillIdList[]")
+                            fieldWithPath("recommendUserList[].userSummary.skillIdList")
                                 .type(JsonFieldType.ARRAY)
                                 .description("User Skill"),
                             fieldWithPath("recommendUserList[].isLiked")
