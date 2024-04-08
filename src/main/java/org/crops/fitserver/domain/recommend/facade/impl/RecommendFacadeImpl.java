@@ -8,6 +8,7 @@ import org.crops.fitserver.domain.recommend.facade.RecommendFacade;
 import org.crops.fitserver.domain.recommend.service.RecommendService;
 import org.crops.fitserver.domain.user.domain.User;
 import org.crops.fitserver.domain.user.domain.Users;
+import org.crops.fitserver.domain.user.service.UserService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,11 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class RecommendFacadeImpl implements RecommendFacade {
 
   private static final int DEFAULT_PAGE_SIZE = 10;
+  private final UserService userService;
   private final RecommendService recommendService;
 
   @Override
   @Transactional(readOnly = true)
-  public List<RecommendUserDto> recommendUser(long userId, int randomSeed, RecommendUserRequest request) {
+  public List<RecommendUserDto> recommendUser(long userId,RecommendUserRequest request) {
+    int randomSeed = (int) (Math.random() * 10);
+    User user = userService.getUserWithLikeUsers(userId);
     Users recommendedUsers = recommendService.recommendUser(
         userId,
         request.liked(),
@@ -40,16 +44,16 @@ public class RecommendFacadeImpl implements RecommendFacade {
         .map(recommendUser ->
             RecommendUserDto.of(
                 recommendUser,
-                getLiked(userId, recommendUser)
+                getLiked(user, recommendUser.getId())
             ))
         .toList();
   }
 
-  private boolean getLiked(long userId, User recommendUser) {
-    return recommendUser
-        .getLikedUsers()
+  private boolean getLiked(User user, long recommendUserId) {
+    return user
+        .getLikeUsers()
         .stream()
-        .anyMatch(userLikes -> userLikes.getLikeUser().getId().equals(userId));
+        .anyMatch(userLikes -> userLikes.getLikedUser().getId().equals(recommendUserId));
   }
 
   @Override

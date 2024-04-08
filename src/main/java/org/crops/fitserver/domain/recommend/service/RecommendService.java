@@ -19,8 +19,6 @@ public interface RecommendService {
       int size,
       int randomSeed);
 
-  boolean isLiked(long userId, long likeUserId);
-
   void likeUser(long likeUserId, long likedUserId);
 
   void unlikeUser(long likeUserId, long likedUserId);
