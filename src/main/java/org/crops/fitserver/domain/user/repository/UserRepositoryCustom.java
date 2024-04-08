@@ -15,7 +15,8 @@ public interface UserRepositoryCustom {
       Long regionId,
       Integer projectCount,
       List<Short> activityHour,
-      Integer page,
-      Integer size
+      int page,
+      int size,
+      int randomSeed
   );
 }

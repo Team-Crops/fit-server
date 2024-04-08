@@ -20,7 +20,7 @@ public class RecommendFacadeImpl implements RecommendFacade {
 
   @Override
   @Transactional(readOnly = true)
-  public List<RecommendUserDto> recommendUser(long userId, RecommendUserRequest request) {
+  public List<RecommendUserDto> recommendUser(long userId, int randomSeed, RecommendUserRequest request) {
     Users recommendedUsers = recommendService.recommendUser(
         userId,
         request.liked(),
@@ -31,7 +31,8 @@ public class RecommendFacadeImpl implements RecommendFacade {
         request.projectCount(),
         request.activityHour(),
         request.page(),
-        DEFAULT_PAGE_SIZE
+        DEFAULT_PAGE_SIZE,
+        randomSeed
     );
     return recommendedUsers
         .getUsers()

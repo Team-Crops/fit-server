@@ -4,6 +4,7 @@ import static org.crops.fitserver.domain.user.domain.QUser.user;
 import static org.crops.fitserver.domain.user.domain.QUserInfo.userInfo;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,9 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
       Long regionId,
       Integer projectCount,
       List<Short> activityHour,
-      Integer page,
-      Integer size) {
+      int page,
+      int size,
+      int randomSeed) {
     return queryFactory
         .selectFrom(user)
         .leftJoin(user.userInfo, userInfo)
@@ -42,7 +44,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
             eqActivityHour(activityHour)
         )
         .orderBy(
-            userInfo.activityHour.desc()
+            Expressions.stringTemplate("RAND("+randomSeed+")").asc()
         )
         .offset(page * size)
         .limit(size)

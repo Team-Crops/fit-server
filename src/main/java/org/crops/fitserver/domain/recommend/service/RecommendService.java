@@ -15,8 +15,9 @@ public interface RecommendService {
       Long regionId,
       Integer projectCount,
       List<Short> activityHour,
-      Integer page,
-      Integer size);
+      int page,
+      int size,
+      int randomSeed);
 
   boolean isLiked(long userId, long likeUserId);
 

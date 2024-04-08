@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,9 +33,10 @@ public class RecommendController {
   @GetMapping("/users")
   public ResponseEntity<RecommendUserResponse> recommendUser(
       @CurrentUserId Long userId,
+      @RequestHeader("random") int randomSeed,
       @Valid @ModelAttribute RecommendUserRequest request
   ) {
-    List<RecommendUserDto> response = recommendFacade.recommendUser(userId, request);
+    List<RecommendUserDto> response = recommendFacade.recommendUser(userId, randomSeed, request);
     return ResponseEntity.ok(RecommendUserResponse.of(response));
   }
 

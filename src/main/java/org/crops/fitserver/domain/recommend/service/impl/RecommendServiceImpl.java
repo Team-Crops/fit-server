@@ -30,8 +30,9 @@ public class RecommendServiceImpl implements RecommendService {
       Long regionId,
       Integer projectCount,
       List<Short> activityHour,
-      Integer page,
-      Integer size) {
+      int page,
+      int size,
+      int randomSeed) {
     return Users.of(
         userRepository.findAllByFilter(
             userId,
@@ -43,7 +44,8 @@ public class RecommendServiceImpl implements RecommendService {
             projectCount,
             activityHour,
             page,
-            size
+            size,
+            randomSeed
         ));
   }
 
