@@ -6,8 +6,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.matching.constant.MatchingStatus;
-import org.crops.fitserver.domain.matching.dto.response.CreateMatchingResponse;
-import org.crops.fitserver.domain.matching.dto.response.GetMatchingResponse;
+import org.crops.fitserver.domain.matching.dto.MatchingDto;
 import org.crops.fitserver.domain.matching.dto.response.GetMatchingRoomResponse;
 import org.crops.fitserver.domain.matching.entity.Matching;
 import org.crops.fitserver.domain.matching.repository.MatchingRepository;
@@ -31,7 +30,7 @@ public class MatchingServiceImpl implements MatchingService {
 
   @Override
   @Transactional
-  public CreateMatchingResponse createMatching(Long userId) {
+  public MatchingDto createMatching(Long userId) {
     var user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
     //이미 매칭이 존재한다면 에러 발생.
@@ -40,18 +39,18 @@ public class MatchingServiceImpl implements MatchingService {
     }
 
     var matching = matchingRepository.save(Matching.create(user));
-    return CreateMatchingResponse.from(matching);
+    return MatchingDto.from(matching);
   }
 
   @Override
   @Transactional(readOnly = true)
-  public GetMatchingResponse getMatching(Long userId) {
+  public MatchingDto getMatching(Long userId) {
     var user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
     var matching = getActiveMatching(user).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_EXIST_MATCHING_EXCEPTION));
 
-    return GetMatchingResponse.from(matching);
+    return MatchingDto.from(matching);
   }
 
   @Override
@@ -122,7 +121,7 @@ public class MatchingServiceImpl implements MatchingService {
     var matching = getActiveMatching(user).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_EXIST_MATCHING_EXCEPTION));
     var matchingRoom = matching.getMatchingRoom();
-    if(!Objects.equals(matchingRoom.getId(), roomId)){
+    if (!Objects.equals(matchingRoom.getId(), roomId)) {
       throw new BusinessException(ErrorCode.NOT_EXIST_MATCHING_ROOM_EXCEPTION);
     }
 

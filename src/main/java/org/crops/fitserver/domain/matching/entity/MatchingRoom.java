@@ -55,7 +55,7 @@ public class MatchingRoom extends BaseTimeEntity {
   private final List<Matching> matchingList = new ArrayList<>();
 
   public static MatchingRoom create(List<Matching> matchingList, Long chatRoomId) {
-    if (matchingList.stream().map(Matching::getPosition).distinct().count() < 4) {
+    if (canCreateRoom(matchingList)) {
       throw new BusinessException(ErrorCode.NOT_ENOUGH_MATCHING_EXCEPTION);
     }
     var newMatchingRoom = MatchingRoom.builder()
@@ -67,6 +67,11 @@ public class MatchingRoom extends BaseTimeEntity {
     matchingList.forEach(newMatchingRoom::addMatching);
 
     return newMatchingRoom;
+  }
+
+  private static boolean canCreateRoom(List<Matching> matchingList) {
+    return matchingList.stream().map(Matching::getPosition).distinct().count()
+        >= MINIMUM_REQUIRED_POSITIONS.size();
   }
 
   private static Long selectHostUserId(List<Matching> matchingList) {
@@ -95,7 +100,7 @@ public class MatchingRoom extends BaseTimeEntity {
   }
 
   public void exit(Matching matching) {
-    if(matchingList.stream().noneMatch(m -> m.getId().equals(matching.getId()))) {
+    if (matchingList.stream().noneMatch(m -> m.getId().equals(matching.getId()))) {
       throw new BusinessException(ErrorCode.NOT_EXIST_MATCHING_EXCEPTION);
     }
     if (matching.isHost()) {
@@ -135,12 +140,13 @@ public class MatchingRoom extends BaseTimeEntity {
   }
 
   public boolean canJoinRoom(Matching matching, PositionType positionType) {
-    if(!canInsertPosition(positionType)){
+    if (!canInsertPosition(positionType)) {
       return false;
     }
 
     var requiredPositionId = getRequiredPositionId(positionType);
-    if(requiredPositionId.isPresent() && !requiredPositionId.get().equals(matching.getPosition().getId())){
+    if (requiredPositionId.isPresent() && !requiredPositionId.get()
+        .equals(matching.getPosition().getId())) {
       return false;
     }
 
@@ -177,7 +183,7 @@ public class MatchingRoom extends BaseTimeEntity {
 
   //백엔드와 프론트엔드는 포지션 id까지 일치해야 한다.
   public Optional<Long> getRequiredPositionId(PositionType positionType) {
-    if(PositionType.PLANNER.equals(positionType) || PositionType.DESIGNER.equals(positionType)) {
+    if (PositionType.PLANNER.equals(positionType) || PositionType.DESIGNER.equals(positionType)) {
       return Optional.empty();
     }
     return matchingList.stream()
@@ -210,7 +216,7 @@ public class MatchingRoom extends BaseTimeEntity {
   }
 
   public void ready(Matching matching) {
-    if(matchingList.stream().noneMatch(m -> m.getId().equals(matching.getId()))) {
+    if (matchingList.stream().noneMatch(m -> m.getId().equals(matching.getId()))) {
       throw new BusinessException(ErrorCode.NOT_EXIST_MATCHING_EXCEPTION);
     }
     matching.ready();
