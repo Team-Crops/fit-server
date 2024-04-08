@@ -14,19 +14,22 @@ public record UserSummaryDto(
     List<Long> skillIdList
 ) {
   public static UserSummaryDto from(User user) {
-    return UserSummaryDto.builder()
+    var userSummaryDtoBuilder = UserSummaryDto.builder()
         .userId(user.getId())
         .username(user.getUsername())
-        .profileImageUrl(user.getProfileImageUrl())
-        .positionId(user.getUserInfo().getPosition().getId())
-        .introduce(user.getUserInfo().getIntroduce())
-        .skillIdList(user
-            .getUserInfo()
-            .getUserInfoSkills()
-            .stream()
-            .map(userInfoSkill ->
-                    userInfoSkill.getSkill().getId())
-            .toList())
-        .build();
+        .profileImageUrl(user.getProfileImageUrl());
+    if (user.getUserInfo() != null) {
+      userSummaryDtoBuilder
+          .positionId(user.getUserInfo().getPosition().getId())
+          .introduce(user.getUserInfo().getIntroduce())
+          .skillIdList(user
+              .getUserInfo()
+              .getUserInfoSkills()
+              .stream()
+              .map(userInfoSkill ->
+                  userInfoSkill.getSkill().getId())
+              .toList());
+    }
+    return userSummaryDtoBuilder.build();
   }
 }
