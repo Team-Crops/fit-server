@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openapitools.jackson.nullable.JsonNullableModule;
@@ -50,7 +51,7 @@ public abstract class MockMvcDocs {
     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS,
         SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-    objectMapper.registerModules(new JsonNullableModule());
+    objectMapper.registerModules(new JsonNullableModule(), new JavaTimeModule());
     return objectMapper;
   }
 }

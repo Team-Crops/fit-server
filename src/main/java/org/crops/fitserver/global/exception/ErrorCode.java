@@ -42,16 +42,24 @@ public enum ErrorCode {
    */
   FILE_UPLOAD_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "file-1", "파일 업로드에 실패했습니다."),
 
-
   /**
    * user-policy-agreement. code prefix: user-policy-agreement-
    */
-  DUPLICATED_POLICY_REQUEST_EXCEPTION(HttpStatus.BAD_REQUEST, "user-policy-agreement-1", "같은 약관을 한 번에 여러 번 동의할 수 없습니다."),
+  DUPLICATED_POLICY_REQUEST_EXCEPTION(HttpStatus.BAD_REQUEST, "user-policy-agreement-1",
+      "같은 약관을 한 번에 여러 번 동의할 수 없습니다."),
 
-
-
+  //matching
+  /**
+   * matching. code prefix: matching-
+   */
+  ALREADY_EXIST_MATCHING_EXCEPTION(HttpStatus.CONFLICT, "matching-1", "이미 매칭이 존재합니다."),
+  NOT_EXIST_MATCHING_EXCEPTION(HttpStatus.NOT_FOUND, "matching-2", "매칭이 존재하지 않습니다."),
+  NOT_EXIST_MATCHING_ROOM_EXCEPTION(HttpStatus.NOT_FOUND, "matching-3", "매칭 방이 존재하지 않습니다."),
+  NOT_ENOUGH_MATCHING_EXCEPTION(HttpStatus.NOT_ACCEPTABLE, "matching-4", "매칭 인원 수가 충분하지 않습니다."),
+  NOT_READY_MATCHING_EXCEPTION(HttpStatus.NOT_ACCEPTABLE, "matching-5", "모든 인원이 매칭 준비가 되지 않았습니다."),
+  NOT_ENABLE_READY_EXCEPTION(HttpStatus.FORBIDDEN, "matching-6", "임시 방장은 준비할 수 없습니다."),
+  ALREADY_EXIST_MATCHING_ROOM_EXCEPTION(HttpStatus.CONFLICT, "matching-7", "이미 매칭방이 존재합니다."),
   ;
-
 
 
   private final HttpStatus httpStatus;

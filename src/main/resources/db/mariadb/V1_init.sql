@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS `position`
 (
     `position_id`  bigint       NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `display_name` varchar(20)  NOT NULL,
+    `type`         varchar(20)  NOT NULL,
     `image_url`   varchar(2048)     NOT NULL,
     `created_at`   datetime(6)      NOT NULL,
     `updated_at`   datetime(6)      NOT NULL,
@@ -110,7 +111,6 @@ CREATE TABLE IF NOT EXISTS `chat_room`
     `chat_room_id`   bigint      NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `created_at`     datetime(6)    NOT NULL,
     `updated_at`     datetime(6)    NOT NULL,
-    `chat_room_type` varchar(20) NOT NULL,
     `is_deleted`     tinyint(1) NOT NULL DEFAULT false
 );
 
@@ -126,28 +126,30 @@ CREATE TABLE IF NOT EXISTS `message`
     `is_deleted`   tinyint(1) NOT NULL DEFAULT false
 );
 
-CREATE TABLE IF NOT EXISTS `user_match`
+CREATE TABLE IF NOT EXISTS `matching`
 (
-    `user_match_id`     bigint      NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `matching_id`     bigint      NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `user_id`           bigint      NOT NULL,
     `room_id`           bigint NULL,
     `position_id`       bigint      NOT NULL,
-    `position_skill_id` bigint      NOT NULL,
-    `is_host`           tinyint(1) NOT NULL DEFAULT false,
     `created_at`        datetime(6)    NOT NULL,
     `updated_at`        datetime(6)    NOT NULL,
-    `position`          varchar(10) NOT NULL
+    `is_deleted`   tinyint(1) NOT NULL DEFAULT false,
+    `last_batch_at`     datetime(6) NULL,
+    `expired_at`        datetime(6) NULL,
+    `status`            varchar(20) NULL
 );
 
-CREATE TABLE IF NOT EXISTS `room`
+CREATE TABLE IF NOT EXISTS `matching_room`
 (
-    `room_id`      bigint   NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `matching_room_id`      bigint   NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `chat_room_id` bigint   NOT NULL,
+    `host_user_id` bigint   NOT NULL,
     `created_at`   datetime(6) NOT NULL,
     `updated_at`   datetime(6) NOT NULL,
     `is_deleted`   tinyint(1) NOT NULL DEFAULT false,
-    `is_matched`   tinyint(1) NOT NULL DEFAULT false,
-    `matched_at`   datetime(6) NULL
+    `is_completed`   tinyint(1) NOT NULL DEFAULT false,
+    `completed_at`   datetime(6) NULL
 );
 
 CREATE TABLE IF NOT EXISTS `project`
