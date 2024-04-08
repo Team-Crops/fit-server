@@ -62,9 +62,6 @@ public class User extends BaseTimeEntity {
   @Column(length = 2048)
   private String email;
 
-  @OneToOne(mappedBy = "user")
-  private SocialUserInfo socialUserInfo;
-
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private UserInfo userInfo;
 
