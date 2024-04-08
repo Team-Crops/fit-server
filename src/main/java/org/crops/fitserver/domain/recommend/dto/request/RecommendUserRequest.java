@@ -1,16 +1,18 @@
 package org.crops.fitserver.domain.recommend.dto.request;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import org.crops.fitserver.domain.user.constant.BackgroundStatus;
 
 public record RecommendUserRequest(
+    Boolean liked,
     List<Long> positionId,
-    Long skillId,
+    List<Long> skillId,
+    BackgroundStatus backgroundStatus,
     Long regionId,
     Integer projectCount,
-    BackgroundStatus backgroundStatus,
-    Short activityHour,
-    Boolean likeUser
+    List<Short> activityHour,
+    @NotNull int page
 ) {
 
 }

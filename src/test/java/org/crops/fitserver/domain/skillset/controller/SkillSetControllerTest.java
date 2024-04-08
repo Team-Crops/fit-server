@@ -26,7 +26,7 @@ import org.crops.fitserver.domain.skillset.dto.request.UpdateSkillRequest;
 import org.crops.fitserver.domain.skillset.service.SkillSetService;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
-import org.crops.fitserver.util.MockMvcDocs;
+import org.crops.fitserver.config.MockMvcDocs;
 import org.junit.jupiter.api.Test;
 import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

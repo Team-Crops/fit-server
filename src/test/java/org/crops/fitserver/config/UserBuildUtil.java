@@ -1,4 +1,4 @@
-package org.crops.fitserver.util;
+package org.crops.fitserver.config;
 
 import static org.crops.fitserver.global.util.JsonUtil.toJson;
 

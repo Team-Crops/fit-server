@@ -1,4 +1,4 @@
-package org.crops.fitserver.util;
+package org.crops.fitserver.config;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;

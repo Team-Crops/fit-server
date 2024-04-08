@@ -1,4 +1,4 @@
-package org.crops.fitserver.util;
+package org.crops.fitserver.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;

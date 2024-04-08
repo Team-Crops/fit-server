@@ -1,10 +1,12 @@
 package org.crops.fitserver.domain.recommend.facade;
 
-import org.crops.fitserver.domain.recommend.dto.response.RecommendUserResponse;
+import java.util.List;
+import org.crops.fitserver.domain.recommend.dto.RecommendUserDto;
+import org.crops.fitserver.domain.recommend.dto.request.RecommendUserRequest;
 
 public interface RecommendFacade {
 
-  RecommendUserResponse recommendUser();
+  List<RecommendUserDto> recommendUser(long userId, RecommendUserRequest request);
 
-  void likeUser();
+  void likeUser(long likeUserId, long likedUserId, boolean like);
 }

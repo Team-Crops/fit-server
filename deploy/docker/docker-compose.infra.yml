@@ -1,9 +1,9 @@
 version: '3.9'
 services:
   mariadb:
-    hostname: fit_db_host
     container_name: fit-mariadb
     image: mariadb:latest
+    hostname: fit_db_host
     ports:
       - 3306:3306
     environment:
@@ -20,6 +20,7 @@ services:
   redis:
     container_name: fit-redis
     image: redis:latest
-    hostname: fit-redis-host
+    restart: always
+    hostname: fit_redis_host
     ports:
       - 6379:6379

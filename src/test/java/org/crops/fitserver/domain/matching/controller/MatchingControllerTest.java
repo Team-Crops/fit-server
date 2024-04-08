@@ -6,14 +6,11 @@ import static org.crops.fitserver.domain.user.util.PrincipalDetailsUtil.getPrinc
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epages.restdocs.apispec.EnumFields;
@@ -22,6 +19,8 @@ import com.epages.restdocs.apispec.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.crops.fitserver.config.MockMvcDocsWithLogin;
+import org.crops.fitserver.config.UserBuildUtil;
 import org.crops.fitserver.domain.matching.constant.MatchingStatus;
 import org.crops.fitserver.domain.matching.dto.MatchingDto;
 import org.crops.fitserver.domain.matching.dto.MatchingUserView;
@@ -30,40 +29,20 @@ import org.crops.fitserver.domain.matching.dto.response.GetMatchingRoomResponse;
 import org.crops.fitserver.domain.matching.service.MatchingService;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
-import org.crops.fitserver.util.MockMvcDocs;
-import org.crops.fitserver.util.UserBuildUtil;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.RestDocumentationContextProvider;
-import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @WebMvcTest(MatchingController.class)
 @Slf4j
-class MatchingControllerTest extends MockMvcDocs {
+class MatchingControllerTest extends MockMvcDocsWithLogin {
 
   @MockBean
   private MatchingService matchingService;
-
-  @Override
-  @BeforeEach
-  protected void setUp(RestDocumentationContextProvider restDocumentation) {
-    this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
-        .apply(springSecurity())
-        .apply(
-            documentationConfiguration(restDocumentation)
-                .operationPreprocessors()
-                .withResponseDefaults(Preprocessors.prettyPrint())
-        )
-        .alwaysDo(print())
-        .build();
-  }
 
   @Nested
   @DisplayName("매칭 생성/조회 테스트")

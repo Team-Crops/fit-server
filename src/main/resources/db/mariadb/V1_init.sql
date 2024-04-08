@@ -66,6 +66,18 @@ CREATE TABLE IF NOT EXISTS `social_user_info`
     CONSTRAINT `uq_socialuserinfo_social_code` UNIQUE (`social_code`)
 );
 
+CREATE TABLE IF NOT EXISTS `user_likes`
+(
+    `user_likes_id`         bigint      NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `like_user_id`          bigint      NOT NULL,
+    `liked_user_id`         bigint      NOT NULL,
+    `created_at`            datetime(6) NOT NULL,
+    `updated_at`            datetime(6) NOT NULL,
+    `is_deleted`            tinyint(1)  NOT NULL DEFAULT false,
+    CONSTRAINT `fk_userlikes_userid` FOREIGN KEY (`like_user_id`) REFERENCES `user` (`user_id`),
+    CONSTRAINT `fk_userlikes_likeduserid` FOREIGN KEY (`liked_user_id`) REFERENCES `user` (`user_id`)
+);
+
 CREATE TABLE IF NOT EXISTS `user_policy_agreement`
 (
     `user_policy_agreement_id` bigint       NOT NULL PRIMARY KEY AUTO_INCREMENT,
