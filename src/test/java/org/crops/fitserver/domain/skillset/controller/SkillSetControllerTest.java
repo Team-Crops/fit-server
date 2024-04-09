@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import java.util.List;
+import org.crops.fitserver.config.MockMvcDocs;
 import org.crops.fitserver.domain.skillset.dto.PositionDto;
 import org.crops.fitserver.domain.skillset.dto.SkillDto;
 import org.crops.fitserver.domain.skillset.dto.request.AddSkillListToPositionRequest;
@@ -26,7 +27,6 @@ import org.crops.fitserver.domain.skillset.dto.request.UpdateSkillRequest;
 import org.crops.fitserver.domain.skillset.service.SkillSetService;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
-import org.crops.fitserver.config.MockMvcDocs;
 import org.junit.jupiter.api.Test;
 import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -324,9 +324,12 @@ class SkillSetControllerTest extends MockMvcDocs {
   public void update_position_displayName_fail_duplicate() throws Exception {
     //given
     var url = "/v1/skill-set/position/{positionId}";
-    var updatePositionRequest = new UpdatePositionRequest(JsonNullable.of("test"),
-        JsonNullable.undefined());
-    given(skillSetService.updatePositionDisplayName(any(), any())).willThrow(
+    var updatePositionRequest = UpdatePositionRequest.builder()
+        .displayName(JsonNullable.of("테스트"))
+        .displayNameEn(JsonNullable.undefined())
+        .imageUrl(JsonNullable.undefined())
+        .build();
+    given(skillSetService.updatePosition(any(), any())).willThrow(
         new BusinessException(ErrorCode.DUPLICATED_RESOURCE_EXCEPTION)
     );
 
@@ -366,9 +369,13 @@ class SkillSetControllerTest extends MockMvcDocs {
   public void update_position_displayName_success() throws Exception {
     //given
     var url = "/v1/skill-set/position/{positionId}";
-    var updatePositionRequest = new UpdatePositionRequest(JsonNullable.of("test"),
-        JsonNullable.undefined());
-    given(skillSetService.updatePositionDisplayName(any(), any())).willReturn(PositionDto.builder()
+    var updatePositionRequest =
+        UpdatePositionRequest.builder()
+            .displayName(JsonNullable.of("테스트"))
+            .displayNameEn(JsonNullable.undefined())
+            .imageUrl(JsonNullable.undefined())
+            .build();
+    given(skillSetService.updatePosition(any(), any())).willReturn(PositionDto.builder()
         .id(1L)
         .displayName("test")
         .build());

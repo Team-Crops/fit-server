@@ -279,7 +279,7 @@ public class SkillSetServiceTest {
     ));
 
     // when
-    var result = skillSetService.updatePositionDisplayName(1L, UpdatePositionRequest.builder().displayName(
+    var result = skillSetService.updatePosition(1L, UpdatePositionRequest.builder().displayName(
         JsonNullable.of("test")).imageUrl(JsonNullable.of("test")).build());
 
     // then
