@@ -11,6 +11,7 @@ import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.crops.fitserver.config.QueryDslTestConfig;
 import org.crops.fitserver.domain.region.domain.Region;
 import org.crops.fitserver.domain.region.repository.RegionRepository;
+import org.crops.fitserver.domain.skillset.constant.PositionType;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.repository.PositionRepository;
 import org.crops.fitserver.domain.user.constant.BackgroundStatus;
@@ -70,6 +71,7 @@ public class UserRepositoryTest {
         .build();
     Position position = Position.builder()
         .displayName("test")
+        .type(PositionType.BACKEND)
         .imageUrl("test")
         .build();
     Region region = Region.builder()

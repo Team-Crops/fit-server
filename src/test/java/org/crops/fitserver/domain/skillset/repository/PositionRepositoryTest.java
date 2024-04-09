@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.config.QueryDslTestConfig;
+import org.crops.fitserver.domain.skillset.constant.PositionType;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.domain.Skill;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,7 @@ public class PositionRepositoryTest {
     // given
     Position position = Position.builder()
         .displayName("test")
+        .type(PositionType.BACKEND)
         .imageUrl("test")
         .build();
     // when
@@ -48,6 +50,7 @@ public class PositionRepositoryTest {
     // given
     Position position = Position.builder()
         .displayName("test")
+        .type(PositionType.BACKEND)
         .imageUrl("test")
         .build();
     positionRepository.save(position);
@@ -65,12 +68,14 @@ public class PositionRepositoryTest {
     // given
     Position position1 = Position.builder()
         .displayName("test1")
+        .type(PositionType.BACKEND)
         .imageUrl("test")
         .build();
     positionRepository.save(position1);
 
     Position position2 = Position.builder()
         .displayName("test2")
+        .type(PositionType.BACKEND)
         .imageUrl("test")
         .build();
     positionRepository.save(position2);
@@ -87,6 +92,7 @@ public class PositionRepositoryTest {
     // given
     Position position = Position.builder()
         .displayName("test")
+        .type(PositionType.BACKEND)
         .imageUrl("test")
         .build();
     position = positionRepository.save(position);
@@ -107,6 +113,7 @@ public class PositionRepositoryTest {
     // given
     Position position = Position.builder()
         .displayName("test")
+        .type(PositionType.BACKEND)
         .imageUrl("test")
         .build();
     Skill skill = Skill.builder()
@@ -126,10 +133,11 @@ public class PositionRepositoryTest {
   }
 
   @Test
-  public void remove_skill() {
+  public void remove_skill_from_position() {
     // given
     Position position = Position.builder()
         .displayName("test")
+        .type(PositionType.BACKEND)
         .imageUrl("test")
         .build();
     Skill skill = Skill.builder()
@@ -154,6 +162,7 @@ public class PositionRepositoryTest {
     // given
     Position position = Position.builder()
         .displayName("test")
+        .type(PositionType.BACKEND)
         .imageUrl("test")
         .build();
     Skill skill = Skill.builder()

@@ -233,32 +233,31 @@ class ProjectControllerTest extends MockMvcDocs {
                       )
                       .responseSchema(Schema.schema("updateProjectResponse"))
                       .responseFields(
-                          fields(fieldWithPath("project").type(JsonFieldType.OBJECT)
-                                  .description("프로젝트 정보"),
-                              fieldWithPath("project.projectId").type(JsonFieldType.NUMBER)
+                          fields(
+                              fieldWithPath("projectId").type(JsonFieldType.NUMBER)
                                   .description("프로젝트 ID"),
-                              fieldWithPath("project.projectName").type(JsonFieldType.STRING)
+                              fieldWithPath("projectName").type(JsonFieldType.STRING)
                                   .description("프로젝트 이름"),
-                              fieldWithPath("project.projectMemberList").type(JsonFieldType.ARRAY)
+                              fieldWithPath("projectMemberList").type(JsonFieldType.ARRAY)
                                   .description("프로젝트 멤버 리스트"),
-                              fieldWithPath("project.projectMemberList[].userId").type(
+                              fieldWithPath("projectMemberList[].userId").type(
                                       JsonFieldType.NUMBER)
                                   .description("멤버 ID"),
-                              fieldWithPath("project.projectMemberList[].username").type(
+                              fieldWithPath("projectMemberList[].username").type(
                                       JsonFieldType.STRING)
                                   .description("멤버 이름"),
-                              fieldWithPath("project.projectMemberList[].profileImageUrl").type(
+                              fieldWithPath("projectMemberList[].profileImageUrl").type(
                                   JsonFieldType.STRING).description("멤버 프로필 이미지 URL"),
-                              fieldWithPath("project.projectMemberList[].positionId").type(
+                              fieldWithPath("projectMemberList[].positionId").type(
                                       JsonFieldType.NUMBER)
                                   .description("멤버 포지션 ID"),
-                              fieldWithPath("project.chatRoomId").type(JsonFieldType.NUMBER)
+                              fieldWithPath("chatRoomId").type(JsonFieldType.NUMBER)
                                   .description("채팅방 ID"),
-                              fieldWithPath("project.createdAt").type(JsonFieldType.STRING)
+                              fieldWithPath("createdAt").type(JsonFieldType.STRING)
                                   .description("프로젝트 생성일"),
-                              fieldWithPath("project.completedAt").type(JsonFieldType.STRING)
+                              fieldWithPath("completedAt").type(JsonFieldType.STRING)
                                   .description("프로젝트 완료일").optional(),
-                              new EnumFields(ProjectStatus.class).withPath("project.projectStatus")
+                              new EnumFields(ProjectStatus.class).withPath("projectStatus")
                                   .description("프로젝트 상태")
                           )
                       )
@@ -324,32 +323,31 @@ class ProjectControllerTest extends MockMvcDocs {
                       )
                       .responseSchema(Schema.schema("updateProjectResponse"))
                       .responseFields(
-                          fields(fieldWithPath("project").type(JsonFieldType.OBJECT)
-                                  .description("프로젝트 정보"),
-                              fieldWithPath("project.projectId").type(JsonFieldType.NUMBER)
+                          fields(
+                              fieldWithPath("projectId").type(JsonFieldType.NUMBER)
                                   .description("프로젝트 ID"),
-                              fieldWithPath("project.projectName").type(JsonFieldType.STRING)
+                              fieldWithPath("projectName").type(JsonFieldType.STRING)
                                   .description("프로젝트 이름"),
-                              fieldWithPath("project.projectMemberList").type(JsonFieldType.ARRAY)
+                              fieldWithPath("projectMemberList").type(JsonFieldType.ARRAY)
                                   .description("프로젝트 멤버 리스트"),
-                              fieldWithPath("project.projectMemberList[].userId").type(
+                              fieldWithPath("projectMemberList[].userId").type(
                                       JsonFieldType.NUMBER)
                                   .description("멤버 ID"),
-                              fieldWithPath("project.projectMemberList[].username").type(
+                              fieldWithPath("projectMemberList[].username").type(
                                       JsonFieldType.STRING)
                                   .description("멤버 이름"),
-                              fieldWithPath("project.projectMemberList[].profileImageUrl").type(
+                              fieldWithPath("projectMemberList[].profileImageUrl").type(
                                   JsonFieldType.STRING).description("멤버 프로필 이미지 URL"),
-                              fieldWithPath("project.projectMemberList[].positionId").type(
+                              fieldWithPath("projectMemberList[].positionId").type(
                                       JsonFieldType.NUMBER)
                                   .description("멤버 포지션 ID"),
-                              fieldWithPath("project.chatRoomId").type(JsonFieldType.NUMBER)
+                              fieldWithPath("chatRoomId").type(JsonFieldType.NUMBER)
                                   .description("채팅방 ID"),
-                              fieldWithPath("project.createdAt").type(JsonFieldType.STRING)
+                              fieldWithPath("createdAt").type(JsonFieldType.STRING)
                                   .description("프로젝트 생성일"),
-                              fieldWithPath("project.completedAt").type(JsonFieldType.STRING)
+                              fieldWithPath("completedAt").type(JsonFieldType.STRING)
                                   .description("프로젝트 완료일").optional(),
-                              new EnumFields(ProjectStatus.class).withPath("project.projectStatus")
+                              new EnumFields(ProjectStatus.class).withPath("projectStatus")
                                   .description("프로젝트 상태")
                           )
                       )
