@@ -1,6 +1,6 @@
 package org.crops.fitserver.domain.project.entity;
 
-import static org.crops.fitserver.domain.project.constant.Constant.PROJECT_DEFAULT_NAME;
+import static org.crops.fitserver.domain.project.constant.ProjectConstant.PROJECT_DEFAULT_NAME;
 
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.Column;
@@ -62,19 +62,14 @@ public class ProjectMember extends BaseTimeEntity {
   @Column(name = "project_name", nullable = false)
   private String projectName;
 
-  public static ProjectMember create(User user, Project project, Position position) {
-    var newProjectMember = ProjectMember.builder()
+  public static ProjectMember create(User user, Position position) {
+    return ProjectMember.builder()
         .user(user)
-        .project(project)
         .position(position)
         .completedAt(null)
         .status(ProjectStatus.PROJECT_IN_PROGRESS)
         .projectName(PROJECT_DEFAULT_NAME)
         .build();
-
-    project.addMember(newProjectMember);
-
-    return newProjectMember;
   }
 
   public void updateProjectName(String projectName) {
@@ -88,5 +83,12 @@ public class ProjectMember extends BaseTimeEntity {
       this.status = status;
       this.completedAt = status.equals(ProjectStatus.PROJECT_COMPLETE) ? LocalDateTime.now() : null;
     }
+  }
+
+  protected void setProject(Project project) {
+    if(this.project != null) {
+      this.project.getProjectMemberList().remove(this);
+    }
+    this.project = project;
   }
 }

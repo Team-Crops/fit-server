@@ -2,6 +2,7 @@ package org.crops.fitserver.domain.project.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.crops.fitserver.domain.project.dto.ProjectDto;
 import org.crops.fitserver.domain.project.dto.request.UpdateProjectRequest;
 import org.crops.fitserver.domain.project.dto.response.GetProjectListResponse;
 import org.crops.fitserver.domain.project.dto.response.UpdateProjectResponse;
@@ -31,7 +32,7 @@ public class ProjectController {
   }
 
   @PatchMapping("/{projectId}")
-  public ResponseEntity<UpdateProjectResponse> updateProject(@CurrentUserId Long userId,
+  public ResponseEntity<ProjectDto> updateProject(@CurrentUserId Long userId,
       @PathVariable Long projectId, @RequestBody UpdateProjectRequest request) {
     return ResponseEntity.ok(projectService.updateProject(userId, projectId, request));
   }

@@ -1,5 +1,7 @@
 package org.crops.fitserver.domain.matching.service.impl;
 
+import static org.crops.fitserver.domain.project.util.ProjectConverter.convertMatchingRoomToProject;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -9,9 +11,11 @@ import org.crops.fitserver.domain.matching.constant.MatchingStatus;
 import org.crops.fitserver.domain.matching.dto.MatchingDto;
 import org.crops.fitserver.domain.matching.dto.response.GetMatchingRoomResponse;
 import org.crops.fitserver.domain.matching.entity.Matching;
+import org.crops.fitserver.domain.matching.entity.MatchingRoom;
 import org.crops.fitserver.domain.matching.repository.MatchingRepository;
 import org.crops.fitserver.domain.matching.repository.MatchingRoomRepository;
 import org.crops.fitserver.domain.matching.service.MatchingService;
+import org.crops.fitserver.domain.project.repository.ProjectRepository;
 import org.crops.fitserver.domain.user.domain.User;
 import org.crops.fitserver.domain.user.repository.UserRepository;
 import org.crops.fitserver.global.exception.BusinessException;
@@ -27,6 +31,7 @@ public class MatchingServiceImpl implements MatchingService {
   private final MatchingRepository matchingRepository;
   private final MatchingRoomRepository matchingRoomRepository;
   private final UserRepository userRepository;
+  private final ProjectRepository projectRepository;
 
   @Override
   @Transactional
@@ -109,7 +114,12 @@ public class MatchingServiceImpl implements MatchingService {
 
     matchingRoom.complete();
     matchingRoomRepository.save(matchingRoom);
-    //TODO: 내 프로젝트 생성 로직 추가
+    createProject(matchingRoom);
+  }
+
+  private void createProject(MatchingRoom matchingRoom) {
+    var project = convertMatchingRoomToProject(matchingRoom);
+    projectRepository.save(project);
   }
 
   @Override

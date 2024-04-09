@@ -21,17 +21,16 @@ import com.epages.restdocs.apispec.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.crops.fitserver.config.MockMvcDocs;
+import org.crops.fitserver.config.UserBuildUtil;
 import org.crops.fitserver.domain.project.constant.ProjectStatus;
 import org.crops.fitserver.domain.project.dto.ProjectDto;
 import org.crops.fitserver.domain.project.dto.ProjectMemberDto;
 import org.crops.fitserver.domain.project.dto.request.UpdateProjectRequest;
 import org.crops.fitserver.domain.project.dto.response.GetProjectListResponse;
-import org.crops.fitserver.domain.project.dto.response.UpdateProjectResponse;
 import org.crops.fitserver.domain.project.service.ProjectService;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
-import org.crops.fitserver.util.MockMvcDocs;
-import org.crops.fitserver.util.UserBuildUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -79,7 +78,7 @@ class ProjectControllerTest extends MockMvcDocs {
       var user = UserBuildUtil.buildUser().build();
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());
       given(projectService.getProjectList(user.getId())).willReturn(
-          GetProjectListResponse.create(
+          GetProjectListResponse.from(
               (List.of(
                   ProjectDto.builder()
                       .projectId(1L)
@@ -188,7 +187,7 @@ class ProjectControllerTest extends MockMvcDocs {
       var updateProjectRequest = new UpdateProjectRequest("new_name_project", null);
 
       given(projectService.updateProject(user.getId(), projectId, updateProjectRequest)).willReturn(
-          new UpdateProjectResponse(ProjectDto.builder()
+          ProjectDto.builder()
               .projectId(projectId)
               .projectName(updateProjectRequest.projectName())
               .projectStatus(ProjectStatus.PROJECT_IN_PROGRESS)
@@ -209,7 +208,6 @@ class ProjectControllerTest extends MockMvcDocs {
                       .build()
               ))
               .build()
-          )
       );
       // when
       var result = mockMvc.perform(patch(URL, principal.getUserId())
@@ -279,7 +277,7 @@ class ProjectControllerTest extends MockMvcDocs {
       var updateProjectRequest = new UpdateProjectRequest(null, ProjectStatus.PROJECT_COMPLETE);
 
       given(projectService.updateProject(user.getId(), projectId, updateProjectRequest)).willReturn(
-          new UpdateProjectResponse(ProjectDto.builder()
+          ProjectDto.builder()
               .projectId(projectId)
               .projectName("project_name")
               .projectStatus(updateProjectRequest.projectStatus())
@@ -301,7 +299,7 @@ class ProjectControllerTest extends MockMvcDocs {
                       .build()
               ))
               .build()
-          ));
+      );
       // when
       var result = mockMvc.perform(patch(URL, principal.getUserId())
           .contentType(MediaType.APPLICATION_JSON)

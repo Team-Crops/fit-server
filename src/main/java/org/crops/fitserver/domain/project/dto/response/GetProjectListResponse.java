@@ -7,8 +7,8 @@ public record GetProjectListResponse(
     List<ProjectDto> projectList
 ) {
 
-  public static GetProjectListResponse create(List<ProjectDto> projectList) {
-    return new GetProjectListResponse(projectList.stream().toList());
+  public static GetProjectListResponse from(List<ProjectDto> projectList) {
+    return new GetProjectListResponse(projectList);
   }
 
 }

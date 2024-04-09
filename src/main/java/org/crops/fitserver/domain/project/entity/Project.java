@@ -25,15 +25,14 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Where(clause = "is_deleted = false")
 public class Project extends BaseTimeEntity {
-
-  @OneToMany(mappedBy = "project")
-  private final List<ProjectMember> projectMemberList = new ArrayList<>();
   @Id
   @Column(name = "project_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   @Column(name = "chat_room_id", nullable = false)
   private Long chatRoomId;
+  @OneToMany(mappedBy = "project")
+  private final List<ProjectMember> projectMemberList = new ArrayList<>();
 
   public static Project create(Long chatRoomId) {
     return Project.builder()
@@ -47,6 +46,7 @@ public class Project extends BaseTimeEntity {
       return;
     }
     projectMemberList.add(projectMember);
+    projectMember.setProject(this);
   }
 
   public void removeMember(ProjectMember projectMember) {
