@@ -180,6 +180,8 @@ CREATE TABLE IF NOT EXISTS `project_member`
     `project_id`        bigint NOT NULL,
     `user_id`           bigint NOT NULL,
     `position_id`       bigint NOT NULL,
+    `created_at`  datetime(6) NOT NULL,
+    `updated_at`  datetime(6) NOT NULL,
     `completed_at` datetime(6) NULL,
     `status`       varchar(20) NOT NULL DEFAULT 'PROJECT_IN_PROGRESS',
     `project_name`  varchar(100) NOT NULL,
