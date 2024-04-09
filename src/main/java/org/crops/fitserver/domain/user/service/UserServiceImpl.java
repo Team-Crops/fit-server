@@ -41,6 +41,12 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public User getUserWithLikeUsers(Long userId) {
+    return userRepository.findWithLikeUsers(userId).orElseThrow(() -> new BusinessException(
+        ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
+  }
+
+  @Override
   @Transactional
   public User updateUserWithInfo(Long userId, UpdateUserRequest updateUserRequest) {
     var user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(

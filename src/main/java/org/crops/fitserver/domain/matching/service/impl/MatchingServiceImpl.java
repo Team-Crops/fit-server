@@ -6,8 +6,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.matching.constant.MatchingStatus;
-import org.crops.fitserver.domain.matching.dto.response.CreateMatchingResponse;
-import org.crops.fitserver.domain.matching.dto.response.GetMatchingResponse;
+import org.crops.fitserver.domain.matching.dto.MatchingDto;
 import org.crops.fitserver.domain.matching.dto.response.GetMatchingRoomResponse;
 import org.crops.fitserver.domain.matching.entity.Matching;
 import org.crops.fitserver.domain.matching.repository.MatchingRepository;
@@ -31,7 +30,7 @@ public class MatchingServiceImpl implements MatchingService {
 
   @Override
   @Transactional
-  public CreateMatchingResponse createMatching(Long userId) {
+  public MatchingDto createMatching(Long userId) {
     var user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
     //이미 매칭이 존재한다면 에러 발생.
@@ -39,19 +38,19 @@ public class MatchingServiceImpl implements MatchingService {
       throw new BusinessException(ErrorCode.ALREADY_EXIST_MATCHING_EXCEPTION);
     }
 
-    var matching = matchingRepository.save(Matching.create(user, user.getUserInfo().getPosition()));
-    return CreateMatchingResponse.from(matching);
+    var matching = matchingRepository.save(Matching.create(user));
+    return MatchingDto.from(matching);
   }
 
   @Override
   @Transactional(readOnly = true)
-  public GetMatchingResponse getMatching(Long userId) {
+  public MatchingDto getMatching(Long userId) {
     var user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
     var matching = getActiveMatching(user).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_EXIST_MATCHING_EXCEPTION));
 
-    return GetMatchingResponse.from(matching);
+    return MatchingDto.from(matching);
   }
 
   @Override
@@ -65,7 +64,7 @@ public class MatchingServiceImpl implements MatchingService {
     if (!Objects.equals(matching.getMatchingRoom().getId(), roomId)) {
       throw new BusinessException(ErrorCode.NOT_EXIST_MATCHING_ROOM_EXCEPTION);
     }
-    var matchingRoom = matchingRoomRepository.findById(roomId)
+    var matchingRoom = matchingRoomRepository.findWithMatchingMembersById(roomId)
         .orElseThrow(() -> new BusinessException(
             ErrorCode.NOT_EXIST_MATCHING_ROOM_EXCEPTION));
 
@@ -74,7 +73,7 @@ public class MatchingServiceImpl implements MatchingService {
 
   @Override
   @Transactional
-  public void readyMatching(Long userId, Long roomId) {
+  public void ready(Long userId, Long roomId) {
     var user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
     var matching = getActiveMatching(user).orElseThrow(() -> new BusinessException(
@@ -88,13 +87,13 @@ public class MatchingServiceImpl implements MatchingService {
       throw new BusinessException(ErrorCode.NOT_ENABLE_READY_EXCEPTION);
     }
 
-    matching.ready();
+    matchingRoom.ready(matching);
     matchingRepository.save(matching);
   }
 
   @Override
   @Transactional
-  public void completeMatching(Long userId, Long roomId) {
+  public void complete(Long userId, Long roomId) {
     var user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
     var matching = getActiveMatching(user).orElseThrow(() -> new BusinessException(
@@ -115,7 +114,24 @@ public class MatchingServiceImpl implements MatchingService {
 
   @Override
   @Transactional
-  public void cancelMatching(Long userId) {
+  public void exit(Long userId, Long roomId) {
+
+    var user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(
+        ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
+    var matching = getActiveMatching(user).orElseThrow(() -> new BusinessException(
+        ErrorCode.NOT_EXIST_MATCHING_EXCEPTION));
+    var matchingRoom = matching.getMatchingRoom();
+    if (!Objects.equals(matchingRoom.getId(), roomId)) {
+      throw new BusinessException(ErrorCode.NOT_EXIST_MATCHING_ROOM_EXCEPTION);
+    }
+
+    matchingRoom.exit(matching);
+
+  }
+
+  @Override
+  @Transactional
+  public void cancel(Long userId) {
     var user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
     var matching = getActiveMatching(user).orElseThrow(() -> new BusinessException(
@@ -154,7 +170,7 @@ public class MatchingServiceImpl implements MatchingService {
   }
 
   private Optional<Matching> getActiveMatching(User user) {
-    return matchingRepository.findActiveMatchingByUser(user,
+    return matchingRepository.findActiveMatchingByUserAndStatus(user,
         List.of(MatchingStatus.WAITING, MatchingStatus.MATCHED));
   }
 }

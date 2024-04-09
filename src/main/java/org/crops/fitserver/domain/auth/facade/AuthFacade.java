@@ -7,10 +7,11 @@ import org.crops.fitserver.domain.auth.dto.response.TokenResponse;
 public interface AuthFacade {
 
   TokenResponse socialLogin(
-      String authorizationCode,
-      SocialPlatform socialPlatform);
+      String origin,
+      SocialPlatform socialPlatform,
+      String authorizationCode);
 
-  SocialLoginPageResponse getSocialLoginPageUrl(SocialPlatform socialPlatform);
+  SocialLoginPageResponse getSocialLoginPageUrl(String origin, SocialPlatform socialPlatform);
 
   TokenResponse testLogin();
 

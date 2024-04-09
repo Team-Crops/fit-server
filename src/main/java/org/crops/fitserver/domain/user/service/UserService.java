@@ -10,6 +10,8 @@ public interface UserService {
 
   User getUserWithInfo(Long userId);
 
+  User getUserWithLikeUsers(Long userId);
+
   User updateUserWithInfo(Long userId, UpdateUserRequest updateUserRequest);
 
   List<UserPolicyAgreement> getPolicyAgreementList(Long userId);

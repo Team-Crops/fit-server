@@ -9,13 +9,17 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.crops.fitserver.domain.recommend.domain.UserLikes;
 import org.crops.fitserver.global.entity.BaseTimeEntity;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -57,11 +61,14 @@ public class User extends BaseTimeEntity {
   @Column(length = 2048)
   private String email;
 
-  @OneToOne(mappedBy = "user")
-  private SocialUserInfo socialUserInfo;
-
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private UserInfo userInfo;
+
+  @OneToMany(mappedBy = "likeUser")
+  private final List<UserLikes> likeUsers = new ArrayList<>();
+
+  @OneToMany(mappedBy = "likedUser")
+  private final List<UserLikes> likedUsers = new ArrayList<>();
 
   public static User from(UserRole userRole) {
     return User.builder()
@@ -114,9 +121,7 @@ public class User extends BaseTimeEntity {
   }
 
   public void promoteRole(UserRole userRole) {
-    if (this.userRole.compareTo(userRole) < 0) {
       this.userRole = userRole;
-    }
   }
 }
 

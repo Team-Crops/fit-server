@@ -57,15 +57,6 @@ public class UserInfoDto {
         .email(user.getEmail())
         .backgroundStatus(user.getUserInfo().getBackgroundStatus());
 
-    if (user.getUserInfo().getBackgroundStatus() != null) {
-      userInfoDtoBuilder = userInfoDtoBuilder
-          .backgroundText(
-              user.getUserInfo().getBackgroundStatus().getBackgroundType()
-                  == BackgroundType.CAREER ? user.getUserInfo().getCareer()
-                  : user.getUserInfo().getEducation()
-          );
-    }
-
     if (user.getUserInfo() != null) {
       userInfoDtoBuilder = userInfoDtoBuilder
           .portfolioUrl(user.getUserInfo().getPortfolioUrl())
@@ -75,6 +66,15 @@ public class UserInfoDto {
           .linkList(parseToLinkList(user.getUserInfo().getLinkJson()))
           .isOpenProfile(user.getUserInfo().isOpenProfile())
           .status(user.getUserInfo().getStatus());
+
+      if (user.getUserInfo().getBackgroundStatus() != null) {
+        userInfoDtoBuilder = userInfoDtoBuilder
+            .backgroundText(
+                user.getUserInfo().getBackgroundStatus().getBackgroundType()
+                    == BackgroundType.CAREER ? user.getUserInfo().getCareer()
+                    : user.getUserInfo().getEducation()
+            );
+      }
 
       if (user.getUserInfo().getPosition() != null) {
         userInfoDtoBuilder = userInfoDtoBuilder.positionId(

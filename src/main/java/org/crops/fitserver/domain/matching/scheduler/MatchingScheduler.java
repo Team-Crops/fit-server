@@ -31,9 +31,9 @@ public class MatchingScheduler {
 
     long matchingCount = 0;
 
-    matchingCount += matchingProcessor.insertToNotEnoughRoom();
-    matchingCount += matchingProcessor.createNewRoom();
-    matchingCount += matchingProcessor.joinRoom();
+    matchingProcessor.insertToNotEnoughRoom();
+    matchingProcessor.createNewRoom();
+    matchingProcessor.joinRoom();
 
     log.info("매칭 종료 : {}개 매칭", matchingCount);
 

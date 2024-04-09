@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.EnumFields;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import java.util.List;
-import org.crops.fitserver.util.MockMvcDocs;
+import org.crops.fitserver.config.MockMvcDocs;
 import org.crops.fitserver.domain.school.constant.SchoolType;
 import org.crops.fitserver.domain.school.dto.SchoolDto;
 import org.crops.fitserver.domain.school.service.SchoolService;

@@ -6,14 +6,11 @@ import static org.crops.fitserver.domain.user.util.PrincipalDetailsUtil.getPrinc
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epages.restdocs.apispec.EnumFields;
@@ -22,50 +19,30 @@ import com.epages.restdocs.apispec.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.crops.fitserver.config.MockMvcDocsWithLogin;
+import org.crops.fitserver.config.UserBuildUtil;
 import org.crops.fitserver.domain.matching.constant.MatchingStatus;
 import org.crops.fitserver.domain.matching.dto.MatchingDto;
-import org.crops.fitserver.domain.matching.dto.MatchingMemberView;
+import org.crops.fitserver.domain.matching.dto.MatchingUserView;
 import org.crops.fitserver.domain.matching.dto.request.ForceOutRequest;
-import org.crops.fitserver.domain.matching.dto.response.CreateMatchingResponse;
-import org.crops.fitserver.domain.matching.dto.response.GetMatchingResponse;
 import org.crops.fitserver.domain.matching.dto.response.GetMatchingRoomResponse;
 import org.crops.fitserver.domain.matching.service.MatchingService;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
-import org.crops.fitserver.util.MockMvcDocs;
-import org.crops.fitserver.util.UserBuildUtil;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.RestDocumentationContextProvider;
-import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @WebMvcTest(MatchingController.class)
 @Slf4j
-class MatchingControllerTest extends MockMvcDocs {
+class MatchingControllerTest extends MockMvcDocsWithLogin {
 
   @MockBean
   private MatchingService matchingService;
-
-  @Override
-  @BeforeEach
-  protected void setUp(RestDocumentationContextProvider restDocumentation) {
-    this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
-        .apply(springSecurity())
-        .apply(
-            documentationConfiguration(restDocumentation)
-                .operationPreprocessors()
-                .withResponseDefaults(Preprocessors.prettyPrint())
-        )
-        .alwaysDo(print())
-        .build();
-  }
 
   @Nested
   @DisplayName("매칭 생성/조회 테스트")
@@ -80,9 +57,8 @@ class MatchingControllerTest extends MockMvcDocs {
       var user = UserBuildUtil.buildUser().build();
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());
       given(matchingService.createMatching(principal.getUserId())).willReturn(
-          new CreateMatchingResponse(
-              new MatchingDto(1L, 1L, 1L, LocalDateTime.now(), LocalDateTime.now().plusDays(3),
-                  MatchingStatus.WAITING)));
+          new MatchingDto(1L, 1L, 1L, LocalDateTime.now(), LocalDateTime.now().plusDays(3),
+              MatchingStatus.WAITING));
       //when
       var result = mockMvc.perform(post(URL)
           .contentType(MediaType.APPLICATION_JSON)
@@ -100,17 +76,17 @@ class MatchingControllerTest extends MockMvcDocs {
                       .responseSchema(Schema.schema("createMatchingResponse"))
                       .responseFields(
                           fields(
-                              fieldWithPath("matching.userId").type(JsonFieldType.NUMBER)
+                              fieldWithPath("userId").type(JsonFieldType.NUMBER)
                                   .description("유저 ID"),
-                              fieldWithPath("matching.roomId").type(JsonFieldType.NUMBER)
+                              fieldWithPath("roomId").type(JsonFieldType.NUMBER)
                                   .description("방 ID").optional(),
-                              fieldWithPath("matching.positionId").type(JsonFieldType.NUMBER)
+                              fieldWithPath("positionId").type(JsonFieldType.NUMBER)
                                   .description("포지션 ID"),
-                              fieldWithPath("matching.createdAt").type(JsonFieldType.STRING)
+                              fieldWithPath("createdAt").type(JsonFieldType.STRING)
                                   .description("생성일"),
-                              fieldWithPath("matching.expiredAt").type(JsonFieldType.STRING)
+                              fieldWithPath("expiredAt").type(JsonFieldType.STRING)
                                   .description("만료일"),
-                              new EnumFields(MatchingStatus.class).withPath("matching.status")
+                              new EnumFields(MatchingStatus.class).withPath("status")
                                   .description("매칭 상태")
                           )
                       )
@@ -126,9 +102,8 @@ class MatchingControllerTest extends MockMvcDocs {
       var user = UserBuildUtil.buildUser().build();
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());
       given(matchingService.getMatching(principal.getUserId())).willReturn(
-          new GetMatchingResponse(
-              new MatchingDto(1L, 1L, 1L, LocalDateTime.now(), LocalDateTime.now().plusDays(3),
-                  MatchingStatus.WAITING)));
+          new MatchingDto(1L, 1L, 1L, LocalDateTime.now(), LocalDateTime.now().plusDays(3),
+              MatchingStatus.WAITING));
       //when
       var result = mockMvc.perform(get(URL)
           .contentType(MediaType.APPLICATION_JSON)
@@ -146,17 +121,17 @@ class MatchingControllerTest extends MockMvcDocs {
                       .responseSchema(Schema.schema("getMatchingResponse"))
                       .responseFields(
                           fields(
-                              fieldWithPath("matching.userId").type(JsonFieldType.NUMBER)
+                              fieldWithPath("userId").type(JsonFieldType.NUMBER)
                                   .description("유저 ID"),
-                              fieldWithPath("matching.roomId").type(JsonFieldType.NUMBER)
+                              fieldWithPath("roomId").type(JsonFieldType.NUMBER)
                                   .description("방 ID").optional(),
-                              fieldWithPath("matching.positionId").type(JsonFieldType.NUMBER)
+                              fieldWithPath("positionId").type(JsonFieldType.NUMBER)
                                   .description("포지션 ID"),
-                              fieldWithPath("matching.createdAt").type(JsonFieldType.STRING)
+                              fieldWithPath("createdAt").type(JsonFieldType.STRING)
                                   .description("생성일"),
-                              fieldWithPath("matching.expiredAt").type(JsonFieldType.STRING)
+                              fieldWithPath("expiredAt").type(JsonFieldType.STRING)
                                   .description("만료일"),
-                              new EnumFields(MatchingStatus.class).withPath("matching.status")
+                              new EnumFields(MatchingStatus.class).withPath("status")
                                   .description("매칭 상태")
                           )
                       )
@@ -214,9 +189,9 @@ class MatchingControllerTest extends MockMvcDocs {
       given(matchingService.getMatchingRoom(principal.getUserId(), roomId)).willReturn(
           new GetMatchingRoomResponse(
               roomId, 1L, false, null, principal.getUserId(), List.of(
-              new MatchingMemberView(principal.getUserId(), 1L, user.getUsername(),
+              new MatchingUserView(principal.getUserId(), 1L, user.getUsername(),
                   user.getProfileImageUrl(), true, true),
-              new MatchingMemberView(0L, 1L, user.getUsername(), user.getProfileImageUrl(), true,
+              new MatchingUserView(0L, 1L, user.getUsername(), user.getProfileImageUrl(), true,
                   false)
           )));
       //when
@@ -468,7 +443,7 @@ class MatchingControllerTest extends MockMvcDocs {
       var roomId = 1L;
       var url = "/v1/matching/room/{roomId}/ready";
       willThrow(new BusinessException(ErrorCode.FORBIDDEN_EXCEPTION)).willDoNothing().given(
-          matchingService).readyMatching(principal.getUserId(), roomId);
+          matchingService).ready(principal.getUserId(), roomId);
       //when
       var result = mockMvc.perform(post(url, roomId)
           .contentType(MediaType.APPLICATION_JSON)
@@ -529,7 +504,7 @@ class MatchingControllerTest extends MockMvcDocs {
       var roomId = 1L;
       var url = "/v1/matching/room/{roomId}/complete";
       willThrow(new BusinessException(ErrorCode.FORBIDDEN_EXCEPTION)).willDoNothing().given(
-          matchingService).completeMatching(principal.getUserId(), roomId);
+          matchingService).complete(principal.getUserId(), roomId);
       //when
       var result = mockMvc.perform(post(url, roomId)
           .contentType(MediaType.APPLICATION_JSON)

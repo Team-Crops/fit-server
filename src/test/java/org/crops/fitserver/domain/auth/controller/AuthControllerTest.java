@@ -1,5 +1,6 @@
 package org.crops.fitserver.domain.auth.controller;
 
+import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.epages.restdocs.apispec.Schema.*;
@@ -19,7 +20,7 @@ import org.crops.fitserver.domain.auth.facade.AuthFacade;
 import org.crops.fitserver.domain.auth.dto.response.SocialLoginPageResponse;
 import org.crops.fitserver.domain.auth.dto.response.TokenResponse;
 import org.crops.fitserver.global.exception.ErrorCode;
-import org.crops.fitserver.util.MockMvcDocs;
+import org.crops.fitserver.config.MockMvcDocs;
 import org.crops.fitserver.domain.user.domain.SocialPlatform;
 import org.crops.fitserver.global.jwt.TokenCollection;
 import org.junit.jupiter.api.DisplayName;
@@ -44,7 +45,8 @@ class AuthControllerTest extends MockMvcDocs {
   @DisplayName("[POST] OAuth Login 테스트")
   class OAuthLoginTest {
 
-    private static final String URL = "http://localhost:8080/v1/auth/social/{socialPlatform}/login";
+    private static final String URL = "/v1/auth/social/{socialPlatform}/login";
+    private static final String ORIGIN = "http://localhost:3000";
     private static final String AUTHORIZATION_CODE = "testAuthorizationCode";
     private static final String ACCESS_TOKEN = "accessToken example";
     private static final String REFRESH_TOKEN = "refreshToken example";
@@ -59,7 +61,7 @@ class AuthControllerTest extends MockMvcDocs {
       void oAuthLogin(SocialPlatform socialPlatform) throws Exception {
         //given
         given(
-            authFacade.socialLogin(anyString(), any(SocialPlatform.class)))
+            authFacade.socialLogin(anyString(), any(SocialPlatform.class), anyString()))
             .willReturn(TokenResponse.from(
                     TokenCollection.of(
                         ACCESS_TOKEN,
@@ -69,6 +71,7 @@ class AuthControllerTest extends MockMvcDocs {
         //when
         var result = mockMvc.perform(
             post(URL, socialPlatform.getName())
+                .header("Origin", ORIGIN)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
         );
@@ -84,6 +87,9 @@ class AuthControllerTest extends MockMvcDocs {
                         .tag("Auth")
                         .summary("OAuth Login api")
                         .description("소셜 로그인 api")
+                        .requestHeaders(
+                            headerWithName("Origin")
+                                .description("Request Origin"))
                         .pathParameters(
                             parameterWithName("socialPlatform")
                                 .description("소셜 플랫폼 - { kakao, google }")
@@ -188,8 +194,9 @@ class AuthControllerTest extends MockMvcDocs {
   @DisplayName("[GET] OAuth Login page 가져오기 테스트")
   class GetSocialLoginPageTest {
 
-    private static final String URL = "http://localhost:8080/v1/auth/social/{socialPlatform}/login-page";
-    private static final String LOGIN_PAGE_URL = "http://test-login-page-url.com";
+    private static final String URL = "/v1/auth/social/{socialPlatform}/login-page";
+    private static final String REDIRECT_PATH = "/redirect";
+    private static final String ORIGIN = "http://localhost:3000";
 
     @Nested
     @DisplayName("성공")
@@ -201,24 +208,28 @@ class AuthControllerTest extends MockMvcDocs {
       void kakaoOAuthLogin(SocialPlatform socialPlatform) throws Exception {
         //given
         given(
-            authFacade.getSocialLoginPageUrl(any(SocialPlatform.class)))
-            .willReturn(SocialLoginPageResponse.from(LOGIN_PAGE_URL));
+            authFacade.getSocialLoginPageUrl(anyString(), any(SocialPlatform.class)))
+            .willReturn(SocialLoginPageResponse.from(ORIGIN + REDIRECT_PATH));
 
         //when
         var result = mockMvc.perform(
                 get(URL, socialPlatform.getName())
+                    .header("Origin", ORIGIN)
                     .contentType(MediaType.APPLICATION_JSON));
 
         //then
         result.andExpect(status().isOk())
             .andExpect(handler().handlerType(AuthController.class))
-            .andExpect(jsonPath("$.loginPageUrl").value(LOGIN_PAGE_URL))
+            .andExpect(jsonPath("$.loginPageUrl").value(ORIGIN + REDIRECT_PATH))
             .andDo(
                 document("Get OAuth Login Page Success",
                     resource(ResourceSnippetParameters.builder()
                         .tag("Auth")
                         .summary("Get OAuth Login Page api")
                         .description("소셜 로그인 페이지 조회 api")
+                        .requestHeaders(
+                            headerWithName("Origin")
+                                .description("Request Origin"))
                         .pathParameters(
                             parameterWithName("socialPlatform")
                                 .description("소셜 플랫폼 - { kakao, google }")

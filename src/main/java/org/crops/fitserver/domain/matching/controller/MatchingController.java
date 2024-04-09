@@ -2,9 +2,8 @@ package org.crops.fitserver.domain.matching.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.crops.fitserver.domain.matching.dto.MatchingDto;
 import org.crops.fitserver.domain.matching.dto.request.ForceOutRequest;
-import org.crops.fitserver.domain.matching.dto.response.CreateMatchingResponse;
-import org.crops.fitserver.domain.matching.dto.response.GetMatchingResponse;
 import org.crops.fitserver.domain.matching.dto.response.GetMatchingRoomResponse;
 import org.crops.fitserver.domain.matching.service.MatchingService;
 import org.crops.fitserver.global.annotation.CurrentUserId;
@@ -27,17 +26,26 @@ public class MatchingController {
   private final MatchingService matchingService;
 
   @PostMapping
-  public ResponseEntity<CreateMatchingResponse> createMatching(
+  public ResponseEntity<MatchingDto> createMatching(
       @CurrentUserId Long userId
   ) {
     return ResponseEntity.ok(matchingService.createMatching(userId));
   }
 
   @GetMapping
-  public ResponseEntity<GetMatchingResponse> getMatching(
+  public ResponseEntity<MatchingDto> getMatching(
       @CurrentUserId Long userId
   ) {
     return ResponseEntity.ok(matchingService.getMatching(userId));
+  }
+
+
+  @PostMapping("/cancel")
+  public ResponseEntity<Void> cancelMatching(
+      @CurrentUserId Long userId
+  ) {
+    matchingService.cancel(userId);
+    return ResponseEntity.ok().build();
   }
 
   @GetMapping("/room/{roomId}")
@@ -63,7 +71,7 @@ public class MatchingController {
       @CurrentUserId Long userId,
       @PathVariable("roomId") Long roomId
   ) {
-    matchingService.readyMatching(userId, roomId);
+    matchingService.ready(userId, roomId);
     return ResponseEntity.ok().build();
   }
 
@@ -72,15 +80,16 @@ public class MatchingController {
       @CurrentUserId Long userId,
       @PathVariable("roomId") Long roomId
   ) {
-    matchingService.completeMatching(userId, roomId);
+    matchingService.complete(userId, roomId);
     return ResponseEntity.ok().build();
   }
 
-  @PostMapping("/cancel")
+  @PostMapping("/room/{roomId}/cancel")
   public ResponseEntity<Void> cancelMatching(
-      @CurrentUserId Long userId
+      @CurrentUserId Long userId,
+      @PathVariable("roomId") Long roomId
   ) {
-    matchingService.cancelMatching(userId);
+    matchingService.exit(userId, roomId);
     return ResponseEntity.ok().build();
   }
 

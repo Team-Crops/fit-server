@@ -3,7 +3,7 @@ package org.crops.fitserver.domain.matching.constant;
 import java.util.Map;
 import org.crops.fitserver.domain.skillset.constant.PositionType;
 
-public class Constant {
+public class MatchingConstants {
 
   public static final int MATCHING_EXPIRE_DAYS = 3;
 

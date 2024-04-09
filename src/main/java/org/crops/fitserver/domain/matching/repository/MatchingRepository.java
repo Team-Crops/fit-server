@@ -15,7 +15,7 @@ public interface MatchingRepository extends JpaRepository<Matching, Long> {
       + "and m.status in :statusList "
       + "and (m.expiredAt is null or m.expiredAt > current_timestamp) "
       + "and m.isDeleted = false")
-  Optional<Matching> findActiveMatchingByUser(User user, List<MatchingStatus> statusList);
+  Optional<Matching> findActiveMatchingByUserAndStatus(User user, List<MatchingStatus> statusList);
 
   @Query("select m from Matching m "
       + "where m.expiredAt <= current_timestamp "

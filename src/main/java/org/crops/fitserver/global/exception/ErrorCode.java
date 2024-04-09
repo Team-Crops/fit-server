@@ -55,6 +55,7 @@ public enum ErrorCode {
   NOT_ENOUGH_MATCHING_EXCEPTION(HttpStatus.NOT_ACCEPTABLE, "matching-4", "매칭 인원 수가 충분하지 않습니다."),
   NOT_READY_MATCHING_EXCEPTION(HttpStatus.NOT_ACCEPTABLE, "matching-5", "모든 인원이 매칭 준비가 되지 않았습니다."),
   NOT_ENABLE_READY_EXCEPTION(HttpStatus.FORBIDDEN, "matching-6", "임시 방장은 준비할 수 없습니다."),
+  ALREADY_EXIST_MATCHING_ROOM_EXCEPTION(HttpStatus.CONFLICT, "matching-7", "이미 매칭방이 존재합니다."),
 
   /**
    * project. code prefix: project-
