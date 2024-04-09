@@ -167,6 +167,7 @@ CREATE TABLE IF NOT EXISTS `matching_room`
 CREATE TABLE IF NOT EXISTS `project`
 (
     `project_id`  bigint   NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `chat_room_id` bigint   NOT NULL,
     `created_at`  datetime(6) NOT NULL,
     `updated_at`  datetime(6) NOT NULL,
     `finished_at` datetime(6) NULL,
@@ -179,9 +180,10 @@ CREATE TABLE IF NOT EXISTS `project_member`
     `project_id`        bigint NOT NULL,
     `user_id`           bigint NOT NULL,
     `position_id`       bigint NOT NULL,
-    `position_skill_id` bigint NOT NULL,
-    `is_deleted`        tinyint(1) NOT NULL DEFAULT false,
-    `is_ proceed`       tinyint(1) NOT NULL DEFAULT true
+    `completed_at` datetime(6) NULL,
+    `status`       varchar(20) NOT NULL DEFAULT 'PROJECT_IN_PROGRESS',
+    `project_name`  varchar(100) NOT NULL,
+    `is_deleted`        tinyint(1) NOT NULL DEFAULT false
 );
 
 CREATE TABLE IF NOT EXISTS `school`

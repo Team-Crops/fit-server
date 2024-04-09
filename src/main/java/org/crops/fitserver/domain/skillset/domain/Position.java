@@ -48,7 +48,7 @@ public class Position extends BaseTimeEntity {
   @Column(nullable = false)
   private String imageUrl;
 
-  @Column(nullable = true)//마이그레이션을 위해 null 허용
+  @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private PositionType type;
 

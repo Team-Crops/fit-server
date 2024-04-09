@@ -49,13 +49,11 @@ public class MatchingProcessor {
 
     matchingRoomList = matchingRoomRepository.findMatchingRoomNotComplete();
 
-    //매칭 만료 시간 순으로 정렬
     matchingMap.forEach((key, value) -> {
       value.sort(Comparator.comparing(Matching::getExpiredAt));
     });
   }
 
-  //최소 인원이 채워지지 않은 룸에 매칭을 시도
   @Transactional
   public void insertToNotEnoughRoom() {
     log.info("insertToNotEnoughRoom start");
@@ -74,7 +72,6 @@ public class MatchingProcessor {
         notEnoughRoomList.size());
   }
 
-  //룸이 없는 매칭끼리 최소인원 이상이 되도록 룸을 생성
   @Transactional
   public void createNewRoom() {
     if (matchingMap.size() < 4) {
@@ -95,7 +92,6 @@ public class MatchingProcessor {
     log.info("createNewRoom end. size: {}", size);
   }
 
-  //최소인원수를 만족한 룸을 찾아서 매칭을 시도
   @Transactional
   public void joinRoom() {
     log.info("joinRoom start");

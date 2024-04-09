@@ -111,7 +111,6 @@ public class MatchingRoom extends BaseTimeEntity {
   }
 
   public void changeHost() {
-    //현재 호스트를 제외하고 완전 랜덤하게 호스트 변경
     var newHost = matchingList.stream()
         .filter(m -> !m.getUser().getId().equals(hostUserId))
         .findAny()
@@ -160,8 +159,10 @@ public class MatchingRoom extends BaseTimeEntity {
     return !skillIdsIntersection.isEmpty();
   }
 
-  //현재 포지션이 다른 포지션의 최대 인원수보다 2배이상 많으면 안된다.
-  //MAXIMUM_POSITIONS에 제한된 인원수를 넘으면 안된다.
+  /**
+   * 현재 포지션이 다른 포지션의 최대 인원수보다 2배이상 많으면 안된다.
+   * MAXIMUM_POSITIONS에 제한된 인원수를 넘으면 안된다.
+   */
   public boolean canInsertPosition(PositionType positionType) {
 
     var otherPositionMinSize = matchingList.stream()
@@ -181,7 +182,9 @@ public class MatchingRoom extends BaseTimeEntity {
     return nowSize < limitSize;
   }
 
-  //백엔드와 프론트엔드는 포지션 id까지 일치해야 한다.
+  /**
+   백엔드와 프론트엔드는 포지션 id까지 일치해야 한다.
+   */
   public Optional<Long> getRequiredPositionId(PositionType positionType) {
     if (PositionType.PLANNER.equals(positionType) || PositionType.DESIGNER.equals(positionType)) {
       return Optional.empty();
@@ -192,8 +195,10 @@ public class MatchingRoom extends BaseTimeEntity {
         .findFirst();
   }
 
-  //플래너와 디자이너는 필요한 스킬이 없다.
-  //백엔드와 프론트엔드는 기존에 있는 사람과 skill이 일치하는 것이 존재해야 한다.
+  /**
+   플래너와 디자이너는 필요한 스킬이 없다.
+   백엔드와 프론트엔드는 기존에 있는 사람과 skill이 일치하는 것이 존재해야 한다.
+   */
   public List<Long> getRequiredSkillIds(PositionType positionType) {
     if (PositionType.PLANNER.equals(positionType) || PositionType.DESIGNER.equals(positionType)) {
       return List.of();
@@ -223,7 +228,7 @@ public class MatchingRoom extends BaseTimeEntity {
   }
 
   public void complete() {
-    //matching이 모두 ready 상태인지 확인
+
     if (matchingList.stream().anyMatch(m -> !m.isReady())) {
       throw new BusinessException(ErrorCode.NOT_READY_MATCHING_EXCEPTION);
     }
