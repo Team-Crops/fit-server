@@ -38,7 +38,7 @@ public class MatchingServiceImpl implements MatchingService {
   public MatchingDto createMatching(Long userId) {
     var user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
-    //이미 매칭이 존재한다면 에러 발생.
+
     if (getActiveMatching(user).isPresent()) {
       throw new BusinessException(ErrorCode.ALREADY_EXIST_MATCHING_EXCEPTION);
     }

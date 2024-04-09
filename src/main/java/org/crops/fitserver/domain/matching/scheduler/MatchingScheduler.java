@@ -21,7 +21,7 @@ public class MatchingScheduler {
   private final ChatRoomService chatRoomService;
 
 
-  //매 10초마다
+  //매 10초마다(개발 서버 기준)
   @Scheduled(cron = "1/10 * * * * *")
   @Transactional
   public void matching() {
