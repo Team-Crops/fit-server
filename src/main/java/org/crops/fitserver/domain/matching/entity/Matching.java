@@ -97,7 +97,7 @@ public class Matching extends BaseTimeEntity {
   protected void match(MatchingRoom matchingRoom) {
     this.status = MatchingStatus.MATCHED;
     this.matchingRoom = matchingRoom;
-    this.expiredAt = null;//매칭이 성공하면 만료시간을 없앤다.
+    this.expiredAt = null;
   }
 
   public void cancel() {

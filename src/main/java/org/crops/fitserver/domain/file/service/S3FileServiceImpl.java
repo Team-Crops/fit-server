@@ -33,7 +33,7 @@ public class S3FileServiceImpl implements FileService {
     var putObjectRequest = PutObjectRequest.builder().bucket(bucket).key(fileKey).build();
 
     var preSignRequest = PutObjectPresignRequest.builder()
-        .signatureDuration(Duration.ofMinutes(10))//10분 안에 업로드 해야함
+        .signatureDuration(Duration.ofMinutes(10))
         .putObjectRequest(putObjectRequest)
         .build();
 
