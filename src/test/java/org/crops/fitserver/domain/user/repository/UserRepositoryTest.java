@@ -71,6 +71,7 @@ public class UserRepositoryTest {
         .build();
     Position position = Position.builder()
         .displayName("test")
+        .displayNameEn("test")
         .type(PositionType.BACKEND)
         .imageUrl("test")
         .build();
