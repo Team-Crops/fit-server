@@ -443,6 +443,16 @@ class SkillSetControllerTest extends MockMvcDocs {
         .displayNameEn("test")
         .type(PositionType.BACKEND)
         .imageUrl("test")
+        .skillList(List.of(
+            SkillDto.builder()
+                .id(1L)
+                .displayName("Java")
+                .build(),
+            SkillDto.builder()
+                .id(2L)
+                .displayName("Spring")
+                .build()
+        ))
         .build());
 
     //when
@@ -480,7 +490,11 @@ class SkillSetControllerTest extends MockMvcDocs {
                                 .description("직군 이미지 url(profileDefault)"),
                             new EnumFields(PositionType.class).withPath("type")
                                 .description("직군 타입"),
-                            fieldWithPath("skillList").description("직군에 속한 스킬 리스트")
+                            fieldWithPath("skillList").type(JsonFieldType.ARRAY).description("직군에 속한 스킬 리스트"),
+                            fieldWithPath("skillList[].id").type(JsonFieldType.NUMBER)
+                                .description("스킬 id"),
+                            fieldWithPath("skillList[].displayName").type(JsonFieldType.STRING)
+                                .description("스킬 이름")
                         )
                         .build()
                 )
