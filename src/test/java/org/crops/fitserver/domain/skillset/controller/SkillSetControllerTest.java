@@ -12,9 +12,12 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.epages.restdocs.apispec.EnumFields;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import java.util.List;
+import org.crops.fitserver.config.MockMvcDocs;
+import org.crops.fitserver.domain.skillset.constant.PositionType;
 import org.crops.fitserver.domain.skillset.dto.PositionDto;
 import org.crops.fitserver.domain.skillset.dto.SkillDto;
 import org.crops.fitserver.domain.skillset.dto.request.AddSkillListToPositionRequest;
@@ -26,7 +29,6 @@ import org.crops.fitserver.domain.skillset.dto.request.UpdateSkillRequest;
 import org.crops.fitserver.domain.skillset.service.SkillSetService;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
-import org.crops.fitserver.config.MockMvcDocs;
 import org.junit.jupiter.api.Test;
 import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -49,6 +51,8 @@ class SkillSetControllerTest extends MockMvcDocs {
             PositionDto.builder()
                 .id(1L)
                 .displayName("백엔드")
+                .displayNameEn("backend")
+                .imageUrl("test")
                 .skillList(List.of(
                     SkillDto.builder()
                         .id(1L)
@@ -63,6 +67,8 @@ class SkillSetControllerTest extends MockMvcDocs {
             PositionDto.builder()
                 .id(2L)
                 .displayName("프론트엔드")
+                .displayNameEn("frontend")
+                .imageUrl("test")
                 .skillList(List.of(
                     SkillDto.builder()
                         .id(3L)
@@ -97,6 +103,12 @@ class SkillSetControllerTest extends MockMvcDocs {
                                 .description("직군 id"),
                             fieldWithPath("positionList[].displayName").type(JsonFieldType.STRING)
                                 .description("직군 이름"),
+                            fieldWithPath("positionList[].displayNameEn").type(JsonFieldType.STRING)
+                                .description("직군 영문 이름"),
+                            new EnumFields(PositionType.class).withPath("positionList[].type")
+                                .description("직군 타입"),
+                            fieldWithPath("positionList[].imageUrl").type(JsonFieldType.STRING)
+                                .description("직군 이미지 url(profileDefault)"),
                             fieldWithPath("positionList[].skillList").type(JsonFieldType.ARRAY)
                                 .description("직군에 속한 스킬 리스트"),
                             fieldWithPath("positionList[].skillList[].id").type(
@@ -117,7 +129,11 @@ class SkillSetControllerTest extends MockMvcDocs {
     //given
     var url = "/v1/skill-set/position";
     CreatePositionRequest createPositionRequest = CreatePositionRequest.builder()
-        .displayName("test").imageUrl("test").build();
+        .displayName("테스트")
+        .displayNameEn("test")
+        .type(PositionType.BACKEND)
+        .imageUrl("test")
+        .build();
     given(skillSetService.createPosition(any())).willThrow(
         new BusinessException(ErrorCode.DUPLICATED_RESOURCE_EXCEPTION)
     );
@@ -141,6 +157,10 @@ class SkillSetControllerTest extends MockMvcDocs {
                         .requestFields(
                             fieldWithPath("displayName").type(JsonFieldType.STRING)
                                 .description("직군 이름"),
+                            fieldWithPath("displayNameEn").type(JsonFieldType.STRING)
+                                .description("직군 영문 이름"),
+                            new EnumFields(PositionType.class).withPath("type")
+                                .description("직군 타입"),
                             fieldWithPath("imageUrl").type(JsonFieldType.STRING)
                                 .description("직군 이미지 url(profileDefault)"),
                             fieldWithPath("skillIds").type(JsonFieldType.ARRAY)
@@ -163,10 +183,17 @@ class SkillSetControllerTest extends MockMvcDocs {
     //given
     var url = "/v1/skill-set/position";
     CreatePositionRequest createPositionRequest = CreatePositionRequest.builder()
-        .displayName("test").imageUrl("test").build();
+        .displayName("테스트")
+        .displayNameEn("test")
+        .type(PositionType.BACKEND)
+        .imageUrl("test")
+        .build();
     given(skillSetService.createPosition(any())).willReturn(PositionDto.builder()
         .id(1L)
-        .displayName("test")
+        .displayName("테스트")
+        .displayNameEn("test")
+        .type(PositionType.BACKEND)
+        .imageUrl("test")
         .build());
 
     //when
@@ -188,6 +215,10 @@ class SkillSetControllerTest extends MockMvcDocs {
                         .requestFields(
                             fieldWithPath("displayName").type(JsonFieldType.STRING)
                                 .description("직군 이름"),
+                            fieldWithPath("displayNameEn").type(JsonFieldType.STRING)
+                                .description("직군 영문 이름"),
+                            new EnumFields(PositionType.class).withPath("type")
+                                .description("직군 타입"),
                             fieldWithPath("imageUrl").type(JsonFieldType.STRING)
                                 .description("직군 이미지 url(profileDefault)"),
                             fieldWithPath("skillIds").description("직군에 속한 스킬 리스트").optional()
@@ -197,6 +228,12 @@ class SkillSetControllerTest extends MockMvcDocs {
                             fieldWithPath("id").type(JsonFieldType.NUMBER).description("직군 id"),
                             fieldWithPath("displayName").type(JsonFieldType.STRING)
                                 .description("직군 이름"),
+                            fieldWithPath("displayNameEn").type(JsonFieldType.STRING)
+                                .description("직군 영문 이름"),
+                            new EnumFields(PositionType.class).withPath("type")
+                                .description("직군 타입"),
+                            fieldWithPath("imageUrl").type(JsonFieldType.STRING)
+                                .description("직군 이미지 url(profileDefault)"),
                             fieldWithPath("skillList")
                                 .description("직군에 속한 스킬 리스트")
                         )
@@ -211,9 +248,11 @@ class SkillSetControllerTest extends MockMvcDocs {
     //given
     var url = "/v1/skill-set/position";
     CreatePositionRequest createPositionRequest = CreatePositionRequest.builder()
-        .displayName("test")
+        .displayName("테스트")
+        .displayNameEn("test")
+        .type(PositionType.BACKEND)
         .imageUrl("test")
-        .skillIds(List.of(1L, 2L))
+        .skillIds(List.of(1L))
         .build();
     given(skillSetService.createPosition(any())).willThrow(
         new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION)
@@ -238,6 +277,10 @@ class SkillSetControllerTest extends MockMvcDocs {
                         .requestFields(
                             fieldWithPath("displayName").type(JsonFieldType.STRING)
                                 .description("직군 이름"),
+                            fieldWithPath("displayNameEn").type(JsonFieldType.STRING)
+                                .description("직군 영문 이름"),
+                            new EnumFields(PositionType.class).withPath("type")
+                                .description("직군 타입"),
                             fieldWithPath("imageUrl").type(JsonFieldType.STRING)
                                 .description("직군 이미지 url(profileDefault)"),
                             fieldWithPath("skillIds").type(JsonFieldType.ARRAY)
@@ -260,13 +303,18 @@ class SkillSetControllerTest extends MockMvcDocs {
     //given
     var url = "/v1/skill-set/position";
     CreatePositionRequest createPositionRequest = CreatePositionRequest.builder()
-        .displayName("test")
-        .skillIds(List.of(1L, 2L))
+        .displayName("테스트")
+        .displayNameEn("test")
+        .type(PositionType.BACKEND)
         .imageUrl("test")
+        .skillIds(List.of(1L, 2L))
         .build();
     given(skillSetService.createPosition(any())).willReturn(PositionDto.builder()
         .id(1L)
-        .displayName("test")
+        .displayName("테스트")
+        .displayNameEn("test")
+        .type(PositionType.BACKEND)
+        .imageUrl("test")
         .skillList(List.of(
             SkillDto.builder()
                 .id(1L)
@@ -298,6 +346,10 @@ class SkillSetControllerTest extends MockMvcDocs {
                         .requestFields(
                             fieldWithPath("displayName").type(JsonFieldType.STRING)
                                 .description("직군 이름"),
+                            fieldWithPath("displayNameEn").type(JsonFieldType.STRING)
+                                .description("직군 영문 이름"),
+                            new EnumFields(PositionType.class).withPath("type")
+                                .description("직군 타입"),
                             fieldWithPath("imageUrl").type(JsonFieldType.STRING)
                                 .description("직군 이미지 url(profileDefault)"),
                             fieldWithPath("skillIds").description("직군에 속한 스킬 리스트").optional()
@@ -307,6 +359,12 @@ class SkillSetControllerTest extends MockMvcDocs {
                             fieldWithPath("id").type(JsonFieldType.NUMBER).description("직군 id"),
                             fieldWithPath("displayName").type(JsonFieldType.STRING)
                                 .description("직군 이름"),
+                            fieldWithPath("displayNameEn").type(JsonFieldType.STRING)
+                                .description("직군 영문 이름"),
+                            fieldWithPath("imageUrl").type(JsonFieldType.STRING)
+                                .description("직군 이미지 url(profileDefault)"),
+                            new EnumFields(PositionType.class).withPath("type")
+                                .description("직군 타입"),
                             fieldWithPath("skillList").type(JsonFieldType.ARRAY)
                                 .description("직군에 속한 스킬 리스트"),
                             fieldWithPath("skillList[].id").type(JsonFieldType.NUMBER)
@@ -324,9 +382,12 @@ class SkillSetControllerTest extends MockMvcDocs {
   public void update_position_displayName_fail_duplicate() throws Exception {
     //given
     var url = "/v1/skill-set/position/{positionId}";
-    var updatePositionRequest = new UpdatePositionRequest(JsonNullable.of("test"),
-        JsonNullable.undefined());
-    given(skillSetService.updatePositionDisplayName(any(), any())).willThrow(
+    var updatePositionRequest = UpdatePositionRequest.builder()
+        .displayName(JsonNullable.of("테스트"))
+        .displayNameEn(JsonNullable.undefined())
+        .imageUrl(JsonNullable.undefined())
+        .build();
+    given(skillSetService.updatePosition(any(), any())).willThrow(
         new BusinessException(ErrorCode.DUPLICATED_RESOURCE_EXCEPTION)
     );
 
@@ -348,7 +409,11 @@ class SkillSetControllerTest extends MockMvcDocs {
                         .requestSchema(Schema.schema("updatePositionRequest"))
                         .requestFields(
                             fieldWithPath("displayName").type(JsonFieldType.STRING)
-                                .description("직군 이름")
+                                .description("직군 이름").optional(),
+                            fieldWithPath("displayNameEn").type(JsonFieldType.STRING)
+                                .description("직군 영문 이름").optional(),
+                            fieldWithPath("imageUrl").type(JsonFieldType.STRING)
+                                .description("직군 이미지 url(profileDefault)").optional()
                         )
                         .responseSchema(Schema.schema("errorResponse"))
                         .responseFields(
@@ -366,11 +431,28 @@ class SkillSetControllerTest extends MockMvcDocs {
   public void update_position_displayName_success() throws Exception {
     //given
     var url = "/v1/skill-set/position/{positionId}";
-    var updatePositionRequest = new UpdatePositionRequest(JsonNullable.of("test"),
-        JsonNullable.undefined());
-    given(skillSetService.updatePositionDisplayName(any(), any())).willReturn(PositionDto.builder()
+    var updatePositionRequest =
+        UpdatePositionRequest.builder()
+            .displayName(JsonNullable.of("테스트"))
+            .displayNameEn(JsonNullable.undefined())
+            .imageUrl(JsonNullable.undefined())
+            .build();
+    given(skillSetService.updatePosition(any(), any())).willReturn(PositionDto.builder()
         .id(1L)
-        .displayName("test")
+        .displayName("테스트")
+        .displayNameEn("test")
+        .type(PositionType.BACKEND)
+        .imageUrl("test")
+        .skillList(List.of(
+            SkillDto.builder()
+                .id(1L)
+                .displayName("Java")
+                .build(),
+            SkillDto.builder()
+                .id(2L)
+                .displayName("Spring")
+                .build()
+        ))
         .build());
 
     //when
@@ -391,14 +473,28 @@ class SkillSetControllerTest extends MockMvcDocs {
                         .requestSchema(Schema.schema("updatePositionRequest"))
                         .requestFields(
                             fieldWithPath("displayName").type(JsonFieldType.STRING)
-                                .description("직군 이름")
+                                .description("직군 이름").optional(),
+                            fieldWithPath("displayNameEn").type(JsonFieldType.STRING)
+                                .description("직군 영문 이름").optional(),
+                            fieldWithPath("imageUrl").type(JsonFieldType.STRING)
+                                .description("직군 이미지 url(profileDefault)").optional()
                         )
                         .responseSchema(Schema.schema("position"))
                         .responseFields(
                             fieldWithPath("id").type(JsonFieldType.NUMBER).description("직군 id"),
                             fieldWithPath("displayName").type(JsonFieldType.STRING)
                                 .description("직군 이름"),
-                            fieldWithPath("skillList").description("직군에 속한 스킬 리스트")
+                            fieldWithPath("displayNameEn").type(JsonFieldType.STRING)
+                                .description("직군 영문 이름"),
+                            fieldWithPath("imageUrl").type(JsonFieldType.STRING)
+                                .description("직군 이미지 url(profileDefault)"),
+                            new EnumFields(PositionType.class).withPath("type")
+                                .description("직군 타입"),
+                            fieldWithPath("skillList").type(JsonFieldType.ARRAY).description("직군에 속한 스킬 리스트"),
+                            fieldWithPath("skillList[].id").type(JsonFieldType.NUMBER)
+                                .description("스킬 id"),
+                            fieldWithPath("skillList[].displayName").type(JsonFieldType.STRING)
+                                .description("스킬 이름")
                         )
                         .build()
                 )
@@ -409,12 +505,15 @@ class SkillSetControllerTest extends MockMvcDocs {
   @Test
   public void add_position_skillList_success() throws Exception {
     //given
-    var url = "/v1/skill-set/position/1/skill";
+    var url = "/v1/skill-set/position/{positionId}/skill";
     var addSkillListToPositionRequest = AddSkillListToPositionRequest.builder()
         .skillIds(List.of(1L, 2L)).build();
     given(skillSetService.addSkillListToPosition(any(), any())).willReturn(PositionDto.builder()
         .id(1L)
-        .displayName("test")
+        .displayName("테스트")
+        .displayNameEn("test")
+        .imageUrl("test")
+        .type(PositionType.BACKEND)
         .skillList(List.of(
             SkillDto.builder()
                 .id(1L)
@@ -428,7 +527,7 @@ class SkillSetControllerTest extends MockMvcDocs {
         .build());
 
     //when
-    var result = mockMvc.perform(patch(url)
+    var result = mockMvc.perform(patch(url, 1L)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(addSkillListToPositionRequest))
     );
@@ -451,6 +550,12 @@ class SkillSetControllerTest extends MockMvcDocs {
                             fieldWithPath("id").type(JsonFieldType.NUMBER).description("직군 id"),
                             fieldWithPath("displayName").type(JsonFieldType.STRING)
                                 .description("직군 이름"),
+                            fieldWithPath("displayNameEn").type(JsonFieldType.STRING)
+                                .description("직군 영문 이름"),
+                            fieldWithPath("imageUrl").type(JsonFieldType.STRING)
+                                .description("직군 이미지 url(profileDefault)"),
+                            new EnumFields(PositionType.class).withPath("type")
+                                .description("직군 타입"),
                             fieldWithPath("skillList").type(JsonFieldType.ARRAY)
                                 .description("직군에 속한 스킬 리스트"),
                             fieldWithPath("skillList[].id").type(JsonFieldType.NUMBER)
@@ -532,7 +637,7 @@ class SkillSetControllerTest extends MockMvcDocs {
   @Test
   public void getSkillListByPositionId_success() throws Exception {
     //given
-    var url = "/v1/skill-set/position/1/skill";
+    var url = "/v1/skill-set/position/{positionId}/skill";
     given(skillSetService.getSkillListByPositionId(any())).willReturn(List.of(
         SkillDto.builder()
             .id(1L)
@@ -545,7 +650,7 @@ class SkillSetControllerTest extends MockMvcDocs {
     ));
 
     //when
-    var result = mockMvc.perform(get(url));
+    var result = mockMvc.perform(get(url, 1L));
 
     //then
     result.andExpect(status().isOk())
@@ -836,7 +941,7 @@ class SkillSetControllerTest extends MockMvcDocs {
   @Test
   public void addSkillToPositionList_success() throws Exception {
     //given
-    var url = "/v1/skill-set/skill/1/position";
+    var url = "/v1/skill-set/skill/{skillId}/position";
     AddSkillToPositionListRequest addSkillToPositionListRequest = AddSkillToPositionListRequest.builder()
         .positionIds(List.of(1L, 2L))
         .build();
@@ -846,7 +951,7 @@ class SkillSetControllerTest extends MockMvcDocs {
         .build());
 
     //when
-    var result = mockMvc.perform(patch(url)
+    var result = mockMvc.perform(patch(url, 1L)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(addSkillToPositionListRequest))
     );

@@ -24,7 +24,7 @@ public interface SkillSetService {
 
   SkillDto addSkillToPositionList(Long SkillId, List<Long> positionIds);
 
-  PositionDto updatePositionDisplayName(Long positionId, UpdatePositionRequest request);
+  PositionDto updatePosition(Long positionId, UpdatePositionRequest request);
 
   PositionDto addSkillListToPosition(Long positionId, List<Long> skillIds);
 

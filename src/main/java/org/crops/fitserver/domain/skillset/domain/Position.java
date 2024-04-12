@@ -46,6 +46,9 @@ public class Position extends BaseTimeEntity {
   private String displayName;
 
   @Column(nullable = false)
+  private String displayNameEn;
+
+  @Column(nullable = false)
   private String imageUrl;
 
   @Column(nullable = false)
@@ -54,6 +57,10 @@ public class Position extends BaseTimeEntity {
 
   public void updateDisplayName(String displayName) {
     this.displayName = displayName;
+  }
+
+  public void updateDisplayNameEn(String displayNameEn) {
+    this.displayNameEn = displayNameEn;
   }
 
   public void updateImageUrl(String imageUrl) {

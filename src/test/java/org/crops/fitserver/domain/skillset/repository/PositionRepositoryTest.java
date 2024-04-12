@@ -35,6 +35,7 @@ public class PositionRepositoryTest {
     // given
     Position position = Position.builder()
         .displayName("test")
+        .displayNameEn("test")
         .type(PositionType.BACKEND)
         .imageUrl("test")
         .build();
@@ -50,6 +51,7 @@ public class PositionRepositoryTest {
     // given
     Position position = Position.builder()
         .displayName("test")
+        .displayNameEn("test")
         .type(PositionType.BACKEND)
         .imageUrl("test")
         .build();
@@ -68,6 +70,7 @@ public class PositionRepositoryTest {
     // given
     Position position1 = Position.builder()
         .displayName("test1")
+        .displayNameEn("test1")
         .type(PositionType.BACKEND)
         .imageUrl("test")
         .build();
@@ -75,6 +78,7 @@ public class PositionRepositoryTest {
 
     Position position2 = Position.builder()
         .displayName("test2")
+        .displayNameEn("test2")
         .type(PositionType.BACKEND)
         .imageUrl("test")
         .build();
@@ -92,6 +96,7 @@ public class PositionRepositoryTest {
     // given
     Position position = Position.builder()
         .displayName("test")
+        .displayNameEn("test")
         .type(PositionType.BACKEND)
         .imageUrl("test")
         .build();
@@ -114,6 +119,7 @@ public class PositionRepositoryTest {
     Position position = Position.builder()
         .displayName("test")
         .type(PositionType.BACKEND)
+        .displayNameEn("test")
         .imageUrl("test")
         .build();
     Skill skill = Skill.builder()
@@ -137,6 +143,7 @@ public class PositionRepositoryTest {
     // given
     Position position = Position.builder()
         .displayName("test")
+        .displayNameEn("test")
         .type(PositionType.BACKEND)
         .imageUrl("test")
         .build();
@@ -161,7 +168,8 @@ public class PositionRepositoryTest {
   public void delete_skill() {
     // given
     Position position = Position.builder()
-        .displayName("test")
+        .displayName("테스트")
+        .displayNameEn("test")
         .type(PositionType.BACKEND)
         .imageUrl("test")
         .build();

@@ -275,12 +275,13 @@ public class SkillSetServiceTest {
     given(positionRepository.findByDisplayName(any())).willReturn(Optional.empty());
     given(fileService.isUploaded(any())).willReturn(true);
     given(positionRepository.findById(any())).willReturn(Optional.of(
-        Position.builder().displayName("test").imageUrl("test").build()
+        Position.builder().displayName("test").imageUrl("test").displayNameEn("test").build()
     ));
 
     // when
-    var result = skillSetService.updatePositionDisplayName(1L, UpdatePositionRequest.builder().displayName(
-        JsonNullable.of("test")).imageUrl(JsonNullable.of("test")).build());
+    var result = skillSetService.updatePosition(1L, UpdatePositionRequest.builder().displayName(
+        JsonNullable.of("test")).displayNameEn(
+        JsonNullable.undefined()).imageUrl(JsonNullable.of("test")).build());
 
     // then
     assertThat(result.displayName()).isEqualTo("test");

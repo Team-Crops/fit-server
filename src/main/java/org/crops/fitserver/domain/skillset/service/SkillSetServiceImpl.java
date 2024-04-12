@@ -108,10 +108,13 @@ class SkillSetServiceImpl implements SkillSetService {
 
   @Override
   @Transactional
-  public PositionDto updatePositionDisplayName(Long positionId, UpdatePositionRequest request) {
+  public PositionDto updatePosition(Long positionId, UpdatePositionRequest request) {
     if(request.displayName().isPresent()) {
       handleDuplicatedDisplayName(request.displayName().get());
-    };
+    }
+    if(request.displayNameEn().isPresent()) {
+      handleDuplicatedDisplayNameEn(request.displayNameEn().get());
+    }
     if(request.imageUrl().isPresent()){
       validateImageUrl(request.imageUrl().get());
     }
@@ -119,6 +122,7 @@ class SkillSetServiceImpl implements SkillSetService {
     return positionRepository.findById(positionId)
         .map(position -> {
           position.updateDisplayName(request.displayName().orElse(position.getDisplayName()));
+          position.updateDisplayNameEn(request.displayNameEn().orElse(position.getDisplayNameEn()));
           position.updateImageUrl(request.imageUrl().orElse(position.getImageUrl()));
           return PositionDto.from(position);
         })
@@ -150,6 +154,12 @@ class SkillSetServiceImpl implements SkillSetService {
 
   private void handleDuplicatedDisplayName(String displayName) {
     if (positionRepository.findByDisplayName(displayName).isPresent()) {
+      throw new BusinessException(ErrorCode.DUPLICATED_RESOURCE_EXCEPTION);
+    }
+  }
+
+  private void handleDuplicatedDisplayNameEn(String displayNameEn) {
+    if (positionRepository.findByDisplayName(displayNameEn).isPresent()) {
       throw new BusinessException(ErrorCode.DUPLICATED_RESOURCE_EXCEPTION);
     }
   }
