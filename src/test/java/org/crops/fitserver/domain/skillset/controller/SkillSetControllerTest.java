@@ -505,7 +505,7 @@ class SkillSetControllerTest extends MockMvcDocs {
   @Test
   public void add_position_skillList_success() throws Exception {
     //given
-    var url = "/v1/skill-set/position/1/skill";
+    var url = "/v1/skill-set/position/{positionId}/skill";
     var addSkillListToPositionRequest = AddSkillListToPositionRequest.builder()
         .skillIds(List.of(1L, 2L)).build();
     given(skillSetService.addSkillListToPosition(any(), any())).willReturn(PositionDto.builder()
@@ -527,7 +527,7 @@ class SkillSetControllerTest extends MockMvcDocs {
         .build());
 
     //when
-    var result = mockMvc.perform(patch(url)
+    var result = mockMvc.perform(patch(url, 1L)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(addSkillListToPositionRequest))
     );
@@ -637,7 +637,7 @@ class SkillSetControllerTest extends MockMvcDocs {
   @Test
   public void getSkillListByPositionId_success() throws Exception {
     //given
-    var url = "/v1/skill-set/position/1/skill";
+    var url = "/v1/skill-set/position/{positionId}/skill";
     given(skillSetService.getSkillListByPositionId(any())).willReturn(List.of(
         SkillDto.builder()
             .id(1L)
@@ -650,7 +650,7 @@ class SkillSetControllerTest extends MockMvcDocs {
     ));
 
     //when
-    var result = mockMvc.perform(get(url));
+    var result = mockMvc.perform(get(url, 1L));
 
     //then
     result.andExpect(status().isOk())
@@ -941,7 +941,7 @@ class SkillSetControllerTest extends MockMvcDocs {
   @Test
   public void addSkillToPositionList_success() throws Exception {
     //given
-    var url = "/v1/skill-set/skill/1/position";
+    var url = "/v1/skill-set/skill/{skillId}/position";
     AddSkillToPositionListRequest addSkillToPositionListRequest = AddSkillToPositionListRequest.builder()
         .positionIds(List.of(1L, 2L))
         .build();
@@ -951,7 +951,7 @@ class SkillSetControllerTest extends MockMvcDocs {
         .build());
 
     //when
-    var result = mockMvc.perform(patch(url)
+    var result = mockMvc.perform(patch(url, 1L)
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(addSkillToPositionListRequest))
     );

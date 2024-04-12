@@ -56,8 +56,10 @@ class RegionControllerTest extends MockMvcDocs {
                         .description("지역 리스트 조회")
                         .summary("지역 리스트 조회")
                         .responseFields(
-                            fieldWithPath("regionList[]").type(JsonFieldType.ARRAY).description("지역 리스트"),
-                            fieldWithPath("regionList[].id").type(JsonFieldType.NUMBER).description("지역 id"),
+                            fieldWithPath("regionList[]").type(JsonFieldType.ARRAY)
+                                .description("지역 리스트"),
+                            fieldWithPath("regionList[].id").type(JsonFieldType.NUMBER)
+                                .description("지역 id"),
                             fieldWithPath("regionList[].displayName").type(JsonFieldType.STRING)
                                 .description("지역명")
                         )
@@ -197,7 +199,7 @@ class RegionControllerTest extends MockMvcDocs {
   @Test
   public void updateRegion_Success() throws Exception {
     //given
-    var url = "/v1/region/1";
+    var url = "/v1/region/{regionId}";
     var request = objectMapper
         .writeValueAsString(
             new UpdateRegionRequest("test")
@@ -206,7 +208,7 @@ class RegionControllerTest extends MockMvcDocs {
         .willReturn(RegionDto.of(1L, "test"));
 
     //when
-    var result = mockMvc.perform(put(url)
+    var result = mockMvc.perform(put(url, 1L)
         .contentType(MediaType.APPLICATION_JSON)
         .content(request)
     );
@@ -240,10 +242,10 @@ class RegionControllerTest extends MockMvcDocs {
   @Test
   public void deleteRegion_Success() throws Exception {
     //given
-    var url = "/v1/region/1";
+    var url = "/v1/region/{regionId}";
 
     //when
-    var result = mockMvc.perform(delete(url)
+    var result = mockMvc.perform(delete(url, 1L)
         .contentType(MediaType.APPLICATION_JSON)
     );
 
