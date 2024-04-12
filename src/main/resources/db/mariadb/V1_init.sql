@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS `position`
 (
     `position_id`  bigint       NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `display_name` varchar(20)  NOT NULL,
+    `display_name_en` varchar(50) NOT NULL,
     `type`         varchar(20)  NOT NULL,
     `image_url`   varchar(2048)     NOT NULL,
     `created_at`   datetime(6)      NOT NULL,
