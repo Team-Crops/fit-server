@@ -15,7 +15,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
-import com.epages.restdocs.apispec.SimpleType;
 import java.util.List;
 import org.crops.fitserver.config.MockMvcDocsWithLogin;
 import org.crops.fitserver.domain.chat.domain.MessageType;
@@ -71,20 +70,18 @@ class MessageControllerTest extends MockMvcDocsWithLogin {
         result.andExpect(status().isOk())
             .andExpect(handler().handlerType(MessageController.class))
             .andDo(
-                document("Recommend User Success",
+                document("get Message Success",
                     resource(ResourceSnippetParameters.builder()
-                        .tag("Recommend")
-                        .summary("Recommend User api")
-                        .description("팀원 추천 api")
+                        .tag("Chat")
+                        .summary("get message api")
+                        .description("방 메세지 조회 api")
                         .pathParameters(
                             parameterWithName("roomId")
                                 .description("방 ID")
-                                .defaultValue("1")
-                                .type(SimpleType.INTEGER))
+                                .defaultValue("1"))
                         .queryParameters(
                             parameterWithName("page")
-                                .description("페이징 번호")
-                                .type(SimpleType.INTEGER))
+                                .description("페이징 번호"))
                         .responseSchema(
                             schema("GetMessageListResponse"))
                         .responseFields(
