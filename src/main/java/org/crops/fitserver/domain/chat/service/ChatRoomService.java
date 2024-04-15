@@ -9,4 +9,6 @@ public interface ChatRoomService {
   ChatRoom getById(Long roomId);
 
   boolean isExistById(Long roomId);
+
+  void validateUserInRoom(long userId, long roomId);
 }

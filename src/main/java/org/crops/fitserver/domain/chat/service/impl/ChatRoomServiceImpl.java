@@ -29,4 +29,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
   public boolean isExistById(Long roomId) {
     return chatRoomRepository.existsById(roomId);
   }
+
+  @Override
+  public void validateUserInRoom(long userId, long roomId) {
+    // TODO: implement
+  }
 }

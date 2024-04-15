@@ -1,9 +1,10 @@
-package org.crops.fitserver.domain.chat.facade;
+package org.crops.fitserver.domain.chat.facade.impl;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.domain.chat.domain.Message;
 import org.crops.fitserver.domain.chat.domain.MessageType;
+import org.crops.fitserver.domain.chat.facade.ChatRoomFacade;
 import org.crops.fitserver.domain.chat.service.ChatRoomService;
 import org.crops.fitserver.domain.chat.service.MessageService;
 import org.crops.fitserver.domain.user.repository.UserRepository;
