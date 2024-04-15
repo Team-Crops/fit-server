@@ -7,8 +7,8 @@ import org.crops.fitserver.domain.chat.domain.MessageType;
 @Builder
 public record MessageDto(
     Long userId,
-    String content,
-    MessageType messageType
+    MessageType messageType,
+    String content
 ) {
 
   public static MessageDto from(Message message) {
