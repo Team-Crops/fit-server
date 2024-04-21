@@ -25,17 +25,13 @@ public class MatchingScheduler {
   @Scheduled(cron = "1/10 * * * * *")
   @Transactional
   public void matching() {
-    log.info("매칭 시작");
     var matchingProcessor = new MatchingProcessor(matchingRepository, matchingRoomRepository,
         chatRoomService);
-
-    long matchingCount = 0;
 
     matchingProcessor.insertToNotEnoughRoom();
     matchingProcessor.createNewRoom();
     matchingProcessor.joinRoom();
 
-    log.info("매칭 종료 : {}개 매칭", matchingCount);
 
   }
 
