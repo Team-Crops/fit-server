@@ -3,6 +3,8 @@ package org.crops.fitserver.domain.project.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,6 +14,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.crops.fitserver.domain.project.constant.ReportType;
+import org.crops.fitserver.global.entity.BaseTimeEntity;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.Where;
 
@@ -22,8 +25,9 @@ import org.hibernate.annotations.Where;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Where(clause = "is_deleted = false")
-public class ProjectReportHistory {
+public class ProjectReportHistory extends BaseTimeEntity {
   @Id
+  @Column(name = "project_report_history_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
@@ -37,6 +41,7 @@ public class ProjectReportHistory {
   private Long projectId;
 
   @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
   private ReportType reportType;
 
   private String description;

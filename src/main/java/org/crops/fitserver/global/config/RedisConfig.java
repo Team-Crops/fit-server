@@ -34,8 +34,6 @@ public class RedisConfig {
 
   private final RedisProperties redisProperties;
 
-  private final ObjectMapper objectMapper;
-
   private final ApplicationContext applicationContext;
 
   @Bean
