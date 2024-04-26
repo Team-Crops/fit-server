@@ -4,5 +4,5 @@ import org.crops.fitserver.global.mq.dto.Message;
 
 public interface MessageReceiver<T extends Message> {
 
-  void onMessage(T message);
+  void onEvent(T message);
 }

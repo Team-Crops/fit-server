@@ -49,7 +49,7 @@ public class RedisMessageSubscriptionManager<T extends org.crops.fitserver.globa
       T value = objectMapper.readValue(publishMessage, clazz);
       log.debug("Received message: {}", value);
 
-      messageReceivers.forEach(messageReceiver -> messageReceiver.onMessage(value));
+      messageReceivers.forEach(messageReceiver -> messageReceiver.onEvent(value));
     } catch (IOException e) {
       log.error("Error processing message", e);
     }

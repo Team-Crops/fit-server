@@ -18,15 +18,15 @@ public class ReportMessageQueue implements MessageReceiver<Report> {
   private final MatchingService matchingService;
 
   @Override
-  public void onMessage(Report message) {
-    var targetUserId = message.getTargetUserId();
+  public void onEvent(Report report) {
+    var targetUserId = report.getTargetUserId();
     /**
      * @유서린
      * canExecute() -> execute() 패턴을 이용할지,
      * try-catch-ignore 패턴을 이용할지 고민입니다.
      * */
     if (userBlockService.canBlockUser(targetUserId)) {
-      userBlockService.blockUser(message.getTargetUserId());
+      userBlockService.blockUser(report.getTargetUserId());
 
       try {
         matchingService.cancel(targetUserId);
