@@ -15,7 +15,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class RedisPubSubBeanRegistry {
 
   private final ObjectMapper objectMapper;
-  RedisTemplate<String, Object> redisTemplate;
+  private final RedisTemplate<String, Object> redisTemplate;
 
 
   @Bean
