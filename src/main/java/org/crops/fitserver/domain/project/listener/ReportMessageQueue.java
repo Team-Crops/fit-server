@@ -27,11 +27,12 @@ public class ReportMessageQueue implements MessageReceiver<Report> {
      * */
     if (userBlockService.canBlockUser(targetUserId)) {
       userBlockService.blockUser(message.getTargetUserId());
-    }
-    try {
-      matchingService.cancel(targetUserId);
-    } catch (BusinessException ignored) {
 
+      try {
+        matchingService.cancel(targetUserId);
+      } catch (BusinessException ignored) {
+
+      }
     }
   }
 }
