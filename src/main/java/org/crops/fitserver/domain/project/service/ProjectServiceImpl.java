@@ -70,7 +70,9 @@ public class ProjectServiceImpl implements ProjectService {
         .findFirst()
         .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_ACCESS_EXCEPTION));
 
-    projectReportHistoryRepository.save(ProjectReportHistory.create(projectMember.getId(), targetProjectMember.getId(), projectId, request.reportType(), request.description()));
+    projectReportHistoryRepository.save(
+        ProjectReportHistory.create(projectMember.getId(), targetProjectMember.getId(), projectId,
+            request.reportType(), request.description()));
   }
 
   private int getSortedComparisonValue(ProjectDto p1, ProjectDto p2) {

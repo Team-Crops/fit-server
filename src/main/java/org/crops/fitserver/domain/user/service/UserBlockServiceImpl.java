@@ -37,7 +37,7 @@ public class UserBlockServiceImpl implements UserBlockService {
   public void blockUser(Long userId) {
     var user = userRepository.findById(userId)
         .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_USER_EXCEPTION));
-    Optional<UserBlock> block = userBlockRepository.findByUser(user);
+    Optional<UserBlock> block = userBlockRepository.findActiveBlock(user);
 
     if (block.isEmpty()) {
       userBlockRepository.save(UserBlock.create(user));

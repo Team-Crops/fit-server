@@ -14,5 +14,5 @@ public interface UserBlockRepository extends JpaRepository<UserBlock, Long> {
       + "and ub.unblockedAt > current_timestamp() "
       + "order by ub.unblockedAt desc "
       + "limit 1")
-  Optional<UserBlock> findByUser(User user);
+  Optional<UserBlock> findActiveBlock(User user);
 }
