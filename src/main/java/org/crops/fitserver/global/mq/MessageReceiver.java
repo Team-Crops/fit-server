@@ -2,7 +2,7 @@ package org.crops.fitserver.global.mq;
 
 import org.crops.fitserver.global.mq.dto.Message;
 
-public interface MessagePublisher<T extends Message> {
+public interface MessageReceiver<T extends Message> {
 
-  void publish(T message);
+  void onMessage(T message);
 }

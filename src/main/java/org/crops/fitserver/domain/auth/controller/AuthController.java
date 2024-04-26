@@ -5,10 +5,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.auth.dto.request.SocialLoginRequest;
 import org.crops.fitserver.domain.auth.dto.response.SocialLoginPageResponse;
-import org.crops.fitserver.domain.auth.facade.AuthFacade;
-import org.crops.fitserver.domain.user.domain.SocialPlatform;
 import org.crops.fitserver.domain.auth.dto.response.TokenResponse;
+import org.crops.fitserver.domain.auth.facade.AuthFacade;
+import org.crops.fitserver.domain.chat.domain.Message;
+import org.crops.fitserver.domain.chat.dto.response.NoticeMessageResponse;
+import org.crops.fitserver.domain.user.domain.SocialPlatform;
 import org.crops.fitserver.global.annotation.V1;
+import org.crops.fitserver.global.mq.MessagePublisher;
+import org.crops.fitserver.global.mq.dto.Report;
+import org.crops.fitserver.global.socket.service.SocketResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +31,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
   private final AuthFacade authFacade;
+  private final MessagePublisher<Report> messagePublisher;
+  private final MessagePublisher<SocketResponse> messagePublisher2;
 
   @PostMapping("/social/{socialPlatform}/login")
   public ResponseEntity<TokenResponse> socialLogin(
@@ -53,12 +60,15 @@ public class AuthController {
   @PostMapping("/social/test/login")
   public ResponseEntity<TokenResponse> testLogin() {
     TokenResponse tokenResponse = authFacade.testLogin();
+    messagePublisher.publish(new Report(1L));
     return ResponseEntity.ok(tokenResponse);
   }
 
   @PostMapping("/social/test/login/{userId}")
   public ResponseEntity<TokenResponse> testLogin(@PathVariable(name = "userId") Long userId) {
     TokenResponse tokenResponse = authFacade.testLogin(userId);
+    messagePublisher2.publish(
+        NoticeMessageResponse.from(Message.builder().content("testets").build()));
     return ResponseEntity.ok(tokenResponse);
   }
 }
