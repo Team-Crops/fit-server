@@ -2,35 +2,38 @@ package org.crops.fitserver.global.mq.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.global.mq.MessageReceiver;
 import org.crops.fitserver.global.mq.MessageSubscriptionManager;
 import org.crops.fitserver.global.mq.constant.Topic;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
 public class RedisMessageSubscriptionManager<T extends org.crops.fitserver.global.mq.dto.Message> implements
     MessageSubscriptionManager<T> {
 
   private final RedisTemplate<String, Object> template;
   private final ObjectMapper objectMapper;
 
-  private final List<MessageReceiver<T>> messageReceivers = new ArrayList<>();
+  private final Set<MessageReceiver<T>> messageReceivers;
 
+  @Getter
   private final Topic topic;
   private final Class<T> clazz;
 
   public RedisMessageSubscriptionManager(RedisTemplate<String, Object> template,
       ObjectMapper objectMapper,
+      List<MessageReceiver<T>> messageReceivers,
       Class<T> clazz) {
     this.template = template;
     this.objectMapper = objectMapper;
+    this.messageReceivers = new HashSet<>(messageReceivers);
     this.clazz = clazz;
     this.topic = Arrays.stream(Topic.values())
         .filter(t -> t.getClazz().equals(clazz)).findFirst()
@@ -57,7 +60,4 @@ public class RedisMessageSubscriptionManager<T extends org.crops.fitserver.globa
     messageReceivers.add(messageReceiver);
   }
 
-  public Topic getTopic() {
-    return topic;
-  }
 }

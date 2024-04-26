@@ -26,7 +26,7 @@ public class RedisMessagePublisher<T extends Message> implements MessagePublishe
 
   @Override
   public void publish(T message) {
-    log.info("Publishing message: {}", message);
+    log.debug("Publishing message: {}", message);
     template.convertAndSend(topic.getTopic(), message);
   }
 }
