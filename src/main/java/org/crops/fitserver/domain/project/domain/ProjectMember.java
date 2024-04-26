@@ -1,4 +1,4 @@
-package org.crops.fitserver.domain.project.entity;
+package org.crops.fitserver.domain.project.domain;
 
 import static org.crops.fitserver.domain.project.constant.ProjectConstant.PROJECT_DEFAULT_NAME;
 

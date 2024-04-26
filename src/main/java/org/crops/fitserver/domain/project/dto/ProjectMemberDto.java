@@ -1,8 +1,7 @@
 package org.crops.fitserver.domain.project.dto;
 
 import lombok.Builder;
-import org.crops.fitserver.domain.project.entity.ProjectMember;
-import org.crops.fitserver.domain.skillset.constant.PositionType;
+import org.crops.fitserver.domain.project.domain.ProjectMember;
 
 @Builder
 public record ProjectMemberDto(

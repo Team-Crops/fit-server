@@ -1,7 +1,7 @@
 package org.crops.fitserver.domain.project.repository;
 
 import java.util.List;
-import org.crops.fitserver.domain.project.entity.Project;
+import org.crops.fitserver.domain.project.domain.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
