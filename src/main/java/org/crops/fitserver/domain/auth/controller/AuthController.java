@@ -31,8 +31,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
   private final AuthFacade authFacade;
-  private final MessagePublisher<Report> messagePublisher;
-  private final MessagePublisher<SocketResponse> messagePublisher2;
 
   @PostMapping("/social/{socialPlatform}/login")
   public ResponseEntity<TokenResponse> socialLogin(
@@ -60,15 +58,12 @@ public class AuthController {
   @PostMapping("/social/test/login")
   public ResponseEntity<TokenResponse> testLogin() {
     TokenResponse tokenResponse = authFacade.testLogin();
-    messagePublisher.publish(new Report(1L));
     return ResponseEntity.ok(tokenResponse);
   }
 
   @PostMapping("/social/test/login/{userId}")
   public ResponseEntity<TokenResponse> testLogin(@PathVariable(name = "userId") Long userId) {
     TokenResponse tokenResponse = authFacade.testLogin(userId);
-    messagePublisher2.publish(
-        NoticeMessageResponse.from(Message.builder().content("testets").build()));
     return ResponseEntity.ok(tokenResponse);
   }
 }
