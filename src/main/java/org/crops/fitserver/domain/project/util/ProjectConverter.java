@@ -1,8 +1,8 @@
 package org.crops.fitserver.domain.project.util;
 
 import org.crops.fitserver.domain.matching.entity.MatchingRoom;
-import org.crops.fitserver.domain.project.entity.Project;
-import org.crops.fitserver.domain.project.entity.ProjectMember;
+import org.crops.fitserver.domain.project.domain.Project;
+import org.crops.fitserver.domain.project.domain.ProjectMember;
 
 public class ProjectConverter {
 

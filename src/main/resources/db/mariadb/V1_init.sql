@@ -219,15 +219,27 @@ CREATE TABLE IF NOT EXISTS `alarm_type`
     `is_deleted`    tinyint(1) NOT NULL DEFAULT false
 );
 
-CREATE TABLE IF NOT EXISTS `report`
+CREATE TABLE IF NOT EXISTS `project_report_history`
 (
-    `report_id`          bigint      NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `project_id`         bigint      NOT NULL,
-    `reporter_member_id` bigint      NOT NULL,
-    `reported_member_id` bigint      NOT NULL,
-    `type`               varchar(30) NOT NULL,
-    `content`            text NULL,
-    `created_at`         datetime(6)    NOT NULL,
-    `updated_at`         datetime(6)    NOT NULL,
-    `is_deleted`         tinyint(1) NOT NULL DEFAULT false
+    `project_report_history_id` bigint       NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `reporter_user_id`          bigint       NOT NULL,
+    `target_user_id`            bigint       NOT NULL,
+    `project_id`                bigint       NOT NULL,
+    `report_type`               varchar(20)  NOT NULL,
+    `description`               varchar(255) NULL,
+    `created_at`                datetime(6)     NOT NULL,
+    `updated_at`                datetime(6)     NOT NULL,
+    `is_deleted`                tinyint(1) NOT NULL DEFAULT false
+);
+
+CREATE TABLE IF NOT EXISTS `user_block`
+(
+    `user_block_id` bigint       NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `user_id`       bigint       NOT NULL,
+    `blocked_at`    datetime(6)     NOT NULL,
+    `unblocked_at`  datetime(6)     NULL,
+    `block_status`  varchar(20)  NOT NULL,
+    `created_at`    datetime(6)     NOT NULL,
+    `updated_at`    datetime(6)     NOT NULL,
+    `is_deleted`    tinyint(1) NOT NULL DEFAULT false
 );
