@@ -26,8 +26,7 @@ public class ReportMessageQueue implements MessageReceiver<Report> {
      * try-catch-ignore 패턴을 이용할지 고민입니다.
      * */
     if (userBlockService.canBlockUser(targetUserId)) {
-      userBlockService.blockUser(report.getTargetUserId());
-
+      userBlockService.blockUser(targetUserId);
       try {
         matchingService.cancel(targetUserId);
       } catch (BusinessException ignored) {

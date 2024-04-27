@@ -38,6 +38,7 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
+  @Transactional
   public ProjectDto updateProject(Long userId, Long projectId,
       UpdateProjectRequest request) {
     var project = projectRepository.findById(projectId)

@@ -10,7 +10,7 @@ import org.crops.fitserver.global.socket.service.SocketResponse;
 
 @Getter
 @RequiredArgsConstructor
-public class NoticeMessageResponse extends SocketResponse implements Serializable {
+public class NoticeMessageResponse extends SocketResponse {
 
   private String notice;
 
