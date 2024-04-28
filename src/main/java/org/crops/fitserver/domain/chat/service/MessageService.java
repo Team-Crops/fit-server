@@ -1,10 +1,11 @@
 package org.crops.fitserver.domain.chat.service;
 
 import com.corundumstudio.socketio.SocketIOClient;
-import java.util.List;
 import org.crops.fitserver.domain.chat.domain.Message;
 
 public interface MessageService {
+
+  Message getById(long messageId);
 
   void sendTextMessage(
       SocketIOClient client,
@@ -17,6 +18,4 @@ public interface MessageService {
   void sendNoticeMessage(
       SocketIOClient client,
       Message message);
-
-  List<Message> getMessages(long roomId, int page, int size);
 }

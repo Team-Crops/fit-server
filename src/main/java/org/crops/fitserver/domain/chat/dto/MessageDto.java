@@ -1,5 +1,6 @@
 package org.crops.fitserver.domain.chat.dto;
 
+import java.time.LocalDateTime;
 import lombok.Builder;
 import org.crops.fitserver.domain.chat.domain.Message;
 import org.crops.fitserver.domain.chat.domain.MessageType;
@@ -7,15 +8,19 @@ import org.crops.fitserver.domain.chat.domain.MessageType;
 @Builder
 public record MessageDto(
     Long userId,
-    MessageType messageType,
-    String content
+    Long messageId,
+    String content,
+    LocalDateTime createdAt,
+    MessageType messageType
 ) {
 
   public static MessageDto from(Message message) {
         return MessageDto.builder()
             .userId(message.getUser().getId())
-            .messageType(message.getMessageType())
             .content(message.getContent())
+            .createdAt(message.getCreatedAt())
+            .messageId(message.getId())
+            .messageType(message.getMessageType())
             .build();
     }
 }

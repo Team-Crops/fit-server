@@ -47,9 +47,9 @@ public class SocketExceptionListener implements ExceptionListener {
   }
 
   private void runExceptionHandling(Exception e, SocketIOClient client) {
-    if (e instanceof BusinessException) {
-      BusinessException businessException = (BusinessException) e;
-      log.error("Exception : {}", e.getMessage(), e);
+    if (e.getCause() instanceof BusinessException) {
+      BusinessException businessException = (BusinessException) e.getCause();
+      log.error("BusinessException : {}", businessException.getMessage(), e);
       client.sendEvent(
           socketProperty.getGetMessageEvent(),
           ErrorResponse.from(
@@ -61,5 +61,4 @@ public class SocketExceptionListener implements ExceptionListener {
           ErrorResponse.from(ErrorCode.INTERNAL_SERVER_ERROR));
     }
   }
-
 }

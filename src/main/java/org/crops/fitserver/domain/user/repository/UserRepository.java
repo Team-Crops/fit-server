@@ -9,6 +9,8 @@ public interface UserRepository extends
     JpaRepository<User, Long>,
     UserRepositoryCustom {
 
+  Optional<User> findById(Long userId);
+
   @Query("select u from User u "
       + "left join u.userInfo ui "
       + "left join ui.userInfoSkills uis "

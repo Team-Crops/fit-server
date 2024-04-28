@@ -19,7 +19,7 @@ public class SocketService {
   public void sendMessage(
       SocketIOClient senderClient,
       String eventName,
-      SocketResponse message) {
+      MessageResponse message) {
     var roomId = String.valueOf(getRoomId(senderClient));
     senderClient
         .getNamespace()
@@ -33,16 +33,8 @@ public class SocketService {
                 message));
   }
 
-  public void setUserId(SocketIOClient socketIOClient, Long userId) {
-    socketIOClient.set(socketProperty.getUserKey(), userId);
-  }
-
-  public void setRoomId(SocketIOClient socketIOClient, Long roomId) {
-    socketIOClient.set(socketProperty.getRoomKey(), roomId);
-  }
-
   public Long getRoomId(SocketIOClient socketIOClient) {
-    var roomId = (Long) socketIOClient.get(socketProperty.getRoomKey());
+    var roomId = socketIOClient.<Long>get(socketProperty.getRoomKey());
     if (Objects.isNull(roomId)) {
       throw new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION);
     }
@@ -50,7 +42,7 @@ public class SocketService {
   }
 
   public Long getUserId(SocketIOClient socketIOClient) {
-    var userId = (Long) socketIOClient.get(socketProperty.getUserKey());
+    var userId = socketIOClient.<Long>get(socketProperty.getUserKey());
     if (Objects.isNull(userId)) {
       throw new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION);
     }
@@ -61,8 +53,8 @@ public class SocketService {
       SocketIOClient senderClient,
       SocketIOClient client,
       String eventName,
-      SocketResponse message) {
-    if (!Objects.equals(client.getSessionId(), senderClient.getSessionId())) {
+      MessageResponse message) {
+    if (!Objects.equals(senderClient.getSessionId(), client.getSessionId())) {
       client.sendEvent(eventName, message);
     }
   }

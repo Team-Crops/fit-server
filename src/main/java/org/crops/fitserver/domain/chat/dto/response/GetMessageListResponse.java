@@ -1,13 +1,13 @@
 package org.crops.fitserver.domain.chat.dto.response;
 
-import java.util.List;
 import org.crops.fitserver.domain.chat.dto.MessageDto;
+import org.crops.fitserver.global.http.CursorResult;
 
 public record GetMessageListResponse(
-    List<MessageDto> messages
+    CursorResult<MessageDto> cursorResult
 ) {
 
-  public static GetMessageListResponse of(List<MessageDto> messages) {
-    return new GetMessageListResponse(messages);
+  public static GetMessageListResponse of(CursorResult<MessageDto> cursorResult) {
+    return new GetMessageListResponse(cursorResult);
   }
 }

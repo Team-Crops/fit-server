@@ -4,7 +4,8 @@ import lombok.Getter;
 import org.crops.fitserver.domain.chat.domain.MessageType;
 
 @Getter
-public abstract class SocketResponse {
+public abstract class MessageResponse {
 
+  protected Long messageId;
   protected MessageType messageType;
 }

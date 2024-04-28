@@ -41,11 +41,16 @@ public class WebSocketAddMappingSupporter {
   }
 
   private void addSocketServerEventListener(Class<?> controller, List<Method> methods) {
+    SocketController socketController = controller.getAnnotation(SocketController.class);
+    String eventValue = socketController.value();
     methods.forEach(method -> {
       SocketMapping socketMapping = method.getAnnotation(SocketMapping.class);
       String endpoint = socketMapping.endpoint();
       Class<?> dtoClass = socketMapping.requestCls();
-      socketIOServer.addEventListener(endpoint, dtoClass, (client, data, ackSender) -> {
+      StringBuilder sb = new StringBuilder();
+      sb.append(eventValue);
+      sb.append(endpoint);
+      socketIOServer.addEventListener(sb.toString(), dtoClass, (client, data, ackSender) -> {
         try {
           List<Object> args = new ArrayList<>();
           for (Class<?> params : method.getParameterTypes()) {
@@ -58,19 +63,23 @@ public class WebSocketAddMappingSupporter {
             }
           }
           method.invoke(beanFactory.getBean(controller), args.toArray());
-        } catch (BusinessException e) {
-          exceptionHandle(e, client);
-        } catch (Exception e) {
+          } catch (Exception e) {
           exceptionHandle(e, client);
         }
       });
     });
   }
 
+  private List<Method> findSocketMappingAnnotatedMethods(Class<?> cls) {
+    return Arrays.stream(cls.getMethods())
+        .filter(method -> method.getAnnotation(SocketMapping.class) != null)
+        .collect(Collectors.toList());
+  }
+
   private void exceptionHandle(Exception e, SocketIOClient client) {
-    if (e instanceof BusinessException) {
-      BusinessException businessException = (BusinessException) e;
-      log.error("Exception : {}", e.getMessage(), e);
+    if (e.getCause() instanceof BusinessException) {
+      BusinessException businessException = (BusinessException) e.getCause();
+      log.error("BusinessException : {}", businessException.getMessage(), e);
       client.sendEvent(
           socketProperty.getGetMessageEvent(),
           ErrorResponse.from(businessException.getErrorCode()));
@@ -80,11 +89,5 @@ public class WebSocketAddMappingSupporter {
           socketProperty.getGetMessageEvent(),
           ErrorResponse.from(ErrorCode.INTERNAL_SERVER_ERROR));
     }
-  }
-
-  private List<Method> findSocketMappingAnnotatedMethods(Class<?> cls) {
-    return Arrays.stream(cls.getMethods())
-        .filter(method -> method.getAnnotation(SocketMapping.class) != null)
-        .collect(Collectors.toList());
   }
 }

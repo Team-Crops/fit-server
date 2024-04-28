@@ -8,6 +8,8 @@ import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
 
 public interface UserService {
 
+  User getById(Long userId);
+
   User getUserWithInfo(Long userId);
 
   User getUserWithLikeUsers(Long userId);

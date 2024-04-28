@@ -35,6 +35,12 @@ public class UserServiceImpl implements UserService {
   private final UserPolicyAgreementRepository userPolicyAgreementRepository;
 
   @Override
+  public User getById(Long userId) {
+    return userRepository.findById(userId).orElseThrow(() -> new BusinessException(
+        ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
+  }
+
+  @Override
   public User getUserWithInfo(Long userId) {
     return userRepository.findWithInfo(userId).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
