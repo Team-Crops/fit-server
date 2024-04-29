@@ -69,7 +69,7 @@ public class MatchingProcessor {
 
     notEnoughRoomList
         .forEach(matchingRoom -> matchingMap.forEach((key, value) -> {
-          if (matchingRoom.isNotEnough(key)) {
+          if (matchingRoom.isNotEnough(key) && !value.isEmpty()) {
             matchingRoom.addMatching(value.remove(0));
             updateRoomList.add(matchingRoom);
           }
