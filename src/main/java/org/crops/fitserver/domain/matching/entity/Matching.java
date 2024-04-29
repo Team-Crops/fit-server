@@ -2,6 +2,7 @@ package org.crops.fitserver.domain.matching.entity;
 
 import static org.crops.fitserver.domain.matching.constant.MatchingConstants.MATCHING_EXPIRE_DAYS;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import jakarta.persistence.Column;
@@ -20,6 +21,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.crops.fitserver.domain.matching.constant.MatchingStatus;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.user.domain.User;
@@ -36,6 +38,7 @@ import org.hibernate.annotations.Where;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Where(clause = "is_deleted = false")
+@ToString(exclude = {"user", "matchingRoom"})
 public class Matching extends BaseTimeEntity {
 
   @Id

@@ -186,6 +186,6 @@ public class MatchingServiceImpl implements MatchingService {
 
   private Optional<Matching> getActiveMatching(User user) {
     return matchingRepository.findActiveMatchingByUserAndStatus(user,
-        List.of(MatchingStatus.WAITING, MatchingStatus.MATCHED));
+        MatchingStatus.getActiveStatusList());
   }
 }

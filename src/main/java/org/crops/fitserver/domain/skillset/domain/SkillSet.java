@@ -38,10 +38,13 @@ public class SkillSet {
   private Position position;
 
   public static SkillSet create(Skill skill, Position position) {
-    return SkillSet.builder()
+    var skillSet = SkillSet.builder()
         .skill(skill)
         .position(position)
         .build();
+    skill.addSkillSet(skillSet);
+    position.addSkillSet(skillSet);
+    return skillSet;
   }
 
   public boolean isEqualPositionType(PositionType positionType) {
