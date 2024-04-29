@@ -43,7 +43,7 @@ public class ChatRoomUser extends BaseTimeEntity {
   private User user;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "last_checked_message_id", nullable = false)
+  @JoinColumn(name = "last_checked_message_id")
   private Message lastCheckedMessage;
 
   public static ChatRoomUser create(User user, ChatRoom chatRoom) {

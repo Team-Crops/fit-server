@@ -1,9 +1,8 @@
 package org.crops.fitserver.domain.chat.facade;
 
 import com.corundumstudio.socketio.SocketIOClient;
-import java.util.List;
-import org.crops.fitserver.domain.chat.dto.MessageDto;
-import org.crops.fitserver.global.http.CursorResult;
+import org.crops.fitserver.global.http.PageResult;
+import org.crops.fitserver.global.socket.service.MessageResponse;
 
 public interface ChatRoomFacade {
 
@@ -30,7 +29,7 @@ public interface ChatRoomFacade {
       long roomId,
       long messageId);
 
-  CursorResult<MessageDto> getMessages(
+  PageResult<MessageResponse> getMessages(
       long userId,
       long roomId,
       Long lastMessageId);

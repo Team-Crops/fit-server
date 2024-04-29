@@ -1,6 +1,5 @@
 package org.crops.fitserver.domain.chat.repository;
 
-import java.util.List;
 import java.util.Optional;
 import org.crops.fitserver.domain.chat.domain.Message;
 import org.springframework.data.domain.Pageable;

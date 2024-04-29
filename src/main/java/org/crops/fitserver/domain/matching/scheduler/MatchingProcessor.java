@@ -124,6 +124,7 @@ public class MatchingProcessor {
       this.findBestRoom(enableRoomList)
           .ifPresent(matchingRoom -> {
             matchingRoom.addMatching(matching);
+            chatRoomService.chatRoomJoin(matchingRoom.getChatRoomId(), matching.getUser());
             matchingRoomRepository.save(matchingRoom);
             removeList.add(matching);
           });

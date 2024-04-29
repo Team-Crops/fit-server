@@ -2,13 +2,12 @@ package org.crops.fitserver.domain.chat.controller;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.chat.dto.request.ReceiveMessageRequest;
 import org.crops.fitserver.domain.chat.dto.request.SendMessageRequest;
 import org.crops.fitserver.domain.chat.dto.response.GetMessageListResponse;
-import org.crops.fitserver.domain.chat.dto.response.MessageIdResponse;
+import org.crops.fitserver.domain.chat.dto.response.GetLastSeenMessageResponse;
 import org.crops.fitserver.domain.chat.facade.ChatRoomFacade;
 import org.crops.fitserver.global.annotation.CurrentUserId;
 import org.crops.fitserver.global.annotation.SocketController;
@@ -67,7 +66,7 @@ public class ChatController {
   }
 
   @SocketMapping(endpoint = "/receive", requestCls = ReceiveMessageRequest.class)
-  public void receiveMessage(SocketIOClient client, @Valid ReceiveMessageRequest request) {
+  public void receiveMessage(SocketIOClient client, ReceiveMessageRequest request) {
     long userId = socketService.getUserId(client);
     long roomId = socketService.getRoomId(client);
     chatRoomFacade.receiveMessage(
@@ -82,17 +81,17 @@ public class ChatController {
       @PathVariable long roomId,
       @RequestParam(required = false) Long lastMessageId
   ) {
-    var response = GetMessageListResponse.of(
+    var response = GetMessageListResponse.from(
         chatRoomFacade.getMessages(userId, roomId, lastMessageId));
     return ResponseEntity.ok(response);
   }
 
   @GetMapping("/room/{roomId}/message/recent")
-  public ResponseEntity<MessageIdResponse> getRecentMessages(
+  public ResponseEntity<GetLastSeenMessageResponse> getLastSeenMessage(
       @CurrentUserId long userId,
        @PathVariable long roomId
   ) {
-    var response = MessageIdResponse.from(
+    var response = GetLastSeenMessageResponse.from(
         chatRoomFacade.getRecentMessageId(userId, roomId));
     return ResponseEntity.ok(response);
   }

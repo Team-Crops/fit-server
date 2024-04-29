@@ -9,4 +9,6 @@ public interface ChatRoomUserRepository extends Repository<ChatRoomUser, Long> {
   ChatRoomUser save(ChatRoomUser chatRoomUser);
 
   Optional<ChatRoomUser> findByUserIdAndChatRoomId(long userId, long chatRoomId);
+
+  void delete(ChatRoomUser chatRoomUser);
 }

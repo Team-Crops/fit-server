@@ -37,7 +37,6 @@ public class ChatRoomConnectListener implements ConnectListener {
     log.info("Socket ID[{}]  User Id {} Room Id {} Connected to socket",
         socketIOClient.getSessionId().toString(), user.getId(), room.getId());
     joinRoom(socketIOClient, room);
-    chatRoomService.updateLastCheckedMessage(user, room);
   }
 
   private User getUser(SocketIOClient socketIOClient) {

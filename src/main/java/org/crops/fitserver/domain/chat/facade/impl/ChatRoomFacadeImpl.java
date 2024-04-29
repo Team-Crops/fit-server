@@ -1,17 +1,17 @@
 package org.crops.fitserver.domain.chat.facade.impl;
 
+import static java.util.stream.Collectors.*;
+
 import com.corundumstudio.socketio.SocketIOClient;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.domain.chat.domain.Message;
 import org.crops.fitserver.domain.chat.domain.MessageType;
-import org.crops.fitserver.domain.chat.dto.MessageDto;
 import org.crops.fitserver.domain.chat.facade.ChatRoomFacade;
 import org.crops.fitserver.domain.chat.service.ChatRoomService;
 import org.crops.fitserver.domain.chat.service.MessageService;
 import org.crops.fitserver.domain.user.service.UserService;
-import org.crops.fitserver.global.http.CursorResult;
+import org.crops.fitserver.global.http.PageResult;
+import org.crops.fitserver.global.socket.service.MessageResponse;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,17 +71,20 @@ public class ChatRoomFacadeImpl implements ChatRoomFacade {
 
   @Override
   @Transactional(readOnly = true)
-  public CursorResult<MessageDto> getMessages(long userId, long roomId, Long lastMessageId) {
+  public PageResult<MessageResponse> getMessages(long userId, long roomId, Long lastMessageId) {
     var user = userService.getById(userId);
     var room = chatRoomService.getById(roomId);
-    chatRoomService.validateUserInRoom(user, room);
     Slice<Message> slice = chatRoomService.getBeforeMessagesByPaging(
         room.getId(), lastMessageId, DEFAULT_PAGE_SIZE);
-    return CursorResult.of(
+    chatRoomService.validateUserInRoom(user, room);
+    if (lastMessageId == null) {
+      chatRoomService.updateLastCheckedMessage(room, user);
+    }
+    return PageResult.of(
         slice.getContent()
             .stream()
-            .map(MessageDto::from)
-            .collect(Collectors.toList()),
+            .map(MessageResponse::from)
+            .collect(toList()),
         slice.hasNext());
   }
 
