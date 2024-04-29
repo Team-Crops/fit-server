@@ -122,7 +122,7 @@ public class MatchingRoom extends BaseTimeEntity {
   }
 
   public boolean isNotEnough() {
-    return this.isEnough();
+    return !this.isEnough();
   }
 
   public boolean isEnough() {
@@ -152,6 +152,9 @@ public class MatchingRoom extends BaseTimeEntity {
     }
 
     var requiredSkillIds = getRequiredSkillIds(positionType);
+    if(requiredSkillIds.isEmpty()){
+      return true;
+    }
     var userSkillIds = matching.getUser().getUserInfo().getUserInfoSkills().stream()
         .map(userInfoSkill -> userInfoSkill.getSkill().getId())
         .toList();
