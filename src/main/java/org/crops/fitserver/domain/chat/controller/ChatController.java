@@ -54,17 +54,6 @@ public class ChatController {
         request.content());
   }
 
-  @SocketMapping(endpoint = "/notice", requestCls = SendMessageRequest.class)
-  public void sendNoticeMessage(SocketIOClient client, @Valid SendMessageRequest request) {
-    long userId = socketService.getUserId(client);
-    long roomId = socketService.getRoomId(client);
-    chatRoomFacade.sendNoticeMessage(
-        client,
-        userId,
-        roomId,
-        request.content());
-  }
-
   @SocketMapping(endpoint = "/receive", requestCls = ReceiveMessageRequest.class)
   public void receiveMessage(SocketIOClient client, ReceiveMessageRequest request) {
     long userId = socketService.getUserId(client);

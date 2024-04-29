@@ -10,7 +10,6 @@ import org.crops.fitserver.domain.chat.repository.MessageRepository;
 import org.crops.fitserver.domain.chat.service.MessageService;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
-import org.crops.fitserver.global.socket.SocketProperty;
 import org.crops.fitserver.global.socket.service.SocketService;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,6 @@ public class MessageServiceImpl implements MessageService {
 
   private final MessageRepository messageRepository;
   private final SocketService socketService;
-  private final SocketProperty socketProperty;
 
   @Override
   public Message getById(long messageId) {
@@ -34,7 +32,7 @@ public class MessageServiceImpl implements MessageService {
       Message message) {
     messageRepository.save(message);
     var response = TextMessageResponse.from(message);
-    socketService.sendMessage(client, socketProperty.getGetMessageEvent(), response);
+    socketService.sendMessage(client, response);
   }
 
   @Override
@@ -43,15 +41,13 @@ public class MessageServiceImpl implements MessageService {
       Message message) {
     messageRepository.save(message);
     var response = ImageMessageResponse.from(message);
-    socketService.sendMessage(client, socketProperty.getGetMessageEvent(), response);
+    socketService.sendMessage(client, response);
   }
 
   @Override
-  public void sendNoticeMessage(
-      SocketIOClient client,
-      Message message) {
+  public void sendNoticeMessage(Message message) {
     messageRepository.save(message);
     var response = NoticeMessageResponse.from(message);
-    socketService.sendMessage(client, socketProperty.getGetMessageEvent(), response);
+    socketService.sendNotice(message.getChatRoom().getId(), response);
   }
 }

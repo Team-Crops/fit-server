@@ -50,17 +50,6 @@ public class ChatRoomFacadeImpl implements ChatRoomFacade {
 
   @Override
   @Transactional
-  public void sendNoticeMessage(SocketIOClient client, long userId, long roomId, String notice) {
-    var user = userService.getById(userId);
-    var room = chatRoomService.getById(roomId);
-    var message = Message.newInstance(user, room, MessageType.NOTICE, notice);
-    chatRoomService.validateUserInRoom(user, room);
-    messageService.sendNoticeMessage(client, message);
-    chatRoomService.updateLastCheckedMessageByMessage(room, user, message);
-  }
-
-  @Override
-  @Transactional
   public void receiveMessage(long userId, long roomId, long messageId) {
     var user = userService.getById(userId);
     var room = chatRoomService.getById(roomId);

@@ -13,6 +13,7 @@ import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
 import org.crops.fitserver.global.http.HeaderTokenExtractor;
 import org.crops.fitserver.global.jwt.JwtResolver;
+import org.crops.fitserver.global.socket.service.SocketService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,7 @@ public class ChatRoomConnectListener implements ConnectListener {
   private final JwtResolver jwtResolver;
   private final ChatRoomService chatRoomService;
   private final UserService userService;
+  private final SocketService socketService;
   private final SocketProperty socketProperty;
 
   @Override
@@ -34,6 +36,11 @@ public class ChatRoomConnectListener implements ConnectListener {
     ChatRoom room = getRoom(socketIOClient);
     saveUserId(socketIOClient, user.getId());
     saveRoomId(socketIOClient, room.getId());
+    socketService.addRoomOperations(
+        room.getId(),
+        socketIOClient
+            .getNamespace()
+            .getRoomOperations(String.valueOf(room.getId())));
     log.info("Socket ID[{}]  User Id {} Room Id {} Connected to socket",
         socketIOClient.getSessionId().toString(), user.getId(), room.getId());
     joinRoom(socketIOClient, room);

@@ -24,7 +24,7 @@ public class ImageMessageResponse extends MessageResponse {
     this.messageType = messageType;
   }
 
-  public static MessageResponse from(Message message) {
+  public static ImageMessageResponse from(Message message) {
     return ImageMessageResponse.builder()
         .userId(message.getUser().getId())
         .imagesUrl(message.getContent())

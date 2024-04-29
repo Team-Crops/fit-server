@@ -15,7 +15,5 @@ public interface MessageService {
       SocketIOClient client,
       Message message);
 
-  void sendNoticeMessage(
-      SocketIOClient client,
-      Message message);
+  void sendNoticeMessage(Message message);
 }

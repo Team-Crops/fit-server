@@ -21,7 +21,7 @@ public class NoticeMessageResponse extends MessageResponse {
     this.messageType = messageType;
   }
 
-  public static MessageResponse from(Message message) {
+  public static NoticeMessageResponse from(Message message) {
     return NoticeMessageResponse.builder()
         .notice(message.getContent())
         .messageId(message.getId())

@@ -18,12 +18,6 @@ public interface ChatRoomFacade {
       long roomId,
       String imageUrl);
 
-  void sendNoticeMessage(
-      SocketIOClient client,
-      long userId,
-      long roomId,
-      String notice);
-
   void receiveMessage(
       long userId,
       long roomId,

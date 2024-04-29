@@ -29,4 +29,6 @@ public interface ChatRoomService {
   void chatRoomJoin(long chatRoomId, User user);
 
   void chatRoomLeave(long chatRoomId, User user);
+
+  void chatRoomForceOut(long chatRoomId, User user);
 }

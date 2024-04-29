@@ -60,4 +60,15 @@ public class Message extends BaseTimeEntity {
         .content(content)
         .build();
   }
+
+  public static Message newInstance(
+      ChatRoom chatRoom,
+      MessageType messageType,
+      String content) {
+    return Message.builder()
+        .chatRoom(chatRoom)
+        .messageType(messageType)
+        .content(content)
+        .build();
+  }
 }

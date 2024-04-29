@@ -7,9 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.crops.fitserver.domain.chat.domain.Message;
 import org.crops.fitserver.domain.chat.service.ChatRoomService;
-import org.crops.fitserver.domain.chat.service.MessageService;
 import org.crops.fitserver.domain.matching.constant.MatchingStatus;
 import org.crops.fitserver.domain.matching.dto.MatchingDto;
 import org.crops.fitserver.domain.matching.dto.response.GetMatchingRoomResponse;
@@ -178,8 +176,8 @@ public class MatchingServiceImpl implements MatchingService {
     }
     matchingRoom.forceOut(userId, forceOutUserId);
     matchingRoomRepository.save(matchingRoom);
-    chatRoomService.chatRoomLeave(matchingRoom.getChatRoomId(), user);
-    //TODO: 채팅방에 강제퇴장 메시지 전송
+
+    chatRoomService.chatRoomForceOut(matchingRoom.getChatRoomId(), user);
     //TODO: 강제퇴장당한 유저에게 강제퇴장 알림 전송
   }
 

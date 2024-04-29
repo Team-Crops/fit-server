@@ -24,7 +24,7 @@ public class TextMessageResponse extends MessageResponse {
     this.messageType = messageType;
   }
 
-  public static MessageResponse from(Message message) {
+  public static TextMessageResponse from(Message message) {
     return TextMessageResponse.builder()
         .userId(message.getUser().getId())
         .content(message.getContent())
