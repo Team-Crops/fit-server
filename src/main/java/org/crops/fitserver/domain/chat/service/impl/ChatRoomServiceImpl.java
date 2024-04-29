@@ -1,6 +1,5 @@
 package org.crops.fitserver.domain.chat.service.impl;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.domain.chat.domain.ChatRoom;
 import org.crops.fitserver.domain.chat.domain.ChatRoomUser;
@@ -12,7 +11,6 @@ import org.crops.fitserver.domain.chat.service.ChatRoomService;
 import org.crops.fitserver.domain.user.domain.User;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
-import org.crops.fitserver.global.http.CursorResult;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -58,7 +56,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
   }
 
   @Override
-  public void updateLastCheckedMessage(User user, ChatRoom room) {
+  public void updateLastCheckedMessage(ChatRoom room, User user) {
     messageRepository
         .findLastMessageByRoomId(room.getId())
         .ifPresent(message -> updateLastCheckedMessageByMessage(room, user, message));
@@ -68,8 +66,21 @@ public class ChatRoomServiceImpl implements ChatRoomService {
   public void updateLastCheckedMessageByMessage(ChatRoom room, User user, Message message) {
     var chatRoomUser = chatRoomUserRepository
         .findByUserIdAndChatRoomId(user.getId(), room.getId())
-        .orElseGet(() -> ChatRoomUser.create(user, room));
+        .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
     chatRoomUser.updateLastCheckedMessage(message);
     chatRoomUserRepository.save(chatRoomUser);
+  }
+
+  @Override
+  public void chatRoomJoin(long chatRoomId, User user) {
+    var chatRoom = getById(chatRoomId);
+    chatRoomUserRepository.save(ChatRoomUser.create(user, chatRoom));
+  }
+
+  @Override
+  public void chatRoomLeave(long chatRoomId, User user) {
+    chatRoomUserRepository
+        .findByUserIdAndChatRoomId(user.getId(), chatRoomId)
+        .ifPresent(chatRoomUser -> chatRoomUserRepository.delete(chatRoomUser));
   }
 }

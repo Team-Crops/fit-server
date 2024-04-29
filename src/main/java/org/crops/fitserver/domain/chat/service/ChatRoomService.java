@@ -3,7 +3,6 @@ package org.crops.fitserver.domain.chat.service;
 import org.crops.fitserver.domain.chat.domain.ChatRoom;
 import org.crops.fitserver.domain.chat.domain.Message;
 import org.crops.fitserver.domain.user.domain.User;
-import org.crops.fitserver.global.http.CursorResult;
 import org.springframework.data.domain.Slice;
 
 public interface ChatRoomService {
@@ -23,7 +22,11 @@ public interface ChatRoomService {
       long userId,
       long chatRoomId);
 
-  void updateLastCheckedMessage(User user, ChatRoom room);
+  void updateLastCheckedMessage(ChatRoom room, User user);
 
   void updateLastCheckedMessageByMessage(ChatRoom room, User user, Message message);
+
+  void chatRoomJoin(long chatRoomId, User user);
+
+  void chatRoomLeave(long chatRoomId, User user);
 }
