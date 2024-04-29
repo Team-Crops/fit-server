@@ -1,12 +1,13 @@
 package org.crops.fitserver.global.socket;
 
+import static java.util.stream.Collectors.*;
+
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.global.annotation.SocketController;
@@ -32,7 +33,7 @@ public class WebSocketAddMappingSupporter {
         .values()
         .stream()
         .map(Object::getClass)
-        .collect(Collectors.toList());
+        .collect(toList());
 
     classes.forEach(cls -> {
       List<Method> methods = findSocketMappingAnnotatedMethods(cls);
@@ -73,7 +74,7 @@ public class WebSocketAddMappingSupporter {
   private List<Method> findSocketMappingAnnotatedMethods(Class<?> cls) {
     return Arrays.stream(cls.getMethods())
         .filter(method -> method.getAnnotation(SocketMapping.class) != null)
-        .collect(Collectors.toList());
+        .collect(toList());
   }
 
   private void exceptionHandle(Exception e, SocketIOClient client) {
