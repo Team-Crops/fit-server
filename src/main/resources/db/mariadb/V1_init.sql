@@ -236,18 +236,27 @@ CREATE TABLE IF NOT EXISTS `alarm`
     CONSTRAINT `fk_alarm_alarmtypeid` FOREIGN KEY (`alarm_type_id`) REFERENCES `alarm_type` (`alarm_type_id`)
 );
 
-CREATE TABLE IF NOT EXISTS `report`
+CREATE TABLE IF NOT EXISTS `project_report_history`
 (
-    `report_id`          bigint      NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `project_id`         bigint      NOT NULL,
-    `reporter_member_id` bigint      NOT NULL,
-    `reported_member_id` bigint      NOT NULL,
-    `type`               varchar(30) NOT NULL,
-    `content`            text NULL,
-    `created_at`         datetime(6)    NOT NULL,
-    `updated_at`         datetime(6)    NOT NULL,
-    `is_deleted`         tinyint(1) NOT NULL DEFAULT false,
-    CONSTRAINT `fk_report_projectid` FOREIGN KEY (`project_id`) REFERENCES `project` (`project_id`),
-    CONSTRAINT `fk_report_reporter_member_id` FOREIGN KEY (`reporter_member_id`) REFERENCES `project_member` (`project_member_id`),
-    CONSTRAINT `fk_report_reported_member_id` FOREIGN KEY (`reported_member_id`) REFERENCES `project_member` (`project_member_id`)
+    `project_report_history_id` bigint       NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `reporter_user_id`          bigint       NOT NULL,
+    `target_user_id`            bigint       NOT NULL,
+    `project_id`                bigint       NOT NULL,
+    `report_type`               varchar(20)  NOT NULL,
+    `description`               varchar(255) NULL,
+    `created_at`                datetime(6)     NOT NULL,
+    `updated_at`                datetime(6)     NOT NULL,
+    `is_deleted`                tinyint(1) NOT NULL DEFAULT false
+);
+
+CREATE TABLE IF NOT EXISTS `user_block`
+(
+    `user_block_id` bigint       NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `user_id`       bigint       NOT NULL,
+    `blocked_at`    datetime(6)     NOT NULL,
+    `unblocked_at`  datetime(6)     NULL,
+    `block_status`  varchar(20)  NOT NULL,
+    `created_at`    datetime(6)     NOT NULL,
+    `updated_at`    datetime(6)     NOT NULL,
+    `is_deleted`    tinyint(1) NOT NULL DEFAULT false
 );

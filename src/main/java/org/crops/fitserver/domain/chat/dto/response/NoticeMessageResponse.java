@@ -1,13 +1,16 @@
 package org.crops.fitserver.domain.chat.dto.response;
 
+import java.io.Serializable;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.domain.chat.domain.Message;
 import org.crops.fitserver.domain.chat.domain.MessageType;
 import org.crops.fitserver.global.socket.service.MessageResponse;
 
 @Getter
-public class NoticeMessageResponse extends MessageResponse {
+@RequiredArgsConstructor
+public class NoticeMessageResponse extends SocketResponse {
 
   private String notice;
 

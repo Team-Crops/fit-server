@@ -1,4 +1,4 @@
-package org.crops.fitserver.domain.project.entity;
+package org.crops.fitserver.domain.project.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

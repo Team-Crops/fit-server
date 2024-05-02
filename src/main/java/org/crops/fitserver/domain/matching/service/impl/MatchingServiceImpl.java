@@ -18,6 +18,7 @@ import org.crops.fitserver.domain.matching.repository.MatchingRoomRepository;
 import org.crops.fitserver.domain.matching.service.MatchingService;
 import org.crops.fitserver.domain.project.repository.ProjectRepository;
 import org.crops.fitserver.domain.user.domain.User;
+import org.crops.fitserver.domain.user.repository.UserBlockRepository;
 import org.crops.fitserver.domain.user.repository.UserRepository;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
@@ -34,12 +35,16 @@ public class MatchingServiceImpl implements MatchingService {
   private final UserRepository userRepository;
   private final ProjectRepository projectRepository;
   private final ChatRoomService chatRoomService;
+  private final UserBlockRepository userBlockRepository;
 
   @Override
   @Transactional
   public MatchingDto createMatching(Long userId) {
     var user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
+    if (userBlockRepository.findActiveBlock(user).isPresent()) {
+      throw new BusinessException(ErrorCode.BLOCKED_USER_EXCEPTION);
+    }
 
     if (getActiveMatching(user).isPresent()) {
       throw new BusinessException(ErrorCode.ALREADY_EXIST_MATCHING_EXCEPTION);

@@ -56,7 +56,7 @@ public class MatchingProcessor {
 
   @Transactional
   public void insertToNotEnoughRoom() {
-    log.info("insertToNotEnoughRoom start");
+    var startTime = System.currentTimeMillis();
     var notEnoughRoomList = matchingRoomList.stream()
         .filter(MatchingRoom::isNotEnough).toList();
     notEnoughRoomList
@@ -68,8 +68,11 @@ public class MatchingProcessor {
 
     matchingRoomRepository.saveAll(notEnoughRoomList);
 
-    log.info("insertToNotEnoughRoom end. size: {}",
-        notEnoughRoomList.size());
+    if(!notEnoughRoomList.isEmpty()) {
+      var endTime = System.currentTimeMillis();
+      log.info("process insertToNotEnoughRoom. size: {}, start time: {}, end time: {}, total time: {}",
+          notEnoughRoomList.size(), startTime, endTime, endTime - startTime);
+    }
   }
 
   @Transactional
@@ -77,7 +80,8 @@ public class MatchingProcessor {
     if (matchingMap.size() < 4) {
       return;
     }
-    log.info("createNewRoom start");
+    var startTime = System.currentTimeMillis();
+
     var size = matchingMap.values().stream().mapToInt(List::size).min().orElse(0);
 
     for (int i = 0; i < size; i++) {
@@ -89,12 +93,17 @@ public class MatchingProcessor {
       matchingRoomRepository.save(newRoom);
     }
 
-    log.info("createNewRoom end. size: {}", size);
+    if(size > 0) {
+      var endTime = System.currentTimeMillis();
+      log.info("process createNewRoom. size: {}, start time: {}, end time: {}, total time: {}",
+          size, startTime, endTime, endTime - startTime);
+    }
+
   }
 
   @Transactional
   public void joinRoom() {
-    log.info("joinRoom start");
+    var startTime = System.currentTimeMillis();
 
     int count = 0;
 
@@ -104,7 +113,11 @@ public class MatchingProcessor {
     count += joinRoom(PositionType.DESIGNER);
     count += joinRoom(PositionType.PLANNER);
 
-    log.info("joinRoom end. count: {}", count);
+    if(count > 0) {
+      var endTime = System.currentTimeMillis();
+      log.info("process joinRoom. size: {}, start time: {}, end time: {}, total time: {}",
+          count, startTime, endTime, endTime - startTime);
+    }
   }
 
   private int joinRoom(PositionType positionType) {
@@ -136,7 +149,7 @@ public class MatchingProcessor {
   }
 
   /**
-   * 최소한의 필터
+   * 필수 필터 조건에 맞는 방만 필터링
    */
   private List<MatchingRoom> filterEnableRoomList(Matching matching, List<MatchingRoom> roomList,
       PositionType positionType) {

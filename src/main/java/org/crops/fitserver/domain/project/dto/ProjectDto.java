@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
 import org.crops.fitserver.domain.project.constant.ProjectStatus;
-import org.crops.fitserver.domain.project.entity.Project;
+import org.crops.fitserver.domain.project.domain.Project;
 
 @Builder
 public record ProjectDto(
