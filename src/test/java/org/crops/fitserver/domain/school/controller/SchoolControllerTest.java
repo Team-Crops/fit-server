@@ -77,7 +77,7 @@ class SchoolControllerTest extends MockMvcDocs {
   public void getSchoolListByKeyword() throws Exception {
     // given
     var url = "/v1/school";
-    given(schoolService.getSchoolListByKeyword("서울")).willReturn(List.of(
+    given(schoolService.getSchoolListByKeyword("서울", SchoolType.UNIVERSITY)).willReturn(List.of(
         SchoolDto.builder()
             .name("서울대학교")
             .id(1L)

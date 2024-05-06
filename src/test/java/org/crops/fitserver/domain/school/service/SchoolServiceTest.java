@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 import java.util.List;
+import org.crops.fitserver.domain.school.constant.SchoolType;
 import org.crops.fitserver.domain.school.domain.School;
 import org.crops.fitserver.domain.school.repository.SchoolRepository;
 import org.junit.jupiter.api.Test;
@@ -45,7 +46,7 @@ public class SchoolServiceTest {
   @Test
   public void getSchoolListByName_success() {
     // given
-    given(schoolRepository.findAllByNameStartsWith("서울")).willReturn(List.of(
+    given(schoolRepository.findAllByNameStartsWithAndTypeEquals("서울", SchoolType.UNIVERSITY)).willReturn(List.of(
         School.builder()
             .name("서울대학교")
             .build(),
@@ -55,7 +56,7 @@ public class SchoolServiceTest {
     ));
 
     // when
-    var result = schoolService.getSchoolListByKeyword("서울");
+    var result = schoolService.getSchoolListByKeyword("서울", SchoolType.UNIVERSITY);
 
     // then
     assertThat(result).hasSize(2);
