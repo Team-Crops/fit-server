@@ -246,7 +246,10 @@ CREATE TABLE IF NOT EXISTS `project_report_history`
     `description`               varchar(255) NULL,
     `created_at`                datetime(6)     NOT NULL,
     `updated_at`                datetime(6)     NOT NULL,
-    `is_deleted`                tinyint(1) NOT NULL DEFAULT false
+    `is_deleted`                tinyint(1) NOT NULL DEFAULT false,
+    CONSTRAINT `fk_projectreport_projectid` FOREIGN KEY (`project_id`) REFERENCES `project` (`project_id`),
+    CONSTRAINT `fk_projectreport_reporter_member_id` FOREIGN KEY (`reporter_user_id`) REFERENCES `project_member` (`project_member_id`),
+    CONSTRAINT `fk_projectreport_reported_member_id` FOREIGN KEY (`target_user_id`) REFERENCES `project_member` (`project_member_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `user_block`
@@ -258,5 +261,6 @@ CREATE TABLE IF NOT EXISTS `user_block`
     `block_status`  varchar(20)  NOT NULL,
     `created_at`    datetime(6)     NOT NULL,
     `updated_at`    datetime(6)     NOT NULL,
-    `is_deleted`    tinyint(1) NOT NULL DEFAULT false
+    `is_deleted`    tinyint(1) NOT NULL DEFAULT false,
+    CONSTRAINT `fk_userblock_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 );
