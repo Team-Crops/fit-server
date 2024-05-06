@@ -8,7 +8,7 @@ import org.crops.fitserver.global.mq.dto.Message;
 import org.crops.fitserver.global.mq.dto.Report;
 import org.crops.fitserver.global.mq.impl.RedisMessagePublisher;
 import org.crops.fitserver.global.mq.impl.RedisMessageSubscriptionManager;
-import org.crops.fitserver.global.socket.service.SocketResponse;
+import org.crops.fitserver.global.socket.service.MessageResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -29,9 +29,9 @@ public class RedisPubSubBeanRegistry {
   }
 
   @Bean
-  public MessageSubscriptionManager<SocketResponse> socketResponseMessageSubscriptionManager() {
-    var targetReceivers = getMessageReceivers(SocketResponse.class);
-    return new RedisMessageSubscriptionManager<>(redisTemplate, objectMapper, targetReceivers, SocketResponse.class);
+  public MessageSubscriptionManager<MessageResponse> MessageResponseMessageSubscriptionManager() {
+    var targetReceivers = getMessageReceivers(MessageResponse.class);
+    return new RedisMessageSubscriptionManager<>(redisTemplate, objectMapper, targetReceivers, MessageResponse.class);
   }
 
   @Bean
@@ -40,8 +40,8 @@ public class RedisPubSubBeanRegistry {
   }
 
   @Bean
-  public MessagePublisher<SocketResponse> socketResponseMessagePublisher() {
-    return new RedisMessagePublisher<>(redisTemplate, SocketResponse.class);
+  public MessagePublisher<MessageResponse> MessageResponseMessagePublisher() {
+    return new RedisMessagePublisher<>(redisTemplate, MessageResponse.class);
   }
 
   private <T extends Message> List<MessageReceiver<T>> getMessageReceivers(

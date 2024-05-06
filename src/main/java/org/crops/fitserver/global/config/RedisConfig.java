@@ -3,7 +3,6 @@ package org.crops.fitserver.global.config;
 import static org.springframework.data.redis.cache.RedisCacheConfiguration.defaultCacheConfig;
 import static org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair.fromSerializer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Duration;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
