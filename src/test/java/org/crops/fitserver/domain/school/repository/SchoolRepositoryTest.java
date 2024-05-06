@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.config.QueryDslTestConfig;
+import org.crops.fitserver.domain.school.constant.SchoolType;
 import org.crops.fitserver.domain.school.domain.School;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -28,18 +29,21 @@ public class SchoolRepositoryTest {
     // given
     var school1 = School.builder()
         .name("서울대학교")
+        .type(SchoolType.UNIVERSITY)
         .build();
     var school2 = School.builder()
         .name("서울과학기술대학교")
+        .type(SchoolType.UNIVERSITY)
         .build();
     var school3 = School.builder()
         .name("고려대학교")
+        .type(SchoolType.UNIVERSITY)
         .build();
     schoolRepository.save(school1);
     schoolRepository.save(school2);
     schoolRepository.save(school3);
     // when
-    var result = schoolRepository.findAllByNameStartsWith("서울");
+    var result = schoolRepository.findAllByNameStartsWithAndTypeEquals("서울", SchoolType.UNIVERSITY);
     // then
     assertThat(result).hasSize(2);
   }
