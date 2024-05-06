@@ -50,9 +50,9 @@ public class Skill extends BaseTimeEntity {
   }
 
   public List<Position> getPositions() {
-    List<Position> positions = new ArrayList<>();
-    this.skillSets.forEach(skillSet -> positions.add(skillSet.getPosition()));
-    return positions;
+    return this.skillSets.stream()
+        .map(SkillSet::getPosition)
+        .toList();
   }
 
 
@@ -64,6 +64,9 @@ public class Skill extends BaseTimeEntity {
   }
 
   protected void addSkillSet(SkillSet skillSet) {
+    if(this.skillSets.contains(skillSet)) {
+      return;
+    }
     this.skillSets.add(skillSet);
   }
 

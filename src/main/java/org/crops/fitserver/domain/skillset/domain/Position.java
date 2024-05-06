@@ -69,11 +69,21 @@ public class Position extends BaseTimeEntity {
     this.imageUrl = imageUrl;
   }
 
+  public List<Skill> getSkills() {
+    return this.skillSets.stream()
+        .map(SkillSet::getSkill)
+        .toList();
+  }
+
   public void addSkill(Skill skill) {
     if (this.skillSets.stream().anyMatch(skillSet -> skillSet.getSkill().equals(skill))) {
       return;
     }
-    this.skillSets.add(SkillSet.create(skill, this));
+    SkillSet.create(skill, this);
+  }
+
+  public void removeSkill(Skill skill) {
+    this.skillSets.removeIf(skillSet -> skillSet.getSkill().equals(skill));
   }
 
   protected void addSkillSet(SkillSet skillSet) {
@@ -81,9 +91,5 @@ public class Position extends BaseTimeEntity {
       return;
     }
     this.skillSets.add(skillSet);
-  }
-
-  public void removeSkill(Skill skill) {
-    this.skillSets.removeIf(skillSet -> skillSet.getSkill().equals(skill));
   }
 }
