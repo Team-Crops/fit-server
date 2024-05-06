@@ -5,15 +5,15 @@ import org.crops.fitserver.domain.chat.domain.Message;
 
 public interface MessageService {
 
-  Message sendTextMessage(
+  Message getById(long messageId);
+
+  void sendTextMessage(
       SocketIOClient client,
       Message message);
 
-  Message sendImageMessage(
+  void sendImageMessage(
       SocketIOClient client,
       Message message);
 
-  Message sendNoticeMessage(
-      SocketIOClient client,
-      Message message);
+  void sendNoticeMessage(Message message);
 }

@@ -2,8 +2,6 @@ package org.crops.fitserver.domain.chat.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,19 +15,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.crops.fitserver.domain.user.domain.User;
 import org.crops.fitserver.global.entity.BaseTimeEntity;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
-@DynamicInsert
 @Builder
+@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class Message extends BaseTimeEntity {
+@Where(clause = "is_deleted = false")
+@SQLDelete(sql = "UPDATE chat_room_user SET is_deleted = true WHERE chat_room_user_id = ?")
+public class ChatRoomUser extends BaseTimeEntity {
 
   @Id
-  @Column(name = "message_id")
+  @Column(name = "chat_room_user_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
@@ -38,37 +39,21 @@ public class Message extends BaseTimeEntity {
   private ChatRoom chatRoom;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id")
+  @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
-  @Enumerated(value = EnumType.STRING)
-  @Column(nullable = false, length = 20)
-  @ColumnDefault(value = "'TEXT'")
-  private MessageType messageType;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "last_checked_message_id")
+  private Message lastCheckedMessage;
 
-  private String content;
-
-  public static Message newInstance(
-      User user,
-      ChatRoom chatRoom,
-      MessageType messageType,
-      String content) {
-    return Message.builder()
+  public static ChatRoomUser create(User user, ChatRoom chatRoom) {
+    return ChatRoomUser.builder()
         .user(user)
         .chatRoom(chatRoom)
-        .messageType(messageType)
-        .content(content)
         .build();
   }
 
-  public static Message newInstance(
-      ChatRoom chatRoom,
-      MessageType messageType,
-      String content) {
-    return Message.builder()
-        .chatRoom(chatRoom)
-        .messageType(messageType)
-        .content(content)
-        .build();
+  public void updateLastCheckedMessage(Message message) {
+    this.lastCheckedMessage = message;
   }
 }

@@ -4,36 +4,31 @@ import lombok.Builder;
 import lombok.Getter;
 import org.crops.fitserver.domain.chat.domain.Message;
 import org.crops.fitserver.domain.chat.domain.MessageType;
-import org.crops.fitserver.global.socket.service.SocketResponse;
+import org.crops.fitserver.global.socket.service.MessageResponse;
 
 @Getter
-public class TextMessageResponse extends SocketResponse {
+public class TextMessageResponse extends MessageResponse {
 
   private Long userId;
-  private String usermame;
-  private String profileImageUrl;
   private String content;
 
   @Builder
   private TextMessageResponse(
       Long userId,
-      String username,
-      String profileImageUrl,
       String content,
+      Long messageId,
       MessageType messageType) {
     this.userId = userId;
-    this.usermame = username;
-    this.profileImageUrl = profileImageUrl;
     this.content = content;
+    this.messageId = messageId;
     this.messageType = messageType;
   }
 
-  public static SocketResponse from(Message message) {
+  public static TextMessageResponse from(Message message) {
     return TextMessageResponse.builder()
         .userId(message.getUser().getId())
-        .username(message.getUser().getUsername())
-        .profileImageUrl(message.getUser().getProfileImageUrl())
         .content(message.getContent())
+        .messageId(message.getId())
         .messageType(MessageType.TEXT)
         .build();
   }

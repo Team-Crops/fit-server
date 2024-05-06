@@ -7,6 +7,8 @@ import org.crops.fitserver.domain.auth.service.provider.OAuthServiceProvider;
 import org.crops.fitserver.domain.auth.facade.AuthFacade;
 import org.crops.fitserver.domain.user.domain.UserRole;
 import org.crops.fitserver.domain.user.repository.UserRepository;
+import org.crops.fitserver.global.exception.BusinessException;
+import org.crops.fitserver.global.exception.ErrorCode;
 import org.crops.fitserver.global.jwt.JwtProvider;
 import org.crops.fitserver.global.jwt.TokenInfo;
 import org.crops.fitserver.domain.user.domain.SocialPlatform;
@@ -54,7 +56,8 @@ public class AuthFacadeImpl implements AuthFacade {
 
   @Override
   public TokenResponse testLogin(Long userId) {
-    User user = userRepository.findById(userId).orElseThrow();
+    var user = userRepository.findById(userId)
+        .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
     return TokenResponse.from(
         jwtProvider.createTokenCollection(
             TokenInfo.from(user)));

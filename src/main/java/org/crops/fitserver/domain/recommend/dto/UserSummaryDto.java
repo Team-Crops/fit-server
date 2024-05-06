@@ -13,6 +13,7 @@ public record UserSummaryDto(
     String profileImageUrl,
     List<Long> skillIdList
 ) {
+
   public static UserSummaryDto from(User user) {
     var userSummaryDtoBuilder = UserSummaryDto.builder()
         .userId(user.getId())
@@ -20,7 +21,6 @@ public record UserSummaryDto(
         .profileImageUrl(user.getProfileImageUrl());
     if (user.getUserInfo() != null) {
       userSummaryDtoBuilder
-          .positionId(user.getUserInfo().getPosition().getId())
           .introduce(user.getUserInfo().getIntroduce())
           .skillIdList(user
               .getUserInfo()
@@ -29,6 +29,9 @@ public record UserSummaryDto(
               .map(userInfoSkill ->
                   userInfoSkill.getSkill().getId())
               .toList());
+      if (user.getUserInfo().getPosition() != null) {
+        userSummaryDtoBuilder.positionId(user.getUserInfo().getPosition().getId());
+      }
     }
     return userSummaryDtoBuilder.build();
   }

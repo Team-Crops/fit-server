@@ -5,7 +5,10 @@ import com.corundumstudio.socketio.listener.ConnectListener;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.crops.fitserver.domain.chat.domain.ChatRoom;
 import org.crops.fitserver.domain.chat.service.ChatRoomService;
+import org.crops.fitserver.domain.user.domain.User;
+import org.crops.fitserver.domain.user.service.UserService;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
 import org.crops.fitserver.global.http.HeaderTokenExtractor;
@@ -22,20 +25,28 @@ public class ChatRoomConnectListener implements ConnectListener {
   private final HeaderTokenExtractor headerTokenExtractor;
   private final JwtResolver jwtResolver;
   private final ChatRoomService chatRoomService;
+  private final UserService userService;
   private final SocketService socketService;
+  private final SocketProperty socketProperty;
 
   @Override
   @Transactional
   public void onConnect(SocketIOClient socketIOClient) {
-    Long roomId = getRoomId(socketIOClient);
-    Long userId = getUserId(socketIOClient);
-    socketService.setUserId(socketIOClient, userId);
-    socketService.setRoomId(socketIOClient, roomId);
-    log.info("Socket ID[{}]  Connected to socket", socketIOClient.getSessionId().toString());
-    socketIOClient.joinRoom(String.valueOf(roomId));
+    User user = getUser(socketIOClient);
+    ChatRoom room = getRoom(socketIOClient);
+    saveUserId(socketIOClient, user.getId());
+    saveRoomId(socketIOClient, room.getId());
+    socketService.addRoomOperations(
+        room.getId(),
+        socketIOClient
+            .getNamespace()
+            .getRoomOperations(String.valueOf(room.getId())));
+    log.info("Socket ID[{}]  User Id {} Room Id {} Connected to socket",
+        socketIOClient.getSessionId().toString(), user.getId(), room.getId());
+    joinRoom(socketIOClient, room);
   }
 
-  private Long getUserId(SocketIOClient socketIOClient) {
+  private User getUser(SocketIOClient socketIOClient) {
     String accessToken = headerTokenExtractor
         .extractAccessToken(
             socketIOClient
@@ -43,32 +54,34 @@ public class ChatRoomConnectListener implements ConnectListener {
                 .getHttpHeaders()
                 .get(HttpHeaders.AUTHORIZATION));
     Long userId = jwtResolver.getUserIdFromAccessToken(accessToken);
-    validUserId(userId);
-    return userId;
+    return userService.getById(userId);
   }
 
-  private void validUserId(Long userId) {
-//    if (!userService.isExistById(userId) {
-    if (false)  {
-      throw new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION);
-    }
-  }
-
-  private Long getRoomId(SocketIOClient socketIOClient) {
+  private ChatRoom getRoom(SocketIOClient socketIOClient) {
     Long roomId = Long.valueOf(
         socketIOClient
             .getHandshakeData()
             .getSingleUrlParam("roomId"));
     validRoomId(roomId);
-    return roomId;
+    return chatRoomService.getById(roomId);
   }
 
   private void validRoomId(Long roomId) {
     if (roomId == null) {
       throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE);
     }
-    if (!chatRoomService.isExistById(roomId)) {
-      throw new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION);
-    }
+  }
+
+  private void saveUserId(SocketIOClient socketIOClient, Long userId) {
+    socketIOClient.set(socketProperty.getUserKey(), userId);
+  }
+
+  private void saveRoomId(SocketIOClient socketIOClient, Long roomId) {
+    socketIOClient.set(socketProperty.getRoomKey(), roomId);
+  }
+
+  private void joinRoom(SocketIOClient socketIOClient, ChatRoom room) {
+    String stringRoomId = String.valueOf(room.getId());
+    socketIOClient.joinRoom(stringRoomId);
   }
 }
