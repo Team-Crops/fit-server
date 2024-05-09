@@ -23,10 +23,10 @@ public class MatchingConstants {
 
 
   public static final Map<PositionType, Integer> MULTIPLE_POSITION_COMPARE_TO_OTHER_POSITIONS = Map.of(
-      PositionType.PLANNER, 1,
-      PositionType.DESIGNER, 1,
+      PositionType.PLANNER, 2,
+      PositionType.DESIGNER, 2,
       PositionType.BACKEND, 2,
-      PositionType.FRONTEND, 2
+      PositionType.FRONTEND, 3
   );
 
 

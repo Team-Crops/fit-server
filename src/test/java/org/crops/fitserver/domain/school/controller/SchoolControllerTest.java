@@ -27,7 +27,7 @@ class SchoolControllerTest extends MockMvcDocs {
   SchoolService schoolService;
 
   @Test
-  public void getSchoolList() throws Exception {
+  public void get_all_school_list_successFully() throws Exception {
     // given
     var url = "/v1/school";
     given(schoolService.getSchoolList()).willReturn(List.of(
@@ -74,10 +74,10 @@ class SchoolControllerTest extends MockMvcDocs {
   }
 
   @Test
-  public void getSchoolListByKeyword() throws Exception {
+  public void get_school_list_by_type_and_name() throws Exception {
     // given
     var url = "/v1/school";
-    given(schoolService.getSchoolListByKeyword("서울")).willReturn(List.of(
+    given(schoolService.getSchoolListByKeyword("서울", SchoolType.UNIVERSITY)).willReturn(List.of(
         SchoolDto.builder()
             .name("서울대학교")
             .id(1L)
@@ -93,6 +93,7 @@ class SchoolControllerTest extends MockMvcDocs {
     // when
     var result = mockMvc.perform(get(url)
         .param("keyword", "서울")
+        .param("type", SchoolType.UNIVERSITY.name())
     );
     // then
     result.andExpect(status().isOk())

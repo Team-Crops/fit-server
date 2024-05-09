@@ -21,6 +21,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.crops.fitserver.domain.skillset.constant.PositionType;
 import org.crops.fitserver.domain.skillset.domain.Skill;
 import org.crops.fitserver.domain.user.domain.UserInfoSkill;
@@ -32,11 +33,12 @@ import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
-@Builder(access = AccessLevel.PROTECTED)
+@Builder
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Where(clause = "is_deleted = false")
+@ToString
 public class MatchingRoom extends BaseTimeEntity {
 
   @Id
@@ -55,7 +57,7 @@ public class MatchingRoom extends BaseTimeEntity {
   private final List<Matching> matchingList = new ArrayList<>();
 
   public static MatchingRoom create(List<Matching> matchingList, Long chatRoomId) {
-    if (canCreateRoom(matchingList)) {
+    if (!canCreateRoom(matchingList)) {
       throw new BusinessException(ErrorCode.NOT_ENOUGH_MATCHING_EXCEPTION);
     }
     var newMatchingRoom = MatchingRoom.builder()
@@ -120,7 +122,7 @@ public class MatchingRoom extends BaseTimeEntity {
   }
 
   public boolean isNotEnough() {
-    return this.isEnough();
+    return !this.isEnough();
   }
 
   public boolean isEnough() {
@@ -150,6 +152,9 @@ public class MatchingRoom extends BaseTimeEntity {
     }
 
     var requiredSkillIds = getRequiredSkillIds(positionType);
+    if(requiredSkillIds.isEmpty()){
+      return true;
+    }
     var userSkillIds = matching.getUser().getUserInfo().getUserInfoSkills().stream()
         .map(userInfoSkill -> userInfoSkill.getSkill().getId())
         .toList();

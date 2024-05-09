@@ -151,8 +151,8 @@ public class PositionRepositoryTest {
         .displayName("test")
         .build();
 
-    position.addSkill(skill);
     skillRepository.save(skill);
+    position.addSkill(skill);
     positionRepository.save(position);
 
     // when

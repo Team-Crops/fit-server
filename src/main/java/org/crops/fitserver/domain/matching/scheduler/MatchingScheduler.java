@@ -20,23 +20,18 @@ public class MatchingScheduler {
   private final MatchingRoomRepository matchingRoomRepository;
   private final ChatRoomService chatRoomService;
 
-
-  //매 10초마다(개발 서버 기준)
-  @Scheduled(cron = "1/10 * * * * *")
-  @Transactional
+  /**
+   * TODO: 크론탭 환경변수에 따라 관리 필요
+   * */
+  @Scheduled(cron = "1/20 * * * * *")
   public void matching() {
     var matchingProcessor = new MatchingProcessor(matchingRepository, matchingRoomRepository,
         chatRoomService);
 
-    matchingProcessor.insertToNotEnoughRoom();
-    matchingProcessor.createNewRoom();
-    matchingProcessor.joinRoom();
-
-
+    matchingProcessor.match();
   }
 
-  @Scheduled(cron = "0/10 * * * * *")
-  @Transactional
+  @Scheduled(cron = "0/30 * * * * *")
   public void expireMatching() {
     var expriredMatchingList = matchingService.expireMatchingAll();
 

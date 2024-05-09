@@ -49,12 +49,25 @@ public class Skill extends BaseTimeEntity {
     this.displayName = displayName;
   }
 
+  public List<Position> getPositions() {
+    return this.skillSets.stream()
+        .map(SkillSet::getPosition)
+        .toList();
+  }
+
 
   public void addPosition(Position position) {
     if (this.skillSets.stream().anyMatch(skillSet -> skillSet.getPosition().equals(position))) {
       return;
     }
     this.skillSets.add(SkillSet.create(this, position));
+  }
+
+  protected void addSkillSet(SkillSet skillSet) {
+    if(this.skillSets.contains(skillSet)) {
+      return;
+    }
+    this.skillSets.add(skillSet);
   }
 
   public void removePosition(Position position) {
