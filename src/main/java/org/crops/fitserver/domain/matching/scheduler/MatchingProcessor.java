@@ -92,7 +92,7 @@ public class MatchingProcessor {
     }
   }
 
-
+  @Transactional
   public void createNewRoom(
       Map<PositionType, List<Matching>> matchingMap) {
     if (matchingMap.size() < 4) {
@@ -119,7 +119,7 @@ public class MatchingProcessor {
 
   }
 
-
+  @Transactional
   public void joinRoom(List<MatchingRoom> matchingRoomList,
       Map<PositionType, List<Matching>> matchingMap) {
     var startTime = System.currentTimeMillis();
@@ -157,7 +157,6 @@ public class MatchingProcessor {
       this.findBestRoom(enableRoomList)
           .ifPresent(matchingRoom -> {
             matchingRoom.addMatching(matching);
-            chatRoomService.chatRoomJoin(matchingRoom.getChatRoomId(), matching.getUser());
             matchingRoomRepository.save(matchingRoom);
             removeList.add(matching);
           });

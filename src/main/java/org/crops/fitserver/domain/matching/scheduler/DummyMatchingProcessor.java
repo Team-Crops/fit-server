@@ -36,7 +36,7 @@ public class DummyMatchingProcessor {
   private final RegionRepository regionRepository;
   private final UserRepository userRepository;
 
-  private static final int DUMMY_USER_COUNT = 10;
+  private static final int DUMMY_USER_COUNT = 4;
 
   public void validateSkillSet() {
     var positionList = positionRepository.findAll();
