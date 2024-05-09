@@ -23,6 +23,7 @@ import org.crops.fitserver.domain.user.domain.UserRole;
 import org.crops.fitserver.domain.user.repository.UserRepository;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Profile("dev")
@@ -47,9 +48,10 @@ public class DummyMatchingProcessor {
     }
   }
 
+  @Transactional
   public List<User> prepareUser() {
     var newUserList = new ArrayList<User>();
-    var positionList = positionRepository.findAll();
+    var positionList = positionRepository.findAllWithSkills();
     var regionList = regionRepository.findAll();
 
     for (int i = 0; i < DUMMY_USER_COUNT; i++) {
