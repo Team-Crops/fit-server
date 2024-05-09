@@ -19,6 +19,8 @@ import org.crops.fitserver.domain.matching.repository.MatchingRepository;
 import org.crops.fitserver.domain.matching.repository.MatchingRoomRepository;
 import org.crops.fitserver.domain.skillset.constant.PositionType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -30,6 +32,7 @@ public class MatchingProcessor {
 
   private static final int BATCH_SIZE = 100;
 
+  @Transactional
   public void match() {
 
     var matchingRoomList = matchingRoomRepository.findMatchingRoomNotComplete();
