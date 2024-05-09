@@ -13,6 +13,7 @@ import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.domain.Skill;
 import org.crops.fitserver.domain.skillset.repository.PositionRepository;
 import org.crops.fitserver.domain.skillset.repository.SkillRepository;
+import org.crops.fitserver.domain.user.constant.BackgroundStatus;
 import org.crops.fitserver.domain.user.constant.LinkType;
 import org.crops.fitserver.domain.user.constant.UserInfoStatus;
 import org.crops.fitserver.domain.user.domain.Link;
@@ -95,6 +96,8 @@ public class DummyMatchingProcessor {
     );
     var userInfo = UserInfo.builder()
         .portfolioUrl("test.com")
+        .backgroundStatus(BackgroundStatus.GRADUATE_STUDENT)
+        .education("서울과학기술대학교")
         .introduce("test")
         .isOpenProfile(true)
         .linkJson(toJson(linkList))
