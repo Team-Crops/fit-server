@@ -19,11 +19,6 @@ import org.crops.fitserver.domain.matching.repository.MatchingRepository;
 import org.crops.fitserver.domain.matching.repository.MatchingRoomRepository;
 import org.crops.fitserver.domain.skillset.constant.PositionType;
 import org.springframework.stereotype.Service;
-
-
-/**
- * TODO: 싱글턴으로 전환
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
