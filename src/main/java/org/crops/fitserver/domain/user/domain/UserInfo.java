@@ -153,6 +153,9 @@ public class UserInfo extends BaseTimeEntity {
     if (!backgroundStatus.isPresent() && !backgroundText.isPresent()) {
       return this;
     }
+    if(this.backgroundStatus == null && !backgroundStatus.isPresent()) {
+      return this;//둘 다 널이면 무시
+    }
 
     withBackground(
         backgroundStatus.orElse(this.backgroundStatus),
