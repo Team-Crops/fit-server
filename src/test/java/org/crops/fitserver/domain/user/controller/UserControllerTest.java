@@ -234,7 +234,7 @@ class UserControllerTest extends MockMvcDocsWithLogin {
 
     var linkList = List.of(
         Link.builder().linkType(LinkType.GITHUB).linkUrl("github.com").build(),
-        Link.builder().linkType(LinkType.ETC).linkUrl("test.com").build()
+        Link.builder().linkType(LinkType.LINK).linkUrl("test.com").build()
     );
     var skillIdList = List.of(1L, 2L, 3L);
 
@@ -376,7 +376,7 @@ class UserControllerTest extends MockMvcDocsWithLogin {
                         fieldWithPath("linkList[]").description("링크 list").optional(),
                         fieldWithPath("linkList[].linkUrl").type(JsonFieldType.STRING)
                             .description("링크 url").optional(),
-                        fieldWithPath("linkList[].linkType").type(JsonFieldType.STRING)
+                        new EnumFields(LinkType.class).withPath("linkList[].linkType")
                             .description("링크 타입").optional(),
                         fieldWithPath("positionId").type(JsonFieldType.NUMBER).description("직군 id")
                             .optional(),

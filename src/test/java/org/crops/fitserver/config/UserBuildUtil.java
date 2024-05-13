@@ -18,7 +18,7 @@ public class UserBuildUtil {
   public static UserBuilder buildNewUser() {
     var linkList = List.of(
         Link.builder().linkType(LinkType.GITHUB).linkUrl("github.com").build(),
-        Link.builder().linkType(LinkType.ETC).linkUrl("test.com").build()
+        Link.builder().linkType(LinkType.LINK).linkUrl("test.com").build()
     );
     var userInfo = UserInfo.builder()
         .portfolioUrl("test.com")
@@ -46,7 +46,7 @@ public class UserBuildUtil {
   private static UserBuilder buildUser(Long userId){
     var linkList = List.of(
         Link.builder().linkType(LinkType.GITHUB).linkUrl("github.com").build(),
-        Link.builder().linkType(LinkType.ETC).linkUrl("test.com").build()
+        Link.builder().linkType(LinkType.LINK).linkUrl("test.com").build()
     );
     var userInfo = UserInfo.builder()
         .id(userId)
