@@ -80,6 +80,7 @@ public class DummyMatchingProcessor {
         .username(username)
         .nickname(nickname)
         .email(email)
+        .profileImageUrl(getDefaultImage(position))
         .build();
     user.getUserInfo()
         .withProjectCount((int) (Math.random()* 5))
@@ -89,7 +90,7 @@ public class DummyMatchingProcessor {
         .withSkills(List.of(skill));
     return user;
   }
-  public static UserBuilder buildNewUser() {
+  private static UserBuilder buildNewUser() {
     var linkList = List.of(
         Link.builder().linkType(LinkType.GITHUB).linkUrl("github.com").build(),
         Link.builder().linkType(LinkType.LINK).linkUrl("test.com").build()
@@ -111,5 +112,14 @@ public class DummyMatchingProcessor {
         .email("test@gmail.com")
         .userInfo(userInfo)
         ;
+  }
+
+  private String getDefaultImage(Position position) {
+    return switch (position.getType()) {
+      case FRONTEND -> "b45a8562-389b-41bc-b78b-867309a0155bweb.png";
+      case BACKEND -> "b45a8562-389b-41bc-b78b-867309a0155bweb.png";
+      case DESIGNER -> "fa76741f-cd18-4fdd-a917-b0329c280823server.png";
+      case PLANNER -> "63841c68-0858-439a-88eb-f801a0fe9677planner.png";
+    };
   }
 }
