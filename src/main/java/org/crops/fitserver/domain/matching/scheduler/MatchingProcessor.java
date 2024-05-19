@@ -2,6 +2,7 @@ package org.crops.fitserver.domain.matching.scheduler;
 
 
 import static java.util.stream.Collectors.groupingBy;
+import static org.crops.fitserver.domain.matching.constant.MatchingConstants.MINIMUM_REQUIRED_POSITIONS;
 
 import io.jsonwebtoken.lang.Collections;
 import java.util.ArrayList;
@@ -57,9 +58,9 @@ public class MatchingProcessor {
   }
 
 
+  @Transactional
   public void insertToNotEnoughRoom(List<MatchingRoom> matchingRoomList,
       Map<PositionType, List<Matching>> matchingMap) {
-    var startTime = System.currentTimeMillis();
     var notEnoughRoomList = matchingRoomList.stream()
         .filter(MatchingRoom::isNotEnough).toList();
 
@@ -83,22 +84,14 @@ public class MatchingProcessor {
         log.error("insertToNotEnoughRoom error", e);
       }
     }
-
-    if (!notEnoughRoomList.isEmpty()) {
-      var endTime = System.currentTimeMillis();
-      log.info(
-          "process insertToNotEnoughRoom. size: {}, start time: {}, end time: {}, total time: {}",
-          notEnoughRoomList.size(), startTime, endTime, endTime - startTime);
-    }
   }
 
   @Transactional
   public void createNewRoom(
       Map<PositionType, List<Matching>> matchingMap) {
-    if (matchingMap.size() < 4) {
+    if (matchingMap.size() < MINIMUM_REQUIRED_POSITIONS.size()) {
       return;
     }
-    var startTime = System.currentTimeMillis();
 
     var size = matchingMap.values().stream().mapToInt(List::size).min().orElse(0);
 
@@ -110,43 +103,26 @@ public class MatchingProcessor {
       var newRoom = MatchingRoom.create(matchingList, chatRoomService.createChatRoom().getId());
       matchingRoomRepository.save(newRoom);
     }
-
-    if (size > 0) {
-      var endTime = System.currentTimeMillis();
-      log.info("process createNewRoom. size: {}, start time: {}, end time: {}, total time: {}",
-          size, startTime, endTime, endTime - startTime);
-    }
-
   }
 
   @Transactional
   public void joinRoom(List<MatchingRoom> matchingRoomList,
       Map<PositionType, List<Matching>> matchingMap) {
-    var startTime = System.currentTimeMillis();
-
-    int count = 0;
-
     //frontend, backend, designer, planner순으로 룸에 들어가기
-    count += joinRoom(PositionType.FRONTEND, matchingMap, matchingRoomList);
-    count += joinRoom(PositionType.BACKEND, matchingMap, matchingRoomList);
-    count += joinRoom(PositionType.DESIGNER, matchingMap, matchingRoomList);
-    count += joinRoom(PositionType.PLANNER, matchingMap, matchingRoomList);
-
-    if (count > 0) {
-      var endTime = System.currentTimeMillis();
-      log.info("process joinRoom. size: {}, start time: {}, end time: {}, total time: {}",
-          count, startTime, endTime, endTime - startTime);
-    }
+    joinRoom(PositionType.FRONTEND, matchingMap, matchingRoomList);
+    joinRoom(PositionType.BACKEND, matchingMap, matchingRoomList);
+    joinRoom(PositionType.DESIGNER, matchingMap, matchingRoomList);
+    joinRoom(PositionType.PLANNER, matchingMap, matchingRoomList);
   }
 
-  private int joinRoom(PositionType positionType, Map<PositionType, List<Matching>> matchingMap,
+  private void joinRoom(PositionType positionType, Map<PositionType, List<Matching>> matchingMap,
       List<MatchingRoom> matchingRoomList) {
     var matchingList = matchingMap.get(positionType);
     var roomList = new ArrayList<>(matchingRoomList.stream()
         .filter(matchingRoom -> matchingRoom.canInsertPosition(positionType))
         .toList());
     if (Collections.isEmpty(matchingList) || Collections.isEmpty(roomList)) {
-      return 0;
+      return;
     }
 
     var removeList = new ArrayList<Matching>();
@@ -163,8 +139,6 @@ public class MatchingProcessor {
     });
 
     matchingList.removeAll(removeList);
-
-    return matchingList.size();
   }
 
   /**

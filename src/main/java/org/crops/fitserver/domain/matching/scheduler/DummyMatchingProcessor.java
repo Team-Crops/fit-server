@@ -70,8 +70,6 @@ public class DummyMatchingProcessor {
 
     userRepository.saveAllAndFlush(newUserList);
 
-    log.info("newUserList size : {}", newUserList.size());
-
     return newUserList;
   }
 

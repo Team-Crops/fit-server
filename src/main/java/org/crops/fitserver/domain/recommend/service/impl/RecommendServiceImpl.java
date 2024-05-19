@@ -1,6 +1,7 @@
 package org.crops.fitserver.domain.recommend.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.domain.recommend.domain.UserLikes;
@@ -81,11 +82,15 @@ public class RecommendServiceImpl implements RecommendService {
   @Override
   public int getRandomSeed(long userId, int page) {
     if (page == 0) {
-      int randomSeed = (int) (Math.random() * 10);
-      stringRedisTemplate.opsForValue().set(RANDOM_SEED_KEY + userId, String.valueOf(randomSeed), 1, TimeUnit.HOURS);
-      return randomSeed;
+      return setRandomSeed(userId);
     }
-    return Integer.parseInt(
-        stringRedisTemplate.opsForValue().get(RANDOM_SEED_KEY + userId));
+    var randomSeed = Optional.ofNullable(stringRedisTemplate.opsForValue().get(RANDOM_SEED_KEY + userId));
+    return randomSeed.map(Integer::parseInt).orElseGet(() -> setRandomSeed(userId));
+  }
+
+  private int setRandomSeed(long userId) {
+    int randomSeed = (int) (Math.random() * 10);
+    stringRedisTemplate.opsForValue().set(RANDOM_SEED_KEY + userId, String.valueOf(randomSeed), 1, TimeUnit.HOURS);
+    return randomSeed;
   }
 }
