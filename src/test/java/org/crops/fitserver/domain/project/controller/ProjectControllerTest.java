@@ -151,7 +151,7 @@ class ProjectControllerTest extends MockMvcDocs {
                                       JsonFieldType.ARRAY).description("프로젝트 멤버 리스트"),
                                   fieldWithPath("projectList[].projectMemberList[].userId").type(
                                       JsonFieldType.NUMBER).description("멤버 ID"),
-                                  fieldWithPath("projectList[].projectMemberList[].username").type(
+                                  fieldWithPath("projectList[].projectMemberList[].nickname").type(
                                       JsonFieldType.STRING).description("멤버 이름"),
                                   fieldWithPath(
                                       "projectList[].projectMemberList[].profileImageUrl").type(
@@ -248,7 +248,7 @@ class ProjectControllerTest extends MockMvcDocs {
                               fieldWithPath("projectMemberList[].userId").type(
                                       JsonFieldType.NUMBER)
                                   .description("멤버 ID"),
-                              fieldWithPath("projectMemberList[].username").type(
+                              fieldWithPath("projectMemberList[].nickname").type(
                                       JsonFieldType.STRING)
                                   .description("멤버 이름"),
                               fieldWithPath("projectMemberList[].profileImageUrl").type(
@@ -338,7 +338,7 @@ class ProjectControllerTest extends MockMvcDocs {
                               fieldWithPath("projectMemberList[].userId").type(
                                       JsonFieldType.NUMBER)
                                   .description("멤버 ID"),
-                              fieldWithPath("projectMemberList[].username").type(
+                              fieldWithPath("projectMemberList[].nickname").type(
                                       JsonFieldType.STRING)
                                   .description("멤버 이름"),
                               fieldWithPath("projectMemberList[].profileImageUrl").type(
