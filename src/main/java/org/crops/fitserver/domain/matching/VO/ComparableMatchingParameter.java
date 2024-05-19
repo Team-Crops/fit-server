@@ -20,16 +20,20 @@ public record ComparableMatchingParameter(
 ) {
 
   public static ComparableMatchingParameter from(Matching matching) {
+    var activityHour = Double.valueOf(matching.getUser().getUserInfo().getActivityHour());
+    var projectCount = Double.valueOf(matching.getUser().getUserInfo().getProjectCount());
+    var skillCount = (double) matching.getUser().getUserInfo().getUserInfoSkills().size();
+
     return ComparableMatchingParameter.builder()
-        .avgActivityHour(Double.valueOf(matching.getUser().getUserInfo().getActivityHour()))
-        .avgProjectCount(Double.valueOf(matching.getUser().getUserInfo().getProjectCount()))
-        .avgSkillCount((double) matching.getUser().getUserInfo().getUserInfoSkills().size())
-        .maxActivityHour(Double.valueOf(matching.getUser().getUserInfo().getActivityHour()))
-        .maxProjectCount(Double.valueOf(matching.getUser().getUserInfo().getProjectCount()))
-        .maxSkillCount((double) matching.getUser().getUserInfo().getUserInfoSkills().size())
-        .minActivityHour(Double.valueOf(matching.getUser().getUserInfo().getActivityHour()))
-        .minProjectCount(Double.valueOf(matching.getUser().getUserInfo().getProjectCount()))
-        .minSkillCount((double) matching.getUser().getUserInfo().getUserInfoSkills().size())
+        .avgActivityHour(activityHour)
+        .avgProjectCount(projectCount)
+        .avgSkillCount(skillCount)
+        .maxActivityHour(activityHour)
+        .maxProjectCount(projectCount)
+        .maxSkillCount(skillCount)
+        .minActivityHour(activityHour)
+        .minProjectCount(projectCount)
+        .minSkillCount(skillCount)
         .build();
   }
 
