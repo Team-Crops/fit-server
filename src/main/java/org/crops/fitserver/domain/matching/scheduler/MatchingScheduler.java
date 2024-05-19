@@ -19,7 +19,6 @@ public class MatchingScheduler {
    */
   @Scheduled(cron = "1/20 * * * * *")
   public void matching() {
-
     matchingProcessor.match();
   }
 
