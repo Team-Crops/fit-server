@@ -1,16 +1,17 @@
 package org.crops.fitserver.global.cache;
 
+import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 public interface CacheRepository {
 
-  <T> T get(String key);
+  <T extends Serializable> T get(String key, Class<T> clazz);
 
-  <T> T get(String key, Supplier<T> supplier);
+  <T extends Serializable> T get(String key, Class<T> clazz, Supplier<T> supplier);
 
-  <T> void set(String key, T data);
+  <T extends Serializable> void set(String key, T valueObject);
 
-  <T> void set(String key, T data, int timeout, TimeUnit timeUnit);
+  <T extends Serializable> void set(String key, T valueObject, int timeout, TimeUnit timeUnit);
 
 }

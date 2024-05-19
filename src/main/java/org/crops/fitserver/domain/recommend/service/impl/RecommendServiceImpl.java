@@ -86,7 +86,7 @@ public class RecommendServiceImpl implements RecommendService {
       cacheRepository.set(key, randomSeed, 1, TimeUnit.HOURS);
     }
 
-    return cacheRepository.get(RANDOM_SEED_KEY + userId, this::newRandomSeed);
+    return cacheRepository.get(RANDOM_SEED_KEY + userId, Integer.class,this::newRandomSeed);
   }
 
   private int newRandomSeed() {
