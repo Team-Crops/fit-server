@@ -1,7 +1,6 @@
 package org.crops.fitserver.domain.recommend.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.crops.fitserver.domain.recommend.domain.UserLikes;
@@ -11,9 +10,9 @@ import org.crops.fitserver.domain.user.constant.BackgroundStatus;
 import org.crops.fitserver.domain.user.domain.User;
 import org.crops.fitserver.domain.user.domain.Users;
 import org.crops.fitserver.domain.user.repository.UserRepository;
+import org.crops.fitserver.global.cache.CacheRepository;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,7 +21,7 @@ public class RecommendServiceImpl implements RecommendService {
 
   private final UserLikesRepository userLikesRepository;
   private final UserRepository userRepository;
-  private final StringRedisTemplate stringRedisTemplate;
+  private final CacheRepository cacheRepository;
 
   private static final String RANDOM_SEED_KEY = "recommend:randomSeed:";
 
@@ -81,16 +80,16 @@ public class RecommendServiceImpl implements RecommendService {
 
   @Override
   public int getRandomSeed(long userId, int page) {
+    var key = RANDOM_SEED_KEY + userId;
     if (page == 0) {
-      return setRandomSeed(userId);
+      var randomSeed = newRandomSeed();
+      cacheRepository.set(key, randomSeed, 1, TimeUnit.HOURS);
     }
-    var randomSeed = Optional.ofNullable(stringRedisTemplate.opsForValue().get(RANDOM_SEED_KEY + userId));
-    return randomSeed.map(Integer::parseInt).orElseGet(() -> setRandomSeed(userId));
+
+    return cacheRepository.get(RANDOM_SEED_KEY + userId, this::newRandomSeed);
   }
 
-  private int setRandomSeed(long userId) {
-    int randomSeed = (int) (Math.random() * 10);
-    stringRedisTemplate.opsForValue().set(RANDOM_SEED_KEY + userId, String.valueOf(randomSeed), 1, TimeUnit.HOURS);
-    return randomSeed;
+  private int newRandomSeed() {
+    return (int) (Math.random() * 10);
   }
 }
