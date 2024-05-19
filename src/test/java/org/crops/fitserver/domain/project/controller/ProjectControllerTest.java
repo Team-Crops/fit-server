@@ -95,13 +95,13 @@ class ProjectControllerTest extends MockMvcDocs {
                       .projectMemberList(List.of(
                           ProjectMemberDto.builder()
                               .userId(principal.getUserId())
-                              .username(user.getUsername())
+                              .nickname(user.getNickname())
                               .positionId(user.getUserInfo().getPosition().getId())
                               .profileImageUrl(user.getProfileImageUrl())
                               .build(),
                           ProjectMemberDto.builder()
                               .userId(2L)
-                              .username("user2")
+                              .nickname("user2")
                               .positionId(2L)
                               .profileImageUrl("profile2")
                               .build()
@@ -116,7 +116,7 @@ class ProjectControllerTest extends MockMvcDocs {
                       .projectMemberList(List.of(
                           ProjectMemberDto.builder()
                               .userId(principal.getUserId())
-                              .username(user.getUsername())
+                              .nickname(user.getNickname())
                               .positionId(user.getUserInfo().getPosition().getId())
                               .profileImageUrl(user.getProfileImageUrl())
                               .build()
@@ -151,7 +151,7 @@ class ProjectControllerTest extends MockMvcDocs {
                                       JsonFieldType.ARRAY).description("프로젝트 멤버 리스트"),
                                   fieldWithPath("projectList[].projectMemberList[].userId").type(
                                       JsonFieldType.NUMBER).description("멤버 ID"),
-                                  fieldWithPath("projectList[].projectMemberList[].username").type(
+                                  fieldWithPath("projectList[].projectMemberList[].nickname").type(
                                       JsonFieldType.STRING).description("멤버 이름"),
                                   fieldWithPath(
                                       "projectList[].projectMemberList[].profileImageUrl").type(
@@ -201,13 +201,13 @@ class ProjectControllerTest extends MockMvcDocs {
               .projectMemberList(List.of(
                   ProjectMemberDto.builder()
                       .userId(principal.getUserId())
-                      .username(user.getUsername())
+                      .nickname(user.getNickname())
                       .positionId(user.getUserInfo().getPosition().getId())
                       .profileImageUrl(user.getProfileImageUrl())
                       .build(),
                   ProjectMemberDto.builder()
                       .userId(2L)
-                      .username("user2")
+                      .nickname("user2")
                       .positionId(2L)
                       .profileImageUrl("profile2")
                       .build()
@@ -248,7 +248,7 @@ class ProjectControllerTest extends MockMvcDocs {
                               fieldWithPath("projectMemberList[].userId").type(
                                       JsonFieldType.NUMBER)
                                   .description("멤버 ID"),
-                              fieldWithPath("projectMemberList[].username").type(
+                              fieldWithPath("projectMemberList[].nickname").type(
                                       JsonFieldType.STRING)
                                   .description("멤버 이름"),
                               fieldWithPath("projectMemberList[].profileImageUrl").type(
@@ -291,13 +291,13 @@ class ProjectControllerTest extends MockMvcDocs {
               .projectMemberList(List.of(
                   ProjectMemberDto.builder()
                       .userId(principal.getUserId())
-                      .username(user.getUsername())
+                      .nickname(user.getNickname())
                       .positionId(user.getUserInfo().getPosition().getId())
                       .profileImageUrl(user.getProfileImageUrl())
                       .build(),
                   ProjectMemberDto.builder()
                       .userId(2L)
-                      .username("user2")
+                      .nickname("user2")
                       .positionId(2L)
                       .profileImageUrl("profile2")
                       .build()
@@ -338,7 +338,7 @@ class ProjectControllerTest extends MockMvcDocs {
                               fieldWithPath("projectMemberList[].userId").type(
                                       JsonFieldType.NUMBER)
                                   .description("멤버 ID"),
-                              fieldWithPath("projectMemberList[].username").type(
+                              fieldWithPath("projectMemberList[].nickname").type(
                                       JsonFieldType.STRING)
                                   .description("멤버 이름"),
                               fieldWithPath("projectMemberList[].profileImageUrl").type(
