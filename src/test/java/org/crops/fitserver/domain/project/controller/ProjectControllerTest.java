@@ -95,13 +95,13 @@ class ProjectControllerTest extends MockMvcDocs {
                       .projectMemberList(List.of(
                           ProjectMemberDto.builder()
                               .userId(principal.getUserId())
-                              .username(user.getUsername())
+                              .nickname(user.getNickname())
                               .positionId(user.getUserInfo().getPosition().getId())
                               .profileImageUrl(user.getProfileImageUrl())
                               .build(),
                           ProjectMemberDto.builder()
                               .userId(2L)
-                              .username("user2")
+                              .nickname("user2")
                               .positionId(2L)
                               .profileImageUrl("profile2")
                               .build()
@@ -116,7 +116,7 @@ class ProjectControllerTest extends MockMvcDocs {
                       .projectMemberList(List.of(
                           ProjectMemberDto.builder()
                               .userId(principal.getUserId())
-                              .username(user.getUsername())
+                              .nickname(user.getNickname())
                               .positionId(user.getUserInfo().getPosition().getId())
                               .profileImageUrl(user.getProfileImageUrl())
                               .build()
@@ -201,13 +201,13 @@ class ProjectControllerTest extends MockMvcDocs {
               .projectMemberList(List.of(
                   ProjectMemberDto.builder()
                       .userId(principal.getUserId())
-                      .username(user.getUsername())
+                      .nickname(user.getNickname())
                       .positionId(user.getUserInfo().getPosition().getId())
                       .profileImageUrl(user.getProfileImageUrl())
                       .build(),
                   ProjectMemberDto.builder()
                       .userId(2L)
-                      .username("user2")
+                      .nickname("user2")
                       .positionId(2L)
                       .profileImageUrl("profile2")
                       .build()
@@ -291,13 +291,13 @@ class ProjectControllerTest extends MockMvcDocs {
               .projectMemberList(List.of(
                   ProjectMemberDto.builder()
                       .userId(principal.getUserId())
-                      .username(user.getUsername())
+                      .nickname(user.getNickname())
                       .positionId(user.getUserInfo().getPosition().getId())
                       .profileImageUrl(user.getProfileImageUrl())
                       .build(),
                   ProjectMemberDto.builder()
                       .userId(2L)
-                      .username("user2")
+                      .nickname("user2")
                       .positionId(2L)
                       .profileImageUrl("profile2")
                       .build()
