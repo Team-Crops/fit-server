@@ -11,3 +11,13 @@ CREATE TABLE IF NOT EXISTS `chat_room_user`
     CONSTRAINT `fk_chatroomuser_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
     CONSTRAINT `fk_chatroomuser_lastcheckedmessageid` FOREIGN KEY (`last_checked_message_id`) REFERENCES `message` (`message_id`)
 );
+
+alter table `social_user_info`
+    add `created_at`    datetime(6) NOT NULL;
+alter table `social_user_info`
+    add `updated_at`    datetime(6) NOT NULL;
+alter table `social_user_info`
+    add `is_deleted`    tinyint(1)  NOT NULL DEFAULT false;
+
+
+
