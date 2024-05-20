@@ -13,7 +13,7 @@ fi
 
 echo "[$TIME] > Start health check of f-it WAS at 'http://127.0.0.1:${TARGET_PORT}'..." >> /home/ubuntu/app/deploy/deploy.log
 
-for RETRY_COUNT in {1..10}
+for RETRY_COUNT in {1..60}
 do
     echo "[$TIME] > #${RETRY_COUNT} trying..." >> /home/ubuntu/app/deploy/deploy.log
     RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:${TARGET_PORT}/actuator/health)

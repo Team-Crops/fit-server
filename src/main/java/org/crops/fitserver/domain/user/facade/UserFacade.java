@@ -14,4 +14,6 @@ public interface UserFacade {
   List<PolicyAgreementDto> getPolicyAgreementList(Long userId);
 
   List<PolicyAgreementDto> updatePolicyAgreement(Long userId, List<PolicyAgreementDto> policyAgreementDtoList);
+
+  void deleteUser(long userId);
 }

@@ -26,6 +26,8 @@ import org.crops.fitserver.global.entity.BaseTimeEntity;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.util.CollectionUtils;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
@@ -33,6 +35,8 @@ import org.springframework.util.CollectionUtils;
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Where(clause = "is_deleted = false")
+@SQLDelete(sql = "UPDATE user SET is_deleted = true WHERE user_id = ?")
 //@ToString
 public class User extends BaseTimeEntity {
 
@@ -68,7 +72,7 @@ public class User extends BaseTimeEntity {
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private UserInfo userInfo;
 
-  @OneToMany(mappedBy = "likeUser")
+  @OneToMany(mappedBy = "likeUser", cascade = CascadeType.ALL, orphanRemoval = true)
   private final List<UserLikes> likeUsers = new ArrayList<>();
 
   @OneToMany(mappedBy = "likedUser")
@@ -163,6 +167,18 @@ public class User extends BaseTimeEntity {
         && this.nickname != null
         && this.phoneNumber != null
         ;
+  }
+
+  public void withdraw() {
+    this.userRole = UserRole.WITHDRAW;
+    this.profileImageUrl = null;
+    this.username = null;
+    this.nickname = null;
+    this.phoneNumber = null;
+    this.isOpenPhoneNum = false;
+    this.email = null;
+    this.userInfo.withdraw();
+    this.likeUsers.clear();
   }
 }
 

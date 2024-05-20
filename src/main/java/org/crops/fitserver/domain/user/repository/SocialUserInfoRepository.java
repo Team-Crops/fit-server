@@ -13,5 +13,7 @@ public interface SocialUserInfoRepository extends
       + "where s.socialCode = :socialCode")
   Optional<SocialUserInfo> findBySocialCode(String socialCode);
 
+  void deleteByUserId(Long userId);
+
   SocialUserInfo save(SocialUserInfo socialUserInfo);
 }

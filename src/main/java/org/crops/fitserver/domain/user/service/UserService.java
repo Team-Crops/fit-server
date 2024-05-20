@@ -19,4 +19,6 @@ public interface UserService {
   List<UserPolicyAgreement> getPolicyAgreementList(Long userId);
 
   List<UserPolicyAgreement> updatePolicyAgreement(Long userId, List<PolicyAgreementDto> policyAgreementDtoList);
+
+  void deleteUser(User user);
 }
