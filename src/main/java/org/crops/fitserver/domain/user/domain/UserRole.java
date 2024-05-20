@@ -5,5 +5,6 @@ public enum UserRole {
   NON_MEMBER,
   MEMBER,
   MANAGER,
-  ADMIN;
+  ADMIN,
+  WITHDRAW;
 }

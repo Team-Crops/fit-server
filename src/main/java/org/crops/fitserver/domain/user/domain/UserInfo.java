@@ -31,6 +31,8 @@ import org.crops.fitserver.global.entity.BaseTimeEntity;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.util.CollectionUtils;
 
@@ -41,6 +43,8 @@ import org.springframework.util.CollectionUtils;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
+@Where(clause = "is_deleted = false")
+@SQLDelete(sql = "UPDATE user_info SET is_deleted = true WHERE user_id = ?")
 public class UserInfo extends BaseTimeEntity {
 
   @Id
@@ -257,5 +261,22 @@ public class UserInfo extends BaseTimeEntity {
         && this.user.getNickname() != null
         && this.user.getPhoneNumber() != null
         ;
+  }
+
+  public void withdraw() {
+    this.status = UserInfoStatus.WITHDRAWAL;
+    this.portfolioUrl = null;
+    this.projectCount = null;
+    this.activityHour = null;
+    this.introduce = null;
+    this.linkJson = null;
+    this.backgroundStatus = null;
+    this.career = null;
+    this.education = null;
+    this.isOpenProfile = false;
+    this.position = null;
+    this.region = null;
+    this.isDeleted = true;
+    this.userInfoSkills.clear();
   }
 }

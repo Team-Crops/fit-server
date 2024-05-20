@@ -12,10 +12,12 @@ import org.crops.fitserver.domain.skillset.repository.PositionRepository;
 import org.crops.fitserver.domain.skillset.repository.SkillRepository;
 import org.crops.fitserver.domain.user.domain.Link;
 import org.crops.fitserver.domain.user.domain.User;
+import org.crops.fitserver.domain.user.domain.UserInfo;
 import org.crops.fitserver.domain.user.domain.UserInfoSkill;
 import org.crops.fitserver.domain.user.domain.UserPolicyAgreement;
 import org.crops.fitserver.domain.user.dto.PolicyAgreementDto;
 import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
+import org.crops.fitserver.domain.user.repository.SocialUserInfoRepository;
 import org.crops.fitserver.domain.user.repository.UserPolicyAgreementRepository;
 import org.crops.fitserver.domain.user.repository.UserRepository;
 import org.crops.fitserver.global.exception.BusinessException;
@@ -33,6 +35,7 @@ public class UserServiceImpl implements UserService {
   private final RegionRepository regionRepository;
   private final SkillRepository skillRepository;
   private final UserPolicyAgreementRepository userPolicyAgreementRepository;
+  private final SocialUserInfoRepository socialUserInfoRepository;
 
   @Override
   public User getById(Long userId) {
@@ -149,5 +152,15 @@ public class UserServiceImpl implements UserService {
     ).toList();
 
     return userPolicyAgreementRepository.saveAll(policyAgreementListForSave);
+  }
+
+  @Override
+  @Transactional
+  public void deleteUser(User user) {
+    user.withdraw();
+    userRepository.delete(user);
+
+    userPolicyAgreementRepository.deleteAllByUserId(user.getId());
+    socialUserInfoRepository.deleteByUserId(user.getId());
   }
 }

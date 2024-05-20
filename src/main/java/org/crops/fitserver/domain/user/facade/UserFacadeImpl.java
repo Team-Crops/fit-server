@@ -39,4 +39,10 @@ public class UserFacadeImpl implements UserFacade {
         .map(PolicyAgreementDto::from)
         .toList();
   }
+
+  @Override
+  public void deleteUser(long userId) {
+    var user = userService.getById(userId);
+    userService.deleteUser(user);
+  }
 }

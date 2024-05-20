@@ -23,6 +23,8 @@ import org.crops.fitserver.domain.recommend.domain.UserLikes;
 import org.crops.fitserver.global.entity.BaseTimeEntity;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
@@ -30,6 +32,8 @@ import org.hibernate.annotations.DynamicInsert;
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Where(clause = "is_deleted = false")
+@SQLDelete(sql = "UPDATE user SET is_deleted = true WHERE user_id = ?")
 public class User extends BaseTimeEntity {
 
   @Id
@@ -64,7 +68,7 @@ public class User extends BaseTimeEntity {
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private UserInfo userInfo;
 
-  @OneToMany(mappedBy = "likeUser")
+  @OneToMany(mappedBy = "likeUser", cascade = CascadeType.ALL, orphanRemoval = true)
   private final List<UserLikes> likeUsers = new ArrayList<>();
 
   @OneToMany(mappedBy = "likedUser")
@@ -122,6 +126,18 @@ public class User extends BaseTimeEntity {
 
   public void promoteRole(UserRole userRole) {
       this.userRole = userRole;
+  }
+
+  public void withdraw() {
+    this.userRole = UserRole.WITHDRAW;
+    this.profileImageUrl = null;
+    this.username = null;
+    this.nickname = null;
+    this.phoneNumber = null;
+    this.isOpenPhoneNum = false;
+    this.email = null;
+    this.userInfo.withdraw();
+    this.likeUsers.clear();
   }
 }
 
