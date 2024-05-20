@@ -20,7 +20,7 @@ do
     if [ ${RESPONSE_CODE} -eq 200 ]; then
         echo "[$TIME] > New f-it WAS successfully running." >> /home/ubuntu/app/deploy/deploy.log
         exit 0
-    elif [ ${RETRY_COUNT} -eq 10 ]; then
+    elif [ ${RETRY_COUNT} -eq 60 ]; then
         echo "[$TIME] > Health check failed." >> /home/ubuntu/app/deploy/deploy.log
         exit 1
     fi
