@@ -14,5 +14,5 @@ public abstract class BaseEntity {
 
   @Column(nullable = false)
   @ColumnDefault("false")
-  private boolean isDeleted;
+  protected boolean isDeleted;
 }
