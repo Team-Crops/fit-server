@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -20,9 +21,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.crops.fitserver.domain.recommend.domain.UserLikes;
+import org.crops.fitserver.domain.user.constant.UserInfoStatus;
 import org.crops.fitserver.global.entity.BaseTimeEntity;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.springframework.util.CollectionUtils;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -34,6 +37,7 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Where(clause = "is_deleted = false")
 @SQLDelete(sql = "UPDATE user SET is_deleted = true WHERE user_id = ?")
+//@ToString
 public class User extends BaseTimeEntity {
 
   @Id
@@ -82,7 +86,29 @@ public class User extends BaseTimeEntity {
 
   @PrePersist
   public void prePersist() {
-    this.userInfo = UserInfo.from(this);
+    if (this.userInfo == null) {
+      this.userInfo = UserInfo.from(this);
+    } else if(this.userInfo.getUser() == null){
+      this.userInfo.setUser(this);
+    }
+    this.updateUserIfEssentialFieldsFilled();
+  }
+  @PreUpdate
+  public void preUpdate() {
+    this.updateUserIfEssentialFieldsFilled();
+  }
+
+
+  public void updateUserIfEssentialFieldsFilled() {
+    if (this.isEssentialFieldsFilled()) {
+      this.userInfo.updateStatus(UserInfoStatus.COMPLETE);
+      promoteRole(UserRole.MEMBER);
+    } else {
+      this.userInfo.updateStatus(UserInfoStatus.INCOMPLETE);
+      if(UserRole.MEMBER.equals(getUserRole())) {
+        promoteRole(UserRole.NON_MEMBER);
+      }
+    }
   }
 
   public User withProfileImageUrl(String profileImageUrl) {
@@ -125,7 +151,22 @@ public class User extends BaseTimeEntity {
   }
 
   public void promoteRole(UserRole userRole) {
-      this.userRole = userRole;
+    this.userRole = userRole;
+  }
+
+  private boolean isEssentialFieldsFilled() {
+    return this.userInfo.getProjectCount() != null
+        && this.userInfo.getActivityHour() != null
+        && this.userInfo.getIntroduce() != null
+        && this.userInfo.getLinkJson() != null
+        && !CollectionUtils.isEmpty(this.userInfo.getUserInfoSkills())
+        && this.userInfo.getPosition() != null
+        && this.userInfo.getRegion() != null
+        && this.userInfo.getBackgroundStatus() != null
+        && this.email != null
+        && this.nickname != null
+        && this.phoneNumber != null
+        ;
   }
 
   public void withdraw() {

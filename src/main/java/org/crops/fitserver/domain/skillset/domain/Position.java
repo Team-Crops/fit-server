@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.crops.fitserver.domain.skillset.constant.PositionType;
 import org.crops.fitserver.global.entity.BaseTimeEntity;
 import org.hibernate.annotations.DynamicInsert;
@@ -32,6 +33,7 @@ import org.hibernate.annotations.Where;
 @DynamicInsert
 @SQLDelete(sql = "UPDATE position SET is_deleted = true WHERE position_id = ?")
 @Where(clause = "is_deleted = false")
+@ToString
 public class Position extends BaseTimeEntity {
 
   @Id
@@ -67,14 +69,27 @@ public class Position extends BaseTimeEntity {
     this.imageUrl = imageUrl;
   }
 
+  public List<Skill> getSkills() {
+    return this.skillSets.stream()
+        .map(SkillSet::getSkill)
+        .toList();
+  }
+
   public void addSkill(Skill skill) {
     if (this.skillSets.stream().anyMatch(skillSet -> skillSet.getSkill().equals(skill))) {
       return;
     }
-    this.skillSets.add(SkillSet.create(skill, this));
+    SkillSet.create(skill, this);
   }
 
   public void removeSkill(Skill skill) {
     this.skillSets.removeIf(skillSet -> skillSet.getSkill().equals(skill));
+  }
+
+  protected void addSkillSet(SkillSet skillSet) {
+    if(this.skillSets.contains(skillSet)) {
+      return;
+    }
+    this.skillSets.add(skillSet);
   }
 }

@@ -227,7 +227,7 @@ public class SkillSetServiceTest {
   public void get_skill_list_by_position_success() {
     // given
     var position = Position.builder().displayName("test").build();
-    position.addSkill(Skill.builder().displayName("test_skill").build());
+    position.addSkill(Skill.builder().id(2134L).displayName("test_skill").build());
     given(positionRepository.findWithSkills(any()))
         .willReturn(Optional.of(position));
 

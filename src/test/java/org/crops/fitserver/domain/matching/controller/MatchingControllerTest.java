@@ -52,7 +52,7 @@ class MatchingControllerTest extends MockMvcDocsWithLogin {
 
     @DisplayName("매칭 생성 성공")
     @Test
-    void createMatching_success() throws Exception {
+    void create_when_dont_exist_matching() throws Exception {
       //given
       var user = UserBuildUtil.buildUser().build();
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());
@@ -95,9 +95,42 @@ class MatchingControllerTest extends MockMvcDocsWithLogin {
           ));
     }
 
+    @DisplayName("매칭 생성 실패 - 이미 매칭중")
+    @Test
+    void cannot_create_when_exist_matching() throws Exception {
+      //given
+      var user = UserBuildUtil.buildUser().build();
+      var principal = getPrincipalDetails(user.getId(), user.getUserRole());
+      given(matchingService.createMatching(principal.getUserId())).willThrow(new BusinessException(
+          ErrorCode.ALREADY_EXIST_MATCHING_EXCEPTION));
+      //when
+      var result = mockMvc.perform(post(URL)
+          .contentType(MediaType.APPLICATION_JSON)
+          .with(user(principal))
+          .with(csrf())
+      );
+      //then
+      result.andExpect(status().isConflict())
+          .andDo(document("matching/createMatching_fail",
+              resource(
+                  ResourceSnippetParameters.builder()
+                      .tag("matching")
+                      .description("매칭 생성 실패")
+                      .summary("매칭 생성 실패")
+                      .responseSchema(Schema.schema("errorResponse"))
+                      .responseFields(
+                          fieldWithPath("code").type(JsonFieldType.STRING).description("에러 코드"),
+                          fieldWithPath("message").type(JsonFieldType.STRING)
+                              .description("에러 메시지")
+                      )
+                      .build()
+              )
+          ));
+    }
+
     @Test
     @DisplayName("매칭 조회 성공")
-    void getMatching_success() throws Exception {
+    void get_own_matching() throws Exception {
       //given
       var user = UserBuildUtil.buildUser().build();
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());
@@ -142,7 +175,7 @@ class MatchingControllerTest extends MockMvcDocsWithLogin {
 
     @Test
     @DisplayName("매칭 조회 실패 - 매칭중이 아님")
-    void getMatching_fail_매칭중이_아님() throws Exception {
+    void cannot_get_when_dont_exist_matching() throws Exception {
       //given
       var user = UserBuildUtil.buildUser().build();
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());
@@ -180,7 +213,7 @@ class MatchingControllerTest extends MockMvcDocsWithLogin {
 
     @Test
     @DisplayName("매칭방 조회 성공")
-    void getMatchingRoom_success() throws Exception {
+    void get_matching_room_when_client_is_participant() throws Exception {
       //given
       var user = UserBuildUtil.buildUser().build();
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());
@@ -248,7 +281,7 @@ class MatchingControllerTest extends MockMvcDocsWithLogin {
 
     @Test
     @DisplayName("매칭방 조회 실패 - 매칭방이 없음")
-    void getMatchingRoom_fail_매칭방이_없음() throws Exception {
+    void cannot_get_matching_room_when_dont_exist() throws Exception {
       //given
       var user = UserBuildUtil.buildUser().build();
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());
@@ -290,7 +323,7 @@ class MatchingControllerTest extends MockMvcDocsWithLogin {
 
     @Test
     @DisplayName("매칭 강제 퇴장 성공")
-    void forceOut_success() throws Exception {
+    void force_out_when_client_is_host() throws Exception {
       //given
       var user = UserBuildUtil.buildUser().build();
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());
@@ -325,7 +358,7 @@ class MatchingControllerTest extends MockMvcDocsWithLogin {
 
     @Test
     @DisplayName("매칭 강제 퇴장 실패 - 방장이 아님")
-    void forceOut_fail_방장이_아님() throws Exception {
+    void cannot_force_out_when_client_is_not_host() throws Exception {
       //given
       var user = UserBuildUtil.buildUser().build();
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());
@@ -364,7 +397,7 @@ class MatchingControllerTest extends MockMvcDocsWithLogin {
 
     @Test
     @DisplayName("매칭 강제 퇴장 실패 - 대상자가 존재하지 않음")
-    void forceOut_fail_대상자가_존재하지_않음() throws Exception {
+    void cannot_force_out_when_target_dont_exist() throws Exception {
       //given
       var user = UserBuildUtil.buildUser().build();
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());
@@ -409,7 +442,7 @@ class MatchingControllerTest extends MockMvcDocsWithLogin {
 
     @Test
     @DisplayName("매칭 준비 성공")
-    void readyMatching_success() throws Exception {
+    void ready_matching_successfully() throws Exception {
       //given
       var user = UserBuildUtil.buildUser().build();
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());
@@ -436,7 +469,7 @@ class MatchingControllerTest extends MockMvcDocsWithLogin {
 
     @Test
     @DisplayName("매칭 준비 실패 - 방장은 준비할 수 없음")
-    void readyMatching_fail_host_can_not_ready() throws Exception {
+    void cannot_ready_when_client_is_host() throws Exception {
       //given
       var user = UserBuildUtil.buildUser().build();
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());
@@ -470,7 +503,7 @@ class MatchingControllerTest extends MockMvcDocsWithLogin {
 
     @Test
     @DisplayName("매칭 완료 성공")
-    void completeMatching_success() throws Exception {
+    void complete_matching_when_client_is_host() throws Exception {
       //given
       var user = UserBuildUtil.buildUser().build();
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());
@@ -497,7 +530,7 @@ class MatchingControllerTest extends MockMvcDocsWithLogin {
 
     @Test
     @DisplayName("매칭 완료 실패 - 방장이 아님")
-    void completeMatching_fail_방장이_아님() throws Exception {
+    void cannot_complete_when_client_is_not_host() throws Exception {
       //given
       var user = UserBuildUtil.buildUser().build();
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());
@@ -536,7 +569,7 @@ class MatchingControllerTest extends MockMvcDocsWithLogin {
 
     @Test
     @DisplayName("매칭 취소 성공")
-    void cancelMatching_success() throws Exception {
+    void cancel_matching() throws Exception {
       //given
       var user = UserBuildUtil.buildUser().build();
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());

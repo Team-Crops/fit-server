@@ -15,13 +15,41 @@ import org.crops.fitserver.domain.user.domain.UserRole;
 
 public class UserBuildUtil {
 
-  public static UserBuilder buildUser() {
+  public static UserBuilder buildNewUser() {
     var linkList = List.of(
         Link.builder().linkType(LinkType.GITHUB).linkUrl("github.com").build(),
-        Link.builder().linkType(LinkType.ETC).linkUrl("test.com").build()
+        Link.builder().linkType(LinkType.LINK).linkUrl("test.com").build()
     );
     var userInfo = UserInfo.builder()
-        .id(1L)
+        .portfolioUrl("test.com")
+        .projectCount(1)
+        .activityHour((short) 1)
+        .introduce("test")
+        .isOpenProfile(true)
+        .linkJson(toJson(linkList))
+        .status(UserInfoStatus.COMPLETE)
+        .build();
+    return User.builder()
+        .userRole(UserRole.MEMBER)
+        .profileImageUrl("test.com")
+        .phoneNumber("010-1234-1234")
+        .isOpenPhoneNum(true)
+        .email("test@gmail.com")
+        .userInfo(userInfo)
+        ;
+  }
+
+  public static UserBuilder buildUser() {
+    return buildUser(1L);
+  }
+
+  private static UserBuilder buildUser(Long userId){
+    var linkList = List.of(
+        Link.builder().linkType(LinkType.GITHUB).linkUrl("github.com").build(),
+        Link.builder().linkType(LinkType.LINK).linkUrl("test.com").build()
+    );
+    var userInfo = UserInfo.builder()
+        .id(userId)
         .portfolioUrl("test.com")
         .projectCount(1)
         .activityHour((short) 1)
@@ -30,10 +58,10 @@ public class UserBuildUtil {
         .position(Position.builder().id(1L).build())
         .region(Region.builder().id(1L).build())
         .linkJson(toJson(linkList))
-        .status(UserInfoStatus.INCOMPLETE)
+        .status(UserInfoStatus.COMPLETE)
         .build();
     return User.builder()
-        .id(1L)
+        .id(userId)
         .userRole(UserRole.MEMBER)
         .profileImageUrl("test.com")
         .username("test")

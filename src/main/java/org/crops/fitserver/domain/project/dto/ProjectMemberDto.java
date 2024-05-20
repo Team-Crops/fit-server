@@ -6,7 +6,7 @@ import org.crops.fitserver.domain.project.domain.ProjectMember;
 @Builder
 public record ProjectMemberDto(
     Long userId,
-    String username,
+    String nickname,
     String profileImageUrl,
     Long positionId
 ) {
@@ -14,7 +14,7 @@ public record ProjectMemberDto(
   public static ProjectMemberDto from(ProjectMember projectMember) {
     return ProjectMemberDto.builder()
         .userId(projectMember.getUser().getId())
-        .username(projectMember.getUser().getUsername())
+        .nickname(projectMember.getUser().getNickname())
         .profileImageUrl(projectMember.getUser().getProfileImageUrl())
         .positionId(projectMember.getPosition().getId())
         .build();

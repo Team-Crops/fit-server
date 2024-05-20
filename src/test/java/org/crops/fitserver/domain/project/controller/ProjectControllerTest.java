@@ -7,6 +7,7 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -24,8 +25,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.config.MockMvcDocs;
 import org.crops.fitserver.config.UserBuildUtil;
 import org.crops.fitserver.domain.project.constant.ProjectStatus;
+import org.crops.fitserver.domain.project.constant.ReportType;
 import org.crops.fitserver.domain.project.dto.ProjectDto;
 import org.crops.fitserver.domain.project.dto.ProjectMemberDto;
+import org.crops.fitserver.domain.project.dto.request.ReportProjectMemberRequest;
 import org.crops.fitserver.domain.project.dto.request.UpdateProjectRequest;
 import org.crops.fitserver.domain.project.dto.response.GetProjectListResponse;
 import org.crops.fitserver.domain.project.service.ProjectService;
@@ -35,6 +38,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -67,13 +72,13 @@ class ProjectControllerTest extends MockMvcDocs {
 
   @Nested
   @DisplayName("프로젝트 리스트 가져오기")
-  class GetProjectList {
+  class GetListTest {
 
     private final String URL = "/v1/project";
 
     @Test
     @DisplayName("프로젝트 리스트를 가져온다.")
-    void success() throws Exception {
+    void get_my_project_list() throws Exception {
       // given
       var user = UserBuildUtil.buildUser().build();
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());
@@ -90,13 +95,13 @@ class ProjectControllerTest extends MockMvcDocs {
                       .projectMemberList(List.of(
                           ProjectMemberDto.builder()
                               .userId(principal.getUserId())
-                              .username(user.getUsername())
+                              .nickname(user.getNickname())
                               .positionId(user.getUserInfo().getPosition().getId())
                               .profileImageUrl(user.getProfileImageUrl())
                               .build(),
                           ProjectMemberDto.builder()
                               .userId(2L)
-                              .username("user2")
+                              .nickname("user2")
                               .positionId(2L)
                               .profileImageUrl("profile2")
                               .build()
@@ -111,7 +116,7 @@ class ProjectControllerTest extends MockMvcDocs {
                       .projectMemberList(List.of(
                           ProjectMemberDto.builder()
                               .userId(principal.getUserId())
-                              .username(user.getUsername())
+                              .nickname(user.getNickname())
                               .positionId(user.getUserInfo().getPosition().getId())
                               .profileImageUrl(user.getProfileImageUrl())
                               .build()
@@ -146,7 +151,7 @@ class ProjectControllerTest extends MockMvcDocs {
                                       JsonFieldType.ARRAY).description("프로젝트 멤버 리스트"),
                                   fieldWithPath("projectList[].projectMemberList[].userId").type(
                                       JsonFieldType.NUMBER).description("멤버 ID"),
-                                  fieldWithPath("projectList[].projectMemberList[].username").type(
+                                  fieldWithPath("projectList[].projectMemberList[].nickname").type(
                                       JsonFieldType.STRING).description("멤버 이름"),
                                   fieldWithPath(
                                       "projectList[].projectMemberList[].profileImageUrl").type(
@@ -173,13 +178,13 @@ class ProjectControllerTest extends MockMvcDocs {
 
   @Nested
   @DisplayName("프로젝트 수정하기")
-  class UpdateProject {
+  class UpdateTest {
 
     private final String URL = "/v1/project/{projectId}";
 
     @Test
     @DisplayName("프로젝트의 이름을 수정")
-    void successChangeName() throws Exception {
+    void change_my_project_name() throws Exception {
       // given
       var user = UserBuildUtil.buildUser().build();
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());
@@ -196,13 +201,13 @@ class ProjectControllerTest extends MockMvcDocs {
               .projectMemberList(List.of(
                   ProjectMemberDto.builder()
                       .userId(principal.getUserId())
-                      .username(user.getUsername())
+                      .nickname(user.getNickname())
                       .positionId(user.getUserInfo().getPosition().getId())
                       .profileImageUrl(user.getProfileImageUrl())
                       .build(),
                   ProjectMemberDto.builder()
                       .userId(2L)
-                      .username("user2")
+                      .nickname("user2")
                       .positionId(2L)
                       .profileImageUrl("profile2")
                       .build()
@@ -243,7 +248,7 @@ class ProjectControllerTest extends MockMvcDocs {
                               fieldWithPath("projectMemberList[].userId").type(
                                       JsonFieldType.NUMBER)
                                   .description("멤버 ID"),
-                              fieldWithPath("projectMemberList[].username").type(
+                              fieldWithPath("projectMemberList[].nickname").type(
                                       JsonFieldType.STRING)
                                   .description("멤버 이름"),
                               fieldWithPath("projectMemberList[].profileImageUrl").type(
@@ -268,7 +273,7 @@ class ProjectControllerTest extends MockMvcDocs {
 
     @Test
     @DisplayName("프로젝트의 상태를 수정")
-    void successChangeStatus() throws Exception {
+    void change_my_project_status() throws Exception {
       // given
       var user = UserBuildUtil.buildUser().build();
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());
@@ -286,13 +291,13 @@ class ProjectControllerTest extends MockMvcDocs {
               .projectMemberList(List.of(
                   ProjectMemberDto.builder()
                       .userId(principal.getUserId())
-                      .username(user.getUsername())
+                      .nickname(user.getNickname())
                       .positionId(user.getUserInfo().getPosition().getId())
                       .profileImageUrl(user.getProfileImageUrl())
                       .build(),
                   ProjectMemberDto.builder()
                       .userId(2L)
-                      .username("user2")
+                      .nickname("user2")
                       .positionId(2L)
                       .profileImageUrl("profile2")
                       .build()
@@ -333,7 +338,7 @@ class ProjectControllerTest extends MockMvcDocs {
                               fieldWithPath("projectMemberList[].userId").type(
                                       JsonFieldType.NUMBER)
                                   .description("멤버 ID"),
-                              fieldWithPath("projectMemberList[].username").type(
+                              fieldWithPath("projectMemberList[].nickname").type(
                                       JsonFieldType.STRING)
                                   .description("멤버 이름"),
                               fieldWithPath("projectMemberList[].profileImageUrl").type(
@@ -358,7 +363,7 @@ class ProjectControllerTest extends MockMvcDocs {
 
     @Test
     @DisplayName("프로젝트가 존재하지 않은 경우 실패")
-    void failNotExistProject() throws Exception {
+    void cannot_change_when_project_not_exist() throws Exception {
       // given
       var user = UserBuildUtil.buildUser().build();
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());
@@ -397,7 +402,7 @@ class ProjectControllerTest extends MockMvcDocs {
 
     @Test
     @DisplayName("프로젝트 멤버가 아닌 경우 실패")
-    void failNotProjectMember() throws Exception {
+    void cannot_change_when_client_is_not_project_member() throws Exception {
       // given
       var user = UserBuildUtil.buildUser().build();
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());
@@ -434,5 +439,51 @@ class ProjectControllerTest extends MockMvcDocs {
     }
 
 
+  }
+
+  @Nested
+  @DisplayName("프로젝트 멤버 신고하기")
+  class RejectTest {
+
+    private final String URL = "/v1/project/{projectId}/report";
+
+
+
+    @ParameterizedTest
+    @DisplayName("프로젝트 멤버를 신고한다.")
+    @EnumSource(ReportType.class)
+    void report_project_member(ReportType reportType) throws Exception {
+      // given
+      var user = UserBuildUtil.buildUser().build();
+      var principal = getPrincipalDetails(user.getId(), user.getUserRole());
+      var projectId = 1L;
+      var request = new ReportProjectMemberRequest(2123L, reportType, "사용자가 작성한 신고사유");
+
+      mockMvc.perform(post(URL, projectId)
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(request))
+          .with(user(principal))
+          .with(csrf())
+      )
+          .andExpect(status().isNoContent())
+          .andDo(document("report-project-member",
+              resource(
+                  ResourceSnippetParameters.builder()
+                      .tag("project")
+                      .summary("프로젝트 멤버 신고")
+                      .description("프로젝트 멤버를 신고한다.")
+                      .requestSchema(Schema.schema("reportProjectMemberRequest"))
+                      .requestFields(
+                          fieldWithPath("targetUserId").type(JsonFieldType.NUMBER)
+                              .description("신고 대상 사용자 ID"),
+                          new EnumFields(ReportType.class).withPath("reportType")
+                              .description("신고 타입"),
+                          fieldWithPath("description").type(JsonFieldType.STRING)
+                              .description("신고 사유")
+                      )
+                      .build()
+              )
+          ));
+    }
   }
 }

@@ -11,10 +11,12 @@ import org.crops.fitserver.global.mq.impl.RedisMessageSubscriptionManager;
 import org.crops.fitserver.global.socket.service.MessageResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.RedisTemplate;
 
 @Configuration
 @RequiredArgsConstructor
+@Profile("!test")
 public class RedisPubSubBeanRegistry {
 
   private final ObjectMapper objectMapper;

@@ -6,6 +6,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -28,6 +30,8 @@ import org.crops.fitserver.domain.skillset.domain.Skill;
 import org.crops.fitserver.domain.user.constant.BackgroundStatus;
 import org.crops.fitserver.domain.user.constant.UserInfoStatus;
 import org.crops.fitserver.global.entity.BaseTimeEntity;
+import org.crops.fitserver.global.exception.BusinessException;
+import org.crops.fitserver.global.exception.ErrorCode;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -49,6 +53,7 @@ public class UserInfo extends BaseTimeEntity {
 
   @Id
   @Column(name = "user_id")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   @OneToOne
   @JoinColumn(name = "user_id", nullable = false)
@@ -105,26 +110,8 @@ public class UserInfo extends BaseTimeEntity {
         .build();
   }
 
-  @PrePersist
-  public void prePersist() {
-    this.updateUserIfEssentialFieldsFilled();
-  }
-
-  @PreUpdate
-  public void preUpdate() {
-    this.updateUserIfEssentialFieldsFilled();
-  }
-
-  public void updateUserIfEssentialFieldsFilled() {
-    if (this.isEssentialFieldsFilled()) {
-      this.status = UserInfoStatus.COMPLETE;
-      this.user.promoteRole(UserRole.MEMBER);
-    } else {
-      this.status = UserInfoStatus.INCOMPLETE;
-      if(UserRole.MEMBER.equals(this.user.getUserRole())) {
-        this.user.promoteRole(UserRole.NON_MEMBER);
-      }
-    }
+  public void updateStatus(UserInfoStatus status) {
+    this.status = status;
   }
 
 
@@ -169,6 +156,9 @@ public class UserInfo extends BaseTimeEntity {
       JsonNullable<String> backgroundText) {
     if (!backgroundStatus.isPresent() && !backgroundText.isPresent()) {
       return this;
+    }
+    if(this.backgroundStatus == null && !backgroundStatus.isPresent()) {
+      return this;//둘 다 널이면 무시
     }
 
     withBackground(
@@ -248,20 +238,13 @@ public class UserInfo extends BaseTimeEntity {
     this.userInfoSkills.removeIf(userInfoSkill -> userInfoSkill.getSkill().equals(skill));
   }
 
-  private boolean isEssentialFieldsFilled() {
-    return this.projectCount != null
-        && this.activityHour != null
-        && this.introduce != null
-        && this.linkJson != null
-        && !CollectionUtils.isEmpty(this.userInfoSkills)
-        && this.position != null
-        && this.region != null
-        && this.backgroundStatus != null
-        && this.user.getEmail() != null
-        && this.user.getNickname() != null
-        && this.user.getPhoneNumber() != null
-        ;
+  protected void setUser(User user) {
+    if(this.user != null && this.user.getUserInfo() != this)  {
+      throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
+    }
+    this.user = user;
   }
+
 
   public void withdraw() {
     this.status = UserInfoStatus.WITHDRAWAL;
