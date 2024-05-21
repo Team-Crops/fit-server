@@ -1,6 +1,8 @@
 package org.crops.fitserver.domain.user.controller;
 
+import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static com.epages.restdocs.apispec.Schema.schema;
 import static org.crops.fitserver.domain.user.util.PrincipalDetailsUtil.getPrincipalDetails;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -24,7 +26,6 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.config.MockMvcDocsWithLogin;
 import org.crops.fitserver.config.UserBuildUtil;
-import org.crops.fitserver.domain.recommend.controller.RecommendController;
 import org.crops.fitserver.domain.region.domain.Region;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.domain.Skill;
@@ -40,6 +41,7 @@ import org.crops.fitserver.domain.user.dto.PolicyAgreementDto;
 import org.crops.fitserver.domain.user.dto.UserInfoDto;
 import org.crops.fitserver.domain.user.dto.request.UpdatePolicyAgreementRequest;
 import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
+import org.crops.fitserver.domain.user.dto.response.GetUserStatusAndInfoResponse;
 import org.crops.fitserver.domain.user.facade.UserFacade;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -676,5 +678,117 @@ class UserControllerTest extends MockMvcDocsWithLogin {
                     .build()
                 )
             ));
+  }
+
+  @Test
+  void getUserStatusAndInfoById() throws Exception {
+    //given
+    final var URL = "/v1/user/{userId}";
+    final var userId = 1L;
+
+    var userInfo = UserInfo.builder()
+        .id(1L)
+        .portfolioUrl("portfolioUrl.com")
+        .projectCount(3)
+        .activityHour((short) 3)
+        .introduce("test introduce")
+        .position(Position.builder().id(1L).build())
+        .region(Region.builder().id(1L).build())
+        .backgroundStatus(BackgroundStatus.GRADUATE_STUDENT)
+        .education("test university")
+        .status(UserInfoStatus.INCOMPLETE)
+        .build();
+
+    userInfo.addSkill(Skill.builder().id(1L).build());
+
+    var user = User.builder()
+        .id(1L)
+        .userRole(UserRole.MEMBER)
+        .profileImageUrl("test.com")
+        .username("test")
+        .nickname("test")
+        .phoneNumber("010-1234-1234")
+        .isOpenPhoneNum(true)
+        .email("test@gmail.com")
+        .userInfo(userInfo)
+        .build();
+
+    var response = GetUserStatusAndInfoResponse.of(user, true);
+
+    given(userFacade.getUserStatusAndInfo(anyLong(), anyLong())).willReturn(
+        response);
+
+    //when
+    var result = mockMvc.perform(get(URL, userId)
+        .contentType(MediaType.APPLICATION_JSON)
+        .with(user(loginPrincipal))
+        .with(csrf())
+    );
+    //then
+    result.andExpect(status().isOk())
+        .andExpect(handler().handlerType(UserController.class))
+        .andDo(
+            document("Get User Info By UserId",
+                resource(ResourceSnippetParameters.builder()
+                    .tag("user")
+                    .summary("유저 정보 조회")
+                    .description("Id로 유저 정보 조회")
+                    .pathParameters(
+                        parameterWithName("userId")
+                            .description("유저 ID")
+                            .defaultValue("1"))
+                    .responseSchema(
+                        schema("GetUserStatusAndInfoResponse"))
+                    .responseFields(
+                        fieldWithPath("isLiked")
+                            .type(JsonFieldType.BOOLEAN)
+                            .description("좋아요 여부"),
+                        fieldWithPath("userProfile.id")
+                            .type(JsonFieldType.NUMBER)
+                            .description("User Id"),
+                        fieldWithPath("userProfile.profileImageUrl")
+                            .type(JsonFieldType.STRING)
+                            .description("프로필 이미지 url"),
+                        fieldWithPath("userProfile.positionId")
+                            .type(JsonFieldType.NUMBER)
+                            .description("직군 Id"),
+                        fieldWithPath("userProfile.nickname")
+                            .type(JsonFieldType.STRING)
+                            .description("닉네임"),
+                        fieldWithPath("userProfile.introduce")
+                            .type(JsonFieldType.STRING)
+                            .description("자기소개"),
+                        fieldWithPath("userProfile.skillIdList")
+                            .type(JsonFieldType.ARRAY)
+                            .description("id list"),
+                        fieldWithPath("userProfile.status")
+                            .type(JsonFieldType.STRING)
+                            .description("사용자 정보 상태"),
+                        fieldWithPath("userProfile.backgroundStatus")
+                            .type(JsonFieldType.STRING)
+                            .description("학력/경력 상태"),
+                        fieldWithPath("userProfile.education")
+                            .type(JsonFieldType.STRING)
+                            .description("학교명"),
+                        fieldWithPath("userProfile.projectCount")
+                            .type(JsonFieldType.NUMBER)
+                            .description("프로젝트 수"),
+                        fieldWithPath("userProfile.regionId")
+                            .type(JsonFieldType.NUMBER)
+                            .description("지역 Id"),
+                        fieldWithPath("userProfile.activityHour")
+                            .type(JsonFieldType.NUMBER)
+                            .description("활동 시간"),
+                        fieldWithPath("userProfile.portfolioUrl")
+                            .type(JsonFieldType.STRING)
+                            .description("포트폴리오 url"),
+                        fieldWithPath("userProfile.email")
+                            .type(JsonFieldType.STRING)
+                            .description("이메일"),
+                        fieldWithPath("userProfile.phoneNumber")
+                            .type(JsonFieldType.STRING)
+                            .description("전화번호")
+                            )
+                    .build())));
   }
 }

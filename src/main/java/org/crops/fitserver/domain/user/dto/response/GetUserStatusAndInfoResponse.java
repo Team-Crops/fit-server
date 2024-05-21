@@ -10,9 +10,9 @@ public record GetUserStatusAndInfoResponse(
     UserProfileDto userProfile
 ) {
 
-  public static GetUserStatusAndInfoResponse of(User userWithInfo, boolean likeUser) {
+  public static GetUserStatusAndInfoResponse of(User user, boolean likeUser) {
     return GetUserStatusAndInfoResponse.builder()
-        .userProfile(UserProfileDto.from(userWithInfo))
+        .userProfile(UserProfileDto.from(user))
         .isLiked(likeUser)
         .build();
   }
