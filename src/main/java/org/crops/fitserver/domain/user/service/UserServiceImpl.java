@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.region.domain.Region;
 import org.crops.fitserver.domain.region.repository.RegionRepository;
 import org.crops.fitserver.domain.skillset.domain.Position;
@@ -12,7 +13,6 @@ import org.crops.fitserver.domain.skillset.repository.PositionRepository;
 import org.crops.fitserver.domain.skillset.repository.SkillRepository;
 import org.crops.fitserver.domain.user.domain.Link;
 import org.crops.fitserver.domain.user.domain.User;
-import org.crops.fitserver.domain.user.domain.UserInfo;
 import org.crops.fitserver.domain.user.domain.UserInfoSkill;
 import org.crops.fitserver.domain.user.domain.UserPolicyAgreement;
 import org.crops.fitserver.domain.user.dto.PolicyAgreementDto;
@@ -26,6 +26,7 @@ import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -158,9 +159,8 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public void deleteUser(User user) {
     user.withdraw();
-    userRepository.delete(user);
-
     userPolicyAgreementRepository.deleteAllByUserId(user.getId());
     socialUserInfoRepository.deleteByUserId(user.getId());
+    userRepository.delete(user);
   }
 }

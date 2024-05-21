@@ -7,6 +7,7 @@ import org.crops.fitserver.domain.user.dto.UserInfoDto;
 import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
 import org.crops.fitserver.domain.user.service.UserService;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -41,8 +42,9 @@ public class UserFacadeImpl implements UserFacade {
   }
 
   @Override
+  @Transactional
   public void deleteUser(long userId) {
-    var user = userService.getById(userId);
+    var user = userService.getUserWithInfo(userId);
     userService.deleteUser(user);
   }
 }

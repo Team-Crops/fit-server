@@ -63,8 +63,7 @@ CREATE TABLE IF NOT EXISTS `social_user_info`
     `user_id`             bigint       NOT NULL,
     `social_type`         varchar(20)  NOT NULL,
     `social_code`         varchar(255) NOT NULL,
-    CONSTRAINT `fk_socialuserinfo_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-    CONSTRAINT `uq_socialuserinfo_social_code` UNIQUE (`social_code`)
+    CONSTRAINT `fk_socialuserinfo_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `user_likes`
