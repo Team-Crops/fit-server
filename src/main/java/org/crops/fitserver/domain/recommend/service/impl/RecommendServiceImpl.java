@@ -55,6 +55,11 @@ public class RecommendServiceImpl implements RecommendService {
   }
 
   @Override
+  public boolean isLikeUser(long likeUserId, long likedUserId) {
+    return userLikesRepository.existsByLikeUserIdAndLikedUserId(likeUserId, likedUserId);
+  }
+
+  @Override
   public void likeUser(long likeUserId, long likedUserId) {
     User likeUser = userRepository.findById(likeUserId)
         .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
