@@ -12,8 +12,8 @@ public interface UserRepository extends
   Optional<User> findById(Long userId);
 
   @Query("select u from User u "
-      + "left join u.userInfo ui "
-      + "left join ui.userInfoSkills uis "
+      + "left join fetch u.userInfo ui "
+      + "left join fetch ui.userInfoSkills uis "
       + "where u.id = :userId")
   Optional<User> findWithInfo(Long userId);
 
