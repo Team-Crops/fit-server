@@ -14,4 +14,6 @@ public interface UserLikesRepository extends Repository<UserLikes, Long> {
   void delete(UserLikes userLikes);
 
   Optional<UserLikes> findByLikeUserAndLikedUser(User likeUser, User likedUser);
+
+  boolean existsByLikeUserIdAndLikedUserId(long likeUserId, long likedUserId);
 }
