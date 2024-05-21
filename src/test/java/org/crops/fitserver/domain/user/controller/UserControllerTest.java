@@ -3,14 +3,17 @@ package org.crops.fitserver.domain.user.controller;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.crops.fitserver.domain.user.util.PrincipalDetailsUtil.getPrincipalDetails;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epages.restdocs.apispec.EnumFields;
@@ -21,6 +24,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.config.MockMvcDocsWithLogin;
 import org.crops.fitserver.config.UserBuildUtil;
+import org.crops.fitserver.domain.recommend.controller.RecommendController;
 import org.crops.fitserver.domain.region.domain.Region;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.skillset.domain.Skill;
@@ -37,6 +41,7 @@ import org.crops.fitserver.domain.user.dto.UserInfoDto;
 import org.crops.fitserver.domain.user.dto.request.UpdatePolicyAgreementRequest;
 import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
 import org.crops.fitserver.domain.user.facade.UserFacade;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -46,6 +51,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 
 @WebMvcTest(UserController.class)
 @Slf4j
+@DisplayName("[User][Controller] UserController Test")
 class UserControllerTest extends MockMvcDocsWithLogin {
 
   @MockBean
@@ -644,5 +650,31 @@ class UserControllerTest extends MockMvcDocsWithLogin {
                     .build()
             )
         ));
+  }
+
+
+  @Test
+  void withdrawUser() throws Exception {
+    //given
+    final var URL = "/v1/user";
+
+    //when
+    var result = mockMvc.perform(delete(URL)
+        .contentType(MediaType.APPLICATION_JSON)
+        .with(user(loginPrincipal))
+        .with(csrf())
+    );
+    //then
+    result.andExpect(status().isNoContent())
+        .andExpect(handler().handlerType(UserController.class))
+        .andDo(
+            document("Withdraw user",
+                resource(ResourceSnippetParameters.builder()
+                    .tag("user")
+                    .summary("토큰으로 탈퇴하기")
+                    .description("유저 탈퇴")
+                    .build()
+                )
+            ));
   }
 }
