@@ -52,7 +52,6 @@ public class WebSocketAddMappingSupporter {
       sb.append(eventValue);
       sb.append(endpoint);
       String path = sb.toString();
-      System.out.println("sb.toString() 1-1-1-1-1-1-1-1-11-1-= " + path);
       socketIOServer.addEventListener(path, dtoClass, (client, data, ackSender) -> {
         try {
           List<Object> args = new ArrayList<>();
