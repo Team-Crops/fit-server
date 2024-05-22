@@ -746,6 +746,15 @@ class UserControllerTest extends MockMvcDocsWithLogin {
                         fieldWithPath("userProfile.id")
                             .type(JsonFieldType.NUMBER)
                             .description("User Id"),
+                        fieldWithPath("userProfile.linkList[]")
+                                .type(JsonFieldType.ARRAY)
+                                .description("링크 리스트"),
+                        fieldWithPath("userProfile.linkList[].linkUrl")
+                                .type(JsonFieldType.STRING)
+                                .description("링크 url"),
+                        new EnumFields(LinkType.class)
+                                .withPath("userProfile.linkList[].linkType")
+                                .description("링크 타입"),
                         fieldWithPath("userProfile.profileImageUrl")
                             .type(JsonFieldType.STRING)
                             .description("프로필 이미지 url"),
