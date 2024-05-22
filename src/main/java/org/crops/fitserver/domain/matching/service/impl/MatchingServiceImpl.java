@@ -105,6 +105,26 @@ public class MatchingServiceImpl implements MatchingService {
 
   @Override
   @Transactional
+  public void cancelReady(Long userId, Long roomId) {
+    var user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(
+        ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
+    var matching = getActiveMatching(user).orElseThrow(() -> new BusinessException(
+        ErrorCode.NOT_EXIST_MATCHING_EXCEPTION));
+    var matchingRoom = matching.getMatchingRoom();
+
+    if (!Objects.equals(matchingRoom.getId(), roomId)) {
+      throw new BusinessException(ErrorCode.NOT_EXIST_MATCHING_ROOM_EXCEPTION);
+    }
+    if (Objects.equals(matchingRoom.getHostUserId(), userId)) {
+      throw new BusinessException(ErrorCode.NOT_ENABLE_READY_EXCEPTION);
+    }
+
+    matchingRoom.cancelReady(matching);
+    matchingRepository.save(matching);
+  }
+
+  @Override
+  @Transactional
   public void complete(Long userId, Long roomId) {
     var user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));

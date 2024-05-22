@@ -131,6 +131,16 @@ public class Matching extends BaseTimeEntity {
     this.status = MatchingStatus.ACCEPTED;
   }
 
+  protected void cancelReady() {
+    if (this.status != MatchingStatus.ACCEPTED) {
+      throw new BusinessException(ErrorCode.NOT_ENABLE_CANCEL_READY_EXCEPTION);
+    }
+    if (isHost()) {
+      throw new BusinessException(ErrorCode.NOT_ENABLE_CANCEL_READY_EXCEPTION);
+    }
+    this.status = MatchingStatus.MATCHED;
+  }
+
   public boolean isReady() {
     return this.status == MatchingStatus.ACCEPTED;
   }
