@@ -697,6 +697,10 @@ class UserControllerTest extends MockMvcDocsWithLogin {
         .backgroundStatus(BackgroundStatus.GRADUATE_STUDENT)
         .education("test university")
         .status(UserInfoStatus.INCOMPLETE)
+            .linkJson(Link.parseToJson(List.of(
+                Link.builder().linkType(LinkType.GITHUB).linkUrl("github.com").build(),
+                Link.builder().linkType(LinkType.LINK).linkUrl("test.com").build()
+            )))
         .build();
 
     userInfo.addSkill(Skill.builder().id(1L).build());
