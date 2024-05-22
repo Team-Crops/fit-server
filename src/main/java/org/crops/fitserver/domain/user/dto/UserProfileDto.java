@@ -5,11 +5,13 @@ import java.util.stream.Collectors;
 import lombok.Builder;
 import org.crops.fitserver.domain.user.constant.BackgroundStatus;
 import org.crops.fitserver.domain.user.constant.UserInfoStatus;
+import org.crops.fitserver.domain.user.domain.Link;
 import org.crops.fitserver.domain.user.domain.User;
 
 @Builder
 public record UserProfileDto(
     long id,
+    List<Link> linkList,
     String profileImageUrl,
     Long positionId,
     String nickname,
@@ -60,6 +62,7 @@ public record UserProfileDto(
     }
     userProfileDtoBuilder.activityHour(user.getUserInfo().getActivityHour());
     userProfileDtoBuilder.portfolioUrl(user.getUserInfo().getPortfolioUrl());
+    userProfileDtoBuilder.linkList(Link.parseToLinkList(user.getUserInfo().getLinkJson()));
     userProfileDtoBuilder.email(user.getEmail());
     userProfileDtoBuilder.phoneNumber(user.getPhoneNumber());
     return userProfileDtoBuilder.build();
