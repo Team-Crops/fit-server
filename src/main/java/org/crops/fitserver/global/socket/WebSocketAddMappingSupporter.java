@@ -53,6 +53,10 @@ public class WebSocketAddMappingSupporter {
       sb.append(endpoint);
       String path = sb.toString();
       socketIOServer.addEventListener(path, dtoClass, (client, data, ackSender) -> {
+        client
+            .getHandshakeData()
+            .getHttpHeaders()
+            .add("Access-Control-Allow-Origin", "*");
         try {
           List<Object> args = new ArrayList<>();
           for (Class<?> params : method.getParameterTypes()) {
