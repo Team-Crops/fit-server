@@ -83,6 +83,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     var chatRoom = getById(chatRoomId);
     var message = Message.newInstance(
         chatRoom,
+        user,
         NOTICE,
         JOIN.getMessage(user.getNickname()));
     messageService.sendNoticeMessage(message);
@@ -94,6 +95,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     var chatRoom = getById(chatRoomId);
     var message = Message.newInstance(
         chatRoom,
+        user,
         NOTICE,
         LEAVE.getMessage(user.getNickname()));
     messageService.sendNoticeMessage(message);
@@ -107,6 +109,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     var chatRoom = getById(chatRoomId);
     var message = Message.newInstance(
         chatRoom,
+        user,
         NOTICE,
         FORCED_OUT.getMessage(user.getNickname()));
     messageService.sendNoticeMessage(message);
