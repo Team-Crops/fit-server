@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS `chat_room_user`
     `chat_room_user_id` bigint   NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `chat_room_id`      bigint   NOT NULL,
     `user_id`           bigint   NOT NULL,
-    `last_checked_message_id`    bigint   NOT NULL,
+    `last_checked_message_id`    bigint     NULL,
     `created_at`        datetime NOT NULL,
     `updated_at`        datetime NOT NULL,
     `is_deleted`        tinyint(1) NOT NULL DEFAULT false,
