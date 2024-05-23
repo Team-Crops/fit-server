@@ -47,12 +47,9 @@ public class ChatRoomConnectListener implements ConnectListener {
   }
 
   private User getUser(SocketIOClient socketIOClient) {
-    String accessToken = headerTokenExtractor
-        .extractAccessToken(
-            socketIOClient
-                .getHandshakeData()
-                .getHttpHeaders()
-                .get(HttpHeaders.AUTHORIZATION));
+    String accessToken = socketIOClient
+        .getHandshakeData()
+        .getSingleUrlParam("auth");
     Long userId = jwtResolver.getUserIdFromAccessToken(accessToken);
     return userService.getById(userId);
   }
