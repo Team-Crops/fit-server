@@ -11,10 +11,8 @@ import org.crops.fitserver.domain.user.domain.User;
 import org.crops.fitserver.domain.user.service.UserService;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
-import org.crops.fitserver.global.http.HeaderTokenExtractor;
 import org.crops.fitserver.global.jwt.JwtResolver;
 import org.crops.fitserver.global.socket.service.SocketService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -22,7 +20,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ChatRoomConnectListener implements ConnectListener {
 
-  private final HeaderTokenExtractor headerTokenExtractor;
   private final JwtResolver jwtResolver;
   private final ChatRoomService chatRoomService;
   private final UserService userService;
