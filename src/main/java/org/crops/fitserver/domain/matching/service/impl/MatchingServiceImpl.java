@@ -207,7 +207,6 @@ public class MatchingServiceImpl implements MatchingService {
   }
 
   private Optional<Matching> getActiveMatching(User user) {
-    return matchingRepository.findActiveMatchingByUserAndStatus(user,
-        MatchingStatus.getActiveStatusList());
+    return matchingRepository.findActiveMatchingByUserAndStatus(user);
   }
 }

@@ -242,7 +242,7 @@ public class MatchingRoom extends BaseTimeEntity {
 
   public void complete() {
 
-    if (matchingList.stream().anyMatch(m -> !m.isReady())) {
+    if (matchingList.stream().filter((matching -> !matching.isHost())).anyMatch(m -> !m.isReady())) {
       throw new BusinessException(ErrorCode.NOT_READY_MATCHING_EXCEPTION);
     }
     isCompleted = true;
