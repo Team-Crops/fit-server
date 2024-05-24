@@ -15,7 +15,7 @@ public class DummyMatchingScheduler {
   private final DummyMatchingProcessor dummyMatchingProcessor;
   private final MatchingService matchingService;
 
-//  @Scheduled(cron = "0/30 * * * * *")
+  @Scheduled(cron = "0/30 * * * * *")
   public void InsertDummyMatching() {
 
     dummyMatchingProcessor.validateSkillSet();
