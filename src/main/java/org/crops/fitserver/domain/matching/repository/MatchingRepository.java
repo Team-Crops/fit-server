@@ -10,18 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface MatchingRepository extends JpaRepository<Matching, Long> {
 
-  @Query("select m from Matching m "
-          + "where m.user = :user "
-          + "and (m.expiredAt is null or m.expiredAt > current_timestamp) "
-          + "and m.isDeleted = false")
-  Optional<Matching> findActiveMatchingByUserAndStatus(User user);
-
-  @Query("select m from Matching m "
-      + "where m.user = :user "
-      + "and m.status in :statusList "
-      + "and (m.expiredAt is null or m.expiredAt > current_timestamp) "
-      + "and m.isDeleted = false")
-  Optional<Matching> findActiveMatchingByUserAndStatus(User user, List<MatchingStatus> statusList);
+  Optional<Matching> findMatchingByUserAndStatusIn(User user, List<MatchingStatus> statusList);
 
   @Query("select m from Matching m "
       + "where m.expiredAt <= current_timestamp "

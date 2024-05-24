@@ -72,7 +72,7 @@ class MatchingServiceTest {
       var user = UserBuildUtil.buildUser().build();
       given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
       given(userBlockRepository.findActiveBlock(user)).willReturn(Optional.empty());
-      given(matchingRepository.findActiveMatchingByUserAndStatus(user,
+      given(matchingRepository.findMatchingByUserAndStatusIn(user,
           MatchingStatus.getActiveStatusList()))
           .willReturn(Optional.of(Matching.create(user)));
 
@@ -92,7 +92,7 @@ class MatchingServiceTest {
       var user = UserBuildUtil.buildUser().build();
       given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
       given(userBlockRepository.findActiveBlock(user)).willReturn(Optional.empty());
-      given(matchingRepository.findActiveMatchingByUserAndStatus(user,
+      given(matchingRepository.findMatchingByUserAndStatusIn(user,
           MatchingStatus.getActiveStatusList()))
           .willReturn(Optional.empty());
       given(matchingRepository.save(Mockito.any(Matching.class))).willReturn(Matching.create(user));
@@ -130,7 +130,7 @@ class MatchingServiceTest {
       //given
       var user = UserBuildUtil.buildUser().build();
       given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
-      given(matchingRepository.findActiveMatchingByUserAndStatus(user,
+      given(matchingRepository.findMatchingByUserAndStatusIn(user,
           MatchingStatus.getActiveStatusList()))
           .willReturn(Optional.empty());
 
@@ -149,7 +149,7 @@ class MatchingServiceTest {
       var user = UserBuildUtil.buildUser().build();
       var matching = Matching.create(user);
       given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
-      given(matchingRepository.findActiveMatchingByUserAndStatus(user,
+      given(matchingRepository.findMatchingByUserAndStatusIn(user,
           MatchingStatus.getActiveStatusList()))
           .willReturn(Optional.of(matching));
 
@@ -197,7 +197,7 @@ class MatchingServiceTest {
       //given
       var user = UserBuildUtil.buildUser().build();
       given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
-      given(matchingRepository.findActiveMatchingByUserAndStatus(user,
+      given(matchingRepository.findMatchingByUserAndStatusIn(user,
           MatchingStatus.getActiveStatusList()))
           .willReturn(Optional.empty());
 
@@ -218,7 +218,7 @@ class MatchingServiceTest {
       var matchingRoom = builderRoom().id(1323L).build();
       matchingRoom.addMatching(matching);
       given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
-      given(matchingRepository.findActiveMatchingByUserAndStatus(user,
+      given(matchingRepository.findMatchingByUserAndStatusIn(user,
           MatchingStatus.getActiveStatusList()))
           .willReturn(Optional.of(matching));
 
@@ -239,7 +239,7 @@ class MatchingServiceTest {
       var matchingRoom = builderRoom().build();
       matchingRoom.addMatching(matching);
       given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
-      given(matchingRepository.findActiveMatchingByUserAndStatus(user,
+      given(matchingRepository.findMatchingByUserAndStatusIn(user,
           MatchingStatus.getActiveStatusList()))
           .willReturn(Optional.of(matching));
       given(matchingRoomRepository.findWithMatchingMembersById(matchingRoom.getId())).willReturn(
