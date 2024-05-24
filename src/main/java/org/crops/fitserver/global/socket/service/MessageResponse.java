@@ -5,6 +5,7 @@ import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.DEDUCTION;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public abstract class MessageResponse implements org.crops.fitserver.global.mq.d
 
   protected Long messageId;
   protected MessageType messageType;
+  protected LocalDateTime createdAt;
 
   public static MessageResponse from(Message message) {
     if (message.getMessageType() == MessageType.TEXT) {
