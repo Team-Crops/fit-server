@@ -7,7 +7,7 @@ import org.crops.fitserver.domain.user.domain.User;
 @Builder
 public record UserSummaryDto(
     Long userId,
-    String username,
+    String nickname,
     Long positionId,
     String introduce,
     String profileImageUrl,
@@ -17,7 +17,7 @@ public record UserSummaryDto(
   public static UserSummaryDto from(User user) {
     var userSummaryDtoBuilder = UserSummaryDto.builder()
         .userId(user.getId())
-        .username(user.getUsername())
+        .nickname(user.getNickname())
         .profileImageUrl(user.getProfileImageUrl());
     if (user.getUserInfo() != null) {
       userSummaryDtoBuilder
