@@ -223,9 +223,9 @@ class MatchingControllerTest extends MockMvcDocsWithLogin {
       given(matchingService.getMatchingRoom(principal.getUserId(), roomId)).willReturn(
           new GetMatchingRoomResponse(
               roomId, 1L, false, null, principal.getUserId(), List.of(
-              new MatchingUserView(principal.getUserId(), 1L, user.getUsername(),
+              new MatchingUserView(principal.getUserId(), 1L, user.getNickname(),
                   user.getProfileImageUrl(), true, true),
-              new MatchingUserView(0L, 1L, user.getUsername(), user.getProfileImageUrl(), true,
+              new MatchingUserView(0L, 1L, user.getNickname(), user.getProfileImageUrl(), true,
                   false)
           )));
       //when
@@ -262,9 +262,9 @@ class MatchingControllerTest extends MockMvcDocsWithLogin {
                               fieldWithPath("matchingUserList[].positionId").type(
                                       JsonFieldType.NUMBER)
                                   .description("포지션 ID"),
-                              fieldWithPath("matchingUserList[].username").type(
+                              fieldWithPath("matchingUserList[].nickname").type(
                                       JsonFieldType.STRING)
-                                  .description("유저 이름"),
+                                  .description("유저 별명"),
                               fieldWithPath("matchingUserList[].profileImageUrl").type(
                                       JsonFieldType.STRING)
                                   .description("프로필 이미지 URL"),
