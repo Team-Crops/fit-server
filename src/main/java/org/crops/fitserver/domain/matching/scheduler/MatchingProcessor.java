@@ -122,6 +122,9 @@ public class MatchingProcessor {
     while (matchingMap.values().stream().mapToInt(List::size).min().orElse(0) > 0) {
       var matchingList = new ArrayList<Matching>();
       matchingMap.forEach((key, value) -> {
+        if(Collections.isEmpty(value)) {
+          return;
+        }
         var bestMatching = findBestMatching(matchingList, value);
         bestMatching.ifPresent((matching -> {
           matchingList.add(matching);
@@ -205,6 +208,9 @@ public class MatchingProcessor {
    */
   private Optional<Matching> findBestMatching(List<Matching> matchingList,
       List<Matching> targetMatchingList) {
+    if(Collections.isEmpty(matchingList)) {
+      return Optional.of(targetMatchingList.get(0));
+    }
     var region = matchingList.get(0).getUser().getUserInfo().getRegion();
 
     //targetMatchingList에서 region이 같은 매칭을 찾아서 반환
