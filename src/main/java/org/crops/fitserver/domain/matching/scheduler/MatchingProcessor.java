@@ -88,6 +88,9 @@ public class MatchingProcessor {
 
     //부족한 매칭을 채워넣음
     matchingMap.forEach((key, value) -> {
+      if(notEnoughRoomMap.get(key).isEmpty()){
+        return;
+      }
       var targetRoomList = notEnoughRoomMap.get(key).stream()
           .filter(matchingRoom -> matchingRoom.isNotEnough(key))
           .toList();
