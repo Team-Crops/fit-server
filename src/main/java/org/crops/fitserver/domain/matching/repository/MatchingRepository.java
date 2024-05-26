@@ -18,6 +18,8 @@ public interface MatchingRepository extends JpaRepository<Matching, Long> {
   List<Matching> findExpireMatching();
 
   @Query("select m from Matching m "
+      + "join fetch m.user u "
+      + "join fetch u.userInfo ui "
       + "where m.status = 'WAITING'"
       + "and m.matchingRoom is null "
       + "and m.isDeleted = false")
