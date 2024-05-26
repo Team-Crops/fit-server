@@ -23,6 +23,7 @@ public class MatchingScheduler {
   public void matching() {
     log.info("매칭 시작");
     matchingProcessor.match();
+    log.info("매칭 종료");
   }
 
 
