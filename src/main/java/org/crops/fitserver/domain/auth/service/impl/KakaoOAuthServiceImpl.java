@@ -57,12 +57,12 @@ public class KakaoOAuthServiceImpl implements OAuthService {
           User newUser = userRepository.save(
               User.from(UserRole.NON_MEMBER));
 
-          return socialUserInfoRepository.save(
-                  SocialUserInfo.newInstance(
-                      newUser,
-                      SocialPlatform.KAKAO,
-                      socialCode))
-              .getUser();
+          socialUserInfoRepository.save(
+              SocialUserInfo.newInstance(
+                  newUser,
+                  SocialPlatform.KAKAO,
+                  socialCode));
+          return newUser;
         });
   }
 

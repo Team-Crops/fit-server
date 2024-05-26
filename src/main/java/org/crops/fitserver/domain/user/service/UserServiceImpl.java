@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.region.domain.Region;
 import org.crops.fitserver.domain.region.repository.RegionRepository;
 import org.crops.fitserver.domain.skillset.domain.Position;
@@ -16,6 +17,7 @@ import org.crops.fitserver.domain.user.domain.UserInfoSkill;
 import org.crops.fitserver.domain.user.domain.UserPolicyAgreement;
 import org.crops.fitserver.domain.user.dto.PolicyAgreementDto;
 import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
+import org.crops.fitserver.domain.user.repository.SocialUserInfoRepository;
 import org.crops.fitserver.domain.user.repository.UserPolicyAgreementRepository;
 import org.crops.fitserver.domain.user.repository.UserRepository;
 import org.crops.fitserver.global.exception.BusinessException;
@@ -24,6 +26,7 @@ import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -33,6 +36,7 @@ public class UserServiceImpl implements UserService {
   private final RegionRepository regionRepository;
   private final SkillRepository skillRepository;
   private final UserPolicyAgreementRepository userPolicyAgreementRepository;
+  private final SocialUserInfoRepository socialUserInfoRepository;
 
   @Override
   public User getById(Long userId) {
@@ -149,5 +153,14 @@ public class UserServiceImpl implements UserService {
     ).toList();
 
     return userPolicyAgreementRepository.saveAll(policyAgreementListForSave);
+  }
+
+  @Override
+  @Transactional
+  public void deleteUser(User user) {
+    user.withdraw();
+    userPolicyAgreementRepository.deleteAllByUserId(user.getId());
+    socialUserInfoRepository.deleteByUserId(user.getId());
+    userRepository.delete(user);
   }
 }

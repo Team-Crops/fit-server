@@ -63,10 +63,12 @@ public class Message extends BaseTimeEntity {
 
   public static Message newInstance(
       ChatRoom chatRoom,
+      User sender,
       MessageType messageType,
       String content) {
     return Message.builder()
         .chatRoom(chatRoom)
+        .user(sender)
         .messageType(messageType)
         .content(content)
         .build();

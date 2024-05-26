@@ -15,7 +15,7 @@ import org.crops.fitserver.global.annotation.SocketMapping;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
 import org.crops.fitserver.global.exception.ErrorResponse;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -23,13 +23,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class WebSocketAddMappingSupporter {
 
-  private final ApplicationContext applicationContext;
+  private final ConfigurableListableBeanFactory beanFactory;
   private final SocketProperty socketProperty;
   private SocketIOServer socketIOServer;
 
   public void addListeners(SocketIOServer socketIOServer) {
     this.socketIOServer = socketIOServer;
-    final List<Class<?>> classes = applicationContext.getBeansWithAnnotation(SocketController.class)
+    final List<Class<?>> classes = beanFactory.getBeansWithAnnotation(SocketController.class)
         .values()
         .stream()
         .map(Object::getClass)
@@ -51,7 +51,12 @@ public class WebSocketAddMappingSupporter {
       StringBuilder sb = new StringBuilder();
       sb.append(eventValue);
       sb.append(endpoint);
-      socketIOServer.addEventListener(sb.toString(), dtoClass, (client, data, ackSender) -> {
+      String path = sb.toString();
+      socketIOServer.addEventListener(path, dtoClass, (client, data, ackSender) -> {
+        client
+            .getHandshakeData()
+            .getHttpHeaders()
+            .add("Access-Control-Allow-Origin", "*");
         try {
           List<Object> args = new ArrayList<>();
           for (Class<?> params : method.getParameterTypes()) {
@@ -63,8 +68,8 @@ public class WebSocketAddMappingSupporter {
               args.add(data);
             }
           }
-          method.invoke(applicationContext.getBeansOfType(controller), args.toArray());
-          } catch (Exception e) {
+          method.invoke(beanFactory.getBean(controller), args.toArray());
+        } catch (Exception e) {
           exceptionHandle(e, client);
         }
       });

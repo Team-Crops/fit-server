@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.matching.dto.MatchingDto;
 import org.crops.fitserver.domain.matching.dto.request.ForceOutRequest;
+import org.crops.fitserver.domain.matching.dto.request.ReadyMatchingRequest;
 import org.crops.fitserver.domain.matching.dto.response.GetMatchingRoomResponse;
 import org.crops.fitserver.domain.matching.service.MatchingService;
 import org.crops.fitserver.global.annotation.CurrentUserId;
@@ -69,9 +70,14 @@ public class MatchingController {
   @PostMapping("/room/{roomId}/ready")
   public ResponseEntity<Void> readyMatching(
       @CurrentUserId Long userId,
-      @PathVariable("roomId") Long roomId
+      @PathVariable("roomId") Long roomId,
+      @RequestBody ReadyMatchingRequest readyMatchingRequest
   ) {
-    matchingService.ready(userId, roomId);
+    if(readyMatchingRequest.isReady()){
+      matchingService.ready(userId, roomId);
+    }else{
+      matchingService.cancelReady(userId, roomId);
+    }
     return ResponseEntity.ok().build();
   }
 

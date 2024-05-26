@@ -5,7 +5,7 @@ import org.crops.fitserver.domain.matching.entity.Matching;
 public record MatchingUserView(
     Long userId,
     Long positionId,
-    String username,
+    String nickname,
     String profileImageUrl,
     Boolean isReady,
     Boolean isHost
@@ -15,7 +15,7 @@ public record MatchingUserView(
     return new MatchingUserView(
         matching.getUser().getId(),
         matching.getPosition().getId(),
-        matching.getUser().getUsername(),
+        matching.getUser().getNickname(),
         matching.getUser().getProfileImageUrl(),
         matching.isReady(),
         matching.isHost()

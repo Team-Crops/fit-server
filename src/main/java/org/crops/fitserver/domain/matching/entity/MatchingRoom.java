@@ -232,9 +232,16 @@ public class MatchingRoom extends BaseTimeEntity {
     matching.ready();
   }
 
+  public void cancelReady(Matching matching) {
+    if (matchingList.stream().noneMatch(m -> m.getId().equals(matching.getId()))) {
+      throw new BusinessException(ErrorCode.NOT_EXIST_MATCHING_EXCEPTION);
+    }
+    matching.cancelReady();
+  }
+
   public void complete() {
 
-    if (matchingList.stream().anyMatch(m -> !m.isReady())) {
+    if (matchingList.stream().filter((matching -> !matching.isHost())).anyMatch(m -> !m.isReady())) {
       throw new BusinessException(ErrorCode.NOT_READY_MATCHING_EXCEPTION);
     }
     isCompleted = true;

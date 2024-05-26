@@ -29,9 +29,3 @@ insert into `social_user_info`
 (user_id, social_type, social_code)
 values (3, 'GOOGLE',  CONCAT('GOOGLE_', FLOOR(RAND()*1000000000)))
 ;
-
--- Chat Room Data
-insert into `chat_room`
-(created_at, updated_at, is_deleted)
-values (now(), now(), false)
-;

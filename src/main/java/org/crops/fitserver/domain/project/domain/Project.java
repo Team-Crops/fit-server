@@ -31,7 +31,7 @@ public class Project extends BaseTimeEntity {
   private Long id;
   @Column(name = "chat_room_id", nullable = false)
   private Long chatRoomId;
-  @OneToMany(mappedBy = "project")
+  @OneToMany(mappedBy = "project", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
   private final List<ProjectMember> projectMemberList = new ArrayList<>();
 
   public static Project create(Long chatRoomId) {

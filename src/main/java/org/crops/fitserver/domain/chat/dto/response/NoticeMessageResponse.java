@@ -1,6 +1,7 @@
 package org.crops.fitserver.domain.chat.dto.response;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +19,12 @@ public class NoticeMessageResponse extends MessageResponse {
   private NoticeMessageResponse(
       String notice,
       Long messageId,
-      MessageType messageType) {
+      MessageType messageType,
+      LocalDateTime createdAt) {
     this.notice = notice;
     this.messageId = messageId;
     this.messageType = messageType;
+    this.createdAt = createdAt;
   }
 
   public static NoticeMessageResponse from(Message message) {
@@ -29,6 +32,7 @@ public class NoticeMessageResponse extends MessageResponse {
         .notice(message.getContent())
         .messageId(message.getId())
         .messageType(MessageType.NOTICE)
+        .createdAt(message.getCreatedAt())
         .build();
   }
 }

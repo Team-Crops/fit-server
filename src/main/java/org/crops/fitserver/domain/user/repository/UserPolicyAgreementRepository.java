@@ -11,4 +11,6 @@ public interface UserPolicyAgreementRepository extends JpaRepository<UserPolicyA
   boolean existsById(Long id);
 
   List<UserPolicyAgreement> findAllByUserId(long userId);
+
+  void deleteAllByUserId(long userId);
 }

@@ -17,6 +17,8 @@ public interface MatchingService {
 
   void ready(Long userId, Long roomId);
 
+  void cancelReady(Long userId, Long roomId);
+
   void complete(Long userId, Long roomId);
 
   void exit(Long userId, Long roomId);

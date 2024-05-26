@@ -3,6 +3,7 @@ package org.crops.fitserver.domain.chat.controller;
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.epages.restdocs.apispec.Schema.schema;
+import static java.time.LocalDateTime.*;
 import static org.crops.fitserver.domain.chat.domain.MessageType.TEXT;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -16,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.crops.fitserver.config.MockMvcDocsWithLogin;
@@ -56,9 +58,9 @@ class ChatControllerTest extends MockMvcDocsWithLogin {
       @Test
       void getMessage() throws Exception {
         List<MessageResponse> messageResponse = new ArrayList<>(List.of(
-            TextMessageResponse.builder().messageId(1L).messageType(TEXT).userId(1L).content("content").build(),
-            TextMessageResponse.builder().messageId(2L).messageType(TEXT).userId(1L).content("content").build(),
-            TextMessageResponse.builder().messageId(3L).messageType(TEXT).userId(1L).content("content").build()));
+            TextMessageResponse.builder().messageId(1L).messageType(TEXT).userId(1L).content("content").createdAt(now()).build(),
+            TextMessageResponse.builder().messageId(2L).messageType(TEXT).userId(1L).content("content").createdAt(now()).build(),
+            TextMessageResponse.builder().messageId(3L).messageType(TEXT).userId(1L).content("content").createdAt(now()).build()));
         PageResult<MessageResponse> pageResult = PageResult.of(messageResponse,
             true);
         given(
@@ -103,6 +105,9 @@ class ChatControllerTest extends MockMvcDocsWithLogin {
                             fieldWithPath("pageResult.values[].content")
                                 .type(STRING)
                                 .description("TEXT일 경우에만 존재"),
+                            fieldWithPath("pageResult.values[].createdAt")
+                                .type(STRING)
+                                .description("메세지 생성 시간"),
                             fieldWithPath("pageResult.hasNext")
                                 .type(BOOLEAN)
                                 .description("true: 다음 페이지 있음, false: 다음 페이지 없음"))

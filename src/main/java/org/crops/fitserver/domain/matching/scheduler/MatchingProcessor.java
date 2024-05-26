@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.crops.fitserver.domain.chat.domain.ChatRoom;
 import org.crops.fitserver.domain.chat.service.ChatRoomService;
 import org.crops.fitserver.domain.matching.VO.ComparableMatchingParameter;
 import org.crops.fitserver.domain.matching.entity.Matching;
@@ -23,6 +24,7 @@ import org.crops.fitserver.domain.matching.entity.MatchingRoom;
 import org.crops.fitserver.domain.matching.repository.MatchingRepository;
 import org.crops.fitserver.domain.matching.repository.MatchingRoomRepository;
 import org.crops.fitserver.domain.skillset.constant.PositionType;
+import org.crops.fitserver.domain.user.domain.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -93,6 +95,7 @@ public class MatchingProcessor {
         var bestRoom = findBestRoom(matching, targetRoomList);
         bestRoom.ifPresent(matchingRoom -> {
           matchingRoom.addMatching(matching);
+          chatRoomService.chatRoomJoin(matchingRoom.getChatRoomId(), matching.getUser());
           updateRoomList.add(matchingRoom);
         });
       });
@@ -128,6 +131,11 @@ public class MatchingProcessor {
       if (matchingList.size() < MINIMUM_REQUIRED_POSITIONS.size()) {
         continue;
       }
+      ChatRoom chatRoom = chatRoomService.createChatRoom();
+      matchingList.forEach(matching -> {
+        User user = matching.getUser();
+        chatRoomService.chatRoomJoin(chatRoom.getId(), user);
+      });
       var newRoom = MatchingRoom.create(matchingList, chatRoomService.createChatRoom().getId());
       matchingRoomRepository.save(newRoom);
     }
@@ -160,6 +168,7 @@ public class MatchingProcessor {
           .ifPresent(matchingRoom -> {
             matchingRoom.addMatching(matching);
             matchingRoomRepository.save(matchingRoom);
+            chatRoomService.chatRoomJoin(matchingRoom.getChatRoomId(), matching.getUser());
             removeList.add(matching);
           });
     });

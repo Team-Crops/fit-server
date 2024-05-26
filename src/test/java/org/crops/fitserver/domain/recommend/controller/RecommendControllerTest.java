@@ -49,6 +49,7 @@ class RecommendControllerTest extends MockMvcDocsWithLogin {
     private static final String URL = "/v1/recommend/user";
     User user1 = User.builder()
         .id(1L)
+        .nickname("nickname1")
         .username("username1")
         .profileImageUrl("profileImageUrl1")
         .userInfo(UserInfo.builder()
@@ -58,6 +59,7 @@ class RecommendControllerTest extends MockMvcDocsWithLogin {
         .build();
     User user2 = User.builder()
         .id(2L)
+        .nickname("nickname2")
         .username("username2")
         .profileImageUrl("profileImageUrl2")
         .userInfo(UserInfo.builder()
@@ -145,9 +147,9 @@ class RecommendControllerTest extends MockMvcDocsWithLogin {
                             fieldWithPath("recommendUserList[].userSummary.userId")
                                 .type(JsonFieldType.NUMBER)
                                 .description("User Id"),
-                            fieldWithPath("recommendUserList[].userSummary.username")
+                            fieldWithPath("recommendUserList[].userSummary.nickname")
                                 .type(JsonFieldType.STRING)
-                                .description("User Name"),
+                                .description("User 별명"),
                             fieldWithPath("recommendUserList[].userSummary.positionId")
                                 .type(JsonFieldType.NUMBER)
                                 .description("Position Id"),

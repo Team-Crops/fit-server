@@ -38,6 +38,9 @@ public class SocketService {
   public void sendNotice(
       Long roomId,
       MessageResponse message) {
+    if(!roomOperationsMap.containsKey(roomId)){
+      return;
+    }
     roomOperationsMap
         .get(roomId)
         .getClients()

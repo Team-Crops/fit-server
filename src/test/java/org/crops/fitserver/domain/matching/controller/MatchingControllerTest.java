@@ -25,6 +25,7 @@ import org.crops.fitserver.domain.matching.constant.MatchingStatus;
 import org.crops.fitserver.domain.matching.dto.MatchingDto;
 import org.crops.fitserver.domain.matching.dto.MatchingUserView;
 import org.crops.fitserver.domain.matching.dto.request.ForceOutRequest;
+import org.crops.fitserver.domain.matching.dto.request.ReadyMatchingRequest;
 import org.crops.fitserver.domain.matching.dto.response.GetMatchingRoomResponse;
 import org.crops.fitserver.domain.matching.service.MatchingService;
 import org.crops.fitserver.global.exception.BusinessException;
@@ -222,9 +223,9 @@ class MatchingControllerTest extends MockMvcDocsWithLogin {
       given(matchingService.getMatchingRoom(principal.getUserId(), roomId)).willReturn(
           new GetMatchingRoomResponse(
               roomId, 1L, false, null, principal.getUserId(), List.of(
-              new MatchingUserView(principal.getUserId(), 1L, user.getUsername(),
+              new MatchingUserView(principal.getUserId(), 1L, user.getNickname(),
                   user.getProfileImageUrl(), true, true),
-              new MatchingUserView(0L, 1L, user.getUsername(), user.getProfileImageUrl(), true,
+              new MatchingUserView(0L, 1L, user.getNickname(), user.getProfileImageUrl(), true,
                   false)
           )));
       //when
@@ -261,9 +262,9 @@ class MatchingControllerTest extends MockMvcDocsWithLogin {
                               fieldWithPath("matchingUserList[].positionId").type(
                                       JsonFieldType.NUMBER)
                                   .description("포지션 ID"),
-                              fieldWithPath("matchingUserList[].username").type(
+                              fieldWithPath("matchingUserList[].nickname").type(
                                       JsonFieldType.STRING)
-                                  .description("유저 이름"),
+                                  .description("유저 별명"),
                               fieldWithPath("matchingUserList[].profileImageUrl").type(
                                       JsonFieldType.STRING)
                                   .description("프로필 이미지 URL"),
@@ -448,9 +449,11 @@ class MatchingControllerTest extends MockMvcDocsWithLogin {
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());
       var roomId = 1L;
       var url = "/v1/matching/room/{roomId}/ready";
+      var readyMatchingRequest = new ReadyMatchingRequest(true);
       //when
       var result = mockMvc.perform(post(url, roomId)
           .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(readyMatchingRequest))
           .with(user(principal))
           .with(csrf())
       );
@@ -477,9 +480,12 @@ class MatchingControllerTest extends MockMvcDocsWithLogin {
       var url = "/v1/matching/room/{roomId}/ready";
       willThrow(new BusinessException(ErrorCode.FORBIDDEN_EXCEPTION)).willDoNothing().given(
           matchingService).ready(principal.getUserId(), roomId);
+      var readyMatchingRequest = new ReadyMatchingRequest(true);
+
       //when
       var result = mockMvc.perform(post(url, roomId)
           .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(readyMatchingRequest))
           .with(user(principal))
           .with(csrf())
       );
@@ -591,6 +597,38 @@ class MatchingControllerTest extends MockMvcDocsWithLogin {
                       .build()
               )
           ));
+
+    }
+  }
+  @Nested
+  @DisplayName("매칭 대기방 취소 테스트")
+  class MatchingRoomCancelTest {
+
+    @Test
+    @DisplayName("매칭 대기방 취소 성공")
+    void cancel_matching_room() throws Exception {
+      //given
+      var user = UserBuildUtil.buildUser().build();
+      var principal = getPrincipalDetails(user.getId(), user.getUserRole());
+      var url = "/v1/matching/room/{roomId}/cancel";
+      var roomId = 1L;
+      //when
+      var result = mockMvc.perform(post(url, roomId)
+              .contentType(MediaType.APPLICATION_JSON)
+              .with(user(principal))
+              .with(csrf())
+      );
+      //then
+      result.andExpect(status().isOk())
+              .andDo(document("matching/cancelMatching",
+                      resource(
+                              ResourceSnippetParameters.builder()
+                                      .tag("matching")
+                                      .description("매칭방 대기방 나가기")
+                                      .summary("매칭 대기방 나가기")
+                                      .build()
+                      )
+              ));
 
     }
   }

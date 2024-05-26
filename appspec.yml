@@ -21,7 +21,7 @@ hooks:
       timeout: 100
       runas: ubuntu
     - location: ./deploy/scripts/healthCheck.sh
-      timeout: 100
+      timeout: 600
       runas: ubuntu
     - location: ./deploy/scripts/switchPort.sh
       timeout: 100

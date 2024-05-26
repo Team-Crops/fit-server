@@ -114,10 +114,11 @@ public class DummyMatchingProcessor {
 
   private String getDefaultImage(Position position) {
     return switch (position.getType()) {
-      case FRONTEND -> "b45a8562-389b-41bc-b78b-867309a0155bweb.png";
-      case BACKEND -> "b45a8562-389b-41bc-b78b-867309a0155bweb.png";
-      case DESIGNER -> "fa76741f-cd18-4fdd-a917-b0329c280823server.png";
-      case PLANNER -> "63841c68-0858-439a-88eb-f801a0fe9677planner.png";
+      case FRONTEND -> "file/profile/default/b45a8562-389b-41bc-b78b-867309a0155bweb.png";
+      case BACKEND -> "file/profile/default/b45a8562-389b-41bc-b78b-867309a0155bweb.png";
+      case DESIGNER -> "file/profile/default/fa76741f-cd18-4fdd-a917-b0329c280823server.png";
+      case PLANNER -> "file/profile/default/63841c68-0858-439a-88eb-f801a0fe9677planner.png";
+      default -> "file/profile/default/63841c68-0858-439a-88eb-f801a0fe9677planner.png";
     };
   }
 }

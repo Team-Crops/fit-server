@@ -15,13 +15,18 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.crops.fitserver.global.entity.BaseTimeEntity;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class SocialUserInfo {
+@Where(clause = "is_deleted = false")
+@SQLDelete(sql = "UPDATE social_user_info SET is_deleted = true WHERE social_user_info_id = ?")
+public class SocialUserInfo extends BaseTimeEntity {
 
   @Id
   @Column(name = "social_user_info_id")
