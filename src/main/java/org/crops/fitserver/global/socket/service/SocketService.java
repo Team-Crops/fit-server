@@ -29,10 +29,7 @@ public class SocketService {
         .getRoomOperations(roomId)
         .getClients()
         .forEach(client ->
-            sendMessageToOtherClient(
-                senderClient,
-                client,
-                message));
+                client.sendEvent(socketProperty.getGetMessageEvent(), message));
   }
 
   public void sendNotice(
