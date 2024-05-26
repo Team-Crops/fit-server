@@ -60,14 +60,13 @@ public record ComparableMatchingParameter(
 
   public static Boolean isSimilar(ComparableMatchingParameter a, ComparableMatchingParameter b) {
     return Math.abs(a.avgActivityHour() - b.avgActivityHour()) <= 2
-        && Math.abs(a.avgProjectCount() - b.avgProjectCount()) <= 2
-        && Math.abs(a.avgSkillCount() - b.avgSkillCount()) <= 2;
+        && Math.abs(a.avgProjectCount() - b.avgProjectCount()) <= 2;
   }
 
   public static Double calculateSimilarity(ComparableMatchingParameter a,
       ComparableMatchingParameter b) {
     return Math.abs(a.avgActivityHour() - b.avgActivityHour()) * 10
-        + Math.abs(a.avgProjectCount() - b.avgProjectCount()) * 5
+        + Math.abs(a.avgProjectCount() - b.avgProjectCount()) * 100
         + Math.abs(a.avgSkillCount() - b.avgSkillCount());
   }
 
