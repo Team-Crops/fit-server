@@ -117,6 +117,9 @@ public class User extends BaseTimeEntity {
   }
 
   public User withUsername(String username) {
+    if (StringUtils.isNotBlank(this.username) && StringUtils.isBlank(username)) {
+      throw new IllegalArgumentException("nickname cannot be null");
+    }
     this.username = username;
     return this;
   }
@@ -130,9 +133,6 @@ public class User extends BaseTimeEntity {
   }
 
   public User withPhoneNumber(String phoneNumber) {
-    if (StringUtils.isNotBlank(this.phoneNumber) && StringUtils.isBlank(phoneNumber)) {
-      throw new IllegalArgumentException("phoneNumber cannot be null");
-    }
     this.phoneNumber = phoneNumber;
     return this;
   }
@@ -157,15 +157,15 @@ public class User extends BaseTimeEntity {
   private boolean isEssentialFieldsFilled() {
     return this.userInfo.getProjectCount() != null
         && this.userInfo.getActivityHour() != null
-        && this.userInfo.getIntroduce() != null
-        && this.userInfo.getLinkJson() != null
+        && StringUtils.isNotBlank(this.userInfo.getLinkJson())
         && !CollectionUtils.isEmpty(this.userInfo.getUserInfoSkills())
         && this.userInfo.getPosition() != null
         && this.userInfo.getRegion() != null
         && this.userInfo.getBackgroundStatus() != null
-        && this.email != null
-        && this.nickname != null
-        && this.phoneNumber != null
+        && StringUtils.isNotBlank(this.email)
+        && StringUtils.isNotBlank(this.nickname)
+        && StringUtils.isNotBlank(this.username)
+        && StringUtils.isNotBlank(this.phoneNumber)
         ;
   }
 
