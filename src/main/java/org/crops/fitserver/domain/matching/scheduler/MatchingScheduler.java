@@ -19,6 +19,7 @@ public class MatchingScheduler {
    */
   @Scheduled(cron = "*/20 * * * * *")
   public void matching() {
+    log.info("매칭 시작");
     matchingProcessor.match();
   }
 
