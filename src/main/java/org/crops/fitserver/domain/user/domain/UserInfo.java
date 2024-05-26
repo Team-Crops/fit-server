@@ -14,8 +14,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -38,7 +36,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.openapitools.jackson.nullable.JsonNullable;
-import org.springframework.util.CollectionUtils;
 
 @Entity(name = "user_info")
 @Getter
@@ -137,17 +134,11 @@ public class UserInfo extends BaseTimeEntity {
   }
 
   public UserInfo withIntroduce(String introduce) {
-    if (StringUtils.isNotBlank(this.introduce) && StringUtils.isBlank(introduce)) {
-      throw new IllegalArgumentException("introduce cannot be null");
-    }
     this.introduce = introduce;
     return this;
   }
 
   public UserInfo withLinkJson(String linkJson) {
-    if (StringUtils.isNotBlank(this.linkJson) && StringUtils.isBlank(linkJson)) {
-      throw new IllegalArgumentException("linkJson cannot be null");
-    }
     this.linkJson = linkJson;
     return this;
   }
@@ -157,7 +148,7 @@ public class UserInfo extends BaseTimeEntity {
     if (!backgroundStatus.isPresent() && !backgroundText.isPresent()) {
       return this;
     }
-    if(this.backgroundStatus == null && !backgroundStatus.isPresent()) {
+    if (this.backgroundStatus == null && !backgroundStatus.isPresent()) {
       return this;//둘 다 널이면 무시
     }
 
@@ -239,7 +230,7 @@ public class UserInfo extends BaseTimeEntity {
   }
 
   protected void setUser(User user) {
-    if(this.user != null && this.user.getUserInfo() != this)  {
+    if (this.user != null && this.user.getUserInfo() != this) {
       throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
     }
     this.user = user;
