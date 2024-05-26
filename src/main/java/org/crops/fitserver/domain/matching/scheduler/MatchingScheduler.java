@@ -3,6 +3,7 @@ package org.crops.fitserver.domain.matching.scheduler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.matching.service.MatchingService;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,7 @@ public class MatchingScheduler {
    * TODO: 크론탭 환경변수에 따라 관리 필요
    */
   @Scheduled(cron = "*/20 * * * * *")
+  @Async
   public void matching() {
     log.info("매칭 시작");
     matchingProcessor.match();
@@ -25,6 +27,7 @@ public class MatchingScheduler {
 
 
   @Scheduled(cron = "*/30 * * * * *")
+  @Async
   public void expireMatching() {
     var expriredMatchingList = matchingService.expireMatchingAll();
 

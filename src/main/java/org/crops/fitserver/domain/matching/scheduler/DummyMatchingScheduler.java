@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.matching.service.MatchingService;
 import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,7 @@ public class DummyMatchingScheduler {
   private final MatchingService matchingService;
 
   @Scheduled(cron = "0/30 * * * * *")
+  @Async
   public void InsertDummyMatching() {
 
     dummyMatchingProcessor.validateSkillSet();
