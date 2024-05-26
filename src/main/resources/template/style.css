@@ -1,0 +1,143 @@
+html,
+body {
+    font-family: 'Arial', sans-serif;
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    max-width: 630px;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.main {
+    flex: 1;
+    padding: 20px;
+}
+
+.logo {
+    margin-top: 50px;
+}
+
+.logo img {
+    width: 160px;
+    height: 51.526px;
+}
+
+.content {
+    margin-top: 30px;
+}
+
+.content h1 {
+    font-size: 30px;
+    color: #000;
+    margin: 50px 0px;
+}
+
+.content p {
+    font-size: 15px;
+    color: #000;
+    line-height: 1.5;
+}
+
+.button-container {
+    margin-top: 60px;
+}
+
+.button {
+    background-color: #FF8A80;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+footer {
+    padding: 30px 20px;
+    background-color: #f5f5f5;
+    border: 0.5px solid #BDBDBD;
+    background-color: #F5F5F5;
+}
+
+.footer-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+}
+
+.footer-logo img {
+    width: 80px;
+}
+
+.footer-links {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #666;
+}
+
+.footer-links a {
+    color: #666;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.footer-links span {
+    margin: 0 10px;
+}
+
+.footer-contact {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    color: #616161;
+    font-family: "Spoqa Han Sans Neo";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 300;
+}
+
+.contact-info {
+    flex: 1;
+}
+
+.contact-info p {
+    line-height: 0.5;
+}
+
+.footer-instagram img {
+    width: 37px;
+    height: 37px;
+    margin-left: 20px;
+    margin-top: 30px;
+}
+
+.footer-contact a {
+    color: #666;
+    text-decoration: none;
+}
+
+.footer-bottom {
+    text-align: left;
+    color: #616161;
+    font-family: "Spoqa Han Sans Neo";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 300;
+}
