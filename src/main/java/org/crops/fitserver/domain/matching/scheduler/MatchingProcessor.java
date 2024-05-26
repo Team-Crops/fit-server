@@ -2,11 +2,14 @@ package org.crops.fitserver.domain.matching.scheduler;
 
 
 import static java.util.stream.Collectors.groupingBy;
+import static org.crops.fitserver.domain.matching.VO.ComparableMatchingParameter.calculateSimilarity;
+import static org.crops.fitserver.domain.matching.VO.ComparableMatchingParameter.isSimilar;
 import static org.crops.fitserver.domain.matching.constant.MatchingConstants.MINIMUM_REQUIRED_POSITIONS;
 
 import io.jsonwebtoken.lang.Collections;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.chat.domain.ChatRoom;
 import org.crops.fitserver.domain.chat.service.ChatRoomService;
+import org.crops.fitserver.domain.matching.VO.ComparableMatchingParameter;
 import org.crops.fitserver.domain.matching.entity.Matching;
 import org.crops.fitserver.domain.matching.entity.MatchingRoom;
 import org.crops.fitserver.domain.matching.repository.MatchingRepository;
@@ -66,17 +70,36 @@ public class MatchingProcessor {
     var notEnoughRoomList = matchingRoomList.stream()
         .filter(MatchingRoom::isNotEnough).toList();
 
+    //포지션별로 매칭이 부족한 룸을 나눔
+    var notEnoughRoomMap = new HashMap<PositionType, List<MatchingRoom>>();
+    notEnoughRoomList.forEach(matchingRoom -> {
+      var PositionTypeSet = matchingMap.keySet();
+      PositionTypeSet.forEach(positionType -> {
+        if (matchingRoom.isEnough(positionType)) {
+          return;
+        }
+        notEnoughRoomMap.computeIfAbsent(positionType, key -> new ArrayList<>())
+            .add(matchingRoom);
+      });
+    });
+
     var updateRoomList = new HashSet<MatchingRoom>();
 
-    notEnoughRoomList
-        .forEach(matchingRoom -> matchingMap.forEach((key, value) -> {
-          if (matchingRoom.isNotEnough(key) && !value.isEmpty()) {
-            Matching matching = value.remove(0);
-            matchingRoom.addMatching(matching);
-            chatRoomService.chatRoomJoin(matchingRoom.getChatRoomId(), matching.getUser());
-            updateRoomList.add(matchingRoom);
-          }
-        }));
+    //부족한 매칭을 채워넣음
+    matchingMap.forEach((key, value) -> {
+      var targetRoomList = notEnoughRoomMap.get(key).stream()
+          .filter(matchingRoom -> matchingRoom.isNotEnough(key))
+          .toList();
+
+      value.forEach(matching -> {
+        var bestRoom = findBestRoom(matching, targetRoomList);
+        bestRoom.ifPresent(matchingRoom -> {
+          matchingRoom.addMatching(matching);
+          chatRoomService.chatRoomJoin(matchingRoom.getChatRoomId(), matching.getUser());
+          updateRoomList.add(matchingRoom);
+        });
+      });
+    });
 
     //100개씩 업데이트. 중간에 하나 에러나도 다른 것들은 업데이트 되도록
     for (int i = 0; i < updateRoomList.size(); i += BATCH_SIZE) {
@@ -96,20 +119,24 @@ public class MatchingProcessor {
     if (matchingMap.size() < MINIMUM_REQUIRED_POSITIONS.size()) {
       return;
     }
-
-    var size = matchingMap.values().stream().mapToInt(List::size).min().orElse(0);
-
-    for (int i = 0; i < size; i++) {
+    while (matchingMap.values().stream().mapToInt(List::size).min().orElse(0) > 0) {
       var matchingList = new ArrayList<Matching>();
       matchingMap.forEach((key, value) -> {
-        matchingList.add(value.remove(0));
+        var bestMatching = findBestMatching(matchingList, value);
+        bestMatching.ifPresent((matching -> {
+          matchingList.add(matching);
+          value.remove(matching);
+        }));
       });
+      if (matchingList.size() < MINIMUM_REQUIRED_POSITIONS.size()) {
+        continue;
+      }
       ChatRoom chatRoom = chatRoomService.createChatRoom();
       matchingList.forEach(matching -> {
         User user = matching.getUser();
         chatRoomService.chatRoomJoin(chatRoom.getId(), user);
       });
-      var newRoom = MatchingRoom.create(matchingList, chatRoom.getId());
+      var newRoom = MatchingRoom.create(matchingList, chatRoomService.createChatRoom().getId());
       matchingRoomRepository.save(newRoom);
     }
   }
@@ -137,9 +164,7 @@ public class MatchingProcessor {
     var removeList = new ArrayList<Matching>();
 
     matchingList.forEach(matching -> {
-      var enableRoomList = filterEnableRoomList(matching, roomList, positionType);
-
-      this.findBestRoom(enableRoomList)
+      this.findBestRoom(matching, roomList)
           .ifPresent(matchingRoom -> {
             matchingRoom.addMatching(matching);
             matchingRoomRepository.save(matchingRoom);
@@ -152,20 +177,49 @@ public class MatchingProcessor {
   }
 
   /**
-   * 필수 필터 조건에 맞는 방만 필터링
+   * TODO: 최적의 매칭 방을 찾아서 반환
    */
-  private List<MatchingRoom> filterEnableRoomList(Matching matching, List<MatchingRoom> roomList,
-      PositionType positionType) {
-    return roomList.stream()
-        .filter(matchingRoom -> matchingRoom.canJoinRoom(matching, positionType))
-        .toList();
+  private Optional<MatchingRoom> findBestRoom(Matching matching, List<MatchingRoom> roomList) {
+    var comparableParameterFromMatching = ComparableMatchingParameter.from(matching);
+
+    //roomList에서 matching이 들어갈 수 있는 방을 찾아서 반환
+    //matching이 들어갈 수 있는 방은 MatchingRoom.canJoinRoom()을 사용
+    //roomList에서 avgActivityHour, avgProjectCount와 가장 가까운 매칭을 찾아서 반환
+    //유사도 알고리즘 적용. ActivityHour의 가중치는 10, ProjectCount의 가중치는 5
+    var insertableRoomList = roomList.stream()
+        .filter(matchingRoom -> matchingRoom.canJoinRoom(matching))
+        .filter(matchingRoom -> isSimilar(comparableParameterFromMatching,
+            ComparableMatchingParameter.from(matchingRoom.getMatchingList())))
+        .findFirst();
+
+    return insertableRoomList.stream()
+        .min(Comparator.comparingDouble((matchingRoom) -> calculateSimilarity(
+            comparableParameterFromMatching,
+            ComparableMatchingParameter.from(matchingRoom.getMatchingList())))
+        );
   }
 
   /**
-   * TODO: 최적의 매칭 방을 찾아서 반환
+   * matchingList: 매칭방을 만들기 전 매칭 리스트(임시 매칭방)
+   * targetMatchingList: 매칭리스트
    */
-  private Optional<MatchingRoom> findBestRoom(List<MatchingRoom> roomList) {
-    return roomList.stream()
-        .findFirst();
+  private Optional<Matching> findBestMatching(List<Matching> matchingList,
+      List<Matching> targetMatchingList) {
+    var region = matchingList.get(0).getUser().getUserInfo().getRegion();
+
+    //targetMatchingList에서 region이 같은 매칭을 찾아서 반환
+    //targetMatchingList에서 avgActivityHour, avgProjectCount와 가장 가까운 매칭을 찾아서 반환
+    //유사도 알고리즘 적용. ActivityHour의 가중치는 10, ProjectCount의 가중치는 5
+    var insertableMatchingList = targetMatchingList.stream()
+        .filter((matching) -> matching.getUser().getUserInfo().getRegion().equals(region))
+        .filter(matching -> isSimilar(ComparableMatchingParameter.from(matching),
+            ComparableMatchingParameter.from(matchingList)))
+        .toList();
+
+    return insertableMatchingList.stream()
+        .min(Comparator.comparingDouble((matching) -> calculateSimilarity(
+            ComparableMatchingParameter.from(matching),
+            ComparableMatchingParameter.from(matchingList)))
+        );
   }
 }

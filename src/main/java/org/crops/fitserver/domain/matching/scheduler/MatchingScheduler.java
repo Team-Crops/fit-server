@@ -17,12 +17,13 @@ public class MatchingScheduler {
   /**
    * TODO: 크론탭 환경변수에 따라 관리 필요
    */
-  @Scheduled(cron = "1/20 * * * * *")
+  @Scheduled(cron = "*/20 * * * * *")
   public void matching() {
     matchingProcessor.match();
   }
 
-  @Scheduled(cron = "0/30 * * * * *")
+
+  @Scheduled(cron = "*/30 * * * * *")
   public void expireMatching() {
     var expriredMatchingList = matchingService.expireMatchingAll();
 

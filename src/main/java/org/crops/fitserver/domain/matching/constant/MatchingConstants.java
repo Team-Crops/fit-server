@@ -6,6 +6,12 @@ import org.crops.fitserver.domain.skillset.constant.PositionType;
 public class MatchingConstants {
 
   public static final int MATCHING_EXPIRE_DAYS = 3;
+  public static final int MAX_DIFF_FOR_ACTIVITY_HOUR = 2;
+  public static final int MAX_DIFF_FOR_PROJECT_COUNT = 2;
+  public static final double MAX_DIFF_RATE_FOR_ACTIVITY_HOUR = 0.5;
+
+  public static final double MAX_DIFF_RATE_FOR_PROJECT_COUNT = 0.5;
+
 
   public static final Map<PositionType, Integer> MINIMUM_REQUIRED_POSITIONS = Map.of(
       PositionType.PLANNER, 1,

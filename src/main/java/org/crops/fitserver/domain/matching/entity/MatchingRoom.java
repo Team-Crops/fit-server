@@ -141,7 +141,8 @@ public class MatchingRoom extends BaseTimeEntity {
         .count() >= MINIMUM_REQUIRED_POSITIONS.get(positionType);
   }
 
-  public boolean canJoinRoom(Matching matching, PositionType positionType) {
+  public boolean canJoinRoom(Matching matching) {
+    var positionType = matching.getPosition().getType();
     if (!canInsertPosition(positionType)) {
       return false;
     }
@@ -153,7 +154,7 @@ public class MatchingRoom extends BaseTimeEntity {
     }
 
     var requiredSkillIds = getRequiredSkillIds(positionType);
-    if(requiredSkillIds.isEmpty()){
+    if (requiredSkillIds.isEmpty()) {
       return true;
     }
     var userSkillIds = matching.getUser().getUserInfo().getUserInfoSkills().stream()
@@ -166,8 +167,7 @@ public class MatchingRoom extends BaseTimeEntity {
   }
 
   /**
-   * 현재 포지션이 다른 포지션의 최대 인원수보다 2배이상 많으면 안된다.
-   * MAXIMUM_POSITIONS에 제한된 인원수를 넘으면 안된다.
+   * 현재 포지션이 다른 포지션의 최대 인원수보다 2배이상 많으면 안된다. MAXIMUM_POSITIONS에 제한된 인원수를 넘으면 안된다.
    */
   public boolean canInsertPosition(PositionType positionType) {
 
@@ -189,7 +189,7 @@ public class MatchingRoom extends BaseTimeEntity {
   }
 
   /**
-   백엔드와 프론트엔드는 포지션 id까지 일치해야 한다.
+   * 백엔드와 프론트엔드는 포지션 id까지 일치해야 한다.
    */
   public Optional<Long> getRequiredPositionId(PositionType positionType) {
     if (PositionType.PLANNER.equals(positionType) || PositionType.DESIGNER.equals(positionType)) {
@@ -202,8 +202,7 @@ public class MatchingRoom extends BaseTimeEntity {
   }
 
   /**
-   플래너와 디자이너는 필요한 스킬이 없다.
-   백엔드와 프론트엔드는 기존에 있는 사람과 skill이 일치하는 것이 존재해야 한다.
+   * 플래너와 디자이너는 필요한 스킬이 없다. 백엔드와 프론트엔드는 기존에 있는 사람과 skill이 일치하는 것이 존재해야 한다.
    */
   public List<Long> getRequiredSkillIds(PositionType positionType) {
     if (PositionType.PLANNER.equals(positionType) || PositionType.DESIGNER.equals(positionType)) {
