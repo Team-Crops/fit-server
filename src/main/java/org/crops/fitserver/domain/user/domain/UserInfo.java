@@ -137,17 +137,11 @@ public class UserInfo extends BaseTimeEntity {
   }
 
   public UserInfo withIntroduce(String introduce) {
-    if (StringUtils.isNotBlank(this.introduce) && StringUtils.isBlank(introduce)) {
-      throw new IllegalArgumentException("introduce cannot be null");
-    }
     this.introduce = introduce;
     return this;
   }
 
   public UserInfo withLinkJson(String linkJson) {
-    if (StringUtils.isNotBlank(this.linkJson) && StringUtils.isBlank(linkJson)) {
-      throw new IllegalArgumentException("linkJson cannot be null");
-    }
     this.linkJson = linkJson;
     return this;
   }
