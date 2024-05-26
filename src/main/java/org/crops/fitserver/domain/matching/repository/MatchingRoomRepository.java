@@ -9,6 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 public interface MatchingRoomRepository extends JpaRepository<MatchingRoom, Long> {
 
   @Query("select mr from MatchingRoom mr "
+      + "join fetch mr.matchingList ml "
+      + "join fetch ml.user u "
+      + "join fetch u.userInfo ui "
       + "where mr.isCompleted = false "
       + "and mr.isDeleted = false")
   List<MatchingRoom> findMatchingRoomNotComplete();
@@ -16,6 +19,7 @@ public interface MatchingRoomRepository extends JpaRepository<MatchingRoom, Long
   @Query("select mr from MatchingRoom mr "
       + "join fetch mr.matchingList ml "
       + "join fetch ml.user u "
+      + "join fetch u.userInfo ui "
       + "where mr.id = :id")
   Optional<MatchingRoom> findWithMatchingMembersById(Long id);
 }
