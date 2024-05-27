@@ -49,7 +49,7 @@ public class AlarmServiceImpl implements AlarmService {
 
   @Override
   public void sendAlarmIfNotRead(User user, AlarmCase alarmCase) {
-    if (alarmRepository.existsByUserIdAndAlarmCaseAndReadFalse(user.getId(), alarmCase)) {
+    if (alarmRepository.existsByUserIdAndAlarmCaseAndIsReadFalse(user.getId(), alarmCase)) {
       sendAlarm(user, alarmCase);
     }
   }

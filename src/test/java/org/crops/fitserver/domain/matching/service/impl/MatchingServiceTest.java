@@ -7,6 +7,7 @@ import static org.mockito.BDDMockito.given;
 import java.util.Optional;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.crops.fitserver.config.UserBuildUtil;
+import org.crops.fitserver.domain.alarm.service.AlarmService;
 import org.crops.fitserver.domain.matching.constant.MatchingStatus;
 import org.crops.fitserver.domain.matching.entity.Matching;
 import org.crops.fitserver.domain.matching.entity.MatchingRoom;
@@ -43,6 +44,8 @@ class MatchingServiceTest {
   private ProjectRepository projectRepository;
   @Mock
   private UserBlockRepository userBlockRepository;
+  @Mock
+  private AlarmService alarmService;
 
   @Nested
   @DisplayName("매칭 생성 테스트")
@@ -96,6 +99,8 @@ class MatchingServiceTest {
           MatchingStatus.getActiveStatusList()))
           .willReturn(Optional.empty());
       given(matchingRepository.save(Mockito.any(Matching.class))).willReturn(Matching.create(user));
+      given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
+
 
       //when
       var result = sut.createMatching(user.getId());
