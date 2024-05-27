@@ -4,8 +4,6 @@ import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithNam
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.epages.restdocs.apispec.Schema.schema;
 import static java.time.LocalDateTime.now;
-import static org.crops.fitserver.domain.chat.domain.MessageType.TEXT;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;

@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum AlarmCase {
-  START_MATCHING(
+  FAILED_MATCHING(
       AlarmType.MATCHING,
       "새로운 매칭을 시작하세요.",
       "충분한 팀원이 모이지 않아 매칭이 성사되지 않았습니다."),

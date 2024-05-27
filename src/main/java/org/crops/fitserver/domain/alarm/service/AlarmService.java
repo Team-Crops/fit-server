@@ -10,4 +10,6 @@ public interface AlarmService {
   PageResult<AlarmDto> getAlarmList(User user, int page);
 
   void sendAlarm(User user, AlarmCase alarmCase);
+
+  void sendAlarmIfNotRead(User user, AlarmCase alarmCase);
 }

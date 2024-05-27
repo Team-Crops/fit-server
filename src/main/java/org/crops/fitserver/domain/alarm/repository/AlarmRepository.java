@@ -2,6 +2,7 @@ package org.crops.fitserver.domain.alarm.repository;
 
 import java.util.List;
 import org.crops.fitserver.domain.alarm.domain.Alarm;
+import org.crops.fitserver.domain.alarm.domain.AlarmCase;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,4 +19,6 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
   @Modifying
   @Query("update Alarm a set a.isRead = true where a.id in :idList")
   void updateReadBuIdList(List<Long> idList);
+
+  boolean existsByUserIdAndAlarmCaseAndReadFalse(Long userId, AlarmCase alarmCase);
 }

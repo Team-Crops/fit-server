@@ -46,4 +46,11 @@ public class AlarmServiceImpl implements AlarmService {
     Alarm alarm = Alarm.create(user, alarmCase);
     alarmRepository.save(alarm);
   }
+
+  @Override
+  public void sendAlarmIfNotRead(User user, AlarmCase alarmCase) {
+    if (alarmRepository.existsByUserIdAndAlarmCaseAndReadFalse(user.getId(), alarmCase)) {
+      sendAlarm(user, alarmCase);
+    }
+  }
 }

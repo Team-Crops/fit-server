@@ -2,6 +2,8 @@ package org.crops.fitserver.domain.project.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.crops.fitserver.domain.alarm.domain.AlarmCase;
+import org.crops.fitserver.domain.alarm.service.AlarmService;
 import org.crops.fitserver.domain.project.constant.ProjectStatus;
 import org.crops.fitserver.domain.project.domain.ProjectReportHistory;
 import org.crops.fitserver.domain.project.dto.ProjectDto;
@@ -24,6 +26,7 @@ public class ProjectServiceImpl implements ProjectService {
   private final ProjectRepository projectRepository;
   private final ProjectMemberRepository projectMemberRepository;
   private final ProjectReportHistoryRepository projectReportHistoryRepository;
+  private final AlarmService alarmService;
 
   @Override
   public GetProjectListResponse getProjectList(Long userId) {
@@ -71,9 +74,11 @@ public class ProjectServiceImpl implements ProjectService {
         .findFirst()
         .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_ACCESS_EXCEPTION));
 
+    alarmService.sendAlarm(projectMember.getUser(), AlarmCase.REPORT);
     projectReportHistoryRepository.save(
         ProjectReportHistory.create(projectMember.getId(), targetProjectMember.getId(), projectId,
             request.reportType(), request.description()));
+
   }
 
   private int getSortedComparisonValue(ProjectDto p1, ProjectDto p2) {

@@ -24,4 +24,6 @@ public interface MatchingRoomRepository extends JpaRepository<MatchingRoom, Long
       + "join fetch u.userInfo ui "
       + "where mr.id = :id")
   Optional<MatchingRoom> findWithMatchingMembersById(Long id);
+
+  boolean existsByChatRoomId(long chatRoomId);
 }
