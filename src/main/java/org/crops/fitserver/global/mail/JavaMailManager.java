@@ -1,4 +1,4 @@
-package org.crops.fitserver.global.mail.service;
+package org.crops.fitserver.global.mail;
 
 import jakarta.mail.MessagingException;
 import java.nio.charset.StandardCharsets;

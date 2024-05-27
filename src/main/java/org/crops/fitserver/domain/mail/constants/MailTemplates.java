@@ -1,6 +1,6 @@
-package org.crops.fitserver.domain.mail.dto;
+package org.crops.fitserver.domain.mail.constants;
 
-public class MailTemplate {
+public class MailTemplates {
 
   public static String CREATE_MATCHING_ROOM_TEMPLATE =
       "<h1>F-IT 대기방이 생성되었어요!</h1>"

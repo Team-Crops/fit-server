@@ -1,4 +1,4 @@
-package org.crops.fitserver.global.mail.service;
+package org.crops.fitserver.global.mail;
 
 public interface MailManager {
 

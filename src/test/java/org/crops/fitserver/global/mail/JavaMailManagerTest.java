@@ -1,4 +1,4 @@
-package org.crops.fitserver.global.mail.service;
+package org.crops.fitserver.global.mail;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

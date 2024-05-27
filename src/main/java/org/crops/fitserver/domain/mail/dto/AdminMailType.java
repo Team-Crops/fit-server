@@ -2,11 +2,12 @@ package org.crops.fitserver.domain.mail.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.crops.fitserver.domain.mail.constants.MailTemplates;
 
 @RequiredArgsConstructor
 @Getter
 public enum AdminMailType implements MailType {
-  REPORT("신고 접수", MailTemplate.REPORT_TEMPLATE),
+  REPORT("신고 접수", MailTemplates.REPORT_TEMPLATE),
   ;
 
   private final String subject;
