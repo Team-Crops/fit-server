@@ -8,17 +8,17 @@ import lombok.RequiredArgsConstructor;
 @Builder(access = AccessLevel.PRIVATE)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class DefaultMailRequiredInfo implements MailRequiredInfo {
-  private final String username;
+  private final String nickname;
 
-  public static DefaultMailRequiredInfo of(String username) {
+  public static DefaultMailRequiredInfo of(String nickname) {
     return DefaultMailRequiredInfo.builder()
-      .username(username)
+      .nickname(nickname)
       .build();
   }
 
   public String replace(String content) {
     return content
-      .replace("${username}", username);
+      .replace("${nickname}", nickname);
   }
 
 }

@@ -109,7 +109,7 @@ public class MatchingServiceImpl implements MatchingService {
     var host = matchingRoom.getHostUser();
     if (matchingRoom.isAllReady()) {
       mailService.send(UserMailType.DONE_READY_COMPLETE, host.getEmail(),
-          DefaultMailRequiredInfo.of(host.getUsername()));
+          DefaultMailRequiredInfo.of(host.getNickname()));
     }
   }
 
@@ -155,7 +155,7 @@ public class MatchingServiceImpl implements MatchingService {
 
     matchingRoom.getMatchingList().forEach(m -> {
       mailService.send(UserMailType.START_PROJECT, m.getUser().getEmail(),
-          DefaultMailRequiredInfo.of(m.getUser().getUsername()));
+          DefaultMailRequiredInfo.of(m.getUser().getNickname()));
     });
   }
 
