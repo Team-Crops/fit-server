@@ -3,26 +3,22 @@ package org.crops.fitserver.domain.alarm.dto;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import org.crops.fitserver.domain.alarm.domain.Alarm;
-import org.crops.fitserver.domain.alarm.domain.AlarmType;
+import org.crops.fitserver.domain.alarm.domain.AlarmCase;
 
 @Builder
 public record AlarmDto(
     long id,
-    AlarmType type,
-    String title,
-    String description,
+    AlarmCase alarmCase,
     boolean isRead,
-    LocalDateTime alarmTime
+    LocalDateTime createAt
 ) {
 
   public static AlarmDto from(Alarm alarm) {
     return AlarmDto.builder()
         .id(alarm.getId())
-        .type(alarm.getAlarmCase().getAlarmType())
-        .title(alarm.getAlarmCase().getTitle())
-        .description(alarm.getAlarmCase().getDescription())
+        .alarmCase(alarm.getAlarmCase())
         .isRead(alarm.isRead())
-        .alarmTime(alarm.getCreatedAt())
+        .createAt(alarm.getCreatedAt())
         .build();
   }
 }

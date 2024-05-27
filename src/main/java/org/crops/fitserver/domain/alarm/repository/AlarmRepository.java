@@ -20,5 +20,5 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
   @Query("update Alarm a set a.isRead = true where a.id in :idList")
   void updateReadBuIdList(List<Long> idList);
 
-  boolean existsByUserIdAndAlarmCaseAndIsReadFalse(Long userId, AlarmCase alarmCase);
+  boolean existsByUserIdAndAlarmCaseAndIsReadTrue(Long userId, AlarmCase alarmCase);
 }

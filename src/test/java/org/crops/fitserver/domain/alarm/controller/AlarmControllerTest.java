@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import java.util.List;
 import org.crops.fitserver.config.MockMvcDocsWithLogin;
-import org.crops.fitserver.domain.alarm.domain.AlarmType;
+import org.crops.fitserver.domain.alarm.domain.AlarmCase;
 import org.crops.fitserver.domain.alarm.dto.AlarmDto;
 import org.crops.fitserver.domain.alarm.dto.response.GetAlarmListResponse;
 import org.crops.fitserver.domain.alarm.facade.AlarmFacade;
@@ -57,19 +57,15 @@ class AlarmControllerTest extends MockMvcDocsWithLogin {
         PageResult<AlarmDto> pageResult = PageResult.of(List.of(
                 AlarmDto.builder()
                     .id(1L)
-                    .type(AlarmType.MATCHING)
-                    .title("매칭 제목")
-                    .description("알림 설명")
+                    .alarmCase(AlarmCase.REPORT)
                     .isRead(false)
-                    .alarmTime(now())
+                    .createAt(now())
                     .build(),
                 AlarmDto.builder()
                     .id(1L)
-                    .type(AlarmType.MATCHING)
-                    .title("매칭 제목")
-                    .description("알림 설명")
+                    .alarmCase(AlarmCase.NEW_MESSAGE_MATCHING)
                     .isRead(false)
-                    .alarmTime(now())
+                    .createAt(now())
                     .build()),
             true);
         given(alarmFacade.getAlarmList(anyLong(), anyInt()))
@@ -101,19 +97,15 @@ class AlarmControllerTest extends MockMvcDocsWithLogin {
                             fieldWithPath("pageResult.values[].id")
                                 .type(NUMBER)
                                 .description("Alarm Id"),
-                            fieldWithPath("pageResult.values[].type")
+                            fieldWithPath("pageResult.values[].alarmCase")
                                 .type(STRING)
-                                .description("MATCHING, PROJECT, REPORT"),
-                            fieldWithPath("pageResult.values[].title")
-                                .type(STRING)
-                                .description("알람 제목"),
-                            fieldWithPath("pageResult.values[].description")
-                                .type(STRING)
-                                .description("알람 설명"),
+                                .description(
+                                    "FAILED_MATCHING, STARTED_PROJECT, START_PROJECT, NEW_MATCHING_ROOM, "
+                                        + "PROGRESS_MATCHING, FORCE_OUT, NEW_MESSAGE_MATCHING, NEW_MESSAGE_PROJECT, REPORT"),
                             fieldWithPath("pageResult.values[].isRead")
                                 .type(BOOLEAN)
                                 .description("알람 읽음 여부"),
-                            fieldWithPath("pageResult.values[].alarmTime")
+                            fieldWithPath("pageResult.values[].createAt")
                                 .type(STRING)
                                 .description("알람 생성 시간"),
                             fieldWithPath("pageResult.hasNext")
