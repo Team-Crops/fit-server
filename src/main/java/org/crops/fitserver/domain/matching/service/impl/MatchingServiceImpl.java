@@ -7,6 +7,8 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.crops.fitserver.domain.alarm.domain.AlarmCase;
+import org.crops.fitserver.domain.alarm.service.AlarmService;
 import org.crops.fitserver.domain.chat.service.ChatRoomService;
 import org.crops.fitserver.domain.matching.constant.MatchingStatus;
 import org.crops.fitserver.domain.matching.dto.MatchingDto;
@@ -35,6 +37,7 @@ public class MatchingServiceImpl implements MatchingService {
   private final UserRepository userRepository;
   private final ProjectRepository projectRepository;
   private final ChatRoomService chatRoomService;
+  private final AlarmService alarmService;
   private final UserBlockRepository userBlockRepository;
 
   @Override
@@ -49,8 +52,8 @@ public class MatchingServiceImpl implements MatchingService {
     if (getActiveMatching(user).isPresent()) {
       throw new BusinessException(ErrorCode.ALREADY_EXIST_MATCHING_EXCEPTION);
     }
-
     var matching = matchingRepository.save(Matching.create(user));
+    alarmService.sendAlarm(user, AlarmCase.PROGRESS_MATCHING);
     return MatchingDto.from(matching);
   }
 
@@ -140,6 +143,8 @@ public class MatchingServiceImpl implements MatchingService {
     }
 
     matchingRoom.complete();
+    matchingRoom.getMatchingList().forEach(m ->
+        alarmService.sendAlarm(m.getUser(), AlarmCase.STARTED_PROJECT));
     matchingRoomRepository.save(matchingRoom);
     createProject(matchingRoom);
   }
@@ -181,9 +186,11 @@ public class MatchingServiceImpl implements MatchingService {
   @Transactional
   public List<Matching> expireMatchingAll() {
     var matchingList = matchingRepository.findExpireMatching();
-    matchingList.forEach(Matching::expire);
+    matchingList.forEach(matching -> {
+      matching.expire();
+      alarmService.sendAlarm(matching.getUser(), AlarmCase.FAILED_MATCHING);
+    });
     matchingRepository.saveAll(matchingList);
-
     return matchingList;
   }
 
@@ -200,6 +207,7 @@ public class MatchingServiceImpl implements MatchingService {
       throw new BusinessException(ErrorCode.NOT_EXIST_MATCHING_EXCEPTION);
     }
     matchingRoom.forceOut(userId, forceOutUserId);
+    alarmService.sendAlarm(user, AlarmCase.FORCE_OUT);
     matchingRoomRepository.save(matchingRoom);
 
     chatRoomService.chatRoomForceOut(matchingRoom.getChatRoomId(), user);

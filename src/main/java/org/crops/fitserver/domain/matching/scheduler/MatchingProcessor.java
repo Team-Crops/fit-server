@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.crops.fitserver.domain.alarm.domain.AlarmCase;
+import org.crops.fitserver.domain.alarm.service.AlarmService;
 import org.crops.fitserver.domain.chat.domain.ChatRoom;
 import org.crops.fitserver.domain.chat.service.ChatRoomService;
 import org.crops.fitserver.domain.matching.VO.ComparableMatchingParameter;
@@ -37,6 +39,7 @@ public class MatchingProcessor {
   private final MatchingRepository matchingRepository;
   private final MatchingRoomRepository matchingRoomRepository;
   private final ChatRoomService chatRoomService;
+  private final AlarmService alarmService;
 
   private static final int BATCH_SIZE = 100;
 
@@ -79,7 +82,8 @@ public class MatchingProcessor {
         if (matchingRoom.isEnough(positionType)) {
           return;
         }
-        notEnoughRoomMap.computeIfAbsent(positionType, key -> new ArrayList<>())
+        notEnoughRoomMap
+            .computeIfAbsent(positionType, key -> new ArrayList<>())
             .add(matchingRoom);
       });
     });
@@ -99,6 +103,7 @@ public class MatchingProcessor {
         var bestRoom = findBestRoom(matching, targetRoomList);
         bestRoom.ifPresent(matchingRoom -> {
           matchingRoom.addMatching(matching);
+          alarmService.sendAlarm(matching.getUser(), AlarmCase.NEW_MATCHING_ROOM);
           chatRoomService.chatRoomJoin(matchingRoom.getChatRoomId(), matching.getUser());
           updateRoomList.add(matchingRoom);
         });
@@ -141,6 +146,7 @@ public class MatchingProcessor {
       ChatRoom chatRoom = chatRoomService.createChatRoom();
       matchingList.forEach(matching -> {
         User user = matching.getUser();
+        alarmService.sendAlarm(user, AlarmCase.NEW_MATCHING_ROOM);
         chatRoomService.chatRoomJoin(chatRoom.getId(), user);
       });
       var newRoom = MatchingRoom.create(matchingList, chatRoomService.createChatRoom().getId());
@@ -175,6 +181,7 @@ public class MatchingProcessor {
           .ifPresent(matchingRoom -> {
             matchingRoom.addMatching(matching);
             matchingRoomRepository.save(matchingRoom);
+            alarmService.sendAlarm(matching.getUser(), AlarmCase.NEW_MATCHING_ROOM);
             chatRoomService.chatRoomJoin(matchingRoom.getChatRoomId(), matching.getUser());
             removeList.add(matching);
           });
