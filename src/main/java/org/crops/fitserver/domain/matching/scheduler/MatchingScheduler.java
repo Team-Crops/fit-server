@@ -2,6 +2,8 @@ package org.crops.fitserver.domain.matching.scheduler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.crops.fitserver.domain.alarm.domain.AlarmCase;
+import org.crops.fitserver.domain.alarm.service.AlarmService;
 import org.crops.fitserver.domain.matching.service.MatchingService;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,6 +16,7 @@ public class MatchingScheduler {
 
   private final MatchingProcessor matchingProcessor;
   private final MatchingService matchingService;
+  private final AlarmService alarmService;
 
   /**
    * TODO: 크론탭 환경변수에 따라 관리 필요
@@ -34,7 +37,7 @@ public class MatchingScheduler {
 
     expriredMatchingList.forEach(matching -> {
       log.info("매칭 만료 : {}", matching.getId());
-      //TODO: 만료된 매칭에 대한 알림 처리 로직 추가
+      alarmService.sendAlarm(matching.getUser(), AlarmCase.FAILED_MATCHING);
     });
   }
 

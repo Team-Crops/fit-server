@@ -186,10 +186,7 @@ public class MatchingServiceImpl implements MatchingService {
   @Transactional
   public List<Matching> expireMatchingAll() {
     var matchingList = matchingRepository.findExpireMatching();
-    matchingList.forEach(matching -> {
-      matching.expire();
-      alarmService.sendAlarm(matching.getUser(), AlarmCase.FAILED_MATCHING);
-    });
+    matchingList.forEach(Matching::expire);
     matchingRepository.saveAll(matchingList);
     return matchingList;
   }
@@ -207,11 +204,10 @@ public class MatchingServiceImpl implements MatchingService {
       throw new BusinessException(ErrorCode.NOT_EXIST_MATCHING_EXCEPTION);
     }
     matchingRoom.forceOut(userId, forceOutUserId);
-    alarmService.sendAlarm(user, AlarmCase.FORCE_OUT);
     matchingRoomRepository.save(matchingRoom);
 
     chatRoomService.chatRoomForceOut(matchingRoom.getChatRoomId(), user);
-    //TODO: 강제퇴장당한 유저에게 강제퇴장 알림 전송
+    alarmService.sendAlarm(user, AlarmCase.FORCE_OUT);
   }
 
   private Optional<Matching> getActiveMatching(User user) {
