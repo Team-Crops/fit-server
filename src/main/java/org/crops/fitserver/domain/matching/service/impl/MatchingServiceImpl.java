@@ -8,6 +8,9 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.chat.service.ChatRoomService;
+import org.crops.fitserver.domain.mail.dto.DefaultMailRequiredInfo;
+import org.crops.fitserver.domain.mail.dto.UserMailType;
+import org.crops.fitserver.domain.mail.service.MailService;
 import org.crops.fitserver.domain.matching.constant.MatchingStatus;
 import org.crops.fitserver.domain.matching.dto.MatchingDto;
 import org.crops.fitserver.domain.matching.dto.response.GetMatchingRoomResponse;
@@ -36,6 +39,7 @@ public class MatchingServiceImpl implements MatchingService {
   private final ProjectRepository projectRepository;
   private final ChatRoomService chatRoomService;
   private final UserBlockRepository userBlockRepository;
+  private final MailService mailService;
 
   @Override
   @Transactional
@@ -101,6 +105,12 @@ public class MatchingServiceImpl implements MatchingService {
 
     matchingRoom.ready(matching);
     matchingRepository.save(matching);
+
+    var host = matchingRoom.getHostUser();
+    if (matchingRoom.isAllReady()) {
+      mailService.send(UserMailType.DONE_READY_COMPLETE, host.getEmail(),
+          DefaultMailRequiredInfo.of(host.getUsername()));
+    }
   }
 
   @Override
@@ -142,6 +152,11 @@ public class MatchingServiceImpl implements MatchingService {
     matchingRoom.complete();
     matchingRoomRepository.save(matchingRoom);
     createProject(matchingRoom);
+
+    matchingRoom.getMatchingList().forEach(m -> {
+      mailService.send(UserMailType.START_PROJECT, m.getUser().getEmail(),
+          DefaultMailRequiredInfo.of(m.getUser().getUsername()));
+    });
   }
 
   private void createProject(MatchingRoom matchingRoom) {
