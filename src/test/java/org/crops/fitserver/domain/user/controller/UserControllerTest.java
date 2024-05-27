@@ -8,9 +8,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -41,6 +41,7 @@ import org.crops.fitserver.domain.user.dto.PolicyAgreementDto;
 import org.crops.fitserver.domain.user.dto.UserInfoDto;
 import org.crops.fitserver.domain.user.dto.request.UpdatePolicyAgreementRequest;
 import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
+import org.crops.fitserver.domain.user.dto.request.WithdrawRequest;
 import org.crops.fitserver.domain.user.dto.response.GetUserStatusAndInfoResponse;
 import org.crops.fitserver.domain.user.facade.UserFacade;
 import org.junit.jupiter.api.DisplayName;
@@ -658,11 +659,13 @@ class UserControllerTest extends MockMvcDocsWithLogin {
   @Test
   void withdrawUser() throws Exception {
     //given
-    final var URL = "/v1/user";
+    final var URL = "/v1/user/withdraw";
+    WithdrawRequest request = new WithdrawRequest("withdraw reason.", true);
 
     //when
-    var result = mockMvc.perform(delete(URL)
+    var result = mockMvc.perform(post(URL)
         .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(request))
         .with(user(loginPrincipal))
         .with(csrf())
     );
@@ -675,6 +678,15 @@ class UserControllerTest extends MockMvcDocsWithLogin {
                     .tag("user")
                     .summary("토큰으로 탈퇴하기")
                     .description("유저 탈퇴")
+                    .requestSchema(
+                        schema("WithdrawRequest"))
+                    .requestFields(
+                        fieldWithPath("withdrawReason")
+                            .type(JsonFieldType.STRING)
+                            .description("틸퇴 사유"),
+                        fieldWithPath("isAgree")
+                            .type(JsonFieldType.BOOLEAN)
+                            .description("탈퇴 동의 여부"))
                     .build()
                 )
             ));

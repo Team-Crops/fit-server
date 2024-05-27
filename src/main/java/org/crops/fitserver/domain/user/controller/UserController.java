@@ -7,6 +7,7 @@ import org.crops.fitserver.domain.user.dto.PolicyAgreementDto;
 import org.crops.fitserver.domain.user.dto.UserInfoDto;
 import org.crops.fitserver.domain.user.dto.request.UpdatePolicyAgreementRequest;
 import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
+import org.crops.fitserver.domain.user.dto.request.WithdrawRequest;
 import org.crops.fitserver.domain.user.dto.response.GetPolicyAgreementResponse;
 import org.crops.fitserver.domain.user.dto.response.GetUserStatusAndInfoResponse;
 import org.crops.fitserver.domain.user.dto.response.UpdatePolicyAgreementResponse;
@@ -16,10 +17,10 @@ import org.crops.fitserver.global.annotation.V1;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -77,10 +78,11 @@ public class UserController {
             updatePolicyAgreementRequest.policyAgreementList())));
   }
 
-  @DeleteMapping()
-  public ResponseEntity<Void> deleteUser(
+  @PostMapping("/withdraw")
+  public ResponseEntity<Void> withdraw(
+      @Valid @RequestBody WithdrawRequest request,
       @CurrentUserId long userId) {
-    userFacade.deleteUser(userId);
+    userFacade.withdraw(userId, request.withdrawReason(), request.isAgree());
     return ResponseEntity.noContent().build();
   }
 }

@@ -56,8 +56,8 @@ public class UserFacadeImpl implements UserFacade {
 
   @Override
   @Transactional
-  public void deleteUser(long userId) {
+  public void withdraw(long userId, String withdrawReason, boolean isAgree) {
     var user = userService.getUserWithInfo(userId);
-    userService.deleteUser(user);
+    userService.withdraw(user, withdrawReason, isAgree);
   }
 }
