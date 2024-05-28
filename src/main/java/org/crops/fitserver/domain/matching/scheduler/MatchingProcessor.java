@@ -21,6 +21,9 @@ import org.crops.fitserver.domain.alarm.domain.AlarmCase;
 import org.crops.fitserver.domain.alarm.service.AlarmService;
 import org.crops.fitserver.domain.chat.domain.ChatRoom;
 import org.crops.fitserver.domain.chat.service.ChatRoomService;
+import org.crops.fitserver.domain.mail.dto.DefaultMailRequiredInfo;
+import org.crops.fitserver.domain.mail.dto.UserMailType;
+import org.crops.fitserver.domain.mail.service.MailService;
 import org.crops.fitserver.domain.matching.VO.ComparableMatchingParameter;
 import org.crops.fitserver.domain.matching.entity.Matching;
 import org.crops.fitserver.domain.matching.entity.MatchingRoom;
@@ -40,13 +43,16 @@ public class MatchingProcessor {
   private final MatchingRoomRepository matchingRoomRepository;
   private final ChatRoomService chatRoomService;
   private final AlarmService alarmService;
+  private final MailService mailService;
 
   private static final int BATCH_SIZE = 100;
+  private static final int MATCHING_ROOM_EXPIRED_DAYS = 1;
 
   @Transactional
   public void match() {
 
-    var matchingRoomList = matchingRoomRepository.findMatchingRoomNotComplete(LocalDateTime.now().minusDays(5));
+    var matchingRoomList = matchingRoomRepository.findMatchingRoomNotComplete(
+        LocalDateTime.now().minusDays(MATCHING_ROOM_EXPIRED_DAYS));
     var matchingList = matchingRepository.findMatchingWithoutRoom();
 
     var matchingMap = getMatchingMap(matchingList);
@@ -71,6 +77,9 @@ public class MatchingProcessor {
   @Transactional
   public void insertToNotEnoughRoom(List<MatchingRoom> matchingRoomList,
       Map<PositionType, List<Matching>> matchingMap) {
+
+    var mailTargetMatchingList = new HashSet<Matching>();
+
     var notEnoughRoomList = matchingRoomList.stream()
         .filter(MatchingRoom::isNotEnough).toList();
 
@@ -92,7 +101,7 @@ public class MatchingProcessor {
 
     //부족한 매칭을 채워넣음
     matchingMap.forEach((key, value) -> {
-      if(Collections.isEmpty(notEnoughRoomMap.get(key))){
+      if (Collections.isEmpty(notEnoughRoomMap.get(key))) {
         return;
       }
       var targetRoomList = notEnoughRoomMap.get(key).stream()
@@ -106,6 +115,7 @@ public class MatchingProcessor {
           alarmService.sendAlarm(matching.getUser(), AlarmCase.NEW_MATCHING_ROOM);
           chatRoomService.chatRoomJoin(matchingRoom.getChatRoomId(), matching.getUser());
           updateRoomList.add(matchingRoom);
+          mailTargetMatchingList.add(matching);
         });
       });
     });
@@ -118,8 +128,14 @@ public class MatchingProcessor {
         matchingRoomRepository.saveAllAndFlush(subList);
       } catch (Exception e) {
         log.error("insertToNotEnoughRoom error", e);
+        //에러가 났으면 mailTargetUserList에서 에러난 대상 제거
+        mailTargetMatchingList.removeIf(user -> subList.stream()
+            .anyMatch(matchingRoom -> matchingRoom.getMatchingList().stream()
+                .anyMatch(matching -> matching.getUser().equals(user))));
       }
     }
+
+    sendMail(mailTargetMatchingList);
   }
 
   @Transactional
@@ -128,29 +144,40 @@ public class MatchingProcessor {
     if (matchingMap.size() < MINIMUM_REQUIRED_POSITIONS.size()) {
       return;
     }
-    while (matchingMap.values().stream().mapToInt(List::size).min().orElse(0) > 0) {
-      var matchingList = new ArrayList<Matching>();
-      matchingMap.forEach((key, value) -> {
-        if(Collections.isEmpty(value)) {
-          return;
+
+    var mailTargetMatchingList = new HashSet<Matching>();
+
+    var size = matchingMap.values().stream().mapToInt(List::size).min().orElse(0);
+
+    for (int i = 0; i < size; i++) {
+
+      while (matchingMap.values().stream().mapToInt(List::size).min().orElse(0) > 0) {
+        var matchingList = new ArrayList<Matching>();
+        matchingMap.forEach((key, value) -> {
+          if (Collections.isEmpty(value)) {
+            return;
+          }
+          var bestMatching = findBestMatching(matchingList, value);
+          bestMatching.ifPresent((matching -> {
+            matchingList.add(matching);
+            value.remove(matching);
+          }));
+        });
+        if (matchingList.size() < MINIMUM_REQUIRED_POSITIONS.size()) {
+          continue;
         }
-        var bestMatching = findBestMatching(matchingList, value);
-        bestMatching.ifPresent((matching -> {
-          matchingList.add(matching);
-          value.remove(matching);
-        }));
-      });
-      if (matchingList.size() < MINIMUM_REQUIRED_POSITIONS.size()) {
-        continue;
+        ChatRoom chatRoom = chatRoomService.createChatRoom();
+        matchingList.forEach(matching -> {
+          User user = matching.getUser();
+          alarmService.sendAlarm(user, AlarmCase.NEW_MATCHING_ROOM);
+          chatRoomService.chatRoomJoin(chatRoom.getId(), user);
+        });
+        var newRoom = MatchingRoom.create(matchingList, chatRoomService.createChatRoom().getId());
+        matchingRoomRepository.save(newRoom);
+        mailTargetMatchingList.addAll(matchingList);
       }
-      ChatRoom chatRoom = chatRoomService.createChatRoom();
-      matchingList.forEach(matching -> {
-        User user = matching.getUser();
-        alarmService.sendAlarm(user, AlarmCase.NEW_MATCHING_ROOM);
-        chatRoomService.chatRoomJoin(chatRoom.getId(), user);
-      });
-      var newRoom = MatchingRoom.create(matchingList, chatRoomService.createChatRoom().getId());
-      matchingRoomRepository.save(newRoom);
+
+      sendMail(mailTargetMatchingList);
     }
   }
 
@@ -166,6 +193,7 @@ public class MatchingProcessor {
 
   private void joinRoom(PositionType positionType, Map<PositionType, List<Matching>> matchingMap,
       List<MatchingRoom> matchingRoomList) {
+    var mailTargetMatchingList = new HashSet<Matching>();
     var matchingList = matchingMap.get(positionType);
     var roomList = new ArrayList<>(matchingRoomList.stream()
         .filter(matchingRoom -> matchingRoom.canInsertPosition(positionType))
@@ -184,10 +212,13 @@ public class MatchingProcessor {
             alarmService.sendAlarm(matching.getUser(), AlarmCase.NEW_MATCHING_ROOM);
             chatRoomService.chatRoomJoin(matchingRoom.getChatRoomId(), matching.getUser());
             removeList.add(matching);
+            mailTargetMatchingList.add(matching);
           });
     });
 
     matchingList.removeAll(removeList);
+
+    sendMail(mailTargetMatchingList);
   }
 
   /**
@@ -214,12 +245,11 @@ public class MatchingProcessor {
   }
 
   /**
-   * matchingList: 매칭방을 만들기 전 매칭 리스트(임시 매칭방)
-   * targetMatchingList: 매칭리스트
+   * matchingList: 매칭방을 만들기 전 매칭 리스트(임시 매칭방) targetMatchingList: 매칭리스트
    */
   private Optional<Matching> findBestMatching(List<Matching> matchingList,
       List<Matching> targetMatchingList) {
-    if(Collections.isEmpty(matchingList)) {
+    if (Collections.isEmpty(matchingList)) {
       return Optional.of(targetMatchingList.get(0));
     }
     var region = matchingList.get(0).getUser().getUserInfo().getRegion();
@@ -238,5 +268,19 @@ public class MatchingProcessor {
             ComparableMatchingParameter.from(matching),
             ComparableMatchingParameter.from(matchingList)))
         );
+  }
+
+  private void sendMail(HashSet<Matching> mailTargetMatchingList) {
+    mailTargetMatchingList.forEach(matching -> {
+          if (matching.isHost()) {
+            mailService.send(UserMailType.CREATE_MATCHING_ROOM_FOR_HOST,
+                matching.getUser().getEmail(),
+                DefaultMailRequiredInfo.of(matching.getUser().getNickname()));
+          } else {
+            mailService.send(UserMailType.CREATE_MATCHING_ROOM, matching.getUser().getEmail(),
+                DefaultMailRequiredInfo.of(matching.getUser().getNickname()));
+          }
+        }
+    );
   }
 }

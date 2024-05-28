@@ -18,10 +18,7 @@ public class MatchingScheduler {
   private final MatchingService matchingService;
   private final AlarmService alarmService;
 
-  /**
-   * TODO: 크론탭 환경변수에 따라 관리 필요
-   */
-  @Scheduled(cron = "*/20 * * * * *")
+  @Scheduled(cron = "0 */2 * * * *")
   @Async
   public void matching() {
     log.info("매칭 시작");
@@ -30,7 +27,7 @@ public class MatchingScheduler {
   }
 
 
-  @Scheduled(cron = "*/30 * * * * *")
+  @Scheduled(cron = "0 */30 * * * *")
   @Async
   public void expireMatching() {
     var expriredMatchingList = matchingService.expireMatchingAll();
