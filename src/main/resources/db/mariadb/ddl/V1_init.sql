@@ -63,6 +63,9 @@ CREATE TABLE IF NOT EXISTS `social_user_info`
     `user_id`             bigint       NOT NULL,
     `social_type`         varchar(20)  NOT NULL,
     `social_code`         varchar(255) NOT NULL,
+    `created_at`        datetime(6)     NOT NULL,
+    `updated_at`    datetime(6) NOT NULL,
+    `is_deleted`    tinyint(1)  NOT NULL DEFAULT false,
     CONSTRAINT `fk_socialuserinfo_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 );
 
@@ -262,4 +265,29 @@ CREATE TABLE IF NOT EXISTS `user_block`
     `updated_at`    datetime(6)     NOT NULL,
     `is_deleted`    tinyint(1) NOT NULL DEFAULT false,
     CONSTRAINT `fk_userblock_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
+);
+
+CREATE TABLE IF NOT EXISTS `chat_room_user`
+(
+    `chat_room_user_id` bigint   NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `chat_room_id`      bigint   NOT NULL,
+    `user_id`           bigint   NOT NULL,
+    `last_checked_message_id`    bigint     NULL,
+    `created_at`        datetime NOT NULL,
+    `updated_at`        datetime NOT NULL,
+    `is_deleted`        tinyint(1) NOT NULL DEFAULT false,
+    CONSTRAINT `fk_chatroomuser_chatroomid` FOREIGN KEY (`chat_room_id`) REFERENCES `chat_room` (`chat_room_id`),
+    CONSTRAINT `fk_chatroomuser_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
+    CONSTRAINT `fk_chatroomuser_lastcheckedmessageid` FOREIGN KEY (`last_checked_message_id`) REFERENCES `message` (`message_id`)
+    );
+
+CREATE TABLE IF NOT EXISTS `alarm`
+(
+    `alarm_id`          bigint        NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `user_id`           bigint        NOT NULL,
+    `alarm_case`        varchar(50)    NOT NULL,
+    `is_read`          tinyint(1) NOT NULL DEFAULT false,
+    `updated_at`        datetime(6)     NOT NULL,
+    `created_at`        datetime(6)     NOT NULL,
+    `is_deleted`        tinyint(1) NOT NULL DEFAULT false
 );
