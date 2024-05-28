@@ -4,11 +4,18 @@ import static java.util.stream.Collectors.*;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import lombok.RequiredArgsConstructor;
+import org.crops.fitserver.domain.alarm.domain.AlarmCase;
+import org.crops.fitserver.domain.alarm.service.AlarmService;
+import org.crops.fitserver.domain.chat.domain.ChatRoom;
+import org.crops.fitserver.domain.chat.domain.ChatRoomUser;
 import org.crops.fitserver.domain.chat.domain.Message;
 import org.crops.fitserver.domain.chat.domain.MessageType;
 import org.crops.fitserver.domain.chat.facade.ChatRoomFacade;
+import org.crops.fitserver.domain.chat.repository.ChatRoomUserRepository;
 import org.crops.fitserver.domain.chat.service.ChatRoomService;
 import org.crops.fitserver.domain.chat.service.MessageService;
+import org.crops.fitserver.domain.project.repository.ProjectRepository;
+import org.crops.fitserver.domain.user.domain.User;
 import org.crops.fitserver.domain.user.service.UserService;
 import org.crops.fitserver.global.http.PageResult;
 import org.crops.fitserver.global.socket.service.MessageResponse;
@@ -23,6 +30,9 @@ public class ChatRoomFacadeImpl implements ChatRoomFacade {
   private final ChatRoomService chatRoomService;
   private final MessageService messageService;
   private final UserService userService;
+  private final AlarmService alarmService;
+  private final ProjectRepository projectRepository;
+  private final ChatRoomUserRepository chatRoomUserRepository;
 
   private static final int DEFAULT_PAGE_SIZE = 10;
 
@@ -34,7 +44,19 @@ public class ChatRoomFacadeImpl implements ChatRoomFacade {
     var message = Message.newInstance(user, room, MessageType.TEXT, content);
     chatRoomService.validateUserInRoom(user, room);
     messageService.sendTextMessage(client, message);
+    sendMessageAlarm(room, user);
     chatRoomService.updateLastCheckedMessageByMessage(room, user, message);
+  }
+
+  private void sendMessageAlarm(ChatRoom chatRoom, User sender) {
+    final AlarmCase alarmCase = projectRepository.existsByChatRoomId(chatRoom.getId()) ?
+        AlarmCase.NEW_MESSAGE_PROJECT :
+        AlarmCase.NEW_MESSAGE_MATCHING;
+    chatRoomUserRepository.findByChatRoomIdWithUser(chatRoom.getId())
+        .stream()
+        .map(ChatRoomUser::getUser)
+        .filter(u -> !u.equals(sender))
+        .forEach(u -> alarmService.sendAlarmIfNotRead(u, alarmCase));
   }
 
   @Override

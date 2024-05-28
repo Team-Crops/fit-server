@@ -4,6 +4,8 @@ import static org.crops.fitserver.domain.mail.constants.MailConstants.ADMIN_MAIL
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.crops.fitserver.domain.alarm.domain.AlarmCase;
+import org.crops.fitserver.domain.alarm.service.AlarmService;
 import org.crops.fitserver.domain.mail.dto.AdminMailType;
 import org.crops.fitserver.domain.mail.dto.ReportMailRequiredInfo;
 import org.crops.fitserver.domain.mail.service.MailService;
@@ -29,6 +31,7 @@ public class ProjectServiceImpl implements ProjectService {
   private final ProjectRepository projectRepository;
   private final ProjectMemberRepository projectMemberRepository;
   private final ProjectReportHistoryRepository projectReportHistoryRepository;
+  private final AlarmService alarmService;
   private final MailService mailService;
 
   @Override
@@ -77,6 +80,7 @@ public class ProjectServiceImpl implements ProjectService {
         .findFirst()
         .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_ACCESS_EXCEPTION));
 
+    alarmService.sendAlarm(projectMember.getUser(), AlarmCase.REPORT);
     projectReportHistoryRepository.save(
         ProjectReportHistory.create(projectMember.getId(), targetProjectMember.getId(), projectId,
             request.reportType(), request.description()));
