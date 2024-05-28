@@ -15,7 +15,7 @@ public class MatchingScheduler {
   private final MatchingProcessor matchingProcessor;
   private final MatchingService matchingService;
 
-//  @Scheduled(cron = "*/20 * 9-23 * * *")
+  @Scheduled(cron = "*/20 * * * * *")
   @Async
   public void matching() {
     log.info("매칭 시작");
