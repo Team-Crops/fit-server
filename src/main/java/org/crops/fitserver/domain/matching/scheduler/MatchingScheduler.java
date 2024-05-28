@@ -27,7 +27,7 @@ public class MatchingScheduler {
   }
 
 
-//  @Scheduled(cron = "*/30 * 9-23 * * *")
+  @Scheduled(cron = "*/30 * 9-23 * * *")
   @Async
   public void expireMatching() {
     var expriredMatchingList = matchingService.expireMatchingAll();
