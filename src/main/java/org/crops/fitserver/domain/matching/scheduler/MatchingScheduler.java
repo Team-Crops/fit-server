@@ -15,10 +15,7 @@ public class MatchingScheduler {
   private final MatchingProcessor matchingProcessor;
   private final MatchingService matchingService;
 
-  /**
-   * TODO: 크론탭 환경변수에 따라 관리 필요
-   */
-  @Scheduled(cron = "*/20 * 9-23 * * *")
+//  @Scheduled(cron = "*/20 * 9-23 * * *")
   @Async
   public void matching() {
     log.info("매칭 시작");
