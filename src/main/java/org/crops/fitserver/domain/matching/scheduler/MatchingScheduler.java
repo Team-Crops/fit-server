@@ -15,7 +15,7 @@ public class MatchingScheduler {
   private final MatchingProcessor matchingProcessor;
   private final MatchingService matchingService;
 
-  @Scheduled(cron = "*/20 * * * * *")
+  @Scheduled(cron = "0 */2 * * * *")
   @Async
   public void matching() {
     log.info("매칭 시작");
@@ -24,7 +24,7 @@ public class MatchingScheduler {
   }
 
 
-  @Scheduled(cron = "*/30 * 9-23 * * *")
+  @Scheduled(cron = "0 */30 * * * *")
   @Async
   public void expireMatching() {
     var expriredMatchingList = matchingService.expireMatchingAll();

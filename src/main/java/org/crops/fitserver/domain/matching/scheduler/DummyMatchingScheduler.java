@@ -16,7 +16,7 @@ public class DummyMatchingScheduler {
   private final DummyMatchingProcessor dummyMatchingProcessor;
   private final MatchingService matchingService;
 
-  @Scheduled(cron = "*/20 * * * * *")
+  @Scheduled(cron = "0 */2 * * * *")
   @Async
   public void InsertDummyMatching() {
     var newUsers = dummyMatchingProcessor.prepareUser();
