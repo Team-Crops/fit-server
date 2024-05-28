@@ -23,6 +23,7 @@ public class CorsConfig {
   private static final List<String> DEFAULT_ALLOWED_ORIGINS = List.of(
       "http://dev-api.f-it.team",
       "http://dev.f-it.team",
+      "https://dev.f-it.team",
       "http://localhost:3000"
   );
 
