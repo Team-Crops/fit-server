@@ -68,7 +68,7 @@ public class DummyMatchingProcessor {
       newUserList.add(newUser);
     }
 
-    userRepository.saveAllAndFlush(newUserList);
+    userRepository.saveAll(newUserList);
 
     return newUserList;
   }
