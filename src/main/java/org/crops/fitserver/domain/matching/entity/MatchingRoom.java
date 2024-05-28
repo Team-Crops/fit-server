@@ -25,6 +25,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.crops.fitserver.domain.skillset.constant.PositionType;
 import org.crops.fitserver.domain.skillset.domain.Skill;
+import org.crops.fitserver.domain.user.domain.User;
 import org.crops.fitserver.domain.user.domain.UserInfoSkill;
 import org.crops.fitserver.global.entity.BaseTimeEntity;
 import org.crops.fitserver.global.exception.BusinessException;
@@ -247,5 +248,17 @@ public class MatchingRoom extends BaseTimeEntity {
     isCompleted = true;
     completedAt = LocalDateTime.now();
     matchingList.forEach(Matching::complete);
+  }
+
+  public boolean isAllReady() {
+    return matchingList.stream().filter((matching -> !matching.isHost())).allMatch(Matching::isReady);
+  }
+
+  public User getHostUser() {
+    return matchingList.stream()
+        .filter(Matching::isHost)
+        .map(Matching::getUser)
+        .findFirst()
+        .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_MATCHING_EXCEPTION));
   }
 }

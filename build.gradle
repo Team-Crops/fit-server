@@ -87,6 +87,9 @@ dependencies {
     // socket io
     implementation 'com.corundumstudio.socketio:netty-socketio:1.7.19'
 
+    // email
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
