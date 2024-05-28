@@ -42,11 +42,13 @@ public class MatchingProcessor {
   private final AlarmService alarmService;
 
   private static final int BATCH_SIZE = 100;
+  private static final int MATCHING_ROOM_EXPIRED_DAYS = 1;
 
   @Transactional
   public void match() {
 
-    var matchingRoomList = matchingRoomRepository.findMatchingRoomNotComplete(LocalDateTime.now().minusDays(5));
+    var matchingRoomList = matchingRoomRepository.findMatchingRoomNotComplete(
+        LocalDateTime.now().minusDays(MATCHING_ROOM_EXPIRED_DAYS));
     var matchingList = matchingRepository.findMatchingWithoutRoom();
 
     var matchingMap = getMatchingMap(matchingList);
@@ -92,7 +94,7 @@ public class MatchingProcessor {
 
     //부족한 매칭을 채워넣음
     matchingMap.forEach((key, value) -> {
-      if(Collections.isEmpty(notEnoughRoomMap.get(key))){
+      if (Collections.isEmpty(notEnoughRoomMap.get(key))) {
         return;
       }
       var targetRoomList = notEnoughRoomMap.get(key).stream()
@@ -131,7 +133,7 @@ public class MatchingProcessor {
     while (matchingMap.values().stream().mapToInt(List::size).min().orElse(0) > 0) {
       var matchingList = new ArrayList<Matching>();
       matchingMap.forEach((key, value) -> {
-        if(Collections.isEmpty(value)) {
+        if (Collections.isEmpty(value)) {
           return;
         }
         var bestMatching = findBestMatching(matchingList, value);
@@ -214,12 +216,11 @@ public class MatchingProcessor {
   }
 
   /**
-   * matchingList: 매칭방을 만들기 전 매칭 리스트(임시 매칭방)
-   * targetMatchingList: 매칭리스트
+   * matchingList: 매칭방을 만들기 전 매칭 리스트(임시 매칭방) targetMatchingList: 매칭리스트
    */
   private Optional<Matching> findBestMatching(List<Matching> matchingList,
       List<Matching> targetMatchingList) {
-    if(Collections.isEmpty(matchingList)) {
+    if (Collections.isEmpty(matchingList)) {
       return Optional.of(targetMatchingList.get(0));
     }
     var region = matchingList.get(0).getUser().getUserInfo().getRegion();
