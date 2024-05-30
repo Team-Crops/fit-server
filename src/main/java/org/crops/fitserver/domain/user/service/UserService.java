@@ -20,5 +20,5 @@ public interface UserService {
 
   List<UserPolicyAgreement> updatePolicyAgreement(Long userId, List<PolicyAgreementDto> policyAgreementDtoList);
 
-  void deleteUser(User user);
+  void withdraw(User user, String withdrawReason, boolean isAgree);
 }

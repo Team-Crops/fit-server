@@ -3,12 +3,10 @@ package org.crops.fitserver.domain.chat.repository;
 import java.util.List;
 import java.util.Optional;
 import org.crops.fitserver.domain.chat.domain.ChatRoomUser;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.Repository;
 
-public interface ChatRoomUserRepository extends Repository<ChatRoomUser, Long> {
-
-  ChatRoomUser save(ChatRoomUser chatRoomUser);
+public interface ChatRoomUserRepository extends JpaRepository<ChatRoomUser, Long> {
 
   Optional<ChatRoomUser> findByUserIdAndChatRoomId(long userId, long chatRoomId);
 

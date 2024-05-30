@@ -9,6 +9,8 @@ import org.crops.fitserver.domain.user.dto.UserInfoDto;
 import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
 import org.crops.fitserver.domain.user.dto.response.GetUserStatusAndInfoResponse;
 import org.crops.fitserver.domain.user.service.UserService;
+import org.crops.fitserver.global.exception.BusinessException;
+import org.crops.fitserver.global.exception.ErrorCode;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,8 +58,11 @@ public class UserFacadeImpl implements UserFacade {
 
   @Override
   @Transactional
-  public void deleteUser(long userId) {
+  public void withdraw(long userId, String withdrawReason, boolean isAgree) {
+    if (!isAgree) {
+      throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE);
+    }
     var user = userService.getUserWithInfo(userId);
-    userService.deleteUser(user);
+    userService.withdraw(user, withdrawReason, isAgree);
   }
 }

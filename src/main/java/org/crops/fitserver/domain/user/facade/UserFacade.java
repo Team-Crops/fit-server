@@ -18,5 +18,5 @@ public interface UserFacade {
 
   List<PolicyAgreementDto> updatePolicyAgreement(Long userId, List<PolicyAgreementDto> policyAgreementDtoList);
 
-  void deleteUser(long userId);
+  void withdraw(long userId, String withdrawReason, boolean isAgree);
 }

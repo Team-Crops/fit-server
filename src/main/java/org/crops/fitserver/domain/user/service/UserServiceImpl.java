@@ -15,11 +15,13 @@ import org.crops.fitserver.domain.user.domain.Link;
 import org.crops.fitserver.domain.user.domain.User;
 import org.crops.fitserver.domain.user.domain.UserInfoSkill;
 import org.crops.fitserver.domain.user.domain.UserPolicyAgreement;
+import org.crops.fitserver.domain.user.domain.UserWithdraw;
 import org.crops.fitserver.domain.user.dto.PolicyAgreementDto;
 import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
 import org.crops.fitserver.domain.user.repository.SocialUserInfoRepository;
 import org.crops.fitserver.domain.user.repository.UserPolicyAgreementRepository;
 import org.crops.fitserver.domain.user.repository.UserRepository;
+import org.crops.fitserver.domain.user.repository.UserWithdrawRepository;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -37,6 +39,7 @@ public class UserServiceImpl implements UserService {
   private final SkillRepository skillRepository;
   private final UserPolicyAgreementRepository userPolicyAgreementRepository;
   private final SocialUserInfoRepository socialUserInfoRepository;
+  private final UserWithdrawRepository userWithdrawRepository;
 
   @Override
   public User getById(Long userId) {
@@ -157,10 +160,11 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional
-  public void deleteUser(User user) {
+  public void withdraw(User user, String withdrawReason, boolean isAgree) {
     user.withdraw();
     userPolicyAgreementRepository.deleteAllByUserId(user.getId());
     socialUserInfoRepository.deleteByUserId(user.getId());
+    userWithdrawRepository.save(UserWithdraw.newInstance(user, withdrawReason, isAgree));
     userRepository.delete(user);
   }
 }
