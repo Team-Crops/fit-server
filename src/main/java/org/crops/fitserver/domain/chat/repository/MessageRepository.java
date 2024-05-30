@@ -4,14 +4,10 @@ import java.util.Optional;
 import org.crops.fitserver.domain.chat.domain.Message;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.Repository;
 
-public interface MessageRepository extends Repository<Message, Long> {
-
-  Optional<Message> findById(long messageId);
-
-  Message save(Message message);
+public interface MessageRepository extends JpaRepository<Message, Long> {
 
   Slice<Message> findByChatRoomIdOrderByIdDesc(long roomId, Pageable pageable);
 
