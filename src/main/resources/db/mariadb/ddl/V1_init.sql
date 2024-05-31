@@ -66,7 +66,8 @@ CREATE TABLE IF NOT EXISTS `social_user_info`
     `created_at`        datetime(6)     NOT NULL,
     `updated_at`    datetime(6) NOT NULL,
     `is_deleted`    tinyint(1)  NOT NULL DEFAULT false,
-    CONSTRAINT `fk_socialuserinfo_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
+    CONSTRAINT `fk_socialuserinfo_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
+    INDEX `idx_socialuserinfo_socialcode` (`social_code`)
 );
 
 CREATE TABLE IF NOT EXISTS `user_likes`
@@ -78,7 +79,8 @@ CREATE TABLE IF NOT EXISTS `user_likes`
     `updated_at`            datetime(6) NOT NULL,
     `is_deleted`            tinyint(1)  NOT NULL DEFAULT false,
     CONSTRAINT `fk_userlikes_userid` FOREIGN KEY (`like_user_id`) REFERENCES `user` (`user_id`),
-    CONSTRAINT `fk_userlikes_likeduserid` FOREIGN KEY (`liked_user_id`) REFERENCES `user` (`user_id`)
+    CONSTRAINT `fk_userlikes_likeduserid` FOREIGN KEY (`liked_user_id`) REFERENCES `user` (`user_id`),
+    INDEX `idx_userlikes_likeuserid` (`like_user_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `user_policy_agreement`
@@ -144,7 +146,8 @@ CREATE TABLE IF NOT EXISTS `message`
     `updated_at`   datetime(6)    NOT NULL,
     `is_deleted`   tinyint(1) NOT NULL DEFAULT false,
     CONSTRAINT `fk_message_chatroomid` FOREIGN KEY (`chat_room_id`) REFERENCES `chat_room` (`chat_room_id`),
-    CONSTRAINT `fk_message_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
+    CONSTRAINT `fk_message_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
+    INDEX `idx_message_chatroomid` (`chat_room_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `matching_room`
@@ -216,26 +219,17 @@ CREATE TABLE IF NOT EXISTS `school`
     `is_deleted` tinyint(1) NOT NULL DEFAULT false
 );
 
-CREATE TABLE IF NOT EXISTS `alarm_type`
-(
-    `alarm_type_id` bigint       NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `content`       varchar(255) NOT NULL,
-    `created_at`    datetime(6)     NOT NULL,
-    `updated_at`    datetime(6)     NOT NULL,
-    `is_deleted`    tinyint(1) NOT NULL DEFAULT false
-);
-
 CREATE TABLE IF NOT EXISTS `alarm`
 (
-    `alarm_id`      bigint   NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `user_id`       bigint   NOT NULL,
-    `alarm_type_id` bigint   NOT NULL,
-    `created_at`    datetime(6) NOT NULL,
-    `updated_at`    datetime(6) NOT NULL,
-    `is_deleted`    tinyint(1) NOT NULL DEFAULT false,
-    `is_readed`     tinyint(1) NOT NULL DEFAULT false,
+    `alarm_id`          bigint        NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `user_id`           bigint        NOT NULL,
+    `alarm_case`        varchar(50)    NOT NULL,
+    `is_read`          tinyint(1) NOT NULL DEFAULT false,
+    `updated_at`        datetime(6)     NOT NULL,
+    `created_at`        datetime(6)     NOT NULL,
+    `is_deleted`        tinyint(1) NOT NULL DEFAULT false,
     CONSTRAINT `fk_alarm_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-    CONSTRAINT `fk_alarm_alarmtypeid` FOREIGN KEY (`alarm_type_id`) REFERENCES `alarm_type` (`alarm_type_id`)
+    INDEX `idx_alarm_userid` (`user_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `project_report_history`
@@ -278,16 +272,6 @@ CREATE TABLE IF NOT EXISTS `chat_room_user`
     `is_deleted`        tinyint(1) NOT NULL DEFAULT false,
     CONSTRAINT `fk_chatroomuser_chatroomid` FOREIGN KEY (`chat_room_id`) REFERENCES `chat_room` (`chat_room_id`),
     CONSTRAINT `fk_chatroomuser_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-    CONSTRAINT `fk_chatroomuser_lastcheckedmessageid` FOREIGN KEY (`last_checked_message_id`) REFERENCES `message` (`message_id`)
-    );
-
-CREATE TABLE IF NOT EXISTS `alarm`
-(
-    `alarm_id`          bigint        NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `user_id`           bigint        NOT NULL,
-    `alarm_case`        varchar(50)    NOT NULL,
-    `is_read`          tinyint(1) NOT NULL DEFAULT false,
-    `updated_at`        datetime(6)     NOT NULL,
-    `created_at`        datetime(6)     NOT NULL,
-    `is_deleted`        tinyint(1) NOT NULL DEFAULT false
+    CONSTRAINT `fk_chatroomuser_lastcheckedmessageid` FOREIGN KEY (`last_checked_message_id`) REFERENCES `message` (`message_id`),
+    INDEX `idx_chatroomuser_chatroomid` (`chat_room_id`)
 );
