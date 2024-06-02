@@ -31,7 +31,8 @@ CREATE TABLE IF NOT EXISTS `region`
     `display_name` varchar(100) NOT NULL,
     `created_at`   datetime(6)     NOT NULL,
     `updated_at`   datetime(6)     NOT NULL,
-    `is_deleted`   tinyint(1) NOT NULL DEFAULT false
+    `is_deleted`   tinyint(1) NOT NULL DEFAULT false,
+    CONSTRAINT `uq_region_display_name` UNIQUE (`display_name`)
 );
 
 CREATE TABLE IF NOT EXISTS `user_info`
@@ -52,9 +53,9 @@ CREATE TABLE IF NOT EXISTS `user_info`
     `created_at`        datetime(6) NOT NULL,
     `updated_at`        datetime(6) NOT NULL,
     `is_deleted`        tinyint(1) NOT NULL DEFAULT false,
-    CONSTRAINT `fk_userinfo_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-    CONSTRAINT `fk_userinfo_positionid` FOREIGN KEY (`position_id`) REFERENCES `position` (`position_id`),
-    CONSTRAINT `fk_userinfo_regionid` FOREIGN KEY (`region_id`) REFERENCES `region` (`region_id`)
+    CONSTRAINT `fk_user_info_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
+    CONSTRAINT `fk_user_info_position_id` FOREIGN KEY (`position_id`) REFERENCES `position` (`position_id`),
+    CONSTRAINT `fk_user_info_region_id` FOREIGN KEY (`region_id`) REFERENCES `region` (`region_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `social_user_info`
@@ -66,8 +67,8 @@ CREATE TABLE IF NOT EXISTS `social_user_info`
     `created_at`        datetime(6)     NOT NULL,
     `updated_at`    datetime(6) NOT NULL,
     `is_deleted`    tinyint(1)  NOT NULL DEFAULT false,
-    CONSTRAINT `fk_socialuserinfo_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-    INDEX `idx_socialuserinfo_socialcode` (`social_code`)
+    CONSTRAINT `fk_social_user_info_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
+    INDEX `idx_social_user_info_social_code` (`social_code`)
 );
 
 CREATE TABLE IF NOT EXISTS `user_likes`
@@ -78,9 +79,10 @@ CREATE TABLE IF NOT EXISTS `user_likes`
     `created_at`            datetime(6) NOT NULL,
     `updated_at`            datetime(6) NOT NULL,
     `is_deleted`            tinyint(1)  NOT NULL DEFAULT false,
-    CONSTRAINT `fk_userlikes_userid` FOREIGN KEY (`like_user_id`) REFERENCES `user` (`user_id`),
-    CONSTRAINT `fk_userlikes_likeduserid` FOREIGN KEY (`liked_user_id`) REFERENCES `user` (`user_id`),
-    INDEX `idx_userlikes_likeuserid` (`like_user_id`)
+    CONSTRAINT `fk_user_likes_user_id` FOREIGN KEY (`like_user_id`) REFERENCES `user` (`user_id`),
+    CONSTRAINT `fk_user_likes_liked_user_id` FOREIGN KEY (`liked_user_id`) REFERENCES `user` (`user_id`),
+    INDEX `idx_user_likes_like_user_id_liked_user_id` (`like_user_id`, `liked_user_id`, `is_deleted`),
+    INDEX `idx_user_likes_liked_user_id_like_user_id` (`liked_user_id`, `like_user_id`, `is_deleted`)
 );
 
 CREATE TABLE IF NOT EXISTS `user_policy_agreement`
@@ -93,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `user_policy_agreement`
     `updated_at`               datetime(6)     NOT NULL,
     `created_at`               datetime(6)     NOT NULL,
     `is_deleted`               tinyint(1) NOT NULL DEFAULT false,
-    CONSTRAINT `fk_userpolicyagreement_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
+    CONSTRAINT `fk_user_policy_agreement_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `skill`
@@ -103,7 +105,7 @@ CREATE TABLE IF NOT EXISTS `skill`
     `created_at`   datetime(6)    NOT NULL,
     `updated_at`   datetime(6)    NOT NULL,
     `is_deleted`   tinyint(1) NOT NULL DEFAULT false,
-    CONSTRAINT `skill_uq_display_name` UNIQUE (`display_name`)
+    CONSTRAINT `uq_skill_display_name` UNIQUE (`display_name`)
 );
 
 CREATE TABLE IF NOT EXISTS `user_info_skill`
@@ -114,8 +116,8 @@ CREATE TABLE IF NOT EXISTS `user_info_skill`
     `created_at`         datetime(6) NOT NULL,
     `updated_at`         datetime(6) NOT NULL,
     `is_deleted`         tinyint(1) NOT NULL DEFAULT false,
-    CONSTRAINT `fk_userinfoskill_skillid` FOREIGN KEY (`skill_id`) REFERENCES `skill` (`skill_id`),
-    CONSTRAINT `fk_userinfoskill_userinfoid` FOREIGN KEY (`user_info_id`) REFERENCES `user_info` (`user_id`)
+    CONSTRAINT `fk_user_info_skill_skill_id` FOREIGN KEY (`skill_id`) REFERENCES `skill` (`skill_id`),
+    CONSTRAINT `fk_user_info_skill_user_info_id` FOREIGN KEY (`user_info_id`) REFERENCES `user_info` (`user_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `skillset`
@@ -124,7 +126,7 @@ CREATE TABLE IF NOT EXISTS `skillset`
     `position_id` bigint NOT NULL,
     `skill_id`    bigint NOT NULL,
     CONSTRAINT `fk_skillset_position_id` FOREIGN KEY (`position_id`) REFERENCES `position` (`position_id`),
-    CONSTRAINT `fk_skillset_skillid` FOREIGN KEY (`skill_id`) REFERENCES `skill` (`skill_id`)
+    CONSTRAINT `fk_skillset_skill_id` FOREIGN KEY (`skill_id`) REFERENCES `skill` (`skill_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `chat_room`
@@ -141,13 +143,12 @@ CREATE TABLE IF NOT EXISTS `message`
     `chat_room_id` bigint      NOT NULL,
     `user_id`      bigint      NOT NULL,
     `content`      text        NOT NULL,
-    `message_type` varchar(20) NOT NULL DEFAULT 'text',
+    `message_type` varchar(20) NOT NULL,
     `created_at`   datetime(6)    NOT NULL,
     `updated_at`   datetime(6)    NOT NULL,
     `is_deleted`   tinyint(1) NOT NULL DEFAULT false,
-    CONSTRAINT `fk_message_chatroomid` FOREIGN KEY (`chat_room_id`) REFERENCES `chat_room` (`chat_room_id`),
-    CONSTRAINT `fk_message_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-    INDEX `idx_message_chatroomid` (`chat_room_id`)
+    CONSTRAINT `fk_message_chat_room_id` FOREIGN KEY (`chat_room_id`) REFERENCES `chat_room` (`chat_room_id`),
+    CONSTRAINT `fk_message_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `matching_room`
@@ -160,8 +161,9 @@ CREATE TABLE IF NOT EXISTS `matching_room`
     `is_deleted`   tinyint(1) NOT NULL DEFAULT false,
     `is_completed`   tinyint(1) NOT NULL DEFAULT false,
     `completed_at`   datetime(6) NULL,
-    CONSTRAINT `fk_matchingroom_chatroomid` FOREIGN KEY (`chat_room_id`) REFERENCES `chat_room` (`chat_room_id`),
-    CONSTRAINT `fk_matchingroom_hostuserid` FOREIGN KEY (`host_user_id`) REFERENCES `user` (`user_id`)
+    CONSTRAINT `fk_matching_room_chat_room_id` FOREIGN KEY (`chat_room_id`) REFERENCES `chat_room` (`chat_room_id`),
+    CONSTRAINT `fk_matching_room_host_user_id` FOREIGN KEY (`host_user_id`) REFERENCES `user` (`user_id`),
+    INDEX `idx_matching_room_created_at` (`created_at`)
 );
 
 CREATE TABLE IF NOT EXISTS `matching`
@@ -177,8 +179,9 @@ CREATE TABLE IF NOT EXISTS `matching`
     `expired_at`        datetime(6) NULL,
     `status`            varchar(20) NULL,
     CONSTRAINT `fk_matching_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-    CONSTRAINT `fk_matching_matchingroomid` FOREIGN KEY (`matching_room_id`) REFERENCES `matching_room` (`matching_room_id`),
-    CONSTRAINT `fk_matching_positionid` FOREIGN KEY (`position_id`) REFERENCES `position` (`position_id`)
+    CONSTRAINT `fk_matching_matching_room_id` FOREIGN KEY (`matching_room_id`) REFERENCES `matching_room` (`matching_room_id`),
+    CONSTRAINT `fk_matching_position_id` FOREIGN KEY (`position_id`) REFERENCES `position` (`position_id`),
+    INDEX `idx_matching_expired_at_desc` (`expired_at` desc)
 );
 
 CREATE TABLE IF NOT EXISTS `project`
@@ -189,7 +192,7 @@ CREATE TABLE IF NOT EXISTS `project`
     `updated_at`  datetime(6) NOT NULL,
     `finished_at` datetime(6) NULL,
     `is_deleted`  tinyint(1) NOT NULL DEFAULT false,
-    CONSTRAINT `fk_project_chatroomid` FOREIGN KEY (`chat_room_id`) REFERENCES `chat_room` (`chat_room_id`)
+    CONSTRAINT `fk_project_chat_room_id` FOREIGN KEY (`chat_room_id`) REFERENCES `chat_room` (`chat_room_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `project_member`
@@ -204,9 +207,9 @@ CREATE TABLE IF NOT EXISTS `project_member`
     `status`       varchar(20) NOT NULL DEFAULT 'PROJECT_IN_PROGRESS',
     `project_name`  varchar(100) NOT NULL,
     `is_deleted`        tinyint(1) NOT NULL DEFAULT false,
-    CONSTRAINT `fk_projectmember_projectid` FOREIGN KEY (`project_id`) REFERENCES `project` (`project_id`),
-    CONSTRAINT `fk_projectmember_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-    CONSTRAINT `fk_projectmember_positionid` FOREIGN KEY (`position_id`) REFERENCES `position` (`position_id`)
+    CONSTRAINT `fk_project_member_project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`project_id`),
+    CONSTRAINT `fk_project_member_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
+    CONSTRAINT `fk_project_member_position_id` FOREIGN KEY (`position_id`) REFERENCES `position` (`position_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `school`
@@ -216,7 +219,8 @@ CREATE TABLE IF NOT EXISTS `school`
     `type`       varchar(100) NOT NULL,
     `created_at` datetime(6)     NOT NULL,
     `updated_at` datetime(6)     NOT NULL,
-    `is_deleted` tinyint(1) NOT NULL DEFAULT false
+    `is_deleted` tinyint(1) NOT NULL DEFAULT false,
+    CONSTRAINT `uq_school_name_type` UNIQUE (`name`, `type`)
 );
 
 CREATE TABLE IF NOT EXISTS `alarm`
@@ -228,8 +232,7 @@ CREATE TABLE IF NOT EXISTS `alarm`
     `updated_at`        datetime(6)     NOT NULL,
     `created_at`        datetime(6)     NOT NULL,
     `is_deleted`        tinyint(1) NOT NULL DEFAULT false,
-    CONSTRAINT `fk_alarm_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-    INDEX `idx_alarm_userid` (`user_id`)
+    CONSTRAINT `fk_alarm_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `project_report_history`
@@ -243,9 +246,9 @@ CREATE TABLE IF NOT EXISTS `project_report_history`
     `created_at`                datetime(6)     NOT NULL,
     `updated_at`                datetime(6)     NOT NULL,
     `is_deleted`                tinyint(1) NOT NULL DEFAULT false,
-    CONSTRAINT `fk_projectreport_projectid` FOREIGN KEY (`project_id`) REFERENCES `project` (`project_id`),
-    CONSTRAINT `fk_projectreport_reporter_member_id` FOREIGN KEY (`reporter_user_id`) REFERENCES `project_member` (`project_member_id`),
-    CONSTRAINT `fk_projectreport_reported_member_id` FOREIGN KEY (`target_user_id`) REFERENCES `project_member` (`project_member_id`)
+    CONSTRAINT `fk_project_report_project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`project_id`),
+    CONSTRAINT `fk_project_report_reporter_member_id` FOREIGN KEY (`reporter_user_id`) REFERENCES `project_member` (`project_member_id`),
+    CONSTRAINT `fk_project_report_reported_member_id` FOREIGN KEY (`target_user_id`) REFERENCES `project_member` (`project_member_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `user_block`
@@ -258,7 +261,7 @@ CREATE TABLE IF NOT EXISTS `user_block`
     `created_at`    datetime(6)     NOT NULL,
     `updated_at`    datetime(6)     NOT NULL,
     `is_deleted`    tinyint(1) NOT NULL DEFAULT false,
-    CONSTRAINT `fk_userblock_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
+    CONSTRAINT `fk_user_block_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `chat_room_user`
@@ -270,8 +273,7 @@ CREATE TABLE IF NOT EXISTS `chat_room_user`
     `created_at`        datetime NOT NULL,
     `updated_at`        datetime NOT NULL,
     `is_deleted`        tinyint(1) NOT NULL DEFAULT false,
-    CONSTRAINT `fk_chatroomuser_chatroomid` FOREIGN KEY (`chat_room_id`) REFERENCES `chat_room` (`chat_room_id`),
-    CONSTRAINT `fk_chatroomuser_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-    CONSTRAINT `fk_chatroomuser_lastcheckedmessageid` FOREIGN KEY (`last_checked_message_id`) REFERENCES `message` (`message_id`),
-    INDEX `idx_chatroomuser_chatroomid` (`chat_room_id`)
+    CONSTRAINT `fk_chat_room_user_chat_room_id` FOREIGN KEY (`chat_room_id`) REFERENCES `chat_room` (`chat_room_id`),
+    CONSTRAINT `fk_chat_room_user_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
+    CONSTRAINT `fk_chat_room_user_last_checked_message_id` FOREIGN KEY (`last_checked_message_id`) REFERENCES `message` (`message_id`),
 );
