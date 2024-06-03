@@ -11,17 +11,17 @@ import org.crops.fitserver.global.socket.service.MessageResponse;
 public class ImageMessageResponse extends MessageResponse {
 
   private Long userId;
-  private String imagesUrl;
+  private String imageUrl;
 
   @Builder
   private ImageMessageResponse(
       Long userId,
-      String imagesUrl,
+      String imageUrl,
       Long messageId,
       MessageType messageType,
       LocalDateTime createdAt) {
     this.userId = userId;
-    this.imagesUrl = imagesUrl;
+    this.imageUrl = imageUrl;
     this.messageId = messageId;
     this.messageType = messageType;
     this.createdAt = createdAt;
@@ -30,7 +30,7 @@ public class ImageMessageResponse extends MessageResponse {
   public static ImageMessageResponse from(Message message) {
     return ImageMessageResponse.builder()
         .userId(message.getUser().getId())
-        .imagesUrl(message.getContent())
+        .imageUrl(message.getContent())
         .messageId(message.getId())
         .messageType(MessageType.IMAGE)
         .createdAt(message.getCreatedAt())
