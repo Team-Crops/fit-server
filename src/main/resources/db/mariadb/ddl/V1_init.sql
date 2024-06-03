@@ -264,6 +264,19 @@ CREATE TABLE IF NOT EXISTS `user_block`
     CONSTRAINT `fk_user_block_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 );
 
+CREATE TABLE IF NOT EXISTS `user_withdraw`
+(
+    `user_withdraw_id` bigint    NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `user_id`       bigint       NOT NULL,
+    `withdraw_reason`           text NULL,
+    `is_agree`    tinyint(1)    NOT NULL DEFAULT true,
+    `created_at`                datetime(6)     NOT NULL,
+    `updated_at`                datetime(6)     NOT NULL,
+    `is_deleted`                tinyint(1) NOT NULL DEFAULT false,
+    CONSTRAINT `fk_user_withdraw_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
+);
+
+
 CREATE TABLE IF NOT EXISTS `chat_room_user`
 (
     `chat_room_user_id` bigint   NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -275,5 +288,5 @@ CREATE TABLE IF NOT EXISTS `chat_room_user`
     `is_deleted`        tinyint(1) NOT NULL DEFAULT false,
     CONSTRAINT `fk_chat_room_user_chat_room_id` FOREIGN KEY (`chat_room_id`) REFERENCES `chat_room` (`chat_room_id`),
     CONSTRAINT `fk_chat_room_user_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-    CONSTRAINT `fk_chat_room_user_last_checked_message_id` FOREIGN KEY (`last_checked_message_id`) REFERENCES `message` (`message_id`),
+    CONSTRAINT `fk_chat_room_user_last_checked_message_id` FOREIGN KEY (`last_checked_message_id`) REFERENCES `message` (`message_id`)
 );
