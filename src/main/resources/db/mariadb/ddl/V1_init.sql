@@ -81,8 +81,8 @@ CREATE TABLE IF NOT EXISTS `user_likes`
     `is_deleted`            tinyint(1)  NOT NULL DEFAULT false,
     CONSTRAINT `fk_user_likes_user_id` FOREIGN KEY (`like_user_id`) REFERENCES `user` (`user_id`),
     CONSTRAINT `fk_user_likes_liked_user_id` FOREIGN KEY (`liked_user_id`) REFERENCES `user` (`user_id`),
-    INDEX `idx_user_likes_like_user_id_liked_user_id` (`like_user_id`, `liked_user_id`, `is_deleted`),
-    INDEX `idx_user_likes_liked_user_id_like_user_id` (`liked_user_id`, `like_user_id`, `is_deleted`)
+    INDEX `idx_user_likes_like_user_id_liked_user_id` (`like_user_id`, `liked_user_id`),
+    INDEX `idx_user_likes_liked_user_id_like_user_id` (`liked_user_id`, `like_user_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `user_policy_agreement`
