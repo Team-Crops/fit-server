@@ -14,15 +14,13 @@ public interface MatchingRepository extends JpaRepository<Matching, Long> {
 
   @Query("select m from Matching m "
       + "where m.expiredAt <= current_timestamp "
-      + "and m.status != 'EXPIRED'"
-      + "and m.isDeleted = false")
+      + "and m.status != 'EXPIRED'")
   List<Matching> findExpireMatching();
 
   @Query("select m from Matching m "
       + "join fetch m.user u "
       + "join fetch u.userInfo ui "
       + "where m.status = 'WAITING'"
-      + "and m.matchingRoom is null "
-      + "and m.isDeleted = false")
+      + "and m.matchingRoom is null")
   List<Matching> findMatchingWithoutRoom();
 }

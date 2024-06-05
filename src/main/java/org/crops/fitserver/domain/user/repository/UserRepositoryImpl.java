@@ -72,10 +72,10 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
   }
 
   private static BooleanExpression eqProjectCount(Integer projectCount) {
-    return projectCount == null ? null : user.userInfo.projectCount.eq(projectCount);
+    return projectCount == null ? null : userInfo.projectCount.eq(projectCount);
   }
 
   private static BooleanExpression eqActivityHour(List<Short> activityHour) {
-    return activityHour == null || activityHour.isEmpty() ? null : user.userInfo.activityHour.in(activityHour);
+    return activityHour == null || activityHour.isEmpty() ? null : userInfo.activityHour.in(activityHour);
   }
 }

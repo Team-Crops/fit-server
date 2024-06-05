@@ -14,8 +14,7 @@ public interface MatchingRoomRepository extends JpaRepository<MatchingRoom, Long
       + "join fetch ml.user u "
       + "join fetch u.userInfo ui "
       + "where mr.isCompleted = false "
-      + "and mr.createdAt >= :expiredAt "
-      + "and mr.isDeleted = false")
+      + "and mr.createdAt >= :expiredAt")
   List<MatchingRoom> findMatchingRoomNotComplete(LocalDateTime expiredAt);
 
   @Query("select mr from MatchingRoom mr "

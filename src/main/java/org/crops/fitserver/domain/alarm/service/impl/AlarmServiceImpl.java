@@ -32,7 +32,7 @@ public class AlarmServiceImpl implements AlarmService {
         .stream()
         .map(AlarmDto::from)
         .toList();
-    alarmRepository.updateReadBuIdList(
+    alarmRepository.updateReadByIdList(
         slice.getContent()
             .stream()
             .map(Alarm::getId).toList());

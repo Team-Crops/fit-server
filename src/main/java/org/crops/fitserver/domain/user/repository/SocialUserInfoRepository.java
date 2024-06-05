@@ -4,7 +4,6 @@ import java.util.Optional;
 import org.crops.fitserver.domain.user.domain.SocialUserInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.Repository;
 
 public interface SocialUserInfoRepository extends
     JpaRepository<SocialUserInfo, Long> {
