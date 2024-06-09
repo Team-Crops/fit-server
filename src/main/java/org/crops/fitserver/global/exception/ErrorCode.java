@@ -64,6 +64,7 @@ public enum ErrorCode {
    * project. code prefix: project-
    */
   NOT_EXIST_PROJECT_EXCEPTION(HttpStatus.NOT_FOUND, "project-1", "프로젝트가 존재하지 않습니다."),
+  NOT_ENABLE_REPORT_EXCEPTION(HttpStatus.FORBIDDEN, "project-2", "신고할 수 없습니다."),
   ;
 
 

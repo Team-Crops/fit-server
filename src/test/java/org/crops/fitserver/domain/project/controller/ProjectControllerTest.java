@@ -98,10 +98,12 @@ class ProjectControllerTest extends MockMvcDocs {
                               .nickname(user.getNickname())
                               .positionId(user.getUserInfo().getPosition().getId())
                               .profileImageUrl(user.getProfileImageUrl())
+                              .isReportable(true)
                               .build(),
                           ProjectMemberDto.builder()
                               .userId(2L)
                               .nickname("user2")
+                              .isReportable(true)
                               .positionId(2L)
                               .profileImageUrl("profile2")
                               .build()
@@ -119,6 +121,7 @@ class ProjectControllerTest extends MockMvcDocs {
                               .nickname(user.getNickname())
                               .positionId(user.getUserInfo().getPosition().getId())
                               .profileImageUrl(user.getProfileImageUrl())
+                              .isReportable(true)
                               .build()
                       ))
                       .build()
@@ -158,6 +161,8 @@ class ProjectControllerTest extends MockMvcDocs {
                                       JsonFieldType.STRING).description("멤버 프로필 이미지 URL"),
                                   fieldWithPath("projectList[].projectMemberList[].positionId").type(
                                       JsonFieldType.NUMBER).description("멤버 포지션 ID"),
+                                  fieldWithPath("projectMemberList[].isReportable").type(
+                                      JsonFieldType.BOOLEAN).description("신고 가능 여부"),
                                   fieldWithPath("projectList[].chatRoomId").type(JsonFieldType.NUMBER)
                                       .description("채팅방 ID"),
                                   fieldWithPath("projectList[].createdAt").type(JsonFieldType.STRING)
@@ -204,10 +209,12 @@ class ProjectControllerTest extends MockMvcDocs {
                       .nickname(user.getNickname())
                       .positionId(user.getUserInfo().getPosition().getId())
                       .profileImageUrl(user.getProfileImageUrl())
+                      .isReportable(true)
                       .build(),
                   ProjectMemberDto.builder()
                       .userId(2L)
                       .nickname("user2")
+                      .isReportable(true)
                       .positionId(2L)
                       .profileImageUrl("profile2")
                       .build()
@@ -256,6 +263,8 @@ class ProjectControllerTest extends MockMvcDocs {
                               fieldWithPath("projectMemberList[].positionId").type(
                                       JsonFieldType.NUMBER)
                                   .description("멤버 포지션 ID"),
+                              fieldWithPath("projectMemberList[].isReportable").type(
+                                  JsonFieldType.BOOLEAN).description("신고 가능 여부"),
                               fieldWithPath("chatRoomId").type(JsonFieldType.NUMBER)
                                   .description("채팅방 ID"),
                               fieldWithPath("createdAt").type(JsonFieldType.STRING)
@@ -294,12 +303,14 @@ class ProjectControllerTest extends MockMvcDocs {
                       .nickname(user.getNickname())
                       .positionId(user.getUserInfo().getPosition().getId())
                       .profileImageUrl(user.getProfileImageUrl())
+                      .isReportable(true)
                       .build(),
                   ProjectMemberDto.builder()
                       .userId(2L)
                       .nickname("user2")
                       .positionId(2L)
                       .profileImageUrl("profile2")
+                      .isReportable(true)
                       .build()
               ))
               .build()
@@ -346,6 +357,8 @@ class ProjectControllerTest extends MockMvcDocs {
                               fieldWithPath("projectMemberList[].positionId").type(
                                       JsonFieldType.NUMBER)
                                   .description("멤버 포지션 ID"),
+                              fieldWithPath("projectMemberList[].isReportable").type(
+                                  JsonFieldType.BOOLEAN).description("신고 가능 여부"),
                               fieldWithPath("chatRoomId").type(JsonFieldType.NUMBER)
                                   .description("채팅방 ID"),
                               fieldWithPath("createdAt").type(JsonFieldType.STRING)

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.crops.fitserver.domain.project.constant.ReportType;
 import org.crops.fitserver.domain.project.domain.ProjectReportHistory;
 import org.crops.fitserver.domain.project.repository.ProjectReportHistoryRepository;
 import org.crops.fitserver.domain.user.domain.UserBlock;
@@ -26,7 +27,7 @@ public class UserBlockServiceImpl implements UserBlockService {
   private final ProjectReportHistoryRepository projectReportHistoryRepository;
   private final UserBlockRepository userBlockRepository;
 
-  public boolean canBlockUser(Long userId) {
+  public boolean canBlockUser(Long userId, ReportType reportType) {
     var user = userRepository.findById(userId)
         .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_USER_EXCEPTION));
     var reportCount = projectReportHistoryRepository.countByTargetUserId(user.getId());

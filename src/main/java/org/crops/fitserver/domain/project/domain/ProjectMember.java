@@ -62,6 +62,9 @@ public class ProjectMember extends BaseTimeEntity {
   @Column(name = "project_name", nullable = false)
   private String projectName;
 
+  @Column(name = "is_reportable", nullable = false)
+  private Boolean isReportable;
+
   public static ProjectMember create(User user, Position position) {
     return ProjectMember.builder()
         .user(user)
@@ -69,6 +72,7 @@ public class ProjectMember extends BaseTimeEntity {
         .completedAt(null)
         .status(ProjectStatus.PROJECT_IN_PROGRESS)
         .projectName(PROJECT_DEFAULT_NAME)
+        .isReportable(true)
         .build();
   }
 
@@ -85,8 +89,14 @@ public class ProjectMember extends BaseTimeEntity {
     }
   }
 
+  public void updateIsReportable(Boolean isReportable) {
+    if (isReportable != null) {
+      this.isReportable = isReportable;
+    }
+  }
+
   protected void setProject(Project project) {
-    if(this.project != null) {
+    if (this.project != null) {
       this.project.getProjectMemberList().remove(this);
     }
     this.project = project;
