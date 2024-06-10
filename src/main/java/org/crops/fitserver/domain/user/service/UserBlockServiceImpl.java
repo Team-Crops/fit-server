@@ -27,7 +27,7 @@ public class UserBlockServiceImpl implements UserBlockService {
   private final ProjectReportHistoryRepository projectReportHistoryRepository;
   private final UserBlockRepository userBlockRepository;
 
-  public boolean canBlockUser(Long userId, ReportType reportType) {
+  public boolean canBlockUser(Long userId) {
     var user = userRepository.findById(userId)
         .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_USER_EXCEPTION));
     var reportCount = projectReportHistoryRepository.countByTargetUserId(user.getId());

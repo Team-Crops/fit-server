@@ -1,10 +1,8 @@
 package org.crops.fitserver.domain.user.service;
 
-import org.crops.fitserver.domain.project.constant.ReportType;
-
 public interface UserBlockService {
 
-    boolean canBlockUser(Long userId, ReportType reportType);
+  boolean canBlockUser(Long userId);
 
-    void blockUser(Long userId);
+  void blockUser(Long userId);
 }
