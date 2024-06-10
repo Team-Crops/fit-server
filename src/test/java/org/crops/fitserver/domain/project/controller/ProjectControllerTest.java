@@ -161,7 +161,7 @@ class ProjectControllerTest extends MockMvcDocs {
                                       JsonFieldType.STRING).description("멤버 프로필 이미지 URL"),
                                   fieldWithPath("projectList[].projectMemberList[].positionId").type(
                                       JsonFieldType.NUMBER).description("멤버 포지션 ID"),
-                                  fieldWithPath("projectMemberList[].projectMemberList[].isReportable").type(
+                                  fieldWithPath("projectList[].projectMemberList[].isReportable").type(
                                       JsonFieldType.BOOLEAN).description("신고 가능 여부"),
                                   fieldWithPath("projectList[].chatRoomId").type(JsonFieldType.NUMBER)
                                       .description("채팅방 ID"),
