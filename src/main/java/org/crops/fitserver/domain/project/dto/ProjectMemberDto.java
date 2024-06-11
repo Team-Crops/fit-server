@@ -8,7 +8,8 @@ public record ProjectMemberDto(
     Long userId,
     String nickname,
     String profileImageUrl,
-    Long positionId
+    Long positionId,
+    Boolean isReportable
 ) {
 
   public static ProjectMemberDto from(ProjectMember projectMember) {
@@ -17,6 +18,7 @@ public record ProjectMemberDto(
         .nickname(projectMember.getUser().getNickname())
         .profileImageUrl(projectMember.getUser().getProfileImageUrl())
         .positionId(projectMember.getPosition().getId())
+        .isReportable(projectMember.getIsReportable())
         .build();
   }
 }
