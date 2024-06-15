@@ -3,6 +3,8 @@ package org.crops.fitserver.domain.user.facade;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.crops.fitserver.domain.matching.repository.MatchingRepository;
+import org.crops.fitserver.domain.matching.service.MatchingService;
 import org.crops.fitserver.domain.recommend.service.RecommendService;
 import org.crops.fitserver.domain.user.dto.PolicyAgreementDto;
 import org.crops.fitserver.domain.user.dto.UserInfoDto;
@@ -21,6 +23,7 @@ public class UserFacadeImpl implements UserFacade {
 
   private final UserService userService;
   private final RecommendService recommendService;
+  private final MatchingRepository matchingRepository;
 
   @Override
   public UserInfoDto getUserWithInfo(Long userId) {
