@@ -59,7 +59,7 @@ public class DummyMatchingProcessor {
       var username = "test-" + RandomStringUtils.randomAlphanumeric(10);
       var nickname = "test-" + RandomStringUtils.randomAlphanumeric(10);
       var email = "test" + i + "@gmail.com";
-      var region = regionList.get(i % regionList.size());
+      var region = regionList.get(1);
       var position = positionList.get(i % positionList.size());
       var skill = position.getSkills().stream()
           .min((o1, o2) -> (int) (Math.random() * 10) - 1).get();
