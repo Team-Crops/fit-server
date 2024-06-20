@@ -41,7 +41,7 @@ public class ChatRoomFacadeImpl implements ChatRoomFacade {
   public MessageResponse sendTextMessage(SocketIOClient client, long userId, long roomId, String content) {
     var user = userService.getById(userId);
     var room = chatRoomService.getById(roomId);
-    var message = messageService.saveTextMessage(
+    var message = messageService.saveMessage(
         Message.newInstance(user, room, MessageType.TEXT, content));
     chatRoomService.validateUserInRoom(user, room);
     sendMessageAlarm(room, user);
@@ -65,7 +65,7 @@ public class ChatRoomFacadeImpl implements ChatRoomFacade {
   public MessageResponse sendImageMessage(SocketIOClient client, long userId, long roomId, String imageUrl) {
     var user = userService.getById(userId);
     var room = chatRoomService.getById(roomId);
-    var message = messageService.saveImageMessage(
+    var message = messageService.saveMessage(
         Message.newInstance(user, room, MessageType.IMAGE, imageUrl));
     chatRoomService.validateUserInRoom(user, room);
     chatRoomService.updateLastCheckedMessageByMessage(room, user, message);

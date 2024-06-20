@@ -1,14 +1,14 @@
 package org.crops.fitserver.domain.chat.service.impl;
 
-import static org.crops.fitserver.domain.chat.constant.ChatConstant.JOIN;
-import static org.crops.fitserver.domain.chat.constant.ChatConstant.FORCED_OUT;
-import static org.crops.fitserver.domain.chat.constant.ChatConstant.LEAVE;
+import static org.crops.fitserver.domain.chat.constant.ChatMessage.FORCED_OUT;
 import static org.crops.fitserver.domain.chat.domain.MessageType.NOTICE;
 
 import lombok.RequiredArgsConstructor;
+import org.crops.fitserver.domain.chat.constant.ChatMessage;
 import org.crops.fitserver.domain.chat.domain.ChatRoom;
 import org.crops.fitserver.domain.chat.domain.ChatRoomUser;
 import org.crops.fitserver.domain.chat.domain.Message;
+import org.crops.fitserver.domain.chat.domain.MessageType;
 import org.crops.fitserver.domain.chat.repository.ChatRoomRepository;
 import org.crops.fitserver.domain.chat.repository.ChatRoomUserRepository;
 import org.crops.fitserver.domain.chat.repository.MessageRepository;
@@ -17,6 +17,7 @@ import org.crops.fitserver.domain.chat.service.MessageService;
 import org.crops.fitserver.domain.user.domain.User;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
+import org.crops.fitserver.global.socket.service.SocketService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 public class ChatRoomServiceImpl implements ChatRoomService {
 
   private final MessageService messageService;
+  private final SocketService socketService;
   private final ChatRoomRepository chatRoomRepository;
   private final ChatRoomUserRepository chatRoomUserRepository;
   private final MessageRepository messageRepository;
@@ -86,10 +88,11 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     var message = Message.newInstance(
         chatRoom,
         user,
-        NOTICE,
-        JOIN.getMessage(user.getNickname()));
-    messageService.saveNoticeMessage(message);
+        MessageType.JOIN,
+        ChatMessage.JOIN.getMessage(user.getNickname()));
+    messageService.saveMessage(message);
     chatRoomUserRepository.save(ChatRoomUser.create(user, chatRoom));
+    socketService.sendNotice(chatRoomId, message);
   }
 
   @Override
@@ -98,13 +101,27 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     var message = Message.newInstance(
         chatRoom,
         user,
-        NOTICE,
-        LEAVE.getMessage(user.getNickname()));
-    messageService.saveNoticeMessage(message);
+        MessageType.EXIT,
+        ChatMessage.EXIT.getMessage(user.getNickname()));
+    messageService.saveMessage(message);
     chatRoomUserRepository
         .findByUserIdAndChatRoomId(user.getId(), chatRoom.getId())
         .ifPresent(chatRoomUser -> chatRoomUserRepository.delete(chatRoomUser));
+    socketService.sendNotice(chatRoomId, message);
   }
+
+  @Override
+  public void chatRoomComplete(long chatRoomId, User user) {
+    var chatRoom = getById(chatRoomId);
+    var message = Message.newInstance(
+        chatRoom,
+        user,
+        MessageType.COMPLETE,
+        ChatMessage.COMPLETE.getMessage());
+    messageService.saveMessage(message);
+    socketService.sendNotice(chatRoomId, message);
+  }
+
 
   @Override
   public void chatRoomForceOut(long chatRoomId, User user) {
@@ -114,7 +131,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         user,
         NOTICE,
         FORCED_OUT.getMessage(user.getNickname()));
-    messageService.saveNoticeMessage(message);
+    messageService.saveMessage(message);
     chatRoomUserRepository
         .findByUserIdAndChatRoomId(user.getId(), chatRoom.getId())
         .ifPresent(chatRoomUser -> chatRoomUserRepository.delete(chatRoomUser));

@@ -6,9 +6,5 @@ public interface MessageService {
 
   Message getById(long messageId);
 
-  Message saveTextMessage(Message message);
-
-  Message saveImageMessage(Message message);
-
-  Message saveNoticeMessage(Message message);
+  Message saveMessage(Message message);
 }

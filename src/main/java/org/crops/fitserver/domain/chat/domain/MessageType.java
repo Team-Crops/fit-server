@@ -5,5 +5,5 @@ import lombok.Getter;
 @Getter
 public enum MessageType {
 
-  NOTICE, TEXT, IMAGE,
+  NOTICE, TEXT, IMAGE, JOIN, EXIT, COMPLETE
 }
