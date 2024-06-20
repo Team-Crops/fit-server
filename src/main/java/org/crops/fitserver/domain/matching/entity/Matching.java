@@ -2,7 +2,6 @@ package org.crops.fitserver.domain.matching.entity;
 
 import static org.crops.fitserver.domain.matching.constant.MatchingConstants.MATCHING_EXPIRE_DAYS;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import jakarta.persistence.Column;
@@ -21,7 +20,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.crops.fitserver.domain.matching.constant.MatchingStatus;
 import org.crops.fitserver.domain.skillset.domain.Position;
 import org.crops.fitserver.domain.user.domain.User;
@@ -103,15 +101,17 @@ public class Matching extends BaseTimeEntity {
   }
 
   public void cancel() {
-    if(this.matchingRoom != null){
+    if (this.matchingRoom != null) {
       throw new BusinessException(ErrorCode.ALREADY_EXIST_MATCHING_ROOM_EXCEPTION);
     }
     this.status = MatchingStatus.CANCELED;
   }
+
   protected void forceOut() {
     this.status = MatchingStatus.FORCED_OUT;
     this.matchingRoom = null;
   }
+
   protected void exit() {
     this.status = MatchingStatus.EXITED;
     this.matchingRoom = null;

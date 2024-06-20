@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.crops.fitserver.domain.project.constant.ReportType;
 import org.crops.fitserver.domain.project.domain.ProjectReportHistory;
 import org.crops.fitserver.domain.project.repository.ProjectReportHistoryRepository;
 import org.crops.fitserver.domain.user.domain.UserBlock;

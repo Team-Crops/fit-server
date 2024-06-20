@@ -20,6 +20,8 @@ import org.crops.fitserver.domain.project.repository.ProjectReportHistoryReposit
 import org.crops.fitserver.domain.project.repository.ProjectRepository;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
+import org.crops.fitserver.global.mq.MessagePublisher;
+import org.crops.fitserver.global.mq.dto.Report;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +35,7 @@ public class ProjectServiceImpl implements ProjectService {
   private final ProjectReportHistoryRepository projectReportHistoryRepository;
   private final AlarmService alarmService;
   private final MailService mailService;
+  private final MessagePublisher<Report> reportMessagePublisher;
 
   @Override
   public GetProjectListResponse getProjectList(Long userId) {
@@ -80,10 +83,20 @@ public class ProjectServiceImpl implements ProjectService {
         .findFirst()
         .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_ACCESS_EXCEPTION));
 
-    alarmService.sendAlarm(projectMember.getUser(), AlarmCase.REPORT);
+    if(!projectMember.getIsReportable()) {
+      throw new BusinessException(ErrorCode.NOT_ENABLE_REPORT_EXCEPTION);
+    }
+
+    targetProjectMember.updateIsReportable(false);
+
     projectReportHistoryRepository.save(
         ProjectReportHistory.create(projectMember.getId(), targetProjectMember.getId(), projectId,
             request.reportType(), request.description()));
+    projectMemberRepository.save(targetProjectMember);
+
+    reportMessagePublisher.publish(Report.of(request.targetUserId(), request.reportType()));
+
+    alarmService.sendAlarm(projectMember.getUser(), AlarmCase.REPORT);
 
     mailService.send(AdminMailType.REPORT, ADMIN_MAIL,
         ReportMailRequiredInfo.of(projectMember.getUser(), targetProjectMember.getUser(),
