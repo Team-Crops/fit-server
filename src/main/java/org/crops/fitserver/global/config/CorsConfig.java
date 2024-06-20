@@ -17,7 +17,7 @@ public class CorsConfig {
   private String activeProfile;
 
   private static final List<String> PRODUCTION_ALLOWED_ORIGINS = List.of(
-      "https://api.f-it.team"
+      "https://f-it.team"
   );
 
   private static final List<String> DEFAULT_ALLOWED_ORIGINS = List.of(

@@ -4,17 +4,21 @@ import static java.util.stream.Collectors.*;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.crops.fitserver.domain.chat.domain.MessageType;
 import org.crops.fitserver.global.annotation.SocketController;
 import org.crops.fitserver.global.annotation.SocketMapping;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
 import org.crops.fitserver.global.exception.ErrorResponse;
+import org.crops.fitserver.global.socket.service.MessageResponse;
+import org.crops.fitserver.global.socket.service.SocketService;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +29,8 @@ public class WebSocketAddMappingSupporter {
 
   private final ConfigurableListableBeanFactory beanFactory;
   private final SocketProperty socketProperty;
+  private final SocketService socketService;
+  private final ObjectMapper objectMapper;
   private SocketIOServer socketIOServer;
 
   public void addListeners(SocketIOServer socketIOServer) {
@@ -34,7 +40,6 @@ public class WebSocketAddMappingSupporter {
         .stream()
         .map(Object::getClass)
         .collect(toList());
-
     classes.forEach(cls -> {
       List<Method> methods = findSocketMappingAnnotatedMethods(cls);
       addSocketServerEventListener(cls, methods);
@@ -46,17 +51,9 @@ public class WebSocketAddMappingSupporter {
     String eventValue = socketController.value();
     methods.forEach(method -> {
       SocketMapping socketMapping = method.getAnnotation(SocketMapping.class);
-      String endpoint = socketMapping.endpoint();
+      String eventName = getEventName(socketMapping, eventValue);
       Class<?> dtoClass = socketMapping.requestCls();
-      StringBuilder sb = new StringBuilder();
-      sb.append(eventValue);
-      sb.append(endpoint);
-      String path = sb.toString();
-      socketIOServer.addEventListener(path, dtoClass, (client, data, ackSender) -> {
-        client
-            .getHandshakeData()
-            .getHttpHeaders()
-            .add("Access-Control-Allow-Origin", "*");
+      socketIOServer.addEventListener(eventName, dtoClass, (client, data, ackSender) -> {
         try {
           List<Object> args = new ArrayList<>();
           for (Class<?> params : method.getParameterTypes()) {
@@ -68,12 +65,40 @@ public class WebSocketAddMappingSupporter {
               args.add(data);
             }
           }
-          method.invoke(beanFactory.getBean(controller), args.toArray());
+          Object returnObject = method.invoke(beanFactory.getBean(controller), args.toArray());
+          if (returnObject != null) {
+            try {
+              MessageResponse messageResponse = (MessageResponse) returnObject;
+              if (messageResponse.getMessageType() == MessageType.NOTICE) {
+                socketService.sendNotice(
+                    socketService.getRoomId(client),
+                    objectMapper.writeValueAsString(messageResponse)
+                );
+              } else {
+                socketService.sendMessage(
+                    client,
+                    objectMapper.writeValueAsString(messageResponse));
+              }
+            } catch (ClassCastException e) {
+              log.error("ClassCastException : {}", e.getMessage(), e);
+              client.sendEvent(
+                  socketProperty.getGetMessageEvent(),
+                  ErrorResponse.from(ErrorCode.INTERNAL_SERVER_ERROR));
+            }
+          }
         } catch (Exception e) {
           exceptionHandle(e, client);
         }
       });
     });
+  }
+
+  private static String getEventName(SocketMapping socketMapping, String eventValue) {
+    String endpoint = socketMapping.endpoint();
+    return new StringBuilder()
+        .append(eventValue)
+        .append(endpoint)
+        .toString();
   }
 
   private List<Method> findSocketMappingAnnotatedMethods(Class<?> cls) {

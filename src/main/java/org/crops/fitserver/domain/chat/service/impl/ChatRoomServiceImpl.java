@@ -43,7 +43,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
   @Override
   public void validateUserInRoom(User user, ChatRoom room) {
-    // TODO: implement
+    if (!chatRoomUserRepository.existsByUserIdAndChatRoomId(user.getId(), room.getId())) {
+      throw new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION);
+    }
   }
 
   @Override
@@ -86,7 +88,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         user,
         NOTICE,
         JOIN.getMessage(user.getNickname()));
-    messageService.sendNoticeMessage(message);
+    messageService.saveNoticeMessage(message);
     chatRoomUserRepository.save(ChatRoomUser.create(user, chatRoom));
   }
 
@@ -98,7 +100,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         user,
         NOTICE,
         LEAVE.getMessage(user.getNickname()));
-    messageService.sendNoticeMessage(message);
+    messageService.saveNoticeMessage(message);
     chatRoomUserRepository
         .findByUserIdAndChatRoomId(user.getId(), chatRoom.getId())
         .ifPresent(chatRoomUser -> chatRoomUserRepository.delete(chatRoomUser));
@@ -112,7 +114,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         user,
         NOTICE,
         FORCED_OUT.getMessage(user.getNickname()));
-    messageService.sendNoticeMessage(message);
+    messageService.saveNoticeMessage(message);
     chatRoomUserRepository
         .findByUserIdAndChatRoomId(user.getId(), chatRoom.getId())
         .ifPresent(chatRoomUser -> chatRoomUserRepository.delete(chatRoomUser));

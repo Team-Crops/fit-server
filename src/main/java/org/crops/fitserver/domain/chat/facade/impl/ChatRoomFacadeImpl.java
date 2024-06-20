@@ -38,14 +38,15 @@ public class ChatRoomFacadeImpl implements ChatRoomFacade {
 
   @Override
   @Transactional
-  public void sendTextMessage(SocketIOClient client, long userId, long roomId, String content) {
+  public MessageResponse sendTextMessage(SocketIOClient client, long userId, long roomId, String content) {
     var user = userService.getById(userId);
     var room = chatRoomService.getById(roomId);
-    var message = Message.newInstance(user, room, MessageType.TEXT, content);
+    var message = messageService.saveTextMessage(
+        Message.newInstance(user, room, MessageType.TEXT, content));
     chatRoomService.validateUserInRoom(user, room);
-    messageService.sendTextMessage(client, message);
     sendMessageAlarm(room, user);
     chatRoomService.updateLastCheckedMessageByMessage(room, user, message);
+    return MessageResponse.from(message);
   }
 
   private void sendMessageAlarm(ChatRoom chatRoom, User sender) {
@@ -61,13 +62,14 @@ public class ChatRoomFacadeImpl implements ChatRoomFacade {
 
   @Override
   @Transactional
-  public void sendImageMessage(SocketIOClient client, long userId, long roomId, String imageUrl) {
+  public MessageResponse sendImageMessage(SocketIOClient client, long userId, long roomId, String imageUrl) {
     var user = userService.getById(userId);
     var room = chatRoomService.getById(roomId);
-    var message = Message.newInstance(user, room, MessageType.IMAGE, imageUrl);
+    var message = messageService.saveImageMessage(
+        Message.newInstance(user, room, MessageType.IMAGE, imageUrl));
     chatRoomService.validateUserInRoom(user, room);
-    messageService.sendImageMessage(client, message);
     chatRoomService.updateLastCheckedMessageByMessage(room, user, message);
+    return MessageResponse.from(message);
   }
 
   @Override

@@ -22,26 +22,27 @@ public class SocketService {
   @Transactional
   public void sendMessage(
       SocketIOClient senderClient,
-      MessageResponse message) {
+      Object message) {
     var roomId = String.valueOf(getRoomId(senderClient));
     senderClient
         .getNamespace()
         .getRoomOperations(roomId)
         .getClients()
         .forEach(client ->
-                client.sendEvent(socketProperty.getGetMessageEvent(), message));
+            client.sendEvent(socketProperty.getGetMessageEvent(), message));
   }
 
   public void sendNotice(
       Long roomId,
-      MessageResponse message) {
-    if(!roomOperationsMap.containsKey(roomId)){
+      Object message) {
+    if (!roomOperationsMap.containsKey(roomId)) {
       return;
     }
     roomOperationsMap
         .get(roomId)
         .getClients()
-        .forEach(client -> client.sendEvent(socketProperty.getGetMessageEvent(), message));
+        .forEach(client ->
+            client.sendEvent(socketProperty.getGetMessageEvent(), message));
   }
 
   public void addRoomOperations(Long roomId, BroadcastOperations broadcastOperations) {
