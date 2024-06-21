@@ -6,13 +6,13 @@ import org.crops.fitserver.global.socket.service.MessageResponse;
 
 public interface ChatRoomFacade {
 
-  void sendTextMessage(
+  MessageResponse sendTextMessage(
       SocketIOClient client,
       long userId,
       long roomId,
       String content);
 
-  void sendImageMessage(
+  MessageResponse sendImageMessage(
       SocketIOClient client,
       long userId,
       long roomId,

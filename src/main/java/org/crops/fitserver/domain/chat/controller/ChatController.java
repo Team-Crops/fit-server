@@ -13,6 +13,7 @@ import org.crops.fitserver.global.annotation.CurrentUserId;
 import org.crops.fitserver.global.annotation.SocketController;
 import org.crops.fitserver.global.annotation.SocketMapping;
 import org.crops.fitserver.global.annotation.V1;
+import org.crops.fitserver.global.socket.service.MessageResponse;
 import org.crops.fitserver.global.socket.service.SocketService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,10 +34,12 @@ public class ChatController {
   private final SocketService socketService;
 
   @SocketMapping(endpoint = "/text", requestCls = SendMessageRequest.class)
-  public void sendTextMessage(SocketIOClient client, @Valid SendMessageRequest request) {
+  public MessageResponse sendTextMessage(
+      SocketIOClient client,
+      @Valid SendMessageRequest request) {
     Long userId = socketService.getUserId(client);
     Long roomId = socketService.getRoomId(client);
-    chatRoomFacade.sendTextMessage(
+    return chatRoomFacade.sendTextMessage(
         client,
         userId,
         roomId,
@@ -44,10 +47,12 @@ public class ChatController {
   }
 
   @SocketMapping(endpoint = "/image", requestCls = SendMessageRequest.class)
-  public void sendImageMessage(SocketIOClient client, @Valid SendMessageRequest request) {
+  public MessageResponse sendImageMessage(
+      SocketIOClient client,
+      @Valid SendMessageRequest request) {
     long userId = socketService.getUserId(client);
     long roomId = socketService.getRoomId(client);
-    chatRoomFacade.sendImageMessage(
+    return chatRoomFacade.sendImageMessage(
         client,
         userId,
         roomId,
@@ -55,7 +60,9 @@ public class ChatController {
   }
 
   @SocketMapping(endpoint = "/receive", requestCls = ReceiveMessageRequest.class)
-  public void receiveMessage(SocketIOClient client, ReceiveMessageRequest request) {
+  public void receiveMessage(
+      SocketIOClient client,
+      ReceiveMessageRequest request) {
     long userId = socketService.getUserId(client);
     long roomId = socketService.getRoomId(client);
     chatRoomFacade.receiveMessage(

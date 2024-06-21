@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ChatRoomConnectListener implements ConnectListener {
+public class WebSocketConnectListener implements ConnectListener {
 
   private final JwtResolver jwtResolver;
   private final ChatRoomService chatRoomService;
@@ -31,6 +31,10 @@ public class ChatRoomConnectListener implements ConnectListener {
   public void onConnect(SocketIOClient socketIOClient) {
     User user = getUser(socketIOClient);
     ChatRoom room = getRoom(socketIOClient);
+    socketIOClient
+        .getHandshakeData()
+        .getHttpHeaders()
+        .add("Access-Control-Allow-Origin", "*");
     saveUserId(socketIOClient, user.getId());
     saveRoomId(socketIOClient, room.getId());
     socketService.addRoomOperations(

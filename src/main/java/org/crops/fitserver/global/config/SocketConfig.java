@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.global.socket.SocketProperty;
 import org.crops.fitserver.global.socket.WebSocketAddMappingSupporter;
 import org.crops.fitserver.global.socket.exception.SocketExceptionListener;
-import org.crops.fitserver.global.socket.ChatRoomConnectListener;
+import org.crops.fitserver.global.socket.WebSocketConnectListener;
 import org.crops.fitserver.global.socket.WebSocketDisconnectListener;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
 public class SocketConfig implements CommandLineRunner {
 
   private final WebSocketAddMappingSupporter mappingSupporter;
-  private final ChatRoomConnectListener connectListener;
+  private final WebSocketConnectListener connectListener;
   private final WebSocketDisconnectListener disconnectListener;
   private final SocketExceptionListener exceptionListener;
   private final SocketProperty socketProperty;
