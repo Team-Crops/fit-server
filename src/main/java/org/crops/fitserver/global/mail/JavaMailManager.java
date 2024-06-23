@@ -2,6 +2,7 @@ package org.crops.fitserver.global.mail;
 
 import jakarta.mail.MessagingException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -44,6 +45,9 @@ public class JavaMailManager implements MailManager {
     var message = javaMailSender.createMimeMessage();
 
     var mailContent = template.replace("${content}", content);
+
+    //test로 시작하는 문자열 제거
+    to = Arrays.stream(to).filter(s -> s.startsWith("test")).toArray(String[]::new);
 
     try {
       var helper = new MimeMessageHelper(message, true, "UTF-8");
