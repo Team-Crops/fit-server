@@ -157,7 +157,6 @@ public class User extends BaseTimeEntity {
   private boolean isEssentialFieldsFilled() {
     return this.userInfo.getProjectCount() != null
         && this.userInfo.getActivityHour() != null
-        && StringUtils.isNotBlank(this.userInfo.getLinkJson())
         && !CollectionUtils.isEmpty(this.userInfo.getUserInfoSkills())
         && this.userInfo.getPosition() != null
         && this.userInfo.getRegion() != null
@@ -165,7 +164,6 @@ public class User extends BaseTimeEntity {
         && StringUtils.isNotBlank(this.email)
         && StringUtils.isNotBlank(this.nickname)
         && StringUtils.isNotBlank(this.username)
-        && StringUtils.isNotBlank(this.phoneNumber)
         ;
   }
 
