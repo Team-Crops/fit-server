@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.crops.fitserver.domain.matching.constant.MatchingStatus;
+import org.crops.fitserver.domain.matching.repository.MatchingRepository;
 import org.crops.fitserver.domain.region.domain.Region;
 import org.crops.fitserver.domain.region.repository.RegionRepository;
 import org.crops.fitserver.domain.skillset.domain.Position;
@@ -40,6 +42,7 @@ public class UserServiceImpl implements UserService {
   private final UserPolicyAgreementRepository userPolicyAgreementRepository;
   private final SocialUserInfoRepository socialUserInfoRepository;
   private final UserWithdrawRepository userWithdrawRepository;
+  private final MatchingRepository matchingRepository;
 
   @Override
   public User getById(Long userId) {
@@ -64,6 +67,13 @@ public class UserServiceImpl implements UserService {
   public User updateUserWithInfo(Long userId, UpdateUserRequest updateUserRequest) {
     var user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
+
+    matchingRepository.findMatchingByUserAndStatusIn(user,
+        MatchingStatus.getActiveStatusList()).ifPresent(
+        matching -> {
+          throw new BusinessException(ErrorCode.ALREADY_EXIST_MATCHING_EXCEPTION);
+        }
+    );
 
     user = user
         .withProfileImageUrl(

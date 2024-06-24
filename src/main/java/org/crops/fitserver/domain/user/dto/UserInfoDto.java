@@ -4,6 +4,8 @@ package org.crops.fitserver.domain.user.dto;
 import static org.crops.fitserver.domain.user.domain.Link.parseToLinkList;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Pattern;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,9 +32,11 @@ public class UserInfoDto {
   private String backgroundText;
   @JsonProperty("isOpenProfile")
   private Boolean isOpenProfile;
+  @Pattern(regexp = ".*\\.pdf$")
   private String portfolioUrl;
   private Integer projectCount;
   private Short activityHour;
+  @Max(200)
   private String introduce;
   private List<Link> linkList;
   private Long positionId;
