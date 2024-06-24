@@ -4,20 +4,24 @@ import com.corundumstudio.socketio.BroadcastOperations;
 import com.corundumstudio.socketio.SocketIOClient;
 import jakarta.transaction.Transactional;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
 import org.crops.fitserver.global.socket.SocketProperty;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SocketService {
 
   private final SocketProperty socketProperty;
-  private final Map<Long, BroadcastOperations> roomOperationsMap = new HashMap<>();
+  private final Map<Long, Set<SocketIOClient>> clientsMap = new HashMap<>();
 
   @Transactional
   public void sendMessage(
@@ -35,20 +39,19 @@ public class SocketService {
   public void sendNotice(
       Long roomId,
       Object message) {
-    if (!roomOperationsMap.containsKey(roomId)) {
+    if (!clientsMap.containsKey(roomId)) {
+      log.warn("Room not found. roomId: {}", roomId);
       return;
     }
-    roomOperationsMap
-        .get(roomId)
-        .getClients()
-        .forEach(client ->
-            client.sendEvent(socketProperty.getGetMessageEvent(), message));
+    clientsMap.get(roomId)
+        .forEach(client -> client.sendEvent(socketProperty.getGetMessageEvent(), message));
   }
 
-  public void addRoomOperations(Long roomId, BroadcastOperations broadcastOperations) {
-    if (!roomOperationsMap.containsKey(roomId)) {
-      roomOperationsMap.put(roomId, broadcastOperations);
+  public void addClients(Long roomId, SocketIOClient client) {
+    if (!clientsMap.containsKey(roomId)) {
+      clientsMap.put(roomId, new HashSet<>());
     }
+    clientsMap.get(roomId).add(client);
   }
 
   public Long getRoomId(SocketIOClient socketIOClient) {

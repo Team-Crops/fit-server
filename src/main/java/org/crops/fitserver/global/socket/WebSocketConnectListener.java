@@ -31,20 +31,23 @@ public class WebSocketConnectListener implements ConnectListener {
   public void onConnect(SocketIOClient socketIOClient) {
     User user = getUser(socketIOClient);
     ChatRoom room = getRoom(socketIOClient);
+    allowOrigin(socketIOClient);
+    saveUserId(socketIOClient, user.getId());
+    saveRoomId(socketIOClient, room.getId());
+    joinRoom(socketIOClient, room);
+    socketService.addClients(
+        room.getId(),
+        socketIOClient);
+
+    log.info("Socket ID[{}]  User Id {} Room Id {} Connected to socket",
+        socketIOClient.getSessionId().toString(), user.getId(), room.getId());
+  }
+
+  private void allowOrigin(SocketIOClient socketIOClient) {
     socketIOClient
         .getHandshakeData()
         .getHttpHeaders()
         .add("Access-Control-Allow-Origin", "*");
-    saveUserId(socketIOClient, user.getId());
-    saveRoomId(socketIOClient, room.getId());
-    socketService.addRoomOperations(
-        room.getId(),
-        socketIOClient
-            .getNamespace()
-            .getRoomOperations(String.valueOf(room.getId())));
-    log.info("Socket ID[{}]  User Id {} Room Id {} Connected to socket",
-        socketIOClient.getSessionId().toString(), user.getId(), room.getId());
-    joinRoom(socketIOClient, room);
   }
 
   private User getUser(SocketIOClient socketIOClient) {
