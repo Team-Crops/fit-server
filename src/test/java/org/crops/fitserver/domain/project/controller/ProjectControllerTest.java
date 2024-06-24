@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.EnumFields;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.config.MockMvcDocs;
@@ -90,8 +90,8 @@ class ProjectControllerTest extends MockMvcDocs {
                       .projectName("프로젝트1")
                       .projectStatus(ProjectStatus.PROJECT_COMPLETE)
                       .chatRoomId(1L)
-                      .createdAt(LocalDateTime.now())
-                      .completedAt(LocalDateTime.now())
+                      .createdAt(OffsetDateTime.now())
+                      .completedAt(OffsetDateTime.now())
                       .projectMemberList(List.of(
                           ProjectMemberDto.builder()
                               .userId(principal.getUserId())
@@ -114,7 +114,7 @@ class ProjectControllerTest extends MockMvcDocs {
                       .projectName("프로젝트2")
                       .projectStatus(ProjectStatus.PROJECT_IN_PROGRESS)
                       .chatRoomId(1L)
-                      .createdAt(LocalDateTime.now())
+                      .createdAt(OffsetDateTime.now())
                       .projectMemberList(List.of(
                           ProjectMemberDto.builder()
                               .userId(principal.getUserId())
@@ -202,7 +202,7 @@ class ProjectControllerTest extends MockMvcDocs {
               .projectName(updateProjectRequest.projectName())
               .projectStatus(ProjectStatus.PROJECT_IN_PROGRESS)
               .chatRoomId(1L)
-              .createdAt(LocalDateTime.now())
+              .createdAt(OffsetDateTime.now())
               .projectMemberList(List.of(
                   ProjectMemberDto.builder()
                       .userId(principal.getUserId())
@@ -295,8 +295,8 @@ class ProjectControllerTest extends MockMvcDocs {
               .projectName("project_name")
               .projectStatus(updateProjectRequest.projectStatus())
               .chatRoomId(1L)
-              .createdAt(LocalDateTime.now())
-              .completedAt(LocalDateTime.now())
+              .createdAt(OffsetDateTime.now())
+              .completedAt(OffsetDateTime.now())
               .projectMemberList(List.of(
                   ProjectMemberDto.builder()
                       .userId(principal.getUserId())

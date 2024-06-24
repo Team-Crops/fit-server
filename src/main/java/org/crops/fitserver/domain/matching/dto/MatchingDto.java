@@ -1,6 +1,6 @@
 package org.crops.fitserver.domain.matching.dto;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import org.crops.fitserver.domain.matching.constant.MatchingStatus;
 import org.crops.fitserver.domain.matching.entity.Matching;
 
@@ -8,8 +8,8 @@ public record MatchingDto(
     Long userId,
     Long roomId,
     Long positionId,
-    LocalDateTime createdAt,
-    LocalDateTime expiredAt,
+    OffsetDateTime createdAt,
+    OffsetDateTime expiredAt,
     MatchingStatus status) {
 
   public static MatchingDto from(Matching matching) {

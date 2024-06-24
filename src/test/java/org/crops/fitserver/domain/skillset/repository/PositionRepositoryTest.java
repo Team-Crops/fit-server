@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.crops.fitserver.config.PersistenceConfig;
 import org.crops.fitserver.config.QueryDslTestConfig;
 import org.crops.fitserver.domain.skillset.constant.PositionType;
 import org.crops.fitserver.domain.skillset.domain.Position;
@@ -13,13 +14,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestConstructor;
 
 @DataJpaTest
-@EnableJpaAuditing
-@Import(QueryDslTestConfig.class)
+@Import({QueryDslTestConfig.class, PersistenceConfig.class})
 @ActiveProfiles("test")
 @RequiredArgsConstructor
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)

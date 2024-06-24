@@ -13,7 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,10 +42,10 @@ public class UserBlock extends BaseTimeEntity {
   private User user;
 
   @Column(nullable = false)
-  private LocalDateTime blockedAt;
+  private OffsetDateTime blockedAt;
 
   @Column(nullable = true)
-  private LocalDateTime unblockedAt;
+  private OffsetDateTime unblockedAt;
 
   @Column(nullable = false)
   @Enumerated(value = EnumType.STRING)
@@ -54,13 +54,13 @@ public class UserBlock extends BaseTimeEntity {
   public static UserBlock create(User user) {
     return UserBlock.builder()
         .user(user)
-        .blockedAt(LocalDateTime.now())
-        .unblockedAt(LocalDateTime.now().plusDays(DEFAULT_BLOCK_DAYS))
+        .blockedAt(OffsetDateTime.now())
+        .unblockedAt(OffsetDateTime.now().plusDays(DEFAULT_BLOCK_DAYS))
         .blockStatus(BlockStatus.BLOCKED)
         .build();
   }
 
   public void extendBlock() {
-    this.unblockedAt = LocalDateTime.now().plusDays(DEFAULT_BLOCK_DAYS);
+    this.unblockedAt = OffsetDateTime.now().plusDays(DEFAULT_BLOCK_DAYS);
   }
 }

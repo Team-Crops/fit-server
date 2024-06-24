@@ -12,7 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -52,7 +52,7 @@ public class MatchingRoom extends BaseTimeEntity {
   @Column(name = "is_completed", nullable = false)
   private Boolean isCompleted;
   @Column(name = "completed_at", nullable = true)
-  private LocalDateTime completedAt;
+  private OffsetDateTime completedAt;
   @Column(name = "host_user_id", nullable = false)
   private Long hostUserId;
   @OneToMany(mappedBy = "matchingRoom", fetch = FetchType.EAGER)
@@ -246,7 +246,7 @@ public class MatchingRoom extends BaseTimeEntity {
       throw new BusinessException(ErrorCode.NOT_READY_MATCHING_EXCEPTION);
     }
     isCompleted = true;
-    completedAt = LocalDateTime.now();
+    completedAt = OffsetDateTime.now();
     matchingList.forEach(Matching::complete);
   }
 

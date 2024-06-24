@@ -1,6 +1,6 @@
 package org.crops.fitserver.domain.alarm.dto;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import lombok.Builder;
 import org.crops.fitserver.domain.alarm.domain.Alarm;
 import org.crops.fitserver.domain.alarm.domain.AlarmCase;
@@ -10,7 +10,7 @@ public record AlarmDto(
     long id,
     AlarmCase alarmCase,
     boolean isRead,
-    LocalDateTime createAt
+    OffsetDateTime createAt
 ) {
 
   public static AlarmDto from(Alarm alarm) {

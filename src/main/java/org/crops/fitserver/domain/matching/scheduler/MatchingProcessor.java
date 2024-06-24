@@ -7,7 +7,7 @@ import static org.crops.fitserver.domain.matching.VO.ComparableMatchingParameter
 import static org.crops.fitserver.domain.matching.constant.MatchingConstants.MINIMUM_REQUIRED_POSITIONS;
 
 import io.jsonwebtoken.lang.Collections;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -52,7 +52,7 @@ public class MatchingProcessor {
   public void match() {
 
     var matchingRoomList = matchingRoomRepository.findMatchingRoomNotComplete(
-        LocalDateTime.now().minusDays(MATCHING_ROOM_EXPIRED_DAYS));
+        OffsetDateTime.now().minusDays(MATCHING_ROOM_EXPIRED_DAYS));
     var matchingList = matchingRepository.findMatchingWithoutRoom();
 
     var matchingMap = getMatchingMap(matchingList);

@@ -1,7 +1,6 @@
 package org.crops.fitserver.domain.chat.dto.response;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,7 @@ public class NoticeMessageResponse extends MessageResponse {
       String notice,
       Long messageId,
       MessageType messageType,
-      LocalDateTime createdAt) {
+      OffsetDateTime createdAt) {
     this.notice = notice;
     this.messageId = messageId;
     this.messageType = messageType;

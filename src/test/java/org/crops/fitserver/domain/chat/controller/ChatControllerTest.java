@@ -3,7 +3,7 @@ package org.crops.fitserver.domain.chat.controller;
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.epages.restdocs.apispec.Schema.schema;
-import static java.time.LocalDateTime.*;
+import static java.time.OffsetDateTime.*;
 import static org.crops.fitserver.domain.chat.domain.MessageType.TEXT;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -17,7 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.crops.fitserver.config.MockMvcDocsWithLogin;
