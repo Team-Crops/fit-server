@@ -64,7 +64,9 @@ public record UserProfileDto(
     userProfileDtoBuilder.portfolioUrl(user.getUserInfo().getPortfolioUrl());
     userProfileDtoBuilder.linkList(Link.parseToLinkList(user.getUserInfo().getLinkJson()));
     userProfileDtoBuilder.email(user.getEmail());
-    userProfileDtoBuilder.phoneNumber(user.getPhoneNumber());
+    if (user.isOpenPhoneNum()) {
+      userProfileDtoBuilder.phoneNumber(user.getPhoneNumber());
+    }
     return userProfileDtoBuilder.build();
   }
 }

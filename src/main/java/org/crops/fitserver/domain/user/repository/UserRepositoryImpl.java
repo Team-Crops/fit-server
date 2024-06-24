@@ -41,7 +41,8 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
             eqBackgroundStatus(backgroundStatus),
             eqRegionId(regionId),
             eqProjectCount(projectCount),
-            eqActivityHour(activityHour)
+            eqActivityHour(activityHour),
+            userInfo.isOpenProfile.isTrue()
         )
         .orderBy(
             Expressions.stringTemplate("RAND("+randomSeed+")").asc()

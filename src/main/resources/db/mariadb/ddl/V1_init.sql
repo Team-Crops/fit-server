@@ -201,6 +201,7 @@ CREATE TABLE IF NOT EXISTS `project_member`
     `project_id`        bigint NOT NULL,
     `user_id`           bigint NOT NULL,
     `position_id`       bigint NOT NULL,
+    `is_reportable`     tinyint(1) NOT NULL DEFAULT false,
     `created_at`  datetime(6) NOT NULL,
     `updated_at`  datetime(6) NOT NULL,
     `completed_at` datetime(6) NULL,
