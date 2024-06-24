@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.given;
 import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.crops.fitserver.domain.matching.repository.MatchingRepository;
 import org.crops.fitserver.domain.region.repository.RegionRepository;
 import org.crops.fitserver.domain.skillset.repository.PositionRepository;
 import org.crops.fitserver.domain.skillset.repository.SkillRepository;
@@ -23,6 +24,7 @@ import org.crops.fitserver.domain.user.dto.PolicyAgreementDto;
 import org.crops.fitserver.domain.user.dto.request.UpdateUserRequest;
 import org.crops.fitserver.domain.user.repository.UserPolicyAgreementRepository;
 import org.crops.fitserver.domain.user.repository.UserRepository;
+import org.crops.fitserver.global.exception.BusinessException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -63,6 +65,8 @@ public class UserServiceTest {
   private SkillRepository skillRepository;
   @Mock
   private UserPolicyAgreementRepository userPolicyAgreementRepository;
+  @Mock
+  private MatchingRepository matchingRepository;
 
   @Test
   public void getUserWithInfo_success() {
