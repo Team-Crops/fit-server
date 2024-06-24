@@ -3,6 +3,7 @@ package org.crops.fitserver.domain.recommend.service.impl;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.domain.recommend.domain.UserLikes;
 import org.crops.fitserver.domain.recommend.repository.UserLikesRepository;
 import org.crops.fitserver.domain.recommend.service.RecommendService;
@@ -15,6 +16,7 @@ import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RecommendServiceImpl implements RecommendService {
