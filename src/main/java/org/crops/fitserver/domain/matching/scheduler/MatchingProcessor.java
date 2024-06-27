@@ -172,7 +172,7 @@ public class MatchingProcessor {
           alarmService.sendAlarm(user, AlarmCase.NEW_MATCHING_ROOM);
           chatRoomService.chatRoomJoin(chatRoom.getId(), user);
         });
-        var newRoom = MatchingRoom.create(matchingList, chatRoomService.createChatRoom().getId());
+        var newRoom = MatchingRoom.create(matchingList, chatRoom.getId());
         matchingRoomRepository.save(newRoom);
         mailTargetMatchingList.addAll(matchingList);
       }
