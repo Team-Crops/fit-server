@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.EnumFields;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.config.MockMvcDocsWithLogin;
@@ -58,7 +58,7 @@ class MatchingControllerTest extends MockMvcDocsWithLogin {
       var user = UserBuildUtil.buildUser().build();
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());
       given(matchingService.createMatching(principal.getUserId())).willReturn(
-          new MatchingDto(1L, 1L, 1L, LocalDateTime.now(), LocalDateTime.now().plusDays(3),
+          new MatchingDto(1L, 1L, 1L, OffsetDateTime.now(), OffsetDateTime.now().plusDays(3),
               MatchingStatus.WAITING));
       //when
       var result = mockMvc.perform(post(URL)
@@ -136,7 +136,7 @@ class MatchingControllerTest extends MockMvcDocsWithLogin {
       var user = UserBuildUtil.buildUser().build();
       var principal = getPrincipalDetails(user.getId(), user.getUserRole());
       given(matchingService.getMatching(principal.getUserId())).willReturn(
-          new MatchingDto(1L, 1L, 1L, LocalDateTime.now(), LocalDateTime.now().plusDays(3),
+          new MatchingDto(1L, 1L, 1L, OffsetDateTime.now(), OffsetDateTime.now().plusDays(3),
               MatchingStatus.WAITING));
       //when
       var result = mockMvc.perform(get(URL)

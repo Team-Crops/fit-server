@@ -11,7 +11,10 @@ public enum ChatMessage {
   FORCED_OUT("%s님을 내보냈습니다."),
   EXIT("%s님이 나갔습니다."),
   JOIN("%s님이 들어왔습니다."),
-  COMPLETE("채팅방이 종료되었습니다.");
+  COMPLETE("채팅방이 종료되었습니다."),
+  READY("%s님이 준비완료했습니다."),
+  CANCEL_READY("%s님이 준비를 취소했습니다.");
+
   private final String message;
 
   public String getMessage(String keyword) {

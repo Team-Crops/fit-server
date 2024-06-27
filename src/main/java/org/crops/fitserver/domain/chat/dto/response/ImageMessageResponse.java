@@ -1,6 +1,6 @@
 package org.crops.fitserver.domain.chat.dto.response;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import org.crops.fitserver.domain.chat.domain.Message;
@@ -19,7 +19,7 @@ public class ImageMessageResponse extends MessageResponse {
       String imageUrl,
       Long messageId,
       MessageType messageType,
-      LocalDateTime createdAt) {
+      OffsetDateTime createdAt) {
     this.userId = userId;
     this.imageUrl = imageUrl;
     this.messageId = messageId;

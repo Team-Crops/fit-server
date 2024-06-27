@@ -13,7 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,7 +53,7 @@ public class ProjectMember extends BaseTimeEntity {
   private Position position;
 
   @Column(name = "completed_at", nullable = true)
-  private LocalDateTime completedAt;
+  private OffsetDateTime completedAt;
 
   @Column(name = "status", nullable = false)
   @Enumerated(value = EnumType.STRING)
@@ -85,7 +85,7 @@ public class ProjectMember extends BaseTimeEntity {
   public void updateStatus(ProjectStatus status) {
     if (status != null) {
       this.status = status;
-      this.completedAt = status.equals(ProjectStatus.PROJECT_COMPLETE) ? LocalDateTime.now() : null;
+      this.completedAt = status.equals(ProjectStatus.PROJECT_COMPLETE) ? OffsetDateTime.now() : null;
     }
   }
 

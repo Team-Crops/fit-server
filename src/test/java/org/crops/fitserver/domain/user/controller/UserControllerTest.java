@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.EnumFields;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.crops.fitserver.config.MockMvcDocsWithLogin;
@@ -592,13 +592,13 @@ class UserControllerTest extends MockMvcDocsWithLogin {
             .policyType(PolicyType.PRIVACY_POLICY)
             .version("1.0.0")
             .isAgree(true)
-            .updatedAt(LocalDateTime.now())
+            .updatedAt(OffsetDateTime.now())
             .build(),
         PolicyAgreementDto.builder()
             .policyType(PolicyType.PRIVACY_POLICY)
             .version("1.0.0")
             .isAgree(true)
-            .updatedAt(LocalDateTime.now())
+            .updatedAt(OffsetDateTime.now())
             .build()
     );
     var updatePolicyAgreementRequest = new UpdatePolicyAgreementRequest(policyAgreementDtoList);

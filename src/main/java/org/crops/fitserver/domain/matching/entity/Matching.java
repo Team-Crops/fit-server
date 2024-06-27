@@ -3,7 +3,7 @@ package org.crops.fitserver.domain.matching.entity;
 import static org.crops.fitserver.domain.matching.constant.MatchingConstants.MATCHING_EXPIRE_DAYS;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.OffsetTimeDeserializer;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,7 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,12 +56,12 @@ public class Matching extends BaseTimeEntity {
   private Position position;
 
   @Column(name = "expired_at", nullable = true)
-  @JsonDeserialize(using = LocalDateDeserializer.class)
-  private LocalDateTime expiredAt;
+  @JsonDeserialize(using = OffsetTimeDeserializer.class)
+  private OffsetDateTime expiredAt;
 
   @Column(name = "last_batch_at", nullable = true)
-  @JsonDeserialize(using = LocalDateDeserializer.class)
-  private LocalDateTime lastBatchAt;
+  @JsonDeserialize(using = OffsetTimeDeserializer.class)
+  private OffsetDateTime lastBatchAt;
 
   @Column(name = "status", nullable = false)
   @Enumerated(value = EnumType.STRING)
@@ -72,7 +72,7 @@ public class Matching extends BaseTimeEntity {
         .user(user)
         .position(user.getUserInfo().getPosition())
         .status(MatchingStatus.WAITING)
-        .expiredAt(LocalDateTime.now().plusDays(MATCHING_EXPIRE_DAYS))
+        .expiredAt(OffsetDateTime.now().plusDays(MATCHING_EXPIRE_DAYS))
         .build();
   }
 
@@ -86,7 +86,7 @@ public class Matching extends BaseTimeEntity {
   }
 
   public void updateLastBatchAt() {
-    this.lastBatchAt = LocalDateTime.now();
+    this.lastBatchAt = OffsetDateTime.now();
   }
 
   public boolean isHost() {

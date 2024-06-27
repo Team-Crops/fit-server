@@ -1,6 +1,6 @@
 package org.crops.fitserver.domain.matching.repository;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.crops.fitserver.domain.matching.entity.MatchingRoom;
@@ -15,7 +15,7 @@ public interface MatchingRoomRepository extends JpaRepository<MatchingRoom, Long
       + "join fetch u.userInfo ui "
       + "where mr.isCompleted = false "
       + "and mr.createdAt >= :expiredAt")
-  List<MatchingRoom> findMatchingRoomNotComplete(LocalDateTime expiredAt);
+  List<MatchingRoom> findMatchingRoomNotComplete(OffsetDateTime expiredAt);
 
   @Query("select mr from MatchingRoom mr "
       + "join fetch mr.matchingList ml "

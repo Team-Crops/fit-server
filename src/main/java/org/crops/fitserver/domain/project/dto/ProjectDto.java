@@ -1,6 +1,6 @@
 package org.crops.fitserver.domain.project.dto;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.Builder;
 import org.crops.fitserver.domain.project.constant.ProjectStatus;
@@ -12,8 +12,8 @@ public record ProjectDto(
     String projectName,
     List<ProjectMemberDto> projectMemberList,
     Long chatRoomId,
-    LocalDateTime createdAt,
-    LocalDateTime completedAt,
+    OffsetDateTime createdAt,
+    OffsetDateTime completedAt,
     ProjectStatus projectStatus
 ) {
 
@@ -35,5 +35,4 @@ public record ProjectDto(
         .projectStatus(owner.getStatus())
         .build();
   }
-
 }

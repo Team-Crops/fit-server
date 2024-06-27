@@ -141,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `message`
 (
     `message_id`   bigint      NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `chat_room_id` bigint      NOT NULL,
-    `user_id`      bigint      NOT NULL,
+    `user_id`      bigint      NULL,
     `content`      text        NOT NULL,
     `message_type` varchar(20) NOT NULL,
     `created_at`   datetime(6)    NOT NULL,

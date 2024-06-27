@@ -1,6 +1,6 @@
 package org.crops.fitserver.domain.matching.dto.response;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.Builder;
 import org.crops.fitserver.domain.matching.dto.MatchingUserView;
@@ -11,7 +11,7 @@ public record GetMatchingRoomResponse(
     Long matchingRoomId,
     Long chatRoomId,
     Boolean isCompleted,
-    LocalDateTime completedAt,
+    OffsetDateTime completedAt,
     Long hostUserId,
     List<MatchingUserView> matchingUserList
 ) {

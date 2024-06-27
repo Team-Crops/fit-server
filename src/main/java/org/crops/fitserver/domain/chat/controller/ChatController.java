@@ -85,7 +85,7 @@ public class ChatController {
   @GetMapping("/room/{roomId}/message/recent")
   public ResponseEntity<GetLastSeenMessageResponse> getLastSeenMessage(
       @CurrentUserId long userId,
-       @PathVariable long roomId
+      @PathVariable long roomId
   ) {
     var response = GetLastSeenMessageResponse.from(
         chatRoomFacade.getRecentMessageId(userId, roomId));

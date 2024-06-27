@@ -42,7 +42,7 @@ public class ChatRoomFacadeImpl implements ChatRoomFacade {
     var user = userService.getById(userId);
     var room = chatRoomService.getById(roomId);
     var message = messageService.saveMessage(
-        Message.newInstance(user, room, MessageType.TEXT, content));
+        Message.newInstance(room, user, MessageType.TEXT, content));
     chatRoomService.validateUserInRoom(user, room);
     sendMessageAlarm(room, user);
     chatRoomService.updateLastCheckedMessageByMessage(room, user, message);
@@ -66,7 +66,7 @@ public class ChatRoomFacadeImpl implements ChatRoomFacade {
     var user = userService.getById(userId);
     var room = chatRoomService.getById(roomId);
     var message = messageService.saveMessage(
-        Message.newInstance(user, room, MessageType.IMAGE, imageUrl));
+        Message.newInstance(room, user, MessageType.IMAGE, imageUrl));
     chatRoomService.validateUserInRoom(user, room);
     chatRoomService.updateLastCheckedMessageByMessage(room, user, message);
     return MessageResponse.from(message);
