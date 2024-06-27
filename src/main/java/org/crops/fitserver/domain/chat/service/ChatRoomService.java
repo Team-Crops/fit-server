@@ -30,6 +30,10 @@ public interface ChatRoomService {
 
   void chatRoomLeave(long chatRoomId, User user);
 
+  void chatRoomReady(long chatRoomId, User user);
+
+  void chatRoomCancelReady(long chatRoomId, User user);
+
   void chatRoomComplete(long chatRoomId, User user);
 
   void chatRoomForceOut(long chatRoomId, User user);

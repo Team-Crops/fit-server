@@ -114,6 +114,8 @@ public class MatchingServiceImpl implements MatchingService {
       mailService.send(UserMailType.DONE_READY_COMPLETE, host.getEmail(),
           DefaultMailRequiredInfo.of(host.getNickname()));
     }
+
+    chatRoomService.chatRoomReady(matchingRoom.getChatRoomId(), user);
   }
 
   @Override
@@ -162,6 +164,8 @@ public class MatchingServiceImpl implements MatchingService {
       mailService.send(UserMailType.START_PROJECT, m.getUser().getEmail(),
           DefaultMailRequiredInfo.of(m.getUser().getNickname()));
     });
+
+    chatRoomService.chatRoomComplete(matchingRoom.getChatRoomId(), user);
   }
 
   private void createProject(MatchingRoom matchingRoom) {
@@ -181,9 +185,9 @@ public class MatchingServiceImpl implements MatchingService {
     if (!Objects.equals(matchingRoom.getId(), roomId)) {
       throw new BusinessException(ErrorCode.NOT_EXIST_MATCHING_ROOM_EXCEPTION);
     }
+    matchingRoom.exit(matching);
 
     chatRoomService.chatRoomLeave(matchingRoom.getChatRoomId(), user);
-    matchingRoom.exit(matching);
   }
 
   @Override
@@ -195,6 +199,8 @@ public class MatchingServiceImpl implements MatchingService {
         ErrorCode.NOT_EXIST_MATCHING_EXCEPTION));
 
     matching.cancel();
+
+    chatRoomService.chatRoomLeave(matching.getMatchingRoom().getChatRoomId(), user);
   }
 
   @Override

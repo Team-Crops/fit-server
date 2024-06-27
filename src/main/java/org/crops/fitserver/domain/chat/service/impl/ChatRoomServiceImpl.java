@@ -111,6 +111,30 @@ public class ChatRoomServiceImpl implements ChatRoomService {
   }
 
   @Override
+  public void chatRoomReady(long chatRoomId, User user) {
+    var chatRoom = getById(chatRoomId);
+    var message = Message.newInstance(
+        chatRoom,
+        user,
+        MessageType.READY,
+        ChatMessage.READY.getMessage(user.getNickname()));
+    messageService.saveMessage(message);
+    socketService.sendNotice(chatRoomId, message);
+  }
+
+  @Override
+  public void chatRoomCancelReady(long chatRoomId, User user) {
+    var chatRoom = getById(chatRoomId);
+    var message = Message.newInstance(
+        chatRoom,
+        user,
+        MessageType.CANCEL_READY,
+        ChatMessage.CANCEL_READY.getMessage(user.getNickname()));
+    messageService.saveMessage(message);
+    socketService.sendNotice(chatRoomId, message);
+  }
+
+  @Override
   public void chatRoomComplete(long chatRoomId, User user) {
     var chatRoom = getById(chatRoomId);
     var message = Message.newInstance(
