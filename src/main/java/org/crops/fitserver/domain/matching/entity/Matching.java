@@ -3,7 +3,9 @@ package org.crops.fitserver.domain.matching.entity;
 import static org.crops.fitserver.domain.matching.constant.MatchingConstants.MATCHING_EXPIRE_DAYS;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.OffsetTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.OffsetTimeSerializer;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -57,10 +59,12 @@ public class Matching extends BaseTimeEntity {
 
   @Column(name = "expired_at", nullable = true)
   @JsonDeserialize(using = OffsetTimeDeserializer.class)
+  @JsonSerialize(using = OffsetTimeSerializer.class)
   private OffsetDateTime expiredAt;
 
   @Column(name = "last_batch_at", nullable = true)
   @JsonDeserialize(using = OffsetTimeDeserializer.class)
+  @JsonSerialize(using = OffsetTimeSerializer.class)
   private OffsetDateTime lastBatchAt;
 
   @Column(name = "status", nullable = false)
