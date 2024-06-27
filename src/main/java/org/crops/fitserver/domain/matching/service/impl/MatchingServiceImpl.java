@@ -177,7 +177,6 @@ public class MatchingServiceImpl implements MatchingService {
   @Override
   @Transactional
   public void exit(Long userId, Long roomId) {
-
     var user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
     var matching = getActiveMatching(user).orElseThrow(() -> new BusinessException(
@@ -186,9 +185,9 @@ public class MatchingServiceImpl implements MatchingService {
     if (!Objects.equals(matchingRoom.getId(), roomId)) {
       throw new BusinessException(ErrorCode.NOT_EXIST_MATCHING_ROOM_EXCEPTION);
     }
+    matchingRoom.exit(matching);
 
     chatRoomService.chatRoomLeave(matchingRoom.getChatRoomId(), user);
-    matchingRoom.exit(matching);
   }
 
   @Override
