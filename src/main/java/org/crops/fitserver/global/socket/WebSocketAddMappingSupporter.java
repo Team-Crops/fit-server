@@ -4,14 +4,12 @@ import static java.util.stream.Collectors.*;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.crops.fitserver.domain.chat.domain.MessageType;
 import org.crops.fitserver.global.annotation.SocketController;
 import org.crops.fitserver.global.annotation.SocketMapping;
 import org.crops.fitserver.global.exception.BusinessException;
@@ -30,7 +28,6 @@ public class WebSocketAddMappingSupporter {
   private final ConfigurableListableBeanFactory beanFactory;
   private final SocketProperty socketProperty;
   private final SocketService socketService;
-  private final ObjectMapper objectMapper;
   private SocketIOServer socketIOServer;
 
   public void addListeners(SocketIOServer socketIOServer) {
@@ -69,15 +66,15 @@ public class WebSocketAddMappingSupporter {
           if (returnObject != null) {
             try {
               MessageResponse messageResponse = (MessageResponse) returnObject;
-              if (messageResponse.getMessageType() == MessageType.NOTICE) {
-                socketService.sendNotice(
-                    socketService.getRoomId(client),
-                    objectMapper.writeValueAsString(messageResponse)
-                );
-              } else {
-                socketService.sendMessage(
-                    client,
-                    objectMapper.writeValueAsString(messageResponse));
+              switch (messageResponse.getMessageType()) {
+                case IMAGE, TEXT:
+                  socketService.sendMessage(
+                      client,
+                      messageResponse);
+                default:
+                  socketService.sendNotice(
+                      socketService.getRoomId(client),
+                      messageResponse);
               }
             } catch (ClassCastException e) {
               log.error("ClassCastException : {}", e.getMessage(), e);

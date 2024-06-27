@@ -1,9 +1,10 @@
 package org.crops.fitserver.domain.chat.service.impl;
 
 import static org.crops.fitserver.domain.chat.constant.ChatMessage.FORCED_OUT;
+import static org.crops.fitserver.domain.chat.constant.ChatMessage.READY;
 import static org.crops.fitserver.domain.chat.domain.MessageType.NOTICE;
 
-import lombok.RequiredArgsConstructor;
+import lombok.RequiredArgsConstructor ;
 import org.crops.fitserver.domain.chat.constant.ChatMessage;
 import org.crops.fitserver.domain.chat.domain.ChatRoom;
 import org.crops.fitserver.domain.chat.domain.ChatRoomUser;
@@ -17,6 +18,7 @@ import org.crops.fitserver.domain.chat.service.MessageService;
 import org.crops.fitserver.domain.user.domain.User;
 import org.crops.fitserver.global.exception.BusinessException;
 import org.crops.fitserver.global.exception.ErrorCode;
+import org.crops.fitserver.global.socket.service.MessageResponse;
 import org.crops.fitserver.global.socket.service.SocketService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -92,7 +94,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         ChatMessage.JOIN.getMessage(user.getNickname()));
     messageService.saveMessage(message);
     chatRoomUserRepository.save(ChatRoomUser.create(user, chatRoom));
-    socketService.sendNotice(chatRoomId, message);
+    socketService.sendNotice(chatRoomId, MessageResponse.from(message));
   }
 
   @Override
@@ -107,7 +109,31 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     chatRoomUserRepository
         .findByUserIdAndChatRoomId(user.getId(), chatRoom.getId())
         .ifPresent(chatRoomUser -> chatRoomUserRepository.delete(chatRoomUser));
-    socketService.sendNotice(chatRoomId, message);
+    socketService.sendNotice(chatRoomId, MessageResponse.from(message));
+  }
+
+  @Override
+  public void chatRoomReady(ChatRoom chatRoom, User user) {
+    var message = Message.newNoticeMessage(
+        chatRoom,
+        MessageType.READY,
+        READY.getMessage(user.getNickname()));
+
+    socketService.sendNotice(
+        chatRoom.getId(),
+        MessageResponse.from(message));
+  }
+
+  @Override
+  public void chatRoomCancelReady(ChatRoom chatRoom, User user) {
+    var message = Message.newNoticeMessage(
+        chatRoom,
+        MessageType.CANCEL_READY,
+        ChatMessage.CANCEL_READY.getMessage(user.getNickname()));
+
+    socketService.sendNotice(
+        chatRoom.getId(),
+        MessageResponse.from(message));
   }
 
   @Override
@@ -119,7 +145,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         MessageType.COMPLETE,
         ChatMessage.COMPLETE.getMessage());
     messageService.saveMessage(message);
-    socketService.sendNotice(chatRoomId, message);
+    socketService.sendNotice(chatRoomId, MessageResponse.from(message));
   }
 
 

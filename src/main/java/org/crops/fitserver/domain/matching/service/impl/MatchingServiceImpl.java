@@ -98,6 +98,7 @@ public class MatchingServiceImpl implements MatchingService {
     var matching = getActiveMatching(user).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_EXIST_MATCHING_EXCEPTION));
     var matchingRoom = matching.getMatchingRoom();
+    var chatRoom = chatRoomService.getById(matchingRoom.getChatRoomId());
 
     if (!Objects.equals(matchingRoom.getId(), roomId)) {
       throw new BusinessException(ErrorCode.NOT_EXIST_MATCHING_ROOM_EXCEPTION);
@@ -105,9 +106,9 @@ public class MatchingServiceImpl implements MatchingService {
     if (Objects.equals(matchingRoom.getHostUserId(), userId)) {
       throw new BusinessException(ErrorCode.NOT_ENABLE_READY_EXCEPTION);
     }
-
     matchingRoom.ready(matching);
     matchingRepository.save(matching);
+    chatRoomService.chatRoomReady(chatRoom, user);
 
     var host = matchingRoom.getHostUser();
     if (matchingRoom.isAllReady()) {
@@ -124,6 +125,7 @@ public class MatchingServiceImpl implements MatchingService {
     var matching = getActiveMatching(user).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_EXIST_MATCHING_EXCEPTION));
     var matchingRoom = matching.getMatchingRoom();
+    var chatRoom = chatRoomService.getById(matchingRoom.getChatRoomId());
 
     if (!Objects.equals(matchingRoom.getId(), roomId)) {
       throw new BusinessException(ErrorCode.NOT_EXIST_MATCHING_ROOM_EXCEPTION);
@@ -133,6 +135,7 @@ public class MatchingServiceImpl implements MatchingService {
     }
 
     matchingRoom.cancelReady(matching);
+    chatRoomService.chatRoomCancelReady(chatRoom, user);
     matchingRepository.save(matching);
   }
 
@@ -153,6 +156,8 @@ public class MatchingServiceImpl implements MatchingService {
     }
 
     matchingRoom.complete();
+    chatRoomService.chatRoomComplete(matchingRoom.getChatRoomId(), user);
+
     matchingRoom.getMatchingList().forEach(m ->
         alarmService.sendAlarm(m.getUser(), AlarmCase.STARTED_PROJECT));
     matchingRoomRepository.save(matchingRoom);
@@ -193,7 +198,11 @@ public class MatchingServiceImpl implements MatchingService {
         ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
     var matching = getActiveMatching(user).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_EXIST_MATCHING_EXCEPTION));
+    var matchingRoom = matching.getMatchingRoom();
 
+    if (matchingRoom != null) {
+      chatRoomService.chatRoomLeave(matchingRoom.getChatRoomId(), user);
+    }
     matching.cancel();
   }
 

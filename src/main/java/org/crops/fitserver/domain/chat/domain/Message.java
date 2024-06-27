@@ -49,19 +49,6 @@ public class Message extends BaseTimeEntity {
   private String content;
 
   public static Message newInstance(
-      User user,
-      ChatRoom chatRoom,
-      MessageType messageType,
-      String content) {
-    return Message.builder()
-        .user(user)
-        .chatRoom(chatRoom)
-        .messageType(messageType)
-        .content(content)
-        .build();
-  }
-
-  public static Message newInstance(
       ChatRoom chatRoom,
       User sender,
       MessageType messageType,
@@ -69,6 +56,17 @@ public class Message extends BaseTimeEntity {
     return Message.builder()
         .chatRoom(chatRoom)
         .user(sender)
+        .messageType(messageType)
+        .content(content)
+        .build();
+  }
+
+  public static Message newNoticeMessage(
+      ChatRoom chatRoom,
+      MessageType messageType,
+      String content) {
+    return Message.builder()
+        .chatRoom(chatRoom)
         .messageType(messageType)
         .content(content)
         .build();

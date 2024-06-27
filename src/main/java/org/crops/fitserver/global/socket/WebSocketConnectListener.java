@@ -35,9 +35,7 @@ public class WebSocketConnectListener implements ConnectListener {
     saveUserId(socketIOClient, user.getId());
     saveRoomId(socketIOClient, room.getId());
     joinRoom(socketIOClient, room);
-    socketService.addClients(
-        room.getId(),
-        socketIOClient);
+    socketService.addClients(socketIOClient);
 
     log.info("Socket ID[{}]  User Id {} Room Id {} Connected to socket",
         socketIOClient.getSessionId().toString(), user.getId(), room.getId());
