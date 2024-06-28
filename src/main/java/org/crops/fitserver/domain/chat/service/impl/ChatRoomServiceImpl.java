@@ -2,7 +2,6 @@ package org.crops.fitserver.domain.chat.service.impl;
 
 import static org.crops.fitserver.domain.chat.constant.ChatMessage.FORCED_OUT;
 import static org.crops.fitserver.domain.chat.constant.ChatMessage.READY;
-import static org.crops.fitserver.domain.chat.domain.MessageType.NOTICE;
 
 import lombok.RequiredArgsConstructor ;
 import org.crops.fitserver.domain.chat.constant.ChatMessage;
@@ -155,7 +154,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     var message = Message.newInstance(
         chatRoom,
         user,
-        NOTICE,
+        MessageType.FORCED_OUT,
         FORCED_OUT.getMessage(user.getNickname()));
     messageService.saveMessage(message);
     chatRoomUserRepository
