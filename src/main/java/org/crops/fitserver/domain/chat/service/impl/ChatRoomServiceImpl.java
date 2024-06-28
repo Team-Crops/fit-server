@@ -137,13 +137,13 @@ public class ChatRoomServiceImpl implements ChatRoomService {
   }
 
   @Override
-  public void chatRoomComplete(long chatRoomId, User user) {
+  public void chatRoomComplete(long chatRoomId, long projectId, User user) {
     var chatRoom = getById(chatRoomId);
     var message = Message.newInstance(
         chatRoom,
         user,
         MessageType.COMPLETE,
-        ChatMessage.COMPLETE.getMessage());
+        String.valueOf(projectId));
     messageService.saveMessage(message);
     socketService.sendNotice(chatRoomId, MessageResponse.from(message));
   }
