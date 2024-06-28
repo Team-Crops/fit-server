@@ -30,7 +30,7 @@ public class NoticeMessageResponse extends MessageResponse {
     return NoticeMessageResponse.builder()
         .notice(message.getContent())
         .messageId(message.getId())
-        .messageType(MessageType.NOTICE)
+        .messageType(message.getMessageType())
         .createdAt(message.getCreatedAt())
         .build();
   }
