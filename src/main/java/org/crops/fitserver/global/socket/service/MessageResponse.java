@@ -38,7 +38,7 @@ public abstract class MessageResponse implements org.crops.fitserver.global.mq.d
         return TextMessageResponse.from(message);
       case IMAGE:
         return ImageMessageResponse.from(message);
-      case NOTICE, JOIN, EXIT, COMPLETE, READY:
+      case NOTICE, JOIN, EXIT, READY, CANCEL_READY, COMPLETE:
         return NoticeMessageResponse.from(message);
       default:
         log.error("Unknown message type: {}", message.getMessageType());
