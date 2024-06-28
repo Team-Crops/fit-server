@@ -34,6 +34,7 @@ public class SocketService {
       log.warn("Room not found. roomId: {}", roomId);
       return;
     }
+    log.info("roomId: {}", roomId);
     try {
       String stringMessage = objectMapper.writeValueAsString(message);
       clientsMap.get(roomId)
