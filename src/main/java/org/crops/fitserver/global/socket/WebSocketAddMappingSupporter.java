@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.*;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +29,7 @@ public class WebSocketAddMappingSupporter {
   private final ConfigurableListableBeanFactory beanFactory;
   private final SocketProperty socketProperty;
   private final SocketService socketService;
+  private final ObjectMapper objectMapper;
   private SocketIOServer socketIOServer;
 
   public void addListeners(SocketIOServer socketIOServer) {
@@ -80,7 +82,8 @@ public class WebSocketAddMappingSupporter {
               log.error("ClassCastException : {}", e.getMessage(), e);
               client.sendEvent(
                   socketProperty.getGetMessageEvent(),
-                  ErrorResponse.from(ErrorCode.INTERNAL_SERVER_ERROR));
+                  objectMapper.writeValueAsString(
+                      ErrorResponse.from(ErrorCode.INTERNAL_SERVER_ERROR)));
             }
           }
         } catch (Exception e) {
