@@ -61,9 +61,11 @@ public class SocketService {
     }
     try {
       String stringMessage = objectMapper.writeValueAsString(message);
-      clientsMap.get(roomId)
-          .forEach(client ->
-              client.sendEvent(socketProperty.getGetMessageEvent(), stringMessage));
+      if (clientsMap.containsKey(roomId)) {
+        clientsMap.get(roomId)
+            .forEach(client ->
+                client.sendEvent(socketProperty.getGetMessageEvent(), stringMessage));
+      }
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     }
