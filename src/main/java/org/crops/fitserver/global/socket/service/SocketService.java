@@ -33,6 +33,10 @@ public class SocketService {
 
     try {
       String stringMessage = objectMapper.writeValueAsString(message);
+      clientsMap.get(roomId)
+          .forEach(client ->
+              client.sendEvent(socketProperty.getGetMessageEvent(), stringMessage));
+      /*
       senderClient
           .getNamespace()
           .getRoomOperations(roomId)
@@ -42,6 +46,7 @@ public class SocketService {
                   socketProperty.getGetMessageEvent(),
                   stringMessage)
           );
+       */
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     }
