@@ -26,11 +26,14 @@ public class SocketService {
   private final Map<Long, Set<SocketIOClient>> clientsMap = new HashMap<>();
 
   @Transactional
-  public void sendMessage (
+  public void sendMessage(
       SocketIOClient senderClient,
       MessageResponse message) {
     var roomId = String.valueOf(getRoomId(senderClient));
-
+    if (!clientsMap.containsKey(roomId)) {
+      log.warn("Room not found. roomId: {}", roomId);
+      return;
+    }
     try {
       String stringMessage = objectMapper.writeValueAsString(message);
       clientsMap.get(roomId)
@@ -61,11 +64,10 @@ public class SocketService {
     }
     try {
       String stringMessage = objectMapper.writeValueAsString(message);
-      if (clientsMap.containsKey(roomId)) {
-        clientsMap.get(roomId)
-            .forEach(client ->
-                client.sendEvent(socketProperty.getGetMessageEvent(), stringMessage));
-      }
+      clientsMap.get(roomId)
+          .forEach(client ->
+              client.sendEvent(socketProperty.getGetMessageEvent(), stringMessage));
+
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     }
