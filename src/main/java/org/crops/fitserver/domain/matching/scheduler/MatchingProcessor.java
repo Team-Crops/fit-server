@@ -78,7 +78,7 @@ public class MatchingProcessor {
   public void insertToNotEnoughRoom(List<MatchingRoom> matchingRoomList,
       Map<PositionType, List<Matching>> matchingMap) {
 
-    var mailTargetMatchingList = new HashSet<Matching>();
+    var successMatchingList = new HashSet<Matching>();
 
     var notEnoughRoomList = matchingRoomList.stream()
         .filter(MatchingRoom::isNotEnough).toList();
@@ -115,7 +115,7 @@ public class MatchingProcessor {
           alarmService.sendAlarm(matching.getUser(), AlarmCase.NEW_MATCHING_ROOM);
           chatRoomService.chatRoomJoin(matchingRoom.getChatRoomId(), matching.getUser());
           updateRoomList.add(matchingRoom);
-          mailTargetMatchingList.add(matching);
+          successMatchingList.add(matching);
         });
       });
     });
@@ -129,13 +129,15 @@ public class MatchingProcessor {
       } catch (Exception e) {
         log.error("insertToNotEnoughRoom error", e);
         //에러가 났으면 mailTargetUserList에서 에러난 대상 제거
-        mailTargetMatchingList.removeIf(user -> subList.stream()
+        successMatchingList.removeIf(user -> subList.stream()
             .anyMatch(matchingRoom -> matchingRoom.getMatchingList().stream()
                 .anyMatch(matching -> matching.getUser().equals(user))));
       }
     }
 
-    sendMail(mailTargetMatchingList);
+    matchingMap.forEach((key, value)->value.removeAll(successMatchingList));
+
+    sendMail(successMatchingList);
   }
 
   @Transactional
@@ -145,7 +147,7 @@ public class MatchingProcessor {
       return;
     }
 
-    var mailTargetMatchingList = new HashSet<Matching>();
+    var successMatchingList = new HashSet<Matching>();
 
     var size = matchingMap.values().stream().mapToInt(List::size).min().orElse(0);
 
@@ -174,10 +176,12 @@ public class MatchingProcessor {
         });
         var newRoom = MatchingRoom.create(matchingList, chatRoom.getId());
         matchingRoomRepository.save(newRoom);
-        mailTargetMatchingList.addAll(matchingList);
+        successMatchingList.addAll(matchingList);
       }
 
-      sendMail(mailTargetMatchingList);
+      matchingMap.forEach((key, value)->value.removeAll(successMatchingList));
+
+      sendMail(successMatchingList);
     }
   }
 
@@ -202,7 +206,7 @@ public class MatchingProcessor {
       return;
     }
 
-    var removeList = new ArrayList<Matching>();
+    var successMatchingList = new ArrayList<Matching>();
 
     matchingList.forEach(matching -> {
       this.findBestRoom(matching, roomList)
@@ -211,12 +215,12 @@ public class MatchingProcessor {
             matchingRoomRepository.save(matchingRoom);
             alarmService.sendAlarm(matching.getUser(), AlarmCase.NEW_MATCHING_ROOM);
             chatRoomService.chatRoomJoin(matchingRoom.getChatRoomId(), matching.getUser());
-            removeList.add(matching);
+            successMatchingList.add(matching);
             mailTargetMatchingList.add(matching);
           });
     });
 
-    matchingList.removeAll(removeList);
+    matchingList.removeAll(successMatchingList);
 
     sendMail(mailTargetMatchingList);
   }
