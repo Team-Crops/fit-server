@@ -21,6 +21,7 @@ import org.crops.fitserver.domain.matching.entity.MatchingRoom;
 import org.crops.fitserver.domain.matching.repository.MatchingRepository;
 import org.crops.fitserver.domain.matching.repository.MatchingRoomRepository;
 import org.crops.fitserver.domain.matching.service.MatchingService;
+import org.crops.fitserver.domain.project.domain.Project;
 import org.crops.fitserver.domain.project.repository.ProjectRepository;
 import org.crops.fitserver.domain.user.domain.User;
 import org.crops.fitserver.domain.user.repository.UserBlockRepository;
@@ -156,22 +157,22 @@ public class MatchingServiceImpl implements MatchingService {
     }
 
     matchingRoom.complete();
-    chatRoomService.chatRoomComplete(matchingRoom.getChatRoomId(), user);
 
     matchingRoom.getMatchingList().forEach(m ->
         alarmService.sendAlarm(m.getUser(), AlarmCase.STARTED_PROJECT));
     matchingRoomRepository.save(matchingRoom);
-    createProject(matchingRoom);
+    var project = createProject(matchingRoom);
 
+    chatRoomService.chatRoomComplete(matchingRoom.getChatRoomId(), project.getId(), user);
     matchingRoom.getMatchingList().forEach(m -> {
       mailService.send(UserMailType.START_PROJECT, m.getUser().getEmail(),
           DefaultMailRequiredInfo.of(m.getUser().getNickname()));
     });
   }
 
-  private void createProject(MatchingRoom matchingRoom) {
+  private Project createProject(MatchingRoom matchingRoom) {
     var project = convertMatchingRoomToProject(matchingRoom);
-    projectRepository.save(project);
+    return projectRepository.save(project);
   }
 
   @Override

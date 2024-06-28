@@ -34,7 +34,7 @@ public interface ChatRoomService {
 
   void chatRoomCancelReady(ChatRoom chatRoom, User user);
 
-  void chatRoomComplete(long chatRoomId, User user);
+  void chatRoomComplete(long chatRoomId, long projectId, User user);
 
   void chatRoomForceOut(long chatRoomId, User user);
 }
