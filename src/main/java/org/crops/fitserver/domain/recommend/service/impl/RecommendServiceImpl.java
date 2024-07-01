@@ -31,8 +31,8 @@ public class RecommendServiceImpl implements RecommendService {
   public Users recommendUser(
       long userId,
       Boolean liked,
-      List<Long> positionId,
-      List<Long> skillId,
+      List<Long> positionIds,
+      List<Long> skillIds,
       BackgroundStatus backgroundStatus,
       Long regionId,
       Integer projectCount,
@@ -44,8 +44,8 @@ public class RecommendServiceImpl implements RecommendService {
         userRepository.findAllByFilter(
             userId,
             liked,
-            positionId,
-            skillId,
+            positionIds,
+            skillIds,
             backgroundStatus,
             regionId,
             projectCount,
