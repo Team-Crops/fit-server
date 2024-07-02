@@ -83,7 +83,11 @@ public class ProjectServiceImpl implements ProjectService {
         .findFirst()
         .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_ACCESS_EXCEPTION));
 
-    if(!projectMember.getIsReportable()) {
+    if(projectMember.getId().equals(targetProjectMember.getId())) {
+      throw new BusinessException(ErrorCode.NOT_ENABLE_REPORT_EXCEPTION);
+    }
+
+    if(!targetProjectMember.getIsReportable()) {
       throw new BusinessException(ErrorCode.NOT_ENABLE_REPORT_EXCEPTION);
     }
 

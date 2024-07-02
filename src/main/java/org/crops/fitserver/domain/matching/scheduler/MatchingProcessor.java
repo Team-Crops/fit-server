@@ -197,7 +197,6 @@ public class MatchingProcessor {
 
   private void joinRoom(PositionType positionType, Map<PositionType, List<Matching>> matchingMap,
       List<MatchingRoom> matchingRoomList) {
-    var mailTargetMatchingList = new HashSet<Matching>();
     var matchingList = matchingMap.get(positionType);
     var roomList = new ArrayList<>(matchingRoomList.stream()
         .filter(matchingRoom -> matchingRoom.canInsertPosition(positionType))
@@ -206,7 +205,7 @@ public class MatchingProcessor {
       return;
     }
 
-    var successMatchingList = new ArrayList<Matching>();
+    var successMatchingList = new HashSet<Matching>();
 
     matchingList.forEach(matching -> {
       this.findBestRoom(matching, roomList)
@@ -216,13 +215,12 @@ public class MatchingProcessor {
             alarmService.sendAlarm(matching.getUser(), AlarmCase.NEW_MATCHING_ROOM);
             chatRoomService.chatRoomJoin(matchingRoom.getChatRoomId(), matching.getUser());
             successMatchingList.add(matching);
-            mailTargetMatchingList.add(matching);
           });
     });
 
     matchingList.removeAll(successMatchingList);
 
-    sendMail(mailTargetMatchingList);
+    sendMail(successMatchingList);
   }
 
   /**
