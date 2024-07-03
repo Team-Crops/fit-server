@@ -4,6 +4,7 @@ import jakarta.mail.MessagingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -47,7 +48,10 @@ public class JavaMailManager implements MailManager {
     var mailContent = template.replace("${content}", content);
 
     //test로 시작하는 문자열 제거
-    to = Arrays.stream(to).filter(s -> s.startsWith("test")).toArray(String[]::new);
+    to = Arrays.stream(to).filter(s -> !s.startsWith("test")).toArray(String[]::new);
+    if(ArrayUtils.isEmpty(to)){
+      return;
+    }
 
     try {
       var helper = new MimeMessageHelper(message, true, "UTF-8");
