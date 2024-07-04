@@ -157,6 +157,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         MessageType.FORCED_OUT,
         FORCED_OUT.getMessage(user.getNickname()));
     messageService.saveMessage(message);
+    socketService.sendNotice(chatRoomId, MessageResponse.from(message));
     chatRoomUserRepository
         .findByUserIdAndChatRoomId(user.getId(), chatRoom.getId())
         .ifPresent(chatRoomUser -> chatRoomUserRepository.delete(chatRoomUser));
