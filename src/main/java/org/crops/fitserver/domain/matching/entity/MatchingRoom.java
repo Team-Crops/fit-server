@@ -121,6 +121,7 @@ public class MatchingRoom extends BaseTimeEntity {
         .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_MATCHING_EXCEPTION));
 
     hostUserId = newHost.getUser().getId();
+    newHost.cancelReady();//호스트가 되면 준비상태를 해제한다.
   }
 
   public boolean isNotEnough() {
