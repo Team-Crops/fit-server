@@ -98,6 +98,4 @@ public class MatchingController {
     matchingService.exit(userId, roomId);
     return ResponseEntity.ok().build();
   }
-
-
 }

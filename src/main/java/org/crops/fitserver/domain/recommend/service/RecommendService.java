@@ -9,8 +9,8 @@ public interface RecommendService {
   Users recommendUser(
       long userId,
       Boolean liked,
-      List<Long> positionId,
-      List<Long> skillId,
+      List<Long> positionIds,
+      List<Long> skillIds,
       BackgroundStatus backgroundStatus,
       Long regionId,
       Integer projectCount,

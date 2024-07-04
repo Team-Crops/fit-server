@@ -35,8 +35,8 @@ public class RecommendFacadeImpl implements RecommendFacade {
     Users recommendedUsers = recommendService.recommendUser(
         userId,
         request.liked(),
-        request.positionId(),
-        request.skillId(),
+        request.positionIds(),
+        request.skillIds(),
         request.backgroundStatus(),
         request.regionId(),
         request.projectCount(),

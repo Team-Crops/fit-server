@@ -16,6 +16,4 @@ public interface ChatRoomUserRepository extends JpaRepository<ChatRoomUser, Long
       + "join fetch cru.user u "
       + "where cru.chatRoom.id = :chatRoomId")
   List<ChatRoomUser> findByChatRoomIdWithUser(long chatRoomId);
-
-  void delete(ChatRoomUser chatRoomUser);
 }

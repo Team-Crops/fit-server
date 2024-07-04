@@ -6,8 +6,8 @@ import org.crops.fitserver.domain.user.constant.BackgroundStatus;
 
 public record RecommendUserRequest(
     Boolean liked,
-    List<Long> positionId,
-    List<Long> skillId,
+    List<Long> positionIds,
+    List<Long> skillIds,
     BackgroundStatus backgroundStatus,
     Long regionId,
     Integer projectCount,
