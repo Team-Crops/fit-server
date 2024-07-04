@@ -220,6 +220,8 @@ public class MatchingServiceImpl implements MatchingService {
   public void forceOut(Long userId, Long roomId, Long forceOutUserId) {
     var user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
+    var forceOutUser = userRepository.findById(forceOutUserId).orElseThrow(() -> new BusinessException(
+        ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
     var matching = getActiveMatching(user).orElseThrow(() -> new BusinessException(
         ErrorCode.NOT_EXIST_MATCHING_EXCEPTION));
     var matchingRoom = matching.getMatchingRoom();
@@ -230,7 +232,7 @@ public class MatchingServiceImpl implements MatchingService {
     matchingRoom.forceOut(userId, forceOutUserId);
     matchingRoomRepository.save(matchingRoom);
 
-    chatRoomService.chatRoomForceOut(matchingRoom.getChatRoomId(), user);
+    chatRoomService.chatRoomForceOut(matchingRoom.getChatRoomId(), forceOutUser);
     alarmService.sendAlarm(user, AlarmCase.FORCE_OUT);
   }
 
