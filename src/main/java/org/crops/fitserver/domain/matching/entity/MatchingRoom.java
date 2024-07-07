@@ -144,6 +144,11 @@ public class MatchingRoom extends BaseTimeEntity {
   }
 
   public boolean canJoinRoom(Matching matching) {
+    var requiredRegionIds = getRequiredRegionIds();
+    if (!requiredRegionIds.contains(matching.getUser().getUserInfo().getRegion().getId())) {
+      return false;
+    }
+
     var positionType = matching.getPosition().getType();
     if (!canInsertPosition(positionType)) {
       return false;
@@ -219,6 +224,12 @@ public class MatchingRoom extends BaseTimeEntity {
         .filter(skill -> skill.getSkillSets().stream()
             .anyMatch(skillSet -> skillSet.isEqualPositionType(positionType)))
         .map(Skill::getId)
+        .toList();
+  }
+
+  public List<Long> getRequiredRegionIds() {
+    return matchingList.stream()
+        .map(m -> m.getUser().getUserInfo().getRegion().getId())
         .toList();
   }
 

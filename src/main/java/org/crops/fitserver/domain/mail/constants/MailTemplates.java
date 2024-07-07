@@ -2,6 +2,18 @@ package org.crops.fitserver.domain.mail.constants;
 
 public class MailTemplates {
 
+  public static String DEFAULT_TEMPLATE =
+      "<div style=\"margin-top: 50px;\">\n"
+          + "                <img src=\"https://d2ueefa0uvyh4f.cloudfront.net/mail/images/logo.png\" alt=\"F-IT &#47196;&#44256;\" style=\"width: 160px; height: 51.526px;\">\n"
+          + "              </div>\n"
+          + "              <div style=\"margin-top: 30px;\">\n"
+          + "                ${content}\n"
+          + "              </div>\n"
+          + "              <div style=\"margin-top: 60px; text-align: center;\">\n"
+          + "                <a href=\"${url}\" style=\"background-color: #FF8A80; color: white; padding: 15px 30px; border: none; border-radius: 10px; font-size: 16px; cursor: pointer; text-decoration: none;\">&#54168;&#51060;&#51648;&#47196; &#51060;&#46041; &rarr;</a>\n"
+          + "              </div>\n"
+      ;
+
   public static String CREATE_MATCHING_ROOM_TEMPLATE =
       "<h1>F-IT 대기방이 생성되었어요!</h1>"
           + "<p>안녕하세요, (주)구황작물입니다.</p>"

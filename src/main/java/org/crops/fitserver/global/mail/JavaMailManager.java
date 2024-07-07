@@ -37,15 +37,15 @@ public class JavaMailManager implements MailManager {
 
 
   @Override
-  public void send(String to, String subject, String content) {
-    send(new String[]{to}, subject, content);
+  public void send(String to, String subject, String template) {
+    send(new String[]{to}, subject, template);
   }
 
   @Override
-  public void send(String[] to, String subject, String content) {
+  public void send(String[] to, String subject, String template) {
     var message = javaMailSender.createMimeMessage();
 
-    var mailContent = template.replace("${content}", content);
+    var mailContent = template.replace("${template}", template);
 
     //test로 시작하는 문자열 제거
     to = Arrays.stream(to).filter(s -> !s.startsWith("test")).toArray(String[]::new);

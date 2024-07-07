@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
         ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
 
     matchingRepository.findMatchingByUserAndStatusIn(user,
-        MatchingStatus.getActiveStatusList()).ifPresent(
+        List.of(MatchingStatus.WAITING)).ifPresent(
         matching -> {
           throw new BusinessException(ErrorCode.ALREADY_EXIST_MATCHING_EXCEPTION);
         }
