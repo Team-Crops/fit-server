@@ -1,0 +1,26 @@
+version: '3.9'
+services:
+  mariadb:
+    container_name: fit-mariadb
+    image: mariadb:latest
+    hostname: fit_db_host
+    ports:
+      - 3306:3306
+    environment:
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    restart: always
+    volumes:
+      - /home/ubuntu/mariadb/conf.d:/etc/mysql/conf.d
+      - /home/ubuntu/mariadb/data:/var/lib/mysql
+      - /home/ubuntu/mariadb/initdb.d:/docker-entrypoint-initdb.d
+
+  redis:
+    container_name: fit-redis
+    image: redis:latest
+    restart: always
+    hostname: fit_redis_host
+    ports:
+      - 6379:6379

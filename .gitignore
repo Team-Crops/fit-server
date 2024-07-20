@@ -73,3 +73,4 @@ application-*.yaml
 
 ### secret ###
 secret
+/src/main/resources/config
