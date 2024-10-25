@@ -17,10 +17,15 @@ public class CorsConfig {
   private String activeProfile;
 
   private static final List<String> PRODUCTION_ALLOWED_ORIGINS = List.of(
-      "https://f-it.team"
+      "https://f-it.team",
+      "http://dev-api.f-it.team",
+      "https://dev-api.f-it.team",
+      "http://dev.f-it.team",
+      "https://dev.f-it.team"
   );
 
   private static final List<String> DEFAULT_ALLOWED_ORIGINS = List.of(
+      "https://f-it.team",
       "http://dev-api.f-it.team",
       "https://dev-api.f-it.team",
       "http://dev.f-it.team",
